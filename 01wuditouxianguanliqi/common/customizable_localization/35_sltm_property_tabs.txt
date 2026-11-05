@@ -1,0 +1,119 @@
+﻿sltm_tab_capital_value = {
+    type = character
+    text = { trigger = { exists = var:sltm_edit_capital } localization_key = sltm_tab_capital_chosen }
+    text = { localization_key = sltm_tab_keep_value }
+}
+
+sltm_tab_dejure_value = {
+    type = character
+    text = { trigger = { exists = var:sltm_edit_dejure } localization_key = sltm_tab_dejure_chosen }
+    text = { localization_key = sltm_tab_keep_value }
+}
+
+sltm_tab_law_1_state = {
+    type = character
+    text = { trigger = { var:sltm_edit_law_add = 1 } localization_key = SLTM_TAB_LAW_WILL_ADD }
+    text = { trigger = { var:sltm_edit_law_remove = 1 } localization_key = SLTM_TAB_LAW_WILL_REMOVE }
+    text = { trigger = { var:sltm_edit_target = { has_title_law = male_preference_law } } localization_key = SLTM_TAB_LAW_PRESENT }
+    text = { localization_key = SLTM_TAB_LAW_ABSENT }
+}
+
+sltm_tab_law_2_state = {
+    type = character
+    text = { trigger = { var:sltm_edit_law_add = 2 } localization_key = SLTM_TAB_LAW_WILL_ADD }
+    text = { trigger = { var:sltm_edit_law_remove = 2 } localization_key = SLTM_TAB_LAW_WILL_REMOVE }
+    text = { trigger = { var:sltm_edit_target = { has_title_law = equal_law } } localization_key = SLTM_TAB_LAW_PRESENT }
+    text = { localization_key = SLTM_TAB_LAW_ABSENT }
+}
+
+sltm_tab_law_3_state = {
+    type = character
+    text = { trigger = { var:sltm_edit_law_add = 3 } localization_key = SLTM_TAB_LAW_WILL_ADD }
+    text = { trigger = { var:sltm_edit_law_remove = 3 } localization_key = SLTM_TAB_LAW_WILL_REMOVE }
+    text = { trigger = { var:sltm_edit_target = { has_title_law = female_preference_law } } localization_key = SLTM_TAB_LAW_PRESENT }
+    text = { localization_key = SLTM_TAB_LAW_ABSENT }
+}
+
+sltm_tab_law_4_state = {
+    type = character
+    text = { trigger = { var:sltm_edit_law_add = 4 } localization_key = SLTM_TAB_LAW_WILL_ADD }
+    text = { trigger = { var:sltm_edit_law_remove = 4 } localization_key = SLTM_TAB_LAW_WILL_REMOVE }
+    text = { trigger = { var:sltm_edit_target = { has_title_law = male_only_law } } localization_key = SLTM_TAB_LAW_PRESENT }
+    text = { localization_key = SLTM_TAB_LAW_ABSENT }
+}
+
+sltm_tab_law_5_state = {
+    type = character
+    text = { trigger = { var:sltm_edit_law_add = 5 } localization_key = SLTM_TAB_LAW_WILL_ADD }
+    text = { trigger = { var:sltm_edit_law_remove = 5 } localization_key = SLTM_TAB_LAW_WILL_REMOVE }
+    text = { trigger = { var:sltm_edit_target = { has_title_law = female_only_law } } localization_key = SLTM_TAB_LAW_PRESENT }
+    text = { localization_key = SLTM_TAB_LAW_ABSENT }
+}
+
+sltm_tab_law_6_state = {
+    type = character
+    text = { trigger = { var:sltm_edit_law_add = 6 } localization_key = SLTM_TAB_LAW_WILL_ADD }
+    text = { trigger = { var:sltm_edit_law_remove = 6 } localization_key = SLTM_TAB_LAW_WILL_REMOVE }
+    text = { trigger = { var:sltm_edit_target = { has_title_law = single_heir_succession_law } } localization_key = SLTM_TAB_LAW_PRESENT }
+    text = { localization_key = SLTM_TAB_LAW_ABSENT }
+}
+
+sltm_tab_law_7_state = {
+    type = character
+    text = { trigger = { var:sltm_edit_law_add = 7 } localization_key = SLTM_TAB_LAW_WILL_ADD }
+    text = { trigger = { var:sltm_edit_law_remove = 7 } localization_key = SLTM_TAB_LAW_WILL_REMOVE }
+    text = { trigger = { var:sltm_edit_target = { has_title_law = single_heir_succession_law_youngest } } localization_key = SLTM_TAB_LAW_PRESENT }
+    text = { localization_key = SLTM_TAB_LAW_ABSENT }
+}
+
+sltm_tab_law_8_state = {
+    type = character
+    text = { trigger = { var:sltm_edit_law_add = 8 } localization_key = SLTM_TAB_LAW_WILL_ADD }
+    text = { trigger = { var:sltm_edit_law_remove = 8 } localization_key = SLTM_TAB_LAW_WILL_REMOVE }
+    text = { trigger = { var:sltm_edit_target = { has_title_law = single_heir_dynasty_house } } localization_key = SLTM_TAB_LAW_PRESENT }
+    text = { localization_key = SLTM_TAB_LAW_ABSENT }
+}
+
+sltm_tab_law_9_state = {
+    type = character
+    text = { trigger = { var:sltm_edit_law_add = 9 } localization_key = SLTM_TAB_LAW_WILL_ADD }
+    text = { trigger = { var:sltm_edit_law_remove = 9 } localization_key = SLTM_TAB_LAW_WILL_REMOVE }
+    text = { trigger = { var:sltm_edit_target = { has_title_law = partition_succession_law } } localization_key = SLTM_TAB_LAW_PRESENT }
+    text = { localization_key = SLTM_TAB_LAW_ABSENT }
+}
+
+sltm_tab_life_status = {
+    type = character
+    text = { trigger = { var:sltm_edit_target = { sltm_plain_title_action_trigger = yes } } localization_key = SLTM_TAB_LIFE_OPEN }
+    text = { localization_key = SLTM_TAB_LIFE_PROTECTED }
+}
+
+sltm_tab_home_status = {
+    type = character
+    text = { trigger = { exists = var:sltm_edit_target.title_domicile } localization_key = SLTM_TAB_HOME_BOUND }
+    text = { localization_key = SLTM_TAB_HOME_MISSING }
+}
+
+sltm_tab_building_draft = {
+    type = character
+    text = { trigger = { has_variable = sltm_edit_building } localization_key = SLTM_TAB_BUILD_DRAFT }
+    text = { localization_key = sltm_tab_keep_value }
+}
+
+sltm_tab_province_value = {
+    type = character
+    text = { trigger = { exists = var:sltm_edit_province } localization_key = sltm_tab_province_chosen }
+    text = { localization_key = sltm_tab_keep_value }
+}
+
+sltm_tab_transfer_frozen = {
+    type = character
+    text = { trigger = { exists = var:sltm_edit_transfer exists = var:sltm_tab_transfer_source } localization_key = SLTM_TAB_TRANSFER_FROZEN }
+    text = { localization_key = SLTM_TAB_TRANSFER_NONE }
+}
+
+sltm_tab_transfer_status = {
+    type = character
+    text = { trigger = { sltm_tab_transferable_trigger = yes } localization_key = SLTM_TAB_TRANSFER_PLAIN }
+    text = { localization_key = SLTM_TAB_TRANSFER_PROTECTED }
+}

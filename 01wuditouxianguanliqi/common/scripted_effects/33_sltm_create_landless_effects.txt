@@ -1,0 +1,296 @@
+﻿# 创立无地头衔 · 两步选择窗口的效果
+# 点选只改草稿；确认才把类别/住所交给后续流程。
+
+# 总览暂停期间，旧存档的返回标志在下次进入或关闭窗口时一并解除。
+sltm_windows_return_effect = {
+ remove_variable = sltm_lvm_open
+ remove_variable = sltm_window_from_manager
+}
+sltm_windows_capture_origin_effect = { sltm_windows_return_effect = yes }
+sltm_windows_refresh_after_change_effect = { sltm_windows_return_effect = yes }
+
+# 根为发起人。窗口先初始化草稿，再写回本次互动的拟持有人和可选模板。
+sltm_menu_open_recipient_atlas_effect = {
+ sltm_windows_return_effect = yes
+ sltm_clw_open_effect = yes
+ set_variable = { name = sltm_create_holder value = scope:recipient }
+ set_variable = { name = sltm_clw_nominee value = scope:recipient }
+ remove_variable = sltm_create_template
+ if = {
+  limit = { exists = scope:target scope:target ?= { holder ?= scope:recipient } }
+  set_variable = { name = sltm_lvm_selected_title value = scope:target }
+  set_variable = { name = sltm_create_template value = scope:target }
+ }
+}
+
+sltm_clw_open_effect = {
+ sltm_create_prepare_effect = yes
+ set_variable = { name = sltm_create_route_clw value = yes }
+ remove_variable = sltm_lvm_open
+ sltm_clw_present_effect = yes
+}
+sltm_clw_present_effect = {
+ sltm_atlas_clear_effect = yes
+ set_variable = { name = sltm_clw_revision value = var:sltm_workflow_revision }
+	set_variable = { name = sltm_clw_open value = 1 }
+	set_variable = { name = sltm_clw_step value = 1 }
+	remove_variable = sltm_clw_kind
+	remove_variable = sltm_clw_domicile_type
+	remove_variable = sltm_clw_confirmed
+	remove_variable = sltm_clw_needs_native_profile
+}
+
+# 清掉本次草稿（取消）
+sltm_clw_clear_effect = {
+ sltm_atlas_clear_effect = yes
+ remove_variable = sltm_clw_revision
+	remove_variable = sltm_clw_open
+	remove_variable = sltm_clw_step
+	remove_variable = sltm_clw_kind
+	remove_variable = sltm_clw_domicile_type
+	remove_variable = sltm_clw_confirmed
+	remove_variable = sltm_clw_needs_native_profile
+}
+
+# 选类别：写类别，回到第 1 步；改选非住所类立刻清掉旧住所 ID
+sltm_clw_select_category_effect = {
+ sltm_clear_promotion_confirmation_effect = yes
+ if = { limit = { sltm_clw_category_is_domicile_trigger = yes sltm_clw_has_domicile_type_trigger = yes }
+    set_variable = { name = sltm_atlas_saved_home value = var:sltm_clw_domicile_type }
+  }
+	set_variable = { name = sltm_clw_kind value = $CATEGORY$ }
+ remove_variable = sltm_hof_confirm_title
+ remove_variable = sltm_hof_confirm_faith
+ remove_variable = sltm_hof_confirm_nominee
+ remove_variable = sltm_hof_confirm_person
+ if = { limit = { sltm_atlas_institution_trigger = yes } set_variable = { name = sltm_create_tier value = 2 } }
+ if = { limit = { var:sltm_clw_kind ?= 2 var:sltm_create_tier = 1 } set_variable = { name = sltm_create_tier value = 2 } }
+ remove_variable = sltm_atlas_receipt_target
+	set_variable = { name = sltm_clw_step value = 1 }
+	if = {
+		limit = { NOT = { var:sltm_clw_kind ?= 3 } }
+		remove_variable = sltm_clw_domicile_type
+	}
+	remove_variable = sltm_clw_confirmed
+ if = { limit = { sltm_clw_category_is_domicile_trigger = yes }
+    set_variable = { name = sltm_clw_step value = 2 }
+    if = { limit = { has_variable = sltm_atlas_saved_home }
+      set_variable = { name = sltm_clw_domicile_type value = var:sltm_atlas_saved_home }
+    }
+  }
+  set_variable = { name = sltm_atlas_view value = 2 }
+  remove_variable = sltm_atlas_picker
+}
+
+# 选住所：只写住所 ID 与停留页，不动类别
+sltm_clw_select_domicile_effect = {
+ sltm_clear_promotion_confirmation_effect = yes
+ remove_variable = sltm_atlas_picker
+	set_variable = { name = sltm_clw_domicile_type value = flag:$DWELLING$ }
+ sltm_atlas_default_profile_effect = yes
+	set_variable = { name = sltm_clw_step value = 2 }
+	remove_variable = sltm_clw_confirmed
+}
+
+# 第 1 步 → 第 2 步
+sltm_clw_goto_domicile_effect = {
+	set_variable = { name = sltm_clw_step value = 2 }
+}
+
+# 第 2 步 → 第 1 步：保留类别与住所，页面回来时仍高亮
+sltm_clw_back_effect = {
+	set_variable = { name = sltm_clw_step value = 1 }
+}
+
+# 主按钮：第 2 步确认，第 1 步按类别分叉
+sltm_clw_primary_effect = {
+	if = {
+		limit = { sltm_clw_step_two_trigger = yes sltm_clw_has_domicile_type_trigger = yes }
+		sltm_clw_confirm_effect = yes
+	}
+	else_if = {
+		limit = { sltm_clw_primary_is_next_trigger = yes }
+		sltm_clw_goto_domicile_effect = yes
+	}
+	else_if = {
+		limit = { sltm_clw_step_one_trigger = yes sltm_clw_has_category_trigger = yes }
+		sltm_clw_confirm_effect = yes
+	}
+}
+
+# The click commits the choices shown on the atlas.
+sltm_clw_confirm_effect = {
+ sltm_atlas_submit_effect = { MODE = 1 }
+}
+
+# Finalize exactly once in the existing creation backend, with the same title/cost guards.
+sltm_atlas_submit_effect = {
+ clear_saved_scope = sltm_promoted_primary_allowed
+ if = {
+  limit = {
+   sltm_atlas_can_create_trigger = yes
+   sltm_atlas_promotes_primary_trigger = yes
+   NOT = { AND = { sltm_atlas_promotion_current_trigger = yes var:sltm_rank_mode ?= $MODE$ } }
+  }
+  set_variable = { name = sltm_rank_revision value = var:sltm_clw_revision }
+  set_variable = { name = sltm_rank_holder value = var:sltm_create_holder }
+  set_variable = { name = sltm_rank_primary value = var:sltm_create_holder.primary_title }
+  set_variable = { name = sltm_rank_tier value = var:sltm_create_tier }
+  set_variable = { name = sltm_rank_kind value = var:sltm_clw_kind }
+  set_variable = { name = sltm_rank_mode value = $MODE$ }
+ }
+ else_if = { limit = { sltm_atlas_can_create_trigger = yes var:sltm_clw_kind ?= 8 }
+  sltm_merc_request_effect = { MODE = $MODE$ }
+ }
+ else_if = {
+  limit = {
+   sltm_atlas_can_create_trigger = yes var:sltm_clw_kind ?= 9
+   exists = var:sltm_create_holder.faith.religious_head_title
+   NOT = { sltm_hof_confirmation_current_trigger = yes }
+  }
+  set_variable = { name = sltm_hof_confirm_title value = var:sltm_create_holder.faith.religious_head_title }
+  set_variable = { name = sltm_hof_confirm_faith value = var:sltm_create_holder.faith }
+  set_variable = { name = sltm_hof_confirm_nominee value = var:sltm_create_holder }
+  remove_variable = sltm_hof_confirm_person
+  if = { limit = { exists = var:sltm_create_holder.faith.religious_head } set_variable = { name = sltm_hof_confirm_person value = var:sltm_create_holder.faith.religious_head } }
+ }
+ else_if = {
+  limit = { sltm_atlas_can_create_trigger = yes }
+  if = { limit = { sltm_atlas_promotes_primary_trigger = yes sltm_atlas_promotion_current_trigger = yes var:sltm_rank_mode ?= $MODE$ }
+   save_scope_as = sltm_promoted_primary_allowed
+  }
+  sltm_clear_promotion_confirmation_effect = yes
+  sltm_workflow_new_session_effect = yes
+  save_scope_value_as = { name = sltm_atlas_submit_mode value = $MODE$ }
+  remove_variable = sltm_clw_open
+  remove_variable = sltm_clw_step
+  sltm_clw_handoff_effect = yes
+  set_variable = { name = sltm_create_review_ready value = 1 }
+  sltm_create_commit_effect = yes
+ }
+}
+
+# Translate the visible atlas choices to the existing constructors.
+sltm_clw_handoff_effect = {
+ remove_variable = sltm_create_special_kind
+ if = { limit = { sltm_atlas_institution_trigger = yes }
+  set_variable = { name = sltm_create_kind value = 4 }
+  set_variable = { name = sltm_create_special_kind value = var:sltm_clw_kind }
+  remove_variable = sltm_create_native_profile
+ }
+ else_if = { limit = { var:sltm_clw_kind ?= 2 }
+  set_variable = { name = sltm_create_kind value = 1 }
+  remove_variable = sltm_create_native_profile
+ }
+ else_if = { limit = { var:sltm_clw_kind ?= 3 var:sltm_clw_domicile_type = flag:sltm_residence }
+  set_variable = { name = sltm_create_kind value = 2 }
+  remove_variable = sltm_create_native_profile
+ }
+ else = {
+  set_variable = { name = sltm_create_kind value = 3 }
+  if = { limit = { var:sltm_clw_kind ?= 4 } set_variable = { name = sltm_create_native_profile value = 3 } }
+  else_if = { limit = { var:sltm_clw_kind ?= 5 } set_variable = { name = sltm_create_native_profile value = 2 } }
+  else_if = { limit = { var:sltm_clw_domicile_type = flag:yurt } set_variable = { name = sltm_create_native_profile value = 3 } }
+  else_if = { limit = { var:sltm_clw_domicile_type = flag:camp } set_variable = { name = sltm_create_native_profile value = 2 } }
+  else_if = { limit = { var:sltm_clw_domicile_type = flag:estate } set_variable = { name = sltm_create_native_profile value = 1 } }
+  else_if = { limit = { var:sltm_clw_domicile_type = flag:ecclesiastical_domicile } set_variable = { name = sltm_create_native_profile value = 9 } }
+  else = { sltm_atlas_default_profile_effect = yes }
+ }
+}
+
+# The two multi-government residences retain an explicit compatible choice.
+sltm_atlas_default_profile_effect = {
+ if = {
+  limit = { has_variable = sltm_clw_domicile_type var:sltm_clw_domicile_type = flag:east_asian_estate
+   NOT = { AND = { has_variable = sltm_create_native_profile OR = { var:sltm_create_native_profile = 5 var:sltm_create_native_profile = 6 } } }
+  }
+  set_variable = { name = sltm_create_native_profile value = 4 }
+ }
+ else_if = {
+  limit = { has_variable = sltm_clw_domicile_type var:sltm_clw_domicile_type = flag:japanese_manor NOT = { AND = { has_variable = sltm_create_native_profile var:sltm_create_native_profile = 8 } } }
+  set_variable = { name = sltm_create_native_profile value = 7 }
+ }
+}
+
+# An already open legacy event can return without changing holder, tier or domicile.
+sltm_atlas_resume_effect = {
+ sltm_workflow_new_session_effect = yes
+ set_variable = { name = sltm_clw_revision value = var:sltm_workflow_revision }
+ set_variable = { name = sltm_clw_open value = 1 }
+ set_variable = { name = sltm_clw_step value = 1 }
+ set_variable = { name = sltm_atlas_view value = 2 }
+ remove_variable = sltm_create_review_ready
+ remove_variable = sltm_atlas_picker
+ if = { limit = { NOT = { has_variable = sltm_create_tier } } set_variable = { name = sltm_create_tier value = 2 } }
+ if = { limit = { var:sltm_clw_kind ?= 2 var:sltm_create_tier = 1 } set_variable = { name = sltm_create_tier value = 2 } }
+ if = { limit = { sltm_clw_category_is_domicile_trigger = yes }
+  set_variable = { name = sltm_clw_step value = 2 }
+  sltm_atlas_default_profile_effect = yes
+ }
+}
+
+sltm_clw_cancel_effect = {
+ if = { limit = { sltm_clw_open_trigger = yes }
+  sltm_workflow_new_session_effect = yes
+  sltm_create_clear_draft_effect = yes
+ }
+}
+sltm_clw_reselect_holder_effect = {
+ if = { limit = { has_variable = sltm_create_route_clw }
+  sltm_workflow_new_session_effect = yes
+  remove_variable = sltm_create_review_ready
+  remove_variable = sltm_create_native_profile
+  sltm_clw_present_effect = yes
+ }
+ else = { trigger_event = sltm_workflow.0100 }
+}
+sltm_clw_show_dwellings_effect = {
+ set_variable = { name = sltm_atlas_view value = 2 }
+ remove_variable = sltm_atlas_picker
+ sltm_workflow_new_session_effect = yes
+ set_variable = { name = sltm_clw_revision value = var:sltm_workflow_revision }
+ set_variable = { name = sltm_clw_open value = 1 }
+ set_variable = { name = sltm_clw_step value = 2 }
+}
+
+sltm_atlas_clear_effect = {
+ sltm_clear_promotion_confirmation_effect = yes
+ remove_variable = sltm_atlas_spread
+ remove_variable = sltm_hof_confirm_title
+ remove_variable = sltm_hof_confirm_faith
+ remove_variable = sltm_hof_confirm_nominee
+ remove_variable = sltm_hof_confirm_person
+ remove_variable = sltm_atlas_receipt_target
+ remove_variable = sltm_atlas_view
+ remove_variable = sltm_atlas_filter
+ remove_variable = sltm_atlas_index
+ remove_variable = sltm_atlas_saved_home
+ remove_variable = sltm_atlas_picker
+
+}
+
+# A direct creation returns to a fresh book with one short receipt for the exact output.
+sltm_atlas_show_receipt_effect = {
+ clear_saved_scope = sltm_atlas_prior_template
+ if = { limit = { exists = var:sltm_create_template } var:sltm_create_template = { save_scope_as = sltm_atlas_prior_template } }
+ sltm_clw_open_effect = yes
+ set_variable = { name = sltm_create_holder value = scope:sltm_holder }
+ set_variable = { name = sltm_clw_nominee value = scope:sltm_holder }
+ remove_variable = sltm_create_template
+ if = { limit = { exists = scope:sltm_atlas_prior_template } set_variable = { name = sltm_create_template value = scope:sltm_atlas_prior_template } }
+ set_variable = { name = sltm_atlas_receipt_target value = scope:sltm_created }
+}
+
+sltm_atlas_toggle_menu_effect = {
+ if = { limit = { has_variable = sltm_atlas_picker var:sltm_atlas_picker = $MENU$ } remove_variable = sltm_atlas_picker }
+ else = { set_variable = { name = sltm_atlas_picker value = $MENU$ } }
+}
+
+sltm_clear_promotion_confirmation_effect = {
+    remove_variable = sltm_rank_revision
+    remove_variable = sltm_rank_holder
+    remove_variable = sltm_rank_primary
+    remove_variable = sltm_rank_tier
+    remove_variable = sltm_rank_kind
+    remove_variable = sltm_rank_mode
+}

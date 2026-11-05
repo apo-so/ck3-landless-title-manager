@@ -1,0 +1,665 @@
+﻿# V3.6 普通多选、指挥官与生活方式特质匹配。
+# 组内 OR、组间 AND；组内空选择等于不限。
+
+sltm_lvm_holder_uses_governor_efficiency_trigger = {
+    OR = {
+        has_government = administrative_government
+        has_government = celestial_government
+        has_government = steppe_admin_government
+        has_government = meritocratic_government
+        has_government = japan_administrative_government
+    }
+}
+sltm_lvm_v36_has_age_selection_trigger = {
+    scope:sltm_lvm_filter_player = { OR = {
+        has_variable = sltm_lvm_hf_age_0_15_selected
+        has_variable = sltm_lvm_hf_age_16_29_selected
+        has_variable = sltm_lvm_hf_age_30_49_selected
+        has_variable = sltm_lvm_hf_age_50_64_selected
+        has_variable = sltm_lvm_hf_age_65_plus_selected
+    } }
+}
+sltm_lvm_v36_matches_age_trigger = {
+    OR = {
+        NOT = { sltm_lvm_v36_has_age_selection_trigger = yes }
+        AND = {
+            scope:sltm_lvm_filter_player = { has_variable = sltm_lvm_hf_age_0_15_selected }
+            age < 16
+        }
+        AND = {
+            scope:sltm_lvm_filter_player = { has_variable = sltm_lvm_hf_age_16_29_selected }
+            age >= 16
+                        age < 30
+        }
+        AND = {
+            scope:sltm_lvm_filter_player = { has_variable = sltm_lvm_hf_age_30_49_selected }
+            age >= 30
+                        age < 50
+        }
+        AND = {
+            scope:sltm_lvm_filter_player = { has_variable = sltm_lvm_hf_age_50_64_selected }
+            age >= 50
+                        age < 65
+        }
+        AND = {
+            scope:sltm_lvm_filter_player = { has_variable = sltm_lvm_hf_age_65_plus_selected }
+            age >= 65
+        }
+    }
+}
+sltm_lvm_v36_has_blocked_selection_trigger = {
+    scope:sltm_lvm_filter_player = { OR = {
+        has_variable = sltm_lvm_hf_blocked_zero_selected
+        has_variable = sltm_lvm_hf_blocked_one_selected
+        has_variable = sltm_lvm_hf_blocked_two_plus_selected
+    } }
+}
+sltm_lvm_v36_matches_blocked_trigger = {
+    OR = {
+        NOT = { sltm_lvm_v36_has_blocked_selection_trigger = yes }
+        AND = {
+            scope:sltm_lvm_filter_player = { has_variable = sltm_lvm_hf_blocked_zero_selected }
+            var:sltm_lvm_blocked_title_count = 0
+        }
+        AND = {
+            scope:sltm_lvm_filter_player = { has_variable = sltm_lvm_hf_blocked_one_selected }
+            var:sltm_lvm_blocked_title_count = 1
+        }
+        AND = {
+            scope:sltm_lvm_filter_player = { has_variable = sltm_lvm_hf_blocked_two_plus_selected }
+            var:sltm_lvm_blocked_title_count >= 2
+        }
+    }
+}
+sltm_lvm_v36_has_efficiency_selection_trigger = {
+    scope:sltm_lvm_filter_player = { OR = {
+        has_variable = sltm_lvm_hf_eff_na_selected
+        has_variable = sltm_lvm_hf_eff_negative_selected
+        has_variable = sltm_lvm_hf_eff_0_9_selected
+        has_variable = sltm_lvm_hf_eff_10_24_selected
+        has_variable = sltm_lvm_hf_eff_25_39_selected
+        has_variable = sltm_lvm_hf_eff_40_50_selected
+    } }
+}
+sltm_lvm_v36_matches_efficiency_trigger = {
+    OR = {
+        NOT = { sltm_lvm_v36_has_efficiency_selection_trigger = yes }
+        AND = {
+            scope:sltm_lvm_filter_player = { has_variable = sltm_lvm_hf_eff_na_selected }
+            NOT = { sltm_lvm_holder_uses_governor_efficiency_trigger = yes }
+        }
+        AND = {
+            scope:sltm_lvm_filter_player = { has_variable = sltm_lvm_hf_eff_negative_selected }
+            sltm_lvm_holder_uses_governor_efficiency_trigger = yes
+                        governor_efficiency_presented < 0
+        }
+        AND = {
+            scope:sltm_lvm_filter_player = { has_variable = sltm_lvm_hf_eff_0_9_selected }
+            sltm_lvm_holder_uses_governor_efficiency_trigger = yes
+                        governor_efficiency_presented >= 0
+                        governor_efficiency_presented < 10
+        }
+        AND = {
+            scope:sltm_lvm_filter_player = { has_variable = sltm_lvm_hf_eff_10_24_selected }
+            sltm_lvm_holder_uses_governor_efficiency_trigger = yes
+                        governor_efficiency_presented >= 10
+                        governor_efficiency_presented < 25
+        }
+        AND = {
+            scope:sltm_lvm_filter_player = { has_variable = sltm_lvm_hf_eff_25_39_selected }
+            sltm_lvm_holder_uses_governor_efficiency_trigger = yes
+                        governor_efficiency_presented >= 25
+                        governor_efficiency_presented < 40
+        }
+        AND = {
+            scope:sltm_lvm_filter_player = { has_variable = sltm_lvm_hf_eff_40_50_selected }
+            sltm_lvm_holder_uses_governor_efficiency_trigger = yes
+                        governor_efficiency_presented >= 40
+        }
+    }
+}
+sltm_lvm_v36_has_gender_selection_trigger = {
+    scope:sltm_lvm_filter_player = { OR = {
+        has_variable = sltm_lvm_hf_gender_male_selected
+        has_variable = sltm_lvm_hf_gender_female_selected
+    } }
+}
+sltm_lvm_v36_matches_gender_trigger = {
+    OR = {
+        NOT = { sltm_lvm_v36_has_gender_selection_trigger = yes }
+        AND = {
+            scope:sltm_lvm_filter_player = { has_variable = sltm_lvm_hf_gender_male_selected }
+            is_female = no
+        }
+        AND = {
+            scope:sltm_lvm_filter_player = { has_variable = sltm_lvm_hf_gender_female_selected }
+            is_female = yes
+        }
+    }
+}
+sltm_lvm_v36_has_government_selection_trigger = {
+    scope:sltm_lvm_filter_player = { OR = {
+        has_variable = sltm_lvm_hf_gov_feudal_selected
+        has_variable = sltm_lvm_hf_gov_clan_selected
+        has_variable = sltm_lvm_hf_gov_administrative_selected
+        has_variable = sltm_lvm_hf_gov_celestial_selected
+        has_variable = sltm_lvm_hf_gov_meritocratic_selected
+        has_variable = sltm_lvm_hf_gov_steppe_admin_selected
+        has_variable = sltm_lvm_hf_gov_japan_administrative_selected
+        has_variable = sltm_lvm_hf_gov_japan_feudal_selected
+        has_variable = sltm_lvm_hf_gov_tribal_selected
+        has_variable = sltm_lvm_hf_gov_nomad_selected
+        has_variable = sltm_lvm_hf_gov_republic_selected
+        has_variable = sltm_lvm_hf_gov_theocracy_selected
+        has_variable = sltm_lvm_hf_gov_mercenary_selected
+        has_variable = sltm_lvm_hf_gov_holy_order_selected
+        has_variable = sltm_lvm_hf_gov_adventurer_selected
+        has_variable = sltm_lvm_hf_gov_herder_selected
+        has_variable = sltm_lvm_hf_gov_wanua_selected
+        has_variable = sltm_lvm_hf_gov_mandala_selected
+    } }
+}
+sltm_lvm_v36_matches_government_trigger = {
+    OR = {
+        NOT = { sltm_lvm_v36_has_government_selection_trigger = yes }
+        AND = {
+            scope:sltm_lvm_filter_player = { has_variable = sltm_lvm_hf_gov_feudal_selected }
+            has_government = feudal_government
+        }
+        AND = {
+            scope:sltm_lvm_filter_player = { has_variable = sltm_lvm_hf_gov_clan_selected }
+            has_government = clan_government
+        }
+        AND = {
+            scope:sltm_lvm_filter_player = { has_variable = sltm_lvm_hf_gov_administrative_selected }
+            has_government = administrative_government
+        }
+        AND = {
+            scope:sltm_lvm_filter_player = { has_variable = sltm_lvm_hf_gov_celestial_selected }
+            has_government = celestial_government
+        }
+        AND = {
+            scope:sltm_lvm_filter_player = { has_variable = sltm_lvm_hf_gov_meritocratic_selected }
+            has_government = meritocratic_government
+        }
+        AND = {
+            scope:sltm_lvm_filter_player = { has_variable = sltm_lvm_hf_gov_steppe_admin_selected }
+            has_government = steppe_admin_government
+        }
+        AND = {
+            scope:sltm_lvm_filter_player = { has_variable = sltm_lvm_hf_gov_japan_administrative_selected }
+            has_government = japan_administrative_government
+        }
+        AND = {
+            scope:sltm_lvm_filter_player = { has_variable = sltm_lvm_hf_gov_japan_feudal_selected }
+            has_government = japan_feudal_government
+        }
+        AND = {
+            scope:sltm_lvm_filter_player = { has_variable = sltm_lvm_hf_gov_tribal_selected }
+            has_government = tribal_government
+        }
+        AND = {
+            scope:sltm_lvm_filter_player = { has_variable = sltm_lvm_hf_gov_nomad_selected }
+            has_government = nomad_government
+        }
+        AND = {
+            scope:sltm_lvm_filter_player = { has_variable = sltm_lvm_hf_gov_republic_selected }
+            has_government = republic_government
+        }
+        AND = {
+            scope:sltm_lvm_filter_player = { has_variable = sltm_lvm_hf_gov_theocracy_selected }
+            has_government = theocracy_government
+        }
+        AND = {
+            scope:sltm_lvm_filter_player = { has_variable = sltm_lvm_hf_gov_mercenary_selected }
+            has_government = mercenary_government
+        }
+        AND = {
+            scope:sltm_lvm_filter_player = { has_variable = sltm_lvm_hf_gov_holy_order_selected }
+            has_government = holy_order_government
+        }
+        AND = {
+            scope:sltm_lvm_filter_player = { has_variable = sltm_lvm_hf_gov_adventurer_selected }
+            has_government = landless_adventurer_government
+        }
+        AND = {
+            scope:sltm_lvm_filter_player = { has_variable = sltm_lvm_hf_gov_herder_selected }
+            has_government = herder_government
+        }
+        AND = {
+            scope:sltm_lvm_filter_player = { has_variable = sltm_lvm_hf_gov_wanua_selected }
+            has_government = wanua_government
+        }
+        AND = {
+            scope:sltm_lvm_filter_player = { has_variable = sltm_lvm_hf_gov_mandala_selected }
+            has_government = mandala_government
+        }
+    }
+}
+sltm_lvm_v36_has_managed_selection_trigger = {
+    scope:sltm_lvm_filter_player = { OR = {
+        has_variable = sltm_lvm_hf_managed_zero_selected
+        has_variable = sltm_lvm_hf_managed_one_selected
+        has_variable = sltm_lvm_hf_managed_two_three_selected
+        has_variable = sltm_lvm_hf_managed_four_plus_selected
+    } }
+}
+sltm_lvm_v36_matches_managed_trigger = {
+    OR = {
+        NOT = { sltm_lvm_v36_has_managed_selection_trigger = yes }
+        AND = {
+            scope:sltm_lvm_filter_player = { has_variable = sltm_lvm_hf_managed_zero_selected }
+            var:sltm_lvm_total_managed_title_count = 0
+        }
+        AND = {
+            scope:sltm_lvm_filter_player = { has_variable = sltm_lvm_hf_managed_one_selected }
+            var:sltm_lvm_total_managed_title_count = 1
+        }
+        AND = {
+            scope:sltm_lvm_filter_player = { has_variable = sltm_lvm_hf_managed_two_three_selected }
+            var:sltm_lvm_total_managed_title_count >= 2
+                        var:sltm_lvm_total_managed_title_count <= 3
+        }
+        AND = {
+            scope:sltm_lvm_filter_player = { has_variable = sltm_lvm_hf_managed_four_plus_selected }
+            var:sltm_lvm_total_managed_title_count >= 4
+        }
+    }
+}
+sltm_lvm_v36_has_merit_selection_trigger = {
+    scope:sltm_lvm_filter_player = { OR = {
+        has_variable = sltm_lvm_hf_merit_0_selected
+        has_variable = sltm_lvm_hf_merit_1_selected
+        has_variable = sltm_lvm_hf_merit_2_selected
+        has_variable = sltm_lvm_hf_merit_3_selected
+        has_variable = sltm_lvm_hf_merit_4_selected
+        has_variable = sltm_lvm_hf_merit_5_selected
+        has_variable = sltm_lvm_hf_merit_6_selected
+        has_variable = sltm_lvm_hf_merit_7_selected
+        has_variable = sltm_lvm_hf_merit_8_selected
+        has_variable = sltm_lvm_hf_merit_9_selected
+    } }
+}
+sltm_lvm_v36_matches_merit_trigger = {
+    OR = {
+        NOT = { sltm_lvm_v36_has_merit_selection_trigger = yes }
+        AND = {
+            scope:sltm_lvm_filter_player = { has_variable = sltm_lvm_hf_merit_0_selected }
+            merit_level = 0
+        }
+        AND = {
+            scope:sltm_lvm_filter_player = { has_variable = sltm_lvm_hf_merit_1_selected }
+            merit_level = 1
+        }
+        AND = {
+            scope:sltm_lvm_filter_player = { has_variable = sltm_lvm_hf_merit_2_selected }
+            merit_level = 2
+        }
+        AND = {
+            scope:sltm_lvm_filter_player = { has_variable = sltm_lvm_hf_merit_3_selected }
+            merit_level = 3
+        }
+        AND = {
+            scope:sltm_lvm_filter_player = { has_variable = sltm_lvm_hf_merit_4_selected }
+            merit_level = 4
+        }
+        AND = {
+            scope:sltm_lvm_filter_player = { has_variable = sltm_lvm_hf_merit_5_selected }
+            merit_level = 5
+        }
+        AND = {
+            scope:sltm_lvm_filter_player = { has_variable = sltm_lvm_hf_merit_6_selected }
+            merit_level = 6
+        }
+        AND = {
+            scope:sltm_lvm_filter_player = { has_variable = sltm_lvm_hf_merit_7_selected }
+            merit_level = 7
+        }
+        AND = {
+            scope:sltm_lvm_filter_player = { has_variable = sltm_lvm_hf_merit_8_selected }
+            merit_level = 8
+        }
+        AND = {
+            scope:sltm_lvm_filter_player = { has_variable = sltm_lvm_hf_merit_9_selected }
+            merit_level = 9
+        }
+    }
+}
+sltm_lvm_v36_has_pending_selection_trigger = {
+    scope:sltm_lvm_filter_player = { OR = {
+        has_variable = sltm_lvm_hf_pending_zero_selected
+        has_variable = sltm_lvm_hf_pending_one_selected
+        has_variable = sltm_lvm_hf_pending_two_plus_selected
+    } }
+}
+sltm_lvm_v36_matches_pending_trigger = {
+    OR = {
+        NOT = { sltm_lvm_v36_has_pending_selection_trigger = yes }
+        AND = {
+            scope:sltm_lvm_filter_player = { has_variable = sltm_lvm_hf_pending_zero_selected }
+            var:sltm_lvm_pending_title_count = 0
+        }
+        AND = {
+            scope:sltm_lvm_filter_player = { has_variable = sltm_lvm_hf_pending_one_selected }
+            var:sltm_lvm_pending_title_count = 1
+        }
+        AND = {
+            scope:sltm_lvm_filter_player = { has_variable = sltm_lvm_hf_pending_two_plus_selected }
+            var:sltm_lvm_pending_title_count >= 2
+        }
+    }
+}
+sltm_lvm_v36_has_prison_selection_trigger = {
+    scope:sltm_lvm_filter_player = { OR = {
+        has_variable = sltm_lvm_hf_free_selected
+        has_variable = sltm_lvm_hf_imprisoned_selected
+    } }
+}
+sltm_lvm_v36_matches_prison_trigger = {
+    OR = {
+        NOT = { sltm_lvm_v36_has_prison_selection_trigger = yes }
+        AND = {
+            scope:sltm_lvm_filter_player = { has_variable = sltm_lvm_hf_free_selected }
+            is_imprisoned = no
+        }
+        AND = {
+            scope:sltm_lvm_filter_player = { has_variable = sltm_lvm_hf_imprisoned_selected }
+            is_imprisoned = yes
+        }
+    }
+}
+sltm_lvm_v36_has_title_type_selection_trigger = {
+    scope:sltm_lvm_filter_player = { OR = {
+        has_variable = sltm_lvm_hf_type_junfu_selected
+        has_variable = sltm_lvm_hf_type_chaochen_selected
+        has_variable = sltm_lvm_hf_type_noble_selected
+        has_variable = sltm_lvm_hf_type_holy_order_selected
+        has_variable = sltm_lvm_hf_type_mercenary_selected
+        has_variable = sltm_lvm_hf_type_religious_head_selected
+        has_variable = sltm_lvm_hf_type_other_selected
+    } }
+}
+sltm_lvm_v36_matches_title_type_trigger = {
+    OR = {
+        NOT = { sltm_lvm_v36_has_title_type_selection_trigger = yes }
+        AND = {
+            scope:sltm_lvm_filter_player = { has_variable = sltm_lvm_hf_type_junfu_selected }
+            var:sltm_lvm_junfu_title_count > 0
+        }
+        AND = {
+            scope:sltm_lvm_filter_player = { has_variable = sltm_lvm_hf_type_chaochen_selected }
+            var:sltm_lvm_chaochen_title_count > 0
+        }
+        AND = {
+            scope:sltm_lvm_filter_player = { has_variable = sltm_lvm_hf_type_noble_selected }
+            var:sltm_lvm_noble_title_count > 0
+        }
+        AND = {
+            scope:sltm_lvm_filter_player = { has_variable = sltm_lvm_hf_type_holy_order_selected }
+            var:sltm_lvm_holy_order_title_count > 0
+        }
+        AND = {
+            scope:sltm_lvm_filter_player = { has_variable = sltm_lvm_hf_type_mercenary_selected }
+            var:sltm_lvm_mercenary_title_count > 0
+        }
+        AND = {
+            scope:sltm_lvm_filter_player = { has_variable = sltm_lvm_hf_type_religious_head_selected }
+            var:sltm_lvm_religious_head_title_count > 0
+        }
+        AND = {
+            scope:sltm_lvm_filter_player = { has_variable = sltm_lvm_hf_type_other_selected }
+            var:sltm_lvm_other_managed_title_count > 0
+        }
+    }
+}
+sltm_lvm_v36_matches_all_ordinary_filters_trigger = {
+    sltm_lvm_v36_matches_age_trigger = yes
+    sltm_lvm_v36_matches_blocked_trigger = yes
+    sltm_lvm_v36_matches_efficiency_trigger = yes
+    sltm_lvm_v36_matches_gender_trigger = yes
+    sltm_lvm_v36_matches_government_trigger = yes
+    sltm_lvm_v36_matches_managed_trigger = yes
+    sltm_lvm_v36_matches_merit_trigger = yes
+    sltm_lvm_v36_matches_pending_trigger = yes
+    sltm_lvm_v36_matches_prison_trigger = yes
+    sltm_lvm_v36_matches_title_type_trigger = yes
+}
+sltm_lvm_v36_has_base_pos_trigger = {
+    scope:sltm_lvm_filter_player = { OR = {
+        var:sltm_lvm_hf_tok_brave = flag:pos
+        var:sltm_lvm_hf_tok_cowardly = flag:pos
+        var:sltm_lvm_hf_tok_martial_edu = flag:pos
+        var:sltm_lvm_hf_tok_steward_edu = flag:pos
+        var:sltm_lvm_hf_tok_good_genetic = flag:pos
+        var:sltm_lvm_hf_tok_bad_genetic = flag:pos
+        var:sltm_lvm_hf_tok_ambitious = flag:pos
+        var:sltm_lvm_hf_tok_content = flag:pos
+        var:sltm_lvm_hf_tok_just = flag:pos
+        var:sltm_lvm_hf_tok_arbitrary = flag:pos
+        var:sltm_lvm_hf_tok_calm = flag:pos
+        var:sltm_lvm_hf_tok_wrathful = flag:pos
+        var:sltm_lvm_hf_tok_patient = flag:pos
+        var:sltm_lvm_hf_tok_impatient = flag:pos
+        var:sltm_lvm_hf_tok_diligent = flag:pos
+        var:sltm_lvm_hf_tok_lazy = flag:pos
+        var:sltm_lvm_hf_tok_honest = flag:pos
+        var:sltm_lvm_hf_tok_deceitful = flag:pos
+    } }
+}
+sltm_lvm_v36_matches_base_traits_trigger = {
+    trigger_if = {
+        limit = { NOT = { sltm_lvm_v36_has_base_pos_trigger = yes } }
+        always = yes
+    }
+    trigger_else = {
+        OR = {
+            AND = { scope:sltm_lvm_filter_player.var:sltm_lvm_hf_tok_brave = flag:pos has_trait = brave }
+            AND = { scope:sltm_lvm_filter_player.var:sltm_lvm_hf_tok_cowardly = flag:pos has_trait = craven }
+            AND = { scope:sltm_lvm_filter_player.var:sltm_lvm_hf_tok_martial_edu = flag:pos has_education_martial_trigger = yes }
+            AND = { scope:sltm_lvm_filter_player.var:sltm_lvm_hf_tok_steward_edu = flag:pos has_education_stewardship_trigger = yes }
+            AND = { scope:sltm_lvm_filter_player.var:sltm_lvm_hf_tok_good_genetic = flag:pos num_of_good_genetic_traits > 0 }
+            AND = { scope:sltm_lvm_filter_player.var:sltm_lvm_hf_tok_bad_genetic = flag:pos num_of_bad_genetic_traits > 0 }
+            AND = { scope:sltm_lvm_filter_player.var:sltm_lvm_hf_tok_ambitious = flag:pos has_trait = ambitious }
+            AND = { scope:sltm_lvm_filter_player.var:sltm_lvm_hf_tok_content = flag:pos has_trait = content }
+            AND = { scope:sltm_lvm_filter_player.var:sltm_lvm_hf_tok_just = flag:pos has_trait = just }
+            AND = { scope:sltm_lvm_filter_player.var:sltm_lvm_hf_tok_arbitrary = flag:pos has_trait = arbitrary }
+            AND = { scope:sltm_lvm_filter_player.var:sltm_lvm_hf_tok_calm = flag:pos has_trait = calm }
+            AND = { scope:sltm_lvm_filter_player.var:sltm_lvm_hf_tok_wrathful = flag:pos has_trait = wrathful }
+            AND = { scope:sltm_lvm_filter_player.var:sltm_lvm_hf_tok_patient = flag:pos has_trait = patient }
+            AND = { scope:sltm_lvm_filter_player.var:sltm_lvm_hf_tok_impatient = flag:pos has_trait = impatient }
+            AND = { scope:sltm_lvm_filter_player.var:sltm_lvm_hf_tok_diligent = flag:pos has_trait = diligent }
+            AND = { scope:sltm_lvm_filter_player.var:sltm_lvm_hf_tok_lazy = flag:pos has_trait = lazy }
+            AND = { scope:sltm_lvm_filter_player.var:sltm_lvm_hf_tok_honest = flag:pos has_trait = honest }
+            AND = { scope:sltm_lvm_filter_player.var:sltm_lvm_hf_tok_deceitful = flag:pos has_trait = deceitful }
+        }
+    }
+    NOT = { OR = {
+        AND = { scope:sltm_lvm_filter_player.var:sltm_lvm_hf_tok_brave = flag:neg has_trait = brave }
+        AND = { scope:sltm_lvm_filter_player.var:sltm_lvm_hf_tok_cowardly = flag:neg has_trait = craven }
+        AND = { scope:sltm_lvm_filter_player.var:sltm_lvm_hf_tok_martial_edu = flag:neg has_education_martial_trigger = yes }
+        AND = { scope:sltm_lvm_filter_player.var:sltm_lvm_hf_tok_steward_edu = flag:neg has_education_stewardship_trigger = yes }
+        AND = { scope:sltm_lvm_filter_player.var:sltm_lvm_hf_tok_good_genetic = flag:neg num_of_good_genetic_traits > 0 }
+        AND = { scope:sltm_lvm_filter_player.var:sltm_lvm_hf_tok_bad_genetic = flag:neg num_of_bad_genetic_traits > 0 }
+        AND = { scope:sltm_lvm_filter_player.var:sltm_lvm_hf_tok_ambitious = flag:neg has_trait = ambitious }
+        AND = { scope:sltm_lvm_filter_player.var:sltm_lvm_hf_tok_content = flag:neg has_trait = content }
+        AND = { scope:sltm_lvm_filter_player.var:sltm_lvm_hf_tok_just = flag:neg has_trait = just }
+        AND = { scope:sltm_lvm_filter_player.var:sltm_lvm_hf_tok_arbitrary = flag:neg has_trait = arbitrary }
+        AND = { scope:sltm_lvm_filter_player.var:sltm_lvm_hf_tok_calm = flag:neg has_trait = calm }
+        AND = { scope:sltm_lvm_filter_player.var:sltm_lvm_hf_tok_wrathful = flag:neg has_trait = wrathful }
+        AND = { scope:sltm_lvm_filter_player.var:sltm_lvm_hf_tok_patient = flag:neg has_trait = patient }
+        AND = { scope:sltm_lvm_filter_player.var:sltm_lvm_hf_tok_impatient = flag:neg has_trait = impatient }
+        AND = { scope:sltm_lvm_filter_player.var:sltm_lvm_hf_tok_diligent = flag:neg has_trait = diligent }
+        AND = { scope:sltm_lvm_filter_player.var:sltm_lvm_hf_tok_lazy = flag:neg has_trait = lazy }
+        AND = { scope:sltm_lvm_filter_player.var:sltm_lvm_hf_tok_honest = flag:neg has_trait = honest }
+        AND = { scope:sltm_lvm_filter_player.var:sltm_lvm_hf_tok_deceitful = flag:neg has_trait = deceitful }
+    } }
+}
+sltm_lvm_v36_has_commander_pos_trigger = {
+    scope:sltm_lvm_filter_player = { OR = {
+        var:sltm_lvm_hf_tok_logistician = flag:pos
+        var:sltm_lvm_hf_tok_military_engineer = flag:pos
+        var:sltm_lvm_hf_tok_aggressive_attacker = flag:pos
+        var:sltm_lvm_hf_tok_unyielding_defender = flag:pos
+        var:sltm_lvm_hf_tok_forder = flag:pos
+        var:sltm_lvm_hf_tok_flexible_leader = flag:pos
+        var:sltm_lvm_hf_tok_desert_warrior = flag:pos
+        var:sltm_lvm_hf_tok_jungle_stalker = flag:pos
+        var:sltm_lvm_hf_tok_reaver = flag:pos
+        var:sltm_lvm_hf_tok_reckless = flag:pos
+        var:sltm_lvm_hf_tok_holy_warrior = flag:pos
+        var:sltm_lvm_hf_tok_open_terrain_expert = flag:pos
+        var:sltm_lvm_hf_tok_rough_terrain_expert = flag:pos
+        var:sltm_lvm_hf_tok_forest_fighter = flag:pos
+        var:sltm_lvm_hf_tok_cautious_leader = flag:pos
+        var:sltm_lvm_hf_tok_organizer = flag:pos
+        var:sltm_lvm_hf_tok_winter_soldier = flag:pos
+    } }
+}
+sltm_lvm_v36_matches_commander_traits_trigger = {
+    trigger_if = {
+        limit = { NOT = { sltm_lvm_v36_has_commander_pos_trigger = yes } }
+        always = yes
+    }
+    trigger_else = {
+        OR = {
+            AND = { scope:sltm_lvm_filter_player.var:sltm_lvm_hf_tok_logistician = flag:pos has_trait = logistician }
+            AND = { scope:sltm_lvm_filter_player.var:sltm_lvm_hf_tok_military_engineer = flag:pos has_trait = military_engineer }
+            AND = { scope:sltm_lvm_filter_player.var:sltm_lvm_hf_tok_aggressive_attacker = flag:pos has_trait = aggressive_attacker }
+            AND = { scope:sltm_lvm_filter_player.var:sltm_lvm_hf_tok_unyielding_defender = flag:pos has_trait = unyielding_defender }
+            AND = { scope:sltm_lvm_filter_player.var:sltm_lvm_hf_tok_forder = flag:pos has_trait = forder }
+            AND = { scope:sltm_lvm_filter_player.var:sltm_lvm_hf_tok_flexible_leader = flag:pos has_trait = flexible_leader }
+            AND = { scope:sltm_lvm_filter_player.var:sltm_lvm_hf_tok_desert_warrior = flag:pos has_trait = desert_warrior }
+            AND = { scope:sltm_lvm_filter_player.var:sltm_lvm_hf_tok_jungle_stalker = flag:pos has_trait = jungle_stalker }
+            AND = { scope:sltm_lvm_filter_player.var:sltm_lvm_hf_tok_reaver = flag:pos has_trait = reaver }
+            AND = { scope:sltm_lvm_filter_player.var:sltm_lvm_hf_tok_reckless = flag:pos has_trait = reckless }
+            AND = { scope:sltm_lvm_filter_player.var:sltm_lvm_hf_tok_holy_warrior = flag:pos has_trait = holy_warrior }
+            AND = { scope:sltm_lvm_filter_player.var:sltm_lvm_hf_tok_open_terrain_expert = flag:pos has_trait = open_terrain_expert }
+            AND = { scope:sltm_lvm_filter_player.var:sltm_lvm_hf_tok_rough_terrain_expert = flag:pos has_trait = rough_terrain_expert }
+            AND = { scope:sltm_lvm_filter_player.var:sltm_lvm_hf_tok_forest_fighter = flag:pos has_trait = forest_fighter }
+            AND = { scope:sltm_lvm_filter_player.var:sltm_lvm_hf_tok_cautious_leader = flag:pos has_trait = cautious_leader }
+            AND = { scope:sltm_lvm_filter_player.var:sltm_lvm_hf_tok_organizer = flag:pos has_trait = organizer }
+            AND = { scope:sltm_lvm_filter_player.var:sltm_lvm_hf_tok_winter_soldier = flag:pos has_trait = winter_soldier }
+        }
+    }
+    NOT = { OR = {
+        AND = { scope:sltm_lvm_filter_player.var:sltm_lvm_hf_tok_logistician = flag:neg has_trait = logistician }
+        AND = { scope:sltm_lvm_filter_player.var:sltm_lvm_hf_tok_military_engineer = flag:neg has_trait = military_engineer }
+        AND = { scope:sltm_lvm_filter_player.var:sltm_lvm_hf_tok_aggressive_attacker = flag:neg has_trait = aggressive_attacker }
+        AND = { scope:sltm_lvm_filter_player.var:sltm_lvm_hf_tok_unyielding_defender = flag:neg has_trait = unyielding_defender }
+        AND = { scope:sltm_lvm_filter_player.var:sltm_lvm_hf_tok_forder = flag:neg has_trait = forder }
+        AND = { scope:sltm_lvm_filter_player.var:sltm_lvm_hf_tok_flexible_leader = flag:neg has_trait = flexible_leader }
+        AND = { scope:sltm_lvm_filter_player.var:sltm_lvm_hf_tok_desert_warrior = flag:neg has_trait = desert_warrior }
+        AND = { scope:sltm_lvm_filter_player.var:sltm_lvm_hf_tok_jungle_stalker = flag:neg has_trait = jungle_stalker }
+        AND = { scope:sltm_lvm_filter_player.var:sltm_lvm_hf_tok_reaver = flag:neg has_trait = reaver }
+        AND = { scope:sltm_lvm_filter_player.var:sltm_lvm_hf_tok_reckless = flag:neg has_trait = reckless }
+        AND = { scope:sltm_lvm_filter_player.var:sltm_lvm_hf_tok_holy_warrior = flag:neg has_trait = holy_warrior }
+        AND = { scope:sltm_lvm_filter_player.var:sltm_lvm_hf_tok_open_terrain_expert = flag:neg has_trait = open_terrain_expert }
+        AND = { scope:sltm_lvm_filter_player.var:sltm_lvm_hf_tok_rough_terrain_expert = flag:neg has_trait = rough_terrain_expert }
+        AND = { scope:sltm_lvm_filter_player.var:sltm_lvm_hf_tok_forest_fighter = flag:neg has_trait = forest_fighter }
+        AND = { scope:sltm_lvm_filter_player.var:sltm_lvm_hf_tok_cautious_leader = flag:neg has_trait = cautious_leader }
+        AND = { scope:sltm_lvm_filter_player.var:sltm_lvm_hf_tok_organizer = flag:neg has_trait = organizer }
+        AND = { scope:sltm_lvm_filter_player.var:sltm_lvm_hf_tok_winter_soldier = flag:neg has_trait = winter_soldier }
+    } }
+}
+sltm_lvm_v36_has_lifestyle_pos_trigger = {
+    scope:sltm_lvm_filter_player = { OR = {
+        var:sltm_lvm_hf_tok_lifestyle_physician = flag:pos
+        var:sltm_lvm_hf_tok_lifestyle_mystic = flag:pos
+        var:sltm_lvm_hf_tok_governor = flag:pos
+        var:sltm_lvm_hf_tok_lifestyle_hunter = flag:pos
+        var:sltm_lvm_hf_tok_tourney_participant = flag:pos
+        var:sltm_lvm_hf_tok_lifestyle_blademaster = flag:pos
+        var:sltm_lvm_hf_tok_lifestyle_reveler = flag:pos
+        var:sltm_lvm_hf_tok_lifestyle_traveler = flag:pos
+        var:sltm_lvm_hf_tok_lifestyle_herbalist = flag:pos
+        var:sltm_lvm_hf_tok_diplomat = flag:pos
+        var:sltm_lvm_hf_tok_family_first = flag:pos
+        var:sltm_lvm_hf_tok_august = flag:pos
+        var:sltm_lvm_hf_tok_strategist = flag:pos
+        var:sltm_lvm_hf_tok_overseer = flag:pos
+        var:sltm_lvm_hf_tok_gallant = flag:pos
+        var:sltm_lvm_hf_tok_architect = flag:pos
+        var:sltm_lvm_hf_tok_administrator = flag:pos
+        var:sltm_lvm_hf_tok_avaricious = flag:pos
+        var:sltm_lvm_hf_tok_schemer = flag:pos
+        var:sltm_lvm_hf_tok_seducer = flag:pos
+        var:sltm_lvm_hf_tok_torturer = flag:pos
+        var:sltm_lvm_hf_tok_whole_of_body = flag:pos
+        var:sltm_lvm_hf_tok_scholar = flag:pos
+        var:sltm_lvm_hf_tok_theologian = flag:pos
+        var:sltm_lvm_hf_tok_lifestyle_voyager = flag:pos
+        var:sltm_lvm_hf_tok_lifestyle_wayfarer = flag:pos
+        var:sltm_lvm_hf_tok_lifestyle_surveyor = flag:pos
+    } }
+}
+sltm_lvm_v36_matches_lifestyle_traits_trigger = {
+    trigger_if = {
+        limit = { NOT = { sltm_lvm_v36_has_lifestyle_pos_trigger = yes } }
+        always = yes
+    }
+    trigger_else = {
+        OR = {
+            AND = { scope:sltm_lvm_filter_player.var:sltm_lvm_hf_tok_lifestyle_physician = flag:pos has_trait = lifestyle_physician }
+            AND = { scope:sltm_lvm_filter_player.var:sltm_lvm_hf_tok_lifestyle_mystic = flag:pos has_trait = lifestyle_mystic }
+            AND = { scope:sltm_lvm_filter_player.var:sltm_lvm_hf_tok_governor = flag:pos has_trait = governor }
+            AND = { scope:sltm_lvm_filter_player.var:sltm_lvm_hf_tok_lifestyle_hunter = flag:pos has_trait = lifestyle_hunter }
+            AND = { scope:sltm_lvm_filter_player.var:sltm_lvm_hf_tok_tourney_participant = flag:pos has_trait = tourney_participant }
+            AND = { scope:sltm_lvm_filter_player.var:sltm_lvm_hf_tok_lifestyle_blademaster = flag:pos has_trait = lifestyle_blademaster }
+            AND = { scope:sltm_lvm_filter_player.var:sltm_lvm_hf_tok_lifestyle_reveler = flag:pos has_trait = lifestyle_reveler }
+            AND = { scope:sltm_lvm_filter_player.var:sltm_lvm_hf_tok_lifestyle_traveler = flag:pos has_trait = lifestyle_traveler }
+            AND = { scope:sltm_lvm_filter_player.var:sltm_lvm_hf_tok_lifestyle_herbalist = flag:pos has_trait = lifestyle_herbalist }
+            AND = { scope:sltm_lvm_filter_player.var:sltm_lvm_hf_tok_diplomat = flag:pos has_trait = diplomat }
+            AND = { scope:sltm_lvm_filter_player.var:sltm_lvm_hf_tok_family_first = flag:pos has_trait = family_first }
+            AND = { scope:sltm_lvm_filter_player.var:sltm_lvm_hf_tok_august = flag:pos has_trait = august }
+            AND = { scope:sltm_lvm_filter_player.var:sltm_lvm_hf_tok_strategist = flag:pos has_trait = strategist }
+            AND = { scope:sltm_lvm_filter_player.var:sltm_lvm_hf_tok_overseer = flag:pos has_trait = overseer }
+            AND = { scope:sltm_lvm_filter_player.var:sltm_lvm_hf_tok_gallant = flag:pos has_trait = gallant }
+            AND = { scope:sltm_lvm_filter_player.var:sltm_lvm_hf_tok_architect = flag:pos has_trait = architect }
+            AND = { scope:sltm_lvm_filter_player.var:sltm_lvm_hf_tok_administrator = flag:pos has_trait = administrator }
+            AND = { scope:sltm_lvm_filter_player.var:sltm_lvm_hf_tok_avaricious = flag:pos has_trait = avaricious }
+            AND = { scope:sltm_lvm_filter_player.var:sltm_lvm_hf_tok_schemer = flag:pos has_trait = schemer }
+            AND = { scope:sltm_lvm_filter_player.var:sltm_lvm_hf_tok_seducer = flag:pos has_trait = seducer }
+            AND = { scope:sltm_lvm_filter_player.var:sltm_lvm_hf_tok_torturer = flag:pos has_trait = torturer }
+            AND = { scope:sltm_lvm_filter_player.var:sltm_lvm_hf_tok_whole_of_body = flag:pos has_trait = whole_of_body }
+            AND = { scope:sltm_lvm_filter_player.var:sltm_lvm_hf_tok_scholar = flag:pos has_trait = erudite }
+            AND = { scope:sltm_lvm_filter_player.var:sltm_lvm_hf_tok_theologian = flag:pos has_trait = theologian }
+            AND = { scope:sltm_lvm_filter_player.var:sltm_lvm_hf_tok_lifestyle_voyager = flag:pos has_trait = lifestyle_voyager }
+            AND = { scope:sltm_lvm_filter_player.var:sltm_lvm_hf_tok_lifestyle_wayfarer = flag:pos has_trait = lifestyle_wayfarer }
+            AND = { scope:sltm_lvm_filter_player.var:sltm_lvm_hf_tok_lifestyle_surveyor = flag:pos has_trait = lifestyle_surveyor }
+        }
+    }
+    NOT = { OR = {
+        AND = { scope:sltm_lvm_filter_player.var:sltm_lvm_hf_tok_lifestyle_physician = flag:neg has_trait = lifestyle_physician }
+        AND = { scope:sltm_lvm_filter_player.var:sltm_lvm_hf_tok_lifestyle_mystic = flag:neg has_trait = lifestyle_mystic }
+        AND = { scope:sltm_lvm_filter_player.var:sltm_lvm_hf_tok_governor = flag:neg has_trait = governor }
+        AND = { scope:sltm_lvm_filter_player.var:sltm_lvm_hf_tok_lifestyle_hunter = flag:neg has_trait = lifestyle_hunter }
+        AND = { scope:sltm_lvm_filter_player.var:sltm_lvm_hf_tok_tourney_participant = flag:neg has_trait = tourney_participant }
+        AND = { scope:sltm_lvm_filter_player.var:sltm_lvm_hf_tok_lifestyle_blademaster = flag:neg has_trait = lifestyle_blademaster }
+        AND = { scope:sltm_lvm_filter_player.var:sltm_lvm_hf_tok_lifestyle_reveler = flag:neg has_trait = lifestyle_reveler }
+        AND = { scope:sltm_lvm_filter_player.var:sltm_lvm_hf_tok_lifestyle_traveler = flag:neg has_trait = lifestyle_traveler }
+        AND = { scope:sltm_lvm_filter_player.var:sltm_lvm_hf_tok_lifestyle_herbalist = flag:neg has_trait = lifestyle_herbalist }
+        AND = { scope:sltm_lvm_filter_player.var:sltm_lvm_hf_tok_diplomat = flag:neg has_trait = diplomat }
+        AND = { scope:sltm_lvm_filter_player.var:sltm_lvm_hf_tok_family_first = flag:neg has_trait = family_first }
+        AND = { scope:sltm_lvm_filter_player.var:sltm_lvm_hf_tok_august = flag:neg has_trait = august }
+        AND = { scope:sltm_lvm_filter_player.var:sltm_lvm_hf_tok_strategist = flag:neg has_trait = strategist }
+        AND = { scope:sltm_lvm_filter_player.var:sltm_lvm_hf_tok_overseer = flag:neg has_trait = overseer }
+        AND = { scope:sltm_lvm_filter_player.var:sltm_lvm_hf_tok_gallant = flag:neg has_trait = gallant }
+        AND = { scope:sltm_lvm_filter_player.var:sltm_lvm_hf_tok_architect = flag:neg has_trait = architect }
+        AND = { scope:sltm_lvm_filter_player.var:sltm_lvm_hf_tok_administrator = flag:neg has_trait = administrator }
+        AND = { scope:sltm_lvm_filter_player.var:sltm_lvm_hf_tok_avaricious = flag:neg has_trait = avaricious }
+        AND = { scope:sltm_lvm_filter_player.var:sltm_lvm_hf_tok_schemer = flag:neg has_trait = schemer }
+        AND = { scope:sltm_lvm_filter_player.var:sltm_lvm_hf_tok_seducer = flag:neg has_trait = seducer }
+        AND = { scope:sltm_lvm_filter_player.var:sltm_lvm_hf_tok_torturer = flag:neg has_trait = torturer }
+        AND = { scope:sltm_lvm_filter_player.var:sltm_lvm_hf_tok_whole_of_body = flag:neg has_trait = whole_of_body }
+        AND = { scope:sltm_lvm_filter_player.var:sltm_lvm_hf_tok_scholar = flag:neg has_trait = erudite }
+        AND = { scope:sltm_lvm_filter_player.var:sltm_lvm_hf_tok_theologian = flag:neg has_trait = theologian }
+        AND = { scope:sltm_lvm_filter_player.var:sltm_lvm_hf_tok_lifestyle_voyager = flag:neg has_trait = lifestyle_voyager }
+        AND = { scope:sltm_lvm_filter_player.var:sltm_lvm_hf_tok_lifestyle_wayfarer = flag:neg has_trait = lifestyle_wayfarer }
+        AND = { scope:sltm_lvm_filter_player.var:sltm_lvm_hf_tok_lifestyle_surveyor = flag:neg has_trait = lifestyle_surveyor }
+    } }
+}
+sltm_lvm_v36_matches_all_trait_filters_trigger = {
+    sltm_lvm_v36_matches_base_traits_trigger = yes
+    sltm_lvm_v36_matches_commander_traits_trigger = yes
+    sltm_lvm_v36_matches_lifestyle_traits_trigger = yes
+}

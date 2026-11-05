@@ -1,0 +1,676 @@
+﻿# 无地封臣筛选状态合法值校验（V2.8）
+# 只负责把缺失或非法旗标恢复到安全默认值；不重算列表，不修改窗口状态。
+
+sltm_lvm_sanitize_holder_identity_filters_effect = {
+    if = {
+        limit = { NOT = { has_variable = sltm_lvm_hf_relation } }
+        set_variable = { name = sltm_lvm_hf_relation value = flag:all }
+    }
+    else_if = {
+        limit = {
+            NOT = {
+                OR = {
+                    var:sltm_lvm_hf_relation = flag:all
+                    var:sltm_lvm_hf_relation = flag:self
+                    var:sltm_lvm_hf_relation = flag:direct_vassal
+                    var:sltm_lvm_hf_relation = flag:all_vassals
+                    var:sltm_lvm_hf_relation = flag:courtier
+                    var:sltm_lvm_hf_relation = flag:close_family
+                }
+            }
+        }
+        set_variable = { name = sltm_lvm_hf_relation value = flag:all }
+    }
+    if = {
+        limit = { NOT = { has_variable = sltm_lvm_hf_gender } }
+        set_variable = { name = sltm_lvm_hf_gender value = flag:all }
+    }
+    else_if = {
+        limit = {
+            NOT = {
+                OR = {
+                    var:sltm_lvm_hf_gender = flag:all
+                    var:sltm_lvm_hf_gender = flag:male
+                    var:sltm_lvm_hf_gender = flag:female
+                }
+            }
+        }
+        set_variable = { name = sltm_lvm_hf_gender value = flag:all }
+    }
+    if = {
+        limit = { NOT = { has_variable = sltm_lvm_hf_adult } }
+        set_variable = { name = sltm_lvm_hf_adult value = flag:all }
+    }
+    else_if = {
+        limit = {
+            NOT = {
+                OR = {
+                    var:sltm_lvm_hf_adult = flag:all
+                    var:sltm_lvm_hf_adult = flag:adult
+                    var:sltm_lvm_hf_adult = flag:child
+                }
+            }
+        }
+        set_variable = { name = sltm_lvm_hf_adult value = flag:all }
+    }
+    if = {
+        limit = { NOT = { has_variable = sltm_lvm_hf_age_band } }
+        set_variable = { name = sltm_lvm_hf_age_band value = flag:all }
+    }
+    else_if = {
+        limit = {
+            NOT = {
+                OR = {
+                    var:sltm_lvm_hf_age_band = flag:all
+                    var:sltm_lvm_hf_age_band = flag:age_0_15
+                    var:sltm_lvm_hf_age_band = flag:age_16_29
+                    var:sltm_lvm_hf_age_band = flag:age_30_49
+                    var:sltm_lvm_hf_age_band = flag:age_50_64
+                    var:sltm_lvm_hf_age_band = flag:age_65_plus
+                }
+            }
+        }
+        set_variable = { name = sltm_lvm_hf_age_band value = flag:all }
+    }
+    if = {
+        limit = { NOT = { has_variable = sltm_lvm_hf_imprisoned } }
+        set_variable = { name = sltm_lvm_hf_imprisoned value = flag:all }
+    }
+    else_if = {
+        limit = {
+            NOT = {
+                OR = {
+                    var:sltm_lvm_hf_imprisoned = flag:all
+                    var:sltm_lvm_hf_imprisoned = flag:free
+                    var:sltm_lvm_hf_imprisoned = flag:imprisoned
+                }
+            }
+        }
+        set_variable = { name = sltm_lvm_hf_imprisoned value = flag:all }
+    }
+    if = {
+        limit = { NOT = { has_variable = sltm_lvm_hf_government } }
+        set_variable = { name = sltm_lvm_hf_government value = flag:all }
+    }
+    else_if = {
+        limit = {
+            NOT = {
+                OR = {
+                    var:sltm_lvm_hf_government = flag:all
+                    var:sltm_lvm_hf_government = flag:clan
+                    var:sltm_lvm_hf_government = flag:feudal
+                    var:sltm_lvm_hf_government = flag:administrative
+                    var:sltm_lvm_hf_government = flag:theocratic
+                    var:sltm_lvm_hf_government = flag:tribal
+                    var:sltm_lvm_hf_government = flag:merchant_republic
+                }
+            }
+        }
+        set_variable = { name = sltm_lvm_hf_government value = flag:all }
+    }
+}
+
+sltm_lvm_sanitize_holder_count_filters_effect = {
+    if = {
+        limit = { NOT = { has_variable = sltm_lvm_hf_managed_count } }
+        set_variable = { name = sltm_lvm_hf_managed_count value = flag:all }
+    }
+    else_if = {
+        limit = {
+            NOT = {
+                OR = {
+                    var:sltm_lvm_hf_managed_count = flag:all
+                    var:sltm_lvm_hf_managed_count = flag:one
+                    var:sltm_lvm_hf_managed_count = flag:two_three
+                    var:sltm_lvm_hf_managed_count = flag:four_plus
+                }
+            }
+        }
+        set_variable = { name = sltm_lvm_hf_managed_count value = flag:all }
+    }
+    if = {
+        limit = { NOT = { has_variable = sltm_lvm_hf_pending_count } }
+        set_variable = { name = sltm_lvm_hf_pending_count value = flag:all }
+    }
+    else_if = {
+        limit = {
+            NOT = {
+                OR = {
+                    var:sltm_lvm_hf_pending_count = flag:all
+                    var:sltm_lvm_hf_pending_count = flag:zero
+                    var:sltm_lvm_hf_pending_count = flag:one_plus
+                    var:sltm_lvm_hf_pending_count = flag:two_plus
+                }
+            }
+        }
+        set_variable = { name = sltm_lvm_hf_pending_count value = flag:all }
+    }
+    if = {
+        limit = { NOT = { has_variable = sltm_lvm_hf_blocked_count } }
+        set_variable = { name = sltm_lvm_hf_blocked_count value = flag:all }
+    }
+    else_if = {
+        limit = {
+            NOT = {
+                OR = {
+                    var:sltm_lvm_hf_blocked_count = flag:all
+                    var:sltm_lvm_hf_blocked_count = flag:zero
+                    var:sltm_lvm_hf_blocked_count = flag:one_plus
+                    var:sltm_lvm_hf_blocked_count = flag:two_plus
+                }
+            }
+        }
+        set_variable = { name = sltm_lvm_hf_blocked_count value = flag:all }
+    }
+    if = {
+        limit = { NOT = { has_variable = sltm_lvm_hf_junfu_count } }
+        set_variable = { name = sltm_lvm_hf_junfu_count value = flag:all }
+    }
+    else_if = {
+        limit = {
+            NOT = {
+                OR = {
+                    var:sltm_lvm_hf_junfu_count = flag:all
+                    var:sltm_lvm_hf_junfu_count = flag:zero
+                    var:sltm_lvm_hf_junfu_count = flag:one
+                    var:sltm_lvm_hf_junfu_count = flag:two_plus
+                }
+            }
+        }
+        set_variable = { name = sltm_lvm_hf_junfu_count value = flag:all }
+    }
+    if = {
+        limit = { NOT = { has_variable = sltm_lvm_hf_noble_count } }
+        set_variable = { name = sltm_lvm_hf_noble_count value = flag:all }
+    }
+    else_if = {
+        limit = {
+            NOT = {
+                OR = {
+                    var:sltm_lvm_hf_noble_count = flag:all
+                    var:sltm_lvm_hf_noble_count = flag:zero
+                    var:sltm_lvm_hf_noble_count = flag:one
+                    var:sltm_lvm_hf_noble_count = flag:two_plus
+                }
+            }
+        }
+        set_variable = { name = sltm_lvm_hf_noble_count value = flag:all }
+    }
+    if = {
+        limit = { NOT = { has_variable = sltm_lvm_hf_holy_order_count } }
+        set_variable = { name = sltm_lvm_hf_holy_order_count value = flag:all }
+    }
+    else_if = {
+        limit = {
+            NOT = {
+                OR = {
+                    var:sltm_lvm_hf_holy_order_count = flag:all
+                    var:sltm_lvm_hf_holy_order_count = flag:zero
+                    var:sltm_lvm_hf_holy_order_count = flag:one
+                    var:sltm_lvm_hf_holy_order_count = flag:two_plus
+                }
+            }
+        }
+        set_variable = { name = sltm_lvm_hf_holy_order_count value = flag:all }
+    }
+    if = {
+        limit = { NOT = { has_variable = sltm_lvm_hf_mercenary_count } }
+        set_variable = { name = sltm_lvm_hf_mercenary_count value = flag:all }
+    }
+    else_if = {
+        limit = {
+            NOT = {
+                OR = {
+                    var:sltm_lvm_hf_mercenary_count = flag:all
+                    var:sltm_lvm_hf_mercenary_count = flag:zero
+                    var:sltm_lvm_hf_mercenary_count = flag:one
+                    var:sltm_lvm_hf_mercenary_count = flag:two_plus
+                }
+            }
+        }
+        set_variable = { name = sltm_lvm_hf_mercenary_count value = flag:all }
+    }
+    if = {
+        limit = { NOT = { has_variable = sltm_lvm_hf_other_count } }
+        set_variable = { name = sltm_lvm_hf_other_count value = flag:all }
+    }
+    else_if = {
+        limit = {
+            NOT = {
+                OR = {
+                    var:sltm_lvm_hf_other_count = flag:all
+                    var:sltm_lvm_hf_other_count = flag:zero
+                    var:sltm_lvm_hf_other_count = flag:one
+                    var:sltm_lvm_hf_other_count = flag:two_plus
+                }
+            }
+        }
+        set_variable = { name = sltm_lvm_hf_other_count value = flag:all }
+    }
+}
+
+sltm_lvm_sanitize_holder_skill_filters_effect = {
+    if = {
+        limit = { NOT = { has_variable = sltm_lvm_hf_diplomacy_band } }
+        set_variable = { name = sltm_lvm_hf_diplomacy_band value = flag:all }
+    }
+    else_if = {
+        limit = {
+            NOT = {
+                OR = {
+                    var:sltm_lvm_hf_diplomacy_band = flag:all
+                    var:sltm_lvm_hf_diplomacy_band = flag:8
+                    var:sltm_lvm_hf_diplomacy_band = flag:12
+                    var:sltm_lvm_hf_diplomacy_band = flag:16
+                    var:sltm_lvm_hf_diplomacy_band = flag:20
+                }
+            }
+        }
+        set_variable = { name = sltm_lvm_hf_diplomacy_band value = flag:all }
+    }
+    if = {
+        limit = { NOT = { has_variable = sltm_lvm_hf_martial_band } }
+        set_variable = { name = sltm_lvm_hf_martial_band value = flag:all }
+    }
+    else_if = {
+        limit = {
+            NOT = {
+                OR = {
+                    var:sltm_lvm_hf_martial_band = flag:all
+                    var:sltm_lvm_hf_martial_band = flag:8
+                    var:sltm_lvm_hf_martial_band = flag:12
+                    var:sltm_lvm_hf_martial_band = flag:16
+                    var:sltm_lvm_hf_martial_band = flag:20
+                }
+            }
+        }
+        set_variable = { name = sltm_lvm_hf_martial_band value = flag:all }
+    }
+    if = {
+        limit = { NOT = { has_variable = sltm_lvm_hf_stewardship_band } }
+        set_variable = { name = sltm_lvm_hf_stewardship_band value = flag:all }
+    }
+    else_if = {
+        limit = {
+            NOT = {
+                OR = {
+                    var:sltm_lvm_hf_stewardship_band = flag:all
+                    var:sltm_lvm_hf_stewardship_band = flag:8
+                    var:sltm_lvm_hf_stewardship_band = flag:12
+                    var:sltm_lvm_hf_stewardship_band = flag:16
+                    var:sltm_lvm_hf_stewardship_band = flag:20
+                }
+            }
+        }
+        set_variable = { name = sltm_lvm_hf_stewardship_band value = flag:all }
+    }
+    if = {
+        limit = { NOT = { has_variable = sltm_lvm_hf_intrigue_band } }
+        set_variable = { name = sltm_lvm_hf_intrigue_band value = flag:all }
+    }
+    else_if = {
+        limit = {
+            NOT = {
+                OR = {
+                    var:sltm_lvm_hf_intrigue_band = flag:all
+                    var:sltm_lvm_hf_intrigue_band = flag:8
+                    var:sltm_lvm_hf_intrigue_band = flag:12
+                    var:sltm_lvm_hf_intrigue_band = flag:16
+                    var:sltm_lvm_hf_intrigue_band = flag:20
+                }
+            }
+        }
+        set_variable = { name = sltm_lvm_hf_intrigue_band value = flag:all }
+    }
+    if = {
+        limit = { NOT = { has_variable = sltm_lvm_hf_learning_band } }
+        set_variable = { name = sltm_lvm_hf_learning_band value = flag:all }
+    }
+    else_if = {
+        limit = {
+            NOT = {
+                OR = {
+                    var:sltm_lvm_hf_learning_band = flag:all
+                    var:sltm_lvm_hf_learning_band = flag:8
+                    var:sltm_lvm_hf_learning_band = flag:12
+                    var:sltm_lvm_hf_learning_band = flag:16
+                    var:sltm_lvm_hf_learning_band = flag:20
+                }
+            }
+        }
+        set_variable = { name = sltm_lvm_hf_learning_band value = flag:all }
+    }
+    if = {
+        limit = { NOT = { has_variable = sltm_lvm_hf_prowess_band } }
+        set_variable = { name = sltm_lvm_hf_prowess_band value = flag:all }
+    }
+    else_if = {
+        limit = {
+            NOT = {
+                OR = {
+                    var:sltm_lvm_hf_prowess_band = flag:all
+                    var:sltm_lvm_hf_prowess_band = flag:8
+                    var:sltm_lvm_hf_prowess_band = flag:12
+                    var:sltm_lvm_hf_prowess_band = flag:16
+                    var:sltm_lvm_hf_prowess_band = flag:20
+                }
+            }
+        }
+        set_variable = { name = sltm_lvm_hf_prowess_band value = flag:all }
+    }
+}
+
+sltm_lvm_sanitize_holder_relation_filters_effect = {
+    if = {
+        limit = { NOT = { has_variable = sltm_lvm_hf_ruler } }
+        set_variable = { name = sltm_lvm_hf_ruler value = flag:all }
+    }
+    else_if = {
+        limit = {
+            NOT = {
+                OR = {
+                    var:sltm_lvm_hf_ruler = flag:all
+                    var:sltm_lvm_hf_ruler = flag:ruler
+                    var:sltm_lvm_hf_ruler = flag:non_ruler
+                    var:sltm_lvm_hf_ruler = flag:landed
+                    var:sltm_lvm_hf_ruler = flag:landless
+                }
+            }
+        }
+        set_variable = { name = sltm_lvm_hf_ruler value = flag:all }
+    }
+    if = {
+        limit = { NOT = { has_variable = sltm_lvm_hf_marriage } }
+        set_variable = { name = sltm_lvm_hf_marriage value = flag:all }
+    }
+    else_if = {
+        limit = {
+            NOT = {
+                OR = {
+                    var:sltm_lvm_hf_marriage = flag:all
+                    var:sltm_lvm_hf_marriage = flag:married
+                    var:sltm_lvm_hf_marriage = flag:unmarried
+                    var:sltm_lvm_hf_marriage = flag:betrothed
+                    var:sltm_lvm_hf_marriage = flag:concubine
+                }
+            }
+        }
+        set_variable = { name = sltm_lvm_hf_marriage value = flag:all }
+    }
+    if = {
+        limit = { NOT = { has_variable = sltm_lvm_hf_sexuality } }
+        set_variable = { name = sltm_lvm_hf_sexuality value = flag:all }
+    }
+    else_if = {
+        limit = {
+            NOT = {
+                OR = {
+                    var:sltm_lvm_hf_sexuality = flag:all
+                    var:sltm_lvm_hf_sexuality = flag:heterosexual
+                    var:sltm_lvm_hf_sexuality = flag:homosexual
+                    var:sltm_lvm_hf_sexuality = flag:bisexual
+                    var:sltm_lvm_hf_sexuality = flag:asexual
+                }
+            }
+        }
+        set_variable = { name = sltm_lvm_hf_sexuality value = flag:all }
+    }
+    if = {
+        limit = { NOT = { has_variable = sltm_lvm_hf_hook } }
+        set_variable = { name = sltm_lvm_hf_hook value = flag:all }
+    }
+    else_if = {
+        limit = {
+            NOT = {
+                OR = {
+                    var:sltm_lvm_hf_hook = flag:all
+                    var:sltm_lvm_hf_hook = flag:player_has_hook
+                    var:sltm_lvm_hf_hook = flag:player_has_no_hook
+                }
+            }
+        }
+        set_variable = { name = sltm_lvm_hf_hook value = flag:all }
+    }
+    if = {
+        limit = { NOT = { has_variable = sltm_lvm_hf_faith_relation } }
+        set_variable = { name = sltm_lvm_hf_faith_relation value = flag:all }
+    }
+    else_if = {
+        limit = {
+            NOT = {
+                OR = {
+                    var:sltm_lvm_hf_faith_relation = flag:all
+                    var:sltm_lvm_hf_faith_relation = flag:same_faith
+                    var:sltm_lvm_hf_faith_relation = flag:same_religion
+                    var:sltm_lvm_hf_faith_relation = flag:hostile_evil
+                }
+            }
+        }
+        set_variable = { name = sltm_lvm_hf_faith_relation value = flag:all }
+    }
+    if = {
+        limit = { NOT = { has_variable = sltm_lvm_hf_culture_relation } }
+        set_variable = { name = sltm_lvm_hf_culture_relation value = flag:all }
+    }
+    else_if = {
+        limit = {
+            NOT = {
+                OR = {
+                    var:sltm_lvm_hf_culture_relation = flag:all
+                    var:sltm_lvm_hf_culture_relation = flag:same_culture
+                    var:sltm_lvm_hf_culture_relation = flag:same_heritage
+                    var:sltm_lvm_hf_culture_relation = flag:other_heritage
+                }
+            }
+        }
+        set_variable = { name = sltm_lvm_hf_culture_relation value = flag:all }
+    }
+    if = {
+        limit = { NOT = { has_variable = sltm_lvm_hf_dynasty_relation } }
+        set_variable = { name = sltm_lvm_hf_dynasty_relation value = flag:all }
+    }
+    else_if = {
+        limit = {
+            NOT = {
+                OR = {
+                    var:sltm_lvm_hf_dynasty_relation = flag:all
+                    var:sltm_lvm_hf_dynasty_relation = flag:same_house
+                    var:sltm_lvm_hf_dynasty_relation = flag:same_dynasty
+                    var:sltm_lvm_hf_dynasty_relation = flag:other_dynasty
+                    var:sltm_lvm_hf_dynasty_relation = flag:lowborn
+                }
+            }
+        }
+        set_variable = { name = sltm_lvm_hf_dynasty_relation value = flag:all }
+    }
+    if = {
+        limit = { NOT = { has_variable = sltm_lvm_hf_vassal_stance } }
+        set_variable = { name = sltm_lvm_hf_vassal_stance value = flag:all }
+    }
+    else_if = {
+        limit = {
+            NOT = {
+                OR = {
+                    var:sltm_lvm_hf_vassal_stance = flag:all
+                    var:sltm_lvm_hf_vassal_stance = flag:loyal
+                    var:sltm_lvm_hf_vassal_stance = flag:dutiful
+                    var:sltm_lvm_hf_vassal_stance = flag:contentious
+                    var:sltm_lvm_hf_vassal_stance = flag:scheming
+                }
+            }
+        }
+        set_variable = { name = sltm_lvm_hf_vassal_stance value = flag:all }
+    }
+    if = {
+        limit = { NOT = { has_variable = sltm_lvm_hf_inspiration } }
+        set_variable = { name = sltm_lvm_hf_inspiration value = flag:all }
+    }
+    else_if = {
+        limit = {
+            NOT = {
+                OR = {
+                    var:sltm_lvm_hf_inspiration = flag:all
+                    var:sltm_lvm_hf_inspiration = flag:yes
+                    var:sltm_lvm_hf_inspiration = flag:no
+                }
+            }
+        }
+        set_variable = { name = sltm_lvm_hf_inspiration value = flag:all }
+    }
+    if = {
+        limit = { NOT = { has_variable = sltm_lvm_hf_artifact } }
+        set_variable = { name = sltm_lvm_hf_artifact value = flag:all }
+    }
+    else_if = {
+        limit = {
+            NOT = {
+                OR = {
+                    var:sltm_lvm_hf_artifact = flag:all
+                    var:sltm_lvm_hf_artifact = flag:yes
+                    var:sltm_lvm_hf_artifact = flag:no
+                }
+            }
+        }
+        set_variable = { name = sltm_lvm_hf_artifact value = flag:all }
+    }
+    if = {
+        limit = { NOT = { has_variable = sltm_lvm_hf_hostage } }
+        set_variable = { name = sltm_lvm_hf_hostage value = flag:all }
+    }
+    else_if = {
+        limit = {
+            NOT = {
+                OR = {
+                    var:sltm_lvm_hf_hostage = flag:all
+                    var:sltm_lvm_hf_hostage = flag:yes
+                    var:sltm_lvm_hf_hostage = flag:no
+                }
+            }
+        }
+        set_variable = { name = sltm_lvm_hf_hostage value = flag:all }
+    }
+    if = {
+        limit = { NOT = { has_variable = sltm_lvm_hf_pin } }
+        set_variable = { name = sltm_lvm_hf_pin value = flag:all }
+    }
+    else_if = {
+        limit = {
+            NOT = {
+                OR = {
+                    var:sltm_lvm_hf_pin = flag:all
+                    var:sltm_lvm_hf_pin = flag:yes
+                    var:sltm_lvm_hf_pin = flag:no
+                }
+            }
+        }
+        set_variable = { name = sltm_lvm_hf_pin value = flag:all }
+    }
+}
+
+sltm_lvm_sanitize_holder_token_filters_effect = {
+    if = {
+        limit = { NOT = { has_variable = sltm_lvm_hf_tok_brave } }
+        set_variable = { name = sltm_lvm_hf_tok_brave value = flag:none }
+    }
+    else_if = {
+        limit = {
+            NOT = {
+                OR = {
+                    var:sltm_lvm_hf_tok_brave = flag:none
+                    var:sltm_lvm_hf_tok_brave = flag:pos
+                    var:sltm_lvm_hf_tok_brave = flag:neg
+                }
+            }
+        }
+        set_variable = { name = sltm_lvm_hf_tok_brave value = flag:none }
+    }
+    if = {
+        limit = { NOT = { has_variable = sltm_lvm_hf_tok_cowardly } }
+        set_variable = { name = sltm_lvm_hf_tok_cowardly value = flag:none }
+    }
+    else_if = {
+        limit = {
+            NOT = {
+                OR = {
+                    var:sltm_lvm_hf_tok_cowardly = flag:none
+                    var:sltm_lvm_hf_tok_cowardly = flag:pos
+                    var:sltm_lvm_hf_tok_cowardly = flag:neg
+                }
+            }
+        }
+        set_variable = { name = sltm_lvm_hf_tok_cowardly value = flag:none }
+    }
+    if = {
+        limit = { NOT = { has_variable = sltm_lvm_hf_tok_martial_edu } }
+        set_variable = { name = sltm_lvm_hf_tok_martial_edu value = flag:none }
+    }
+    else_if = {
+        limit = {
+            NOT = {
+                OR = {
+                    var:sltm_lvm_hf_tok_martial_edu = flag:none
+                    var:sltm_lvm_hf_tok_martial_edu = flag:pos
+                    var:sltm_lvm_hf_tok_martial_edu = flag:neg
+                }
+            }
+        }
+        set_variable = { name = sltm_lvm_hf_tok_martial_edu value = flag:none }
+    }
+    if = {
+        limit = { NOT = { has_variable = sltm_lvm_hf_tok_steward_edu } }
+        set_variable = { name = sltm_lvm_hf_tok_steward_edu value = flag:none }
+    }
+    else_if = {
+        limit = {
+            NOT = {
+                OR = {
+                    var:sltm_lvm_hf_tok_steward_edu = flag:none
+                    var:sltm_lvm_hf_tok_steward_edu = flag:pos
+                    var:sltm_lvm_hf_tok_steward_edu = flag:neg
+                }
+            }
+        }
+        set_variable = { name = sltm_lvm_hf_tok_steward_edu value = flag:none }
+    }
+    if = {
+        limit = { NOT = { has_variable = sltm_lvm_hf_tok_good_genetic } }
+        set_variable = { name = sltm_lvm_hf_tok_good_genetic value = flag:none }
+    }
+    else_if = {
+        limit = {
+            NOT = {
+                OR = {
+                    var:sltm_lvm_hf_tok_good_genetic = flag:none
+                    var:sltm_lvm_hf_tok_good_genetic = flag:pos
+                    var:sltm_lvm_hf_tok_good_genetic = flag:neg
+                }
+            }
+        }
+        set_variable = { name = sltm_lvm_hf_tok_good_genetic value = flag:none }
+    }
+    if = {
+        limit = { NOT = { has_variable = sltm_lvm_hf_tok_bad_genetic } }
+        set_variable = { name = sltm_lvm_hf_tok_bad_genetic value = flag:none }
+    }
+    else_if = {
+        limit = {
+            NOT = {
+                OR = {
+                    var:sltm_lvm_hf_tok_bad_genetic = flag:none
+                    var:sltm_lvm_hf_tok_bad_genetic = flag:pos
+                    var:sltm_lvm_hf_tok_bad_genetic = flag:neg
+                }
+            }
+        }
+        set_variable = { name = sltm_lvm_hf_tok_bad_genetic value = flag:none }
+    }
+}
+
+sltm_lvm_sanitize_holder_filter_state_effect = {
+    sltm_lvm_sanitize_holder_identity_filters_effect = yes
+    sltm_lvm_sanitize_holder_count_filters_effect = yes
+    sltm_lvm_sanitize_holder_skill_filters_effect = yes
+    sltm_lvm_sanitize_holder_relation_filters_effect = yes
+    sltm_lvm_sanitize_holder_token_filters_effect = yes
+}
+

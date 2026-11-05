@@ -1,0 +1,156 @@
+﻿# 创建头衔
+texticon = {
+	icon = sltm_create_title_icon
+	iconsize = {
+		texture = "gfx/interface/icons/character_interactions/purchase_land_interaction.dds"
+		size = { 25 25 }
+		offset = { 0 6 }
+		fontsize = 16
+		uv ={ 0.05 0.05 1 1 }
+	}
+}
+
+# promote_culture
+texticon = {
+	icon = sltm_promote_culture_icon
+	iconsize = {
+		texture = "gfx/interface/icons/council_task_types/task_promote_culture.dds"
+		size = { 25 25 }
+		offset = { 0 6 }
+		fontsize = 16
+	}
+}
+# poi_capitals
+texticon = {
+	icon = sltm_poi_capitals_icon
+	iconsize = {
+		texture = "gfx/interface/icons/point_of_interest_types/poi_capitals.dds"
+		size = { 25 25 }
+		offset = { 0 6 }
+		fontsize = 16
+	}
+}
+# poi_special_buildings_wonder
+texticon = {
+	icon = sltm_poi_special_buildings_wonder_icon
+	iconsize = {
+		texture = "gfx/interface/icons/point_of_interest_types/poi_special_buildings_wonder.dds"
+		size = { 25 25 }
+		offset = { 0 6 }
+		fontsize = 16
+	}
+}
+# chronicler_court_position
+texticon = {
+	icon = sltm_chronicler_court_position_icon
+	iconsize = {
+		texture = "gfx/interface/icons/court_position_types/chronicler_court_position.dds"
+		size = { 25 25 }
+		offset = { 0 6 }
+		fontsize = 16
+	}
+}
+# de_jure_cb
+texticon = {
+	icon = sltm_de_jure_cb_icon
+	iconsize = {
+		texture = "gfx/interface/icons/casus_bellis/de_jure_cb.dds"
+		size = { 25 25 }
+		offset = { 0 6 }
+		fontsize = 16
+	}
+}
+# construct_economic_buildings
+texticon = {
+	icon = sltm_construct_economic_buildings_icon
+	iconsize = {
+		texture = "gfx/interface/icons/vassal_directives/construct_economic_buildings.dds"
+		size = { 25 25 }
+		offset = { 0 6 }
+		fontsize = 16
+	}
+}
+# construct_fortification_buildings
+texticon = {
+	icon = sltm_construct_fortification_buildings_icon
+	iconsize = {
+		texture = "gfx/interface/icons/vassal_directives/construct_fortification_buildings.dds"
+		size = { 25 25 }
+		offset = { 0 6 }
+		fontsize = 16
+	}
+}
+# sltm_onmap_holding_icon
+texticon = {
+	icon = sltm_onmap_holding_icon
+	iconsize = {
+		texture = "gfx/interface/icons/map_icons/onmap_holding_icon.dds"
+		size = { 25 25 }
+		offset = { 0 6 }
+		fontsize = 16
+	}
+}
+### 地产类型 ###
+texticon = {
+	icon = sltm_castle_holding_icon
+	iconsize = {
+		texture = "gfx/interface/icons/government_types/feudal_government.dds"
+		size = { 24 24 }
+		offset = { 0 6 }
+		fontsize = 16
+	}
+}
+texticon = {
+	icon = sltm_city_holding_icon
+	iconsize = {
+		texture = "gfx/interface/icons/government_types/republic_government.dds"
+		size = { 24 24 }
+		offset = { 0 6 }
+		fontsize = 16
+	}
+}
+texticon = {
+	icon = sltm_church_holding_icon
+	iconsize = {
+		texture = "gfx/interface/icons/government_types/theocracy_government.dds"
+		size = { 24 24 }
+		offset = { 0 6 }
+		fontsize = 16
+	}
+}
+texticon = {
+	icon = sltm_tribal_holding_icon
+	iconsize = {
+		texture = "gfx/interface/icons/government_types/tribal_government.dds"
+		size = { 24 24 }
+		offset = { 0 6 }
+		fontsize = 16
+	}
+}
+texticon = {
+	icon = sltm_nomad_holding_icon
+	iconsize = {
+		texture = "gfx/interface/icons/government_types/nomad_government.dds"
+		size = { 24 24 }
+		offset = { 0 6 }
+		fontsize = 16
+	}
+}
+texticon = {
+	icon = sltm_herder_holding_icon
+	iconsize = {
+		texture = "gfx/interface/icons/government_types/herder_government.dds"
+		size = { 24 24 }
+		offset = { 0 6 }
+		fontsize = 16
+	}
+}
+texticon = {
+	icon = sltm_temple_citadel_holding_icon
+	iconsize = {
+		texture = "gfx/interface/icons/government_types/mandala_government.dds"
+		size = { 24 24 }
+		offset = { 0 6 }
+		fontsize = 16
+	}
+}

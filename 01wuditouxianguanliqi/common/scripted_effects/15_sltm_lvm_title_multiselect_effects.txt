@@ -1,0 +1,307 @@
+﻿# 无地头衔管理器 V3.0：头衔多选筛选状态
+# 每个 _selected 变量存在即表示该选项被勾选；组内无任何变量表示“不限”。
+
+sltm_lvm_title_multiselect_toggle_effect = {
+    sltm_lvm_save_title_multiselect_undo_effect = yes
+    if = {
+        limit = { has_variable = $MARKER$ }
+        remove_variable = $MARKER$
+    }
+    else = {
+        set_variable = $MARKER$
+    }
+    sltm_lvm_update_title_multiselect_counts_effect = yes
+    sltm_lvm_recompute_title_view_effect = yes
+}
+
+sltm_lvm_title_multiselect_clear_type_effect = {
+    sltm_lvm_save_title_multiselect_undo_effect = yes
+    remove_variable = sltm_lvm_tf_type_junfu_selected
+    remove_variable = sltm_lvm_tf_type_chaochen_selected
+    remove_variable = sltm_lvm_tf_type_noble_selected
+    remove_variable = sltm_lvm_tf_type_holy_order_selected
+    remove_variable = sltm_lvm_tf_type_mercenary_selected
+    remove_variable = sltm_lvm_tf_type_religious_head_selected
+    remove_variable = sltm_lvm_tf_type_other_selected
+    sltm_lvm_update_title_multiselect_counts_effect = yes
+    sltm_lvm_recompute_title_view_effect = yes
+}
+
+sltm_lvm_title_multiselect_clear_creation_effect = {
+    sltm_lvm_save_title_multiselect_undo_effect = yes
+    remove_variable = sltm_lvm_tf_creation_created_selected
+    remove_variable = sltm_lvm_tf_creation_uncreated_selected
+    sltm_lvm_update_title_multiselect_counts_effect = yes
+    sltm_lvm_recompute_title_view_effect = yes
+}
+
+sltm_lvm_title_multiselect_clear_tier_effect = {
+    sltm_lvm_save_title_multiselect_undo_effect = yes
+    remove_variable = sltm_lvm_tf_tier_barony_selected
+    remove_variable = sltm_lvm_tf_tier_county_selected
+    remove_variable = sltm_lvm_tf_tier_duchy_selected
+    remove_variable = sltm_lvm_tf_tier_kingdom_selected
+    remove_variable = sltm_lvm_tf_tier_empire_selected
+    remove_variable = sltm_lvm_tf_tier_hegemony_selected
+    sltm_lvm_update_title_multiselect_counts_effect = yes
+    sltm_lvm_recompute_title_view_effect = yes
+}
+
+sltm_lvm_title_multiselect_clear_status_effect = {
+    sltm_lvm_save_title_multiselect_undo_effect = yes
+    remove_variable = sltm_lvm_tf_status_normal_selected
+    remove_variable = sltm_lvm_tf_status_pending_selected
+    remove_variable = sltm_lvm_tf_status_blocked_selected
+    sltm_lvm_update_title_multiselect_counts_effect = yes
+    sltm_lvm_recompute_title_view_effect = yes
+}
+
+sltm_lvm_title_multiselect_clear_role_effect = {
+    sltm_lvm_save_title_multiselect_undo_effect = yes
+    remove_variable = sltm_lvm_tf_role_primary_selected
+    remove_variable = sltm_lvm_tf_role_concurrent_selected
+    sltm_lvm_update_title_multiselect_counts_effect = yes
+    sltm_lvm_recompute_title_view_effect = yes
+}
+
+sltm_lvm_title_multiselect_clear_holder_effect = {
+    sltm_lvm_save_title_multiselect_undo_effect = yes
+    remove_variable = sltm_lvm_tf_holder_courtier_selected
+    sltm_lvm_update_title_multiselect_counts_effect = yes
+    sltm_lvm_recompute_title_view_effect = yes
+}
+
+sltm_lvm_update_title_multiselect_counts_effect = {
+    set_variable = { name = sltm_lvm_tf_type_selected_count value = 0 }
+    if = { limit = { has_variable = sltm_lvm_tf_type_junfu_selected } change_variable = { name = sltm_lvm_tf_type_selected_count add = 1 } }
+    if = { limit = { has_variable = sltm_lvm_tf_type_chaochen_selected } change_variable = { name = sltm_lvm_tf_type_selected_count add = 1 } }
+    if = { limit = { has_variable = sltm_lvm_tf_type_noble_selected } change_variable = { name = sltm_lvm_tf_type_selected_count add = 1 } }
+    if = { limit = { has_variable = sltm_lvm_tf_type_holy_order_selected } change_variable = { name = sltm_lvm_tf_type_selected_count add = 1 } }
+    if = { limit = { has_variable = sltm_lvm_tf_type_mercenary_selected } change_variable = { name = sltm_lvm_tf_type_selected_count add = 1 } }
+    if = { limit = { has_variable = sltm_lvm_tf_type_religious_head_selected } change_variable = { name = sltm_lvm_tf_type_selected_count add = 1 } }
+    if = { limit = { has_variable = sltm_lvm_tf_type_other_selected } change_variable = { name = sltm_lvm_tf_type_selected_count add = 1 } }
+
+    set_variable = { name = sltm_lvm_tf_creation_selected_count value = 0 }
+    if = { limit = { has_variable = sltm_lvm_tf_creation_created_selected } change_variable = { name = sltm_lvm_tf_creation_selected_count add = 1 } }
+    if = { limit = { has_variable = sltm_lvm_tf_creation_uncreated_selected } change_variable = { name = sltm_lvm_tf_creation_selected_count add = 1 } }
+
+    set_variable = { name = sltm_lvm_tf_tier_selected_count value = 0 }
+    if = { limit = { has_variable = sltm_lvm_tf_tier_barony_selected } change_variable = { name = sltm_lvm_tf_tier_selected_count add = 1 } }
+    if = { limit = { has_variable = sltm_lvm_tf_tier_county_selected } change_variable = { name = sltm_lvm_tf_tier_selected_count add = 1 } }
+    if = { limit = { has_variable = sltm_lvm_tf_tier_duchy_selected } change_variable = { name = sltm_lvm_tf_tier_selected_count add = 1 } }
+    if = { limit = { has_variable = sltm_lvm_tf_tier_kingdom_selected } change_variable = { name = sltm_lvm_tf_tier_selected_count add = 1 } }
+    if = { limit = { has_variable = sltm_lvm_tf_tier_empire_selected } change_variable = { name = sltm_lvm_tf_tier_selected_count add = 1 } }
+    if = { limit = { has_variable = sltm_lvm_tf_tier_hegemony_selected } change_variable = { name = sltm_lvm_tf_tier_selected_count add = 1 } }
+
+    set_variable = { name = sltm_lvm_tf_status_selected_count value = 0 }
+    if = { limit = { has_variable = sltm_lvm_tf_status_normal_selected } change_variable = { name = sltm_lvm_tf_status_selected_count add = 1 } }
+    if = { limit = { has_variable = sltm_lvm_tf_status_pending_selected } change_variable = { name = sltm_lvm_tf_status_selected_count add = 1 } }
+    if = { limit = { has_variable = sltm_lvm_tf_status_blocked_selected } change_variable = { name = sltm_lvm_tf_status_selected_count add = 1 } }
+
+    set_variable = { name = sltm_lvm_tf_role_selected_count value = 0 }
+    if = { limit = { has_variable = sltm_lvm_tf_role_primary_selected } change_variable = { name = sltm_lvm_tf_role_selected_count add = 1 } }
+    if = { limit = { has_variable = sltm_lvm_tf_role_concurrent_selected } change_variable = { name = sltm_lvm_tf_role_selected_count add = 1 } }
+
+    set_variable = { name = sltm_lvm_tf_holder_selected_count value = 0 }
+    if = { limit = { has_variable = sltm_lvm_tf_holder_courtier_selected } change_variable = { name = sltm_lvm_tf_holder_selected_count add = 1 } }
+    # 2026-07-18（V3.4-C）头衔兵士组计入持有人组计数（同一显示区）。
+    if = { limit = { has_variable = sltm_lvm_tf_has_maa_selected } change_variable = { name = sltm_lvm_tf_holder_selected_count add = 1 } }
+
+    set_variable = { name = sltm_lvm_title_active_filter_count value = 0 }
+    change_variable = { name = sltm_lvm_title_active_filter_count add = var:sltm_lvm_tf_type_selected_count }
+    change_variable = { name = sltm_lvm_title_active_filter_count add = var:sltm_lvm_tf_creation_selected_count }
+    change_variable = { name = sltm_lvm_title_active_filter_count add = var:sltm_lvm_tf_tier_selected_count }
+    change_variable = { name = sltm_lvm_title_active_filter_count add = var:sltm_lvm_tf_status_selected_count }
+    change_variable = { name = sltm_lvm_title_active_filter_count add = var:sltm_lvm_tf_role_selected_count }
+    change_variable = { name = sltm_lvm_title_active_filter_count add = var:sltm_lvm_tf_holder_selected_count }
+    # 旧 GUI 仍读取此变量；保持同步直到 V3.0 窗口完全切换。
+    set_variable = { name = sltm_lvm_title_active_filter_count_legacy value = var:sltm_lvm_title_active_filter_count }
+}
+
+sltm_lvm_sanitize_title_multiselect_state_effect = {
+    sltm_lvm_update_title_multiselect_counts_effect = yes
+}
+
+sltm_lvm_reset_title_multiselect_filters_effect = {
+    sltm_lvm_save_title_multiselect_undo_effect = yes
+    remove_variable = sltm_lvm_tf_type_junfu_selected
+    remove_variable = sltm_lvm_tf_type_chaochen_selected
+    remove_variable = sltm_lvm_tf_type_noble_selected
+    remove_variable = sltm_lvm_tf_type_holy_order_selected
+    remove_variable = sltm_lvm_tf_type_mercenary_selected
+    remove_variable = sltm_lvm_tf_type_religious_head_selected
+    remove_variable = sltm_lvm_tf_type_other_selected
+    remove_variable = sltm_lvm_tf_creation_created_selected
+    remove_variable = sltm_lvm_tf_creation_uncreated_selected
+    remove_variable = sltm_lvm_tf_tier_barony_selected
+    remove_variable = sltm_lvm_tf_tier_county_selected
+    remove_variable = sltm_lvm_tf_tier_duchy_selected
+    remove_variable = sltm_lvm_tf_tier_kingdom_selected
+    remove_variable = sltm_lvm_tf_tier_empire_selected
+    remove_variable = sltm_lvm_tf_tier_hegemony_selected
+    remove_variable = sltm_lvm_tf_status_normal_selected
+    remove_variable = sltm_lvm_tf_status_pending_selected
+    remove_variable = sltm_lvm_tf_status_blocked_selected
+    remove_variable = sltm_lvm_tf_role_primary_selected
+    remove_variable = sltm_lvm_tf_role_concurrent_selected
+    remove_variable = sltm_lvm_tf_holder_courtier_selected
+    remove_variable = sltm_lvm_tf_has_maa_selected
+    sltm_lvm_update_title_multiselect_counts_effect = yes
+    sltm_lvm_recompute_title_view_effect = yes
+}
+
+sltm_lvm_save_title_multiselect_undo_effect = {
+    remove_variable = sltm_lvm_title_multiselect_undo_valid
+    remove_variable = sltm_lvm_title_multiselect_undo_schema
+    remove_variable = sltm_lvm_title_undo_type_junfu_selected
+    remove_variable = sltm_lvm_title_undo_type_chaochen_selected
+    remove_variable = sltm_lvm_title_undo_type_noble_selected
+    remove_variable = sltm_lvm_title_undo_type_holy_order_selected
+    remove_variable = sltm_lvm_title_undo_type_mercenary_selected
+    remove_variable = sltm_lvm_title_undo_type_religious_head_selected
+    remove_variable = sltm_lvm_title_undo_type_other_selected
+    remove_variable = sltm_lvm_title_undo_creation_created_selected
+    remove_variable = sltm_lvm_title_undo_creation_uncreated_selected
+    remove_variable = sltm_lvm_title_undo_tier_barony_selected
+    remove_variable = sltm_lvm_title_undo_tier_county_selected
+    remove_variable = sltm_lvm_title_undo_tier_duchy_selected
+    remove_variable = sltm_lvm_title_undo_tier_kingdom_selected
+    remove_variable = sltm_lvm_title_undo_tier_empire_selected
+    remove_variable = sltm_lvm_title_undo_tier_hegemony_selected
+    remove_variable = sltm_lvm_title_undo_status_normal_selected
+    remove_variable = sltm_lvm_title_undo_status_pending_selected
+    remove_variable = sltm_lvm_title_undo_status_blocked_selected
+    remove_variable = sltm_lvm_title_undo_role_primary_selected
+    remove_variable = sltm_lvm_title_undo_role_concurrent_selected
+    remove_variable = sltm_lvm_title_undo_holder_courtier_selected
+    remove_variable = sltm_lvm_title_undo_has_maa_selected
+    if = { limit = { has_variable = sltm_lvm_tf_type_junfu_selected } set_variable = sltm_lvm_title_undo_type_junfu_selected }
+    if = { limit = { has_variable = sltm_lvm_tf_type_chaochen_selected } set_variable = sltm_lvm_title_undo_type_chaochen_selected }
+    if = { limit = { has_variable = sltm_lvm_tf_type_noble_selected } set_variable = sltm_lvm_title_undo_type_noble_selected }
+    if = { limit = { has_variable = sltm_lvm_tf_type_holy_order_selected } set_variable = sltm_lvm_title_undo_type_holy_order_selected }
+    if = { limit = { has_variable = sltm_lvm_tf_type_mercenary_selected } set_variable = sltm_lvm_title_undo_type_mercenary_selected }
+    if = { limit = { has_variable = sltm_lvm_tf_type_religious_head_selected } set_variable = sltm_lvm_title_undo_type_religious_head_selected }
+    if = { limit = { has_variable = sltm_lvm_tf_type_other_selected } set_variable = sltm_lvm_title_undo_type_other_selected }
+    if = { limit = { has_variable = sltm_lvm_tf_creation_created_selected } set_variable = sltm_lvm_title_undo_creation_created_selected }
+    if = { limit = { has_variable = sltm_lvm_tf_creation_uncreated_selected } set_variable = sltm_lvm_title_undo_creation_uncreated_selected }
+    if = { limit = { has_variable = sltm_lvm_tf_tier_barony_selected } set_variable = sltm_lvm_title_undo_tier_barony_selected }
+    if = { limit = { has_variable = sltm_lvm_tf_tier_county_selected } set_variable = sltm_lvm_title_undo_tier_county_selected }
+    if = { limit = { has_variable = sltm_lvm_tf_tier_duchy_selected } set_variable = sltm_lvm_title_undo_tier_duchy_selected }
+    if = { limit = { has_variable = sltm_lvm_tf_tier_kingdom_selected } set_variable = sltm_lvm_title_undo_tier_kingdom_selected }
+    if = { limit = { has_variable = sltm_lvm_tf_tier_empire_selected } set_variable = sltm_lvm_title_undo_tier_empire_selected }
+    if = { limit = { has_variable = sltm_lvm_tf_tier_hegemony_selected } set_variable = sltm_lvm_title_undo_tier_hegemony_selected }
+    if = { limit = { has_variable = sltm_lvm_tf_status_normal_selected } set_variable = sltm_lvm_title_undo_status_normal_selected }
+    if = { limit = { has_variable = sltm_lvm_tf_status_pending_selected } set_variable = sltm_lvm_title_undo_status_pending_selected }
+    if = { limit = { has_variable = sltm_lvm_tf_status_blocked_selected } set_variable = sltm_lvm_title_undo_status_blocked_selected }
+    if = { limit = { has_variable = sltm_lvm_tf_role_primary_selected } set_variable = sltm_lvm_title_undo_role_primary_selected }
+    if = { limit = { has_variable = sltm_lvm_tf_role_concurrent_selected } set_variable = sltm_lvm_title_undo_role_concurrent_selected }
+    if = { limit = { has_variable = sltm_lvm_tf_holder_courtier_selected } set_variable = sltm_lvm_title_undo_holder_courtier_selected }
+    if = { limit = { has_variable = sltm_lvm_tf_has_maa_selected } set_variable = sltm_lvm_title_undo_has_maa_selected }
+    set_variable = { name = sltm_lvm_title_multiselect_undo_schema value = flag:v30 }
+    set_variable = { name = sltm_lvm_title_multiselect_undo_valid value = flag:yes }
+}
+
+sltm_lvm_restore_title_multiselect_undo_effect = {
+    if = {
+        limit = {
+            has_variable = sltm_lvm_title_multiselect_undo_valid
+            var:sltm_lvm_title_multiselect_undo_schema = flag:v30
+        }
+        sltm_lvm_clear_title_multiselect_markers_effect = yes
+        if = { limit = { has_variable = sltm_lvm_title_undo_type_junfu_selected } set_variable = sltm_lvm_tf_type_junfu_selected }
+        if = { limit = { has_variable = sltm_lvm_title_undo_type_chaochen_selected } set_variable = sltm_lvm_tf_type_chaochen_selected }
+        if = { limit = { has_variable = sltm_lvm_title_undo_type_noble_selected } set_variable = sltm_lvm_tf_type_noble_selected }
+        if = { limit = { has_variable = sltm_lvm_title_undo_type_holy_order_selected } set_variable = sltm_lvm_tf_type_holy_order_selected }
+        if = { limit = { has_variable = sltm_lvm_title_undo_type_mercenary_selected } set_variable = sltm_lvm_tf_type_mercenary_selected }
+        if = { limit = { has_variable = sltm_lvm_title_undo_type_religious_head_selected } set_variable = sltm_lvm_tf_type_religious_head_selected }
+        if = { limit = { has_variable = sltm_lvm_title_undo_type_other_selected } set_variable = sltm_lvm_tf_type_other_selected }
+        if = { limit = { has_variable = sltm_lvm_title_undo_creation_created_selected } set_variable = sltm_lvm_tf_creation_created_selected }
+        if = { limit = { has_variable = sltm_lvm_title_undo_creation_uncreated_selected } set_variable = sltm_lvm_tf_creation_uncreated_selected }
+        if = { limit = { has_variable = sltm_lvm_title_undo_tier_barony_selected } set_variable = sltm_lvm_tf_tier_barony_selected }
+        if = { limit = { has_variable = sltm_lvm_title_undo_tier_county_selected } set_variable = sltm_lvm_tf_tier_county_selected }
+        if = { limit = { has_variable = sltm_lvm_title_undo_tier_duchy_selected } set_variable = sltm_lvm_tf_tier_duchy_selected }
+        if = { limit = { has_variable = sltm_lvm_title_undo_tier_kingdom_selected } set_variable = sltm_lvm_tf_tier_kingdom_selected }
+        if = { limit = { has_variable = sltm_lvm_title_undo_tier_empire_selected } set_variable = sltm_lvm_tf_tier_empire_selected }
+        if = { limit = { has_variable = sltm_lvm_title_undo_tier_hegemony_selected } set_variable = sltm_lvm_tf_tier_hegemony_selected }
+        if = { limit = { has_variable = sltm_lvm_title_undo_status_normal_selected } set_variable = sltm_lvm_tf_status_normal_selected }
+        if = { limit = { has_variable = sltm_lvm_title_undo_status_pending_selected } set_variable = sltm_lvm_tf_status_pending_selected }
+        if = { limit = { has_variable = sltm_lvm_title_undo_status_blocked_selected } set_variable = sltm_lvm_tf_status_blocked_selected }
+        if = { limit = { has_variable = sltm_lvm_title_undo_role_primary_selected } set_variable = sltm_lvm_tf_role_primary_selected }
+        if = { limit = { has_variable = sltm_lvm_title_undo_role_concurrent_selected } set_variable = sltm_lvm_tf_role_concurrent_selected }
+        if = { limit = { has_variable = sltm_lvm_title_undo_holder_courtier_selected } set_variable = sltm_lvm_tf_holder_courtier_selected }
+        if = { limit = { has_variable = sltm_lvm_title_undo_has_maa_selected } set_variable = sltm_lvm_tf_has_maa_selected }
+        remove_variable = sltm_lvm_title_multiselect_undo_valid
+        remove_variable = sltm_lvm_title_multiselect_undo_schema
+        sltm_lvm_update_title_multiselect_counts_effect = yes
+        sltm_lvm_recompute_title_view_effect = yes
+    }
+}
+
+sltm_lvm_clear_title_multiselect_markers_effect = {
+    remove_variable = sltm_lvm_tf_type_junfu_selected
+    remove_variable = sltm_lvm_tf_type_chaochen_selected
+    remove_variable = sltm_lvm_tf_type_noble_selected
+    remove_variable = sltm_lvm_tf_type_holy_order_selected
+    remove_variable = sltm_lvm_tf_type_mercenary_selected
+    remove_variable = sltm_lvm_tf_type_religious_head_selected
+    remove_variable = sltm_lvm_tf_type_other_selected
+    remove_variable = sltm_lvm_tf_creation_created_selected
+    remove_variable = sltm_lvm_tf_creation_uncreated_selected
+    remove_variable = sltm_lvm_tf_tier_barony_selected
+    remove_variable = sltm_lvm_tf_tier_county_selected
+    remove_variable = sltm_lvm_tf_tier_duchy_selected
+    remove_variable = sltm_lvm_tf_tier_kingdom_selected
+    remove_variable = sltm_lvm_tf_tier_empire_selected
+    remove_variable = sltm_lvm_tf_tier_hegemony_selected
+    remove_variable = sltm_lvm_tf_status_normal_selected
+    remove_variable = sltm_lvm_tf_status_pending_selected
+    remove_variable = sltm_lvm_tf_status_blocked_selected
+    remove_variable = sltm_lvm_tf_role_primary_selected
+    remove_variable = sltm_lvm_tf_role_concurrent_selected
+    remove_variable = sltm_lvm_tf_holder_courtier_selected
+    remove_variable = sltm_lvm_tf_has_maa_selected
+}
+
+sltm_lvm_migrate_title_filters_v30_effect = {
+    if = {
+        limit = { NOT = { has_variable = sltm_lvm_title_filters_migrated_v30 } }
+        if = { limit = { var:sltm_lvm_tf_type = flag:junfu } set_variable = sltm_lvm_tf_type_junfu_selected }
+        if = { limit = { var:sltm_lvm_tf_type = flag:noble_family } set_variable = sltm_lvm_tf_type_noble_selected }
+        if = { limit = { var:sltm_lvm_tf_type = flag:holy_order } set_variable = sltm_lvm_tf_type_holy_order_selected }
+        if = { limit = { var:sltm_lvm_tf_type = flag:mercenary } set_variable = sltm_lvm_tf_type_mercenary_selected }
+        if = { limit = { var:sltm_lvm_tf_type = flag:religious_head } set_variable = sltm_lvm_tf_type_religious_head_selected }
+        if = { limit = { var:sltm_lvm_tf_type = flag:other } set_variable = sltm_lvm_tf_type_other_selected }
+        if = { limit = { var:sltm_lvm_tf_tier = flag:barony } set_variable = sltm_lvm_tf_tier_barony_selected }
+        if = { limit = { var:sltm_lvm_tf_tier = flag:county } set_variable = sltm_lvm_tf_tier_county_selected }
+        if = { limit = { var:sltm_lvm_tf_tier = flag:duchy } set_variable = sltm_lvm_tf_tier_duchy_selected }
+        if = { limit = { var:sltm_lvm_tf_tier = flag:kingdom } set_variable = sltm_lvm_tf_tier_kingdom_selected }
+        if = { limit = { var:sltm_lvm_tf_tier = flag:empire } set_variable = sltm_lvm_tf_tier_empire_selected }
+        if = { limit = { var:sltm_lvm_tf_tier = flag:hegemony } set_variable = sltm_lvm_tf_tier_hegemony_selected }
+        if = { limit = { var:sltm_lvm_tf_status = flag:normal } set_variable = sltm_lvm_tf_status_normal_selected }
+        if = { limit = { var:sltm_lvm_tf_status = flag:pending } set_variable = sltm_lvm_tf_status_pending_selected }
+        if = { limit = { var:sltm_lvm_tf_status = flag:blocked } set_variable = sltm_lvm_tf_status_blocked_selected }
+        if = { limit = { var:sltm_lvm_tf_role = flag:primary } set_variable = sltm_lvm_tf_role_primary_selected }
+        if = { limit = { var:sltm_lvm_tf_role = flag:concurrent } set_variable = sltm_lvm_tf_role_concurrent_selected }
+        remove_variable = sltm_lvm_tf_type
+        remove_variable = sltm_lvm_tf_tier
+        remove_variable = sltm_lvm_tf_status
+        remove_variable = sltm_lvm_tf_role
+        set_variable = { name = sltm_lvm_title_filters_migrated_v30 value = flag:yes }
+    }
+    sltm_lvm_update_title_multiselect_counts_effect = yes
+}
+
+sltm_lvm_ensure_title_multiselect_state_effect = {
+    sltm_lvm_ensure_filter_state_effect = yes
+    sltm_lvm_migrate_title_filters_v30_effect = yes
+    sltm_lvm_sanitize_title_multiselect_state_effect = yes
+    sltm_lvm_ensure_title_preset_slot_effect = yes
+}
+
+# 2026-07-17 新增（V3.2）：预设“当前槽”默认值（下拉预设用）。
+sltm_lvm_ensure_title_preset_slot_effect = {
+    if = {
+        limit = { NOT = { has_variable = sltm_lvm_title_preset_slot } }
+        set_variable = { name = sltm_lvm_title_preset_slot value = 1 }
+    }
+}

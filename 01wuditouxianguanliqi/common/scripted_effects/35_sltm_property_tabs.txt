@@ -1,0 +1,31 @@
+﻿# Active tab belongs to the player's current edit session. Browsing never changes A, B or a field.
+sltm_select_editor_tab_effect = {
+    remove_variable = sltm_ui_appearance
+    set_variable = { name = sltm_ui_tab value = $TAB$ }
+    remove_variable = sltm_tab_transfer_confirm
+}
+sltm_tab_changed_effect = {
+    remove_variable = sltm_edit_review_ready
+    sltm_ui_sync_effect = yes
+}
+sltm_tab_mark_capital_effect = {
+    clear_saved_scope = sltm_tab_new_capital
+    var:sltm_designee_title ?= {
+        if = { limit = { tier = tier_county } save_scope_as = sltm_tab_new_capital }
+        else_if = { limit = { tier = tier_barony } de_jure_liege ?= { save_scope_as = sltm_tab_new_capital } }
+        else = { title_capital_county ?= { save_scope_as = sltm_tab_new_capital } }
+    }
+    if = {
+        limit = { exists = scope:sltm_tab_new_capital }
+        set_variable = { name = sltm_edit_capital value = scope:sltm_tab_new_capital }
+        sltm_tab_changed_effect = yes
+    }
+}
+# An explicit choice captures the donor's holder and both sides of the transfer.
+sltm_tab_freeze_transfer_effect = {
+    remove_variable = sltm_tab_transfer_confirm
+    set_variable = { name = sltm_transfer_title value = var:sltm_edit_target }
+    set_variable = { name = sltm_transfer_from value = var:sltm_edit_target.holder }
+    set_variable = { name = sltm_edit_transfer value = var:sltm_designee_title.holder }
+    set_variable = { name = sltm_tab_transfer_source value = var:sltm_designee_title }
+}

@@ -1,0 +1,13 @@
+# Native exact-object window relay; selection does not change native default domicile.
+window = {
+ name = "sltm_domicile_relay"
+ layer = middle
+ size = { 0 0 }
+ alwaystransparent = yes
+ state = {
+  name = sltm_pending
+  trigger_when = "[And(GetPlayer.IsValid, GetScriptedGui('sltm_domicile_pending_gui').IsValid(GuiScope.SetRoot(GetPlayer.MakeScope).End))]"
+  on_start = "[ToggleGameViewData('domicile', GetPlayer.MakeScope.Var('sltm_open_domicile').Domicile)]"
+  on_start = "[GetScriptedGui('sltm_domicile_clear_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+ }
+}

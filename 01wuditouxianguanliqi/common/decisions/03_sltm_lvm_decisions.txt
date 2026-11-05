@@ -1,0 +1,33 @@
+﻿# 无地头衔管理器：第一版入口
+
+sltm_open_landless_vassal_manager_decision = {
+    picture = {
+        reference = "gfx/interface/illustrations/decisions/decision_invite_knights.dds"
+    }
+
+    # 放入本体“领地决议”分组，并在该分组内靠前显示。
+    decision_group_type = realm
+    sort_order = 1000
+
+    ai_check_interval = 0
+
+    selection_tooltip = sltm_open_landless_vassal_manager_decision_tooltip
+    desc = sltm_open_landless_vassal_manager_decision_desc
+    confirm_text = sltm_open_landless_vassal_manager_decision_confirm
+
+    is_shown = {
+        always = no # 总览暂不开放。
+    }
+
+    is_valid = {
+        always = no
+    }
+
+    effect = {
+        sltm_lvm_open_manager_effect = yes
+    }
+
+    ai_potential = {
+        always = no
+    }
+}

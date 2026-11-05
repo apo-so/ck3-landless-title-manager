@@ -1,0 +1,100 @@
+﻿# 2026-07-18（V3.3-D）无地头衔管理器：详情面板 8 个操作按钮的 scripted GUI 包装。
+# scope = character（玩家/root）。is_shown 复刻互动 05 各功能 starts_enabled/is_valid（换算到选中头衔语境）。
+# root = 玩家；var:sltm_lvm_selected_title = 当前选中头衔；其 holder = recipient。
+
+# 功能1：标记头衔
+sltm_lvm_act_mark_gui = {
+    scope = character
+    is_shown = { exists = var:sltm_lvm_selected_title }
+    effect = { sltm_lvm_title_mark_current_effect = yes }
+}
+
+# 功能2：创立无地头衔（选中头衔须伯爵级以上）
+sltm_lvm_act_create_gui = {
+scope = character
+is_shown = { always = yes }
+effect = { sltm_create_open_effect = yes }
+}
+
+# 功能3：剥夺当前选中头衔（危险，两段式确认）
+sltm_lvm_act_revoke_gui = {
+    scope = character
+    is_shown = {
+        exists = var:sltm_lvm_selected_title
+        var:sltm_lvm_selected_title = {
+            exists = holder
+            NOT = { holder = root }
+            sltm_plain_title_action_trigger = yes
+        }
+    }
+    effect = { sltm_lvm_title_revoke_current_effect = yes }
+}
+
+# 功能4：授予已标记头衔给选中头衔的持有者
+sltm_lvm_act_grant_marked_gui = {
+    scope = character
+    is_shown = {
+        exists = var:sltm_lvm_selected_title
+        exists = var:sltm_designee_title
+        var:sltm_designee_title = { sltm_plain_title_action_trigger = yes }
+        var:sltm_lvm_selected_title = {
+            exists = holder
+            NOT = { holder = root }
+        }
+    }
+    effect = { sltm_lvm_title_grant_marked_current_effect = yes }
+}
+
+# 功能5：迁移已标记头衔法理首府到选中头衔首府
+sltm_lvm_act_move_capital_gui = {
+    scope = character
+    is_shown = {
+        exists = var:sltm_lvm_selected_title
+        exists = var:sltm_designee_title
+        var:sltm_lvm_selected_title = {
+            exists = holder
+            tier >= tier_county
+        }
+    }
+    effect = { sltm_lvm_title_move_marked_capital_current_effect = yes }
+}
+
+# 功能6：搬迁已标记头衔持有者的庄园到选中头衔首府
+sltm_lvm_act_move_domicile_gui = {
+    scope = character
+    is_shown = {
+        exists = var:sltm_lvm_selected_title
+        exists = var:sltm_designee_title
+        var:sltm_designee_title = {
+            exists = holder
+            exists = title_domicile
+        }
+    }
+    effect = { sltm_lvm_title_move_marked_domicile_current_effect = yes }
+}
+
+# 功能7：调整选中头衔法理归属到已标记头衔下
+sltm_lvm_act_transfer_de_jure_gui = {
+    scope = character
+    is_shown = {
+        exists = var:sltm_lvm_selected_title
+        exists = var:sltm_designee_title
+        var:sltm_lvm_selected_title = {
+            exists = holder
+            NOT = { this = root.var:sltm_designee_title }
+            tier < root.var:sltm_designee_title.tier
+            NOT = { target_is_de_jure_liege_or_above = root.var:sltm_designee_title }
+        }
+    }
+    effect = { sltm_lvm_title_transfer_de_jure_current_effect = yes }
+}
+
+# 功能8：销毁当前选中头衔（危险，两段式确认）
+sltm_lvm_act_destroy_gui = {
+    scope = character
+    is_shown = {
+        exists = var:sltm_lvm_selected_title
+        var:sltm_lvm_selected_title = { exists = holder sltm_plain_title_action_trigger = yes }
+    }
+    effect = { sltm_lvm_title_destroy_current_effect = yes }
+}

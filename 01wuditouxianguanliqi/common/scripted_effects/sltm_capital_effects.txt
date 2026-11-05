@@ -1,0 +1,38 @@
+﻿# Standalone extraction: selected dependency definitions only.
+sltm_set_capital_county_effect = {
+    scope:current_de_jure_scope = {
+        set_capital_county = scope:current_capital_scope
+    }
+    if = {
+        limit = {
+            scope:current_de_jure_scope.tier = tier_duchy
+        }
+        custom_tooltip = set_de_jure_capital_warning
+        hidden_effect = {
+            random_duchy = {
+                limit = {
+                    NOT = { this = scope:current_de_jure_scope }
+                    is_landless_type_title = no
+                }
+                save_scope_as = placeholder_duchy
+            }
+            scope:current_de_jure_scope = {
+                every_in_de_jure_hierarchy = {
+                    limit = {
+                        tier = tier_county
+                        NOT = { this = scope:current_capital_scope }
+                    }
+                    add_to_temporary_list = correction_list
+                    set_de_jure_liege_title = scope:placeholder_duchy
+                }
+            }
+            every_in_list = {
+                list = correction_list
+                set_de_jure_liege_title = scope:current_de_jure_scope
+            }
+        }
+    }
+    else = {
+        custom_tooltip = set_de_jure_capital_effect_tooltip
+    }
+}

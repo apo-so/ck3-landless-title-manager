@@ -1,0 +1,155 @@
+﻿############################################################
+# 无地头衔管理器 V2.7.2 —— 原版化筛选行与下拉组件
+#
+# 组件职责：
+#   sltm_lvm_filter_row                 标签 + 下拉控件的横向布局
+#   sltm_lvm_dropdown_base              固定尺寸下拉宿主和内部浮层
+#   sltm_lvm_dropdown_value_button      当前值按钮
+#   sltm_lvm_dropdown_option_button     浮层内单个选项
+#
+# 设计依据：
+#   - 游戏本体 window_character_filter.gui 的 filter_item = hbox
+#   - 游戏本体 buttons.gui 的 button_drop / button_dropdown 视觉属性
+#   - 参考 Mod 的 scrollarea / scrollwidget / scrollbar_vertical 结构
+#
+# 本文件不引用 acs_* 类型；调用方继续使用 sltm_lvm_* 命名。
+############################################################
+
+types MytmLvmDropdownTypes {
+
+type sltm_lvm_filter_row = hbox {
+    name = "sltm_lvm_filter_row"
+    layoutpolicy_horizontal = expanding
+    spacing = 10
+    margin_bottom = 5
+    allow_outside = yes
+
+    block "sltm_lvm_row_label" { }
+    expand = { }
+    block "sltm_lvm_row_dropdown" { }
+}
+
+type sltm_lvm_dropdown_base = widget {
+    name = "sltm_lvm_dropdown_base"
+    size = { 300 33 }
+    allow_outside = yes
+
+    # 选项浮层和当前值按钮都在 base 的鼠标层级内；只有离开整个
+    # 下拉控件时才清理临时状态。
+    state = {
+        name = _mouse_hierarchy_leave
+        duration = 0
+        on_finish = "[GetVariableSystem.Clear('sltm_lvm_dropdown_open')]"
+    }
+
+    block "sltm_lvm_selected_values" { }
+
+    scrollarea = {
+        name = "sltm_lvm_dropdown_part"
+        position = { 0 33 }
+        maximumsize = { 300 250 }
+        autoresizescrollarea = yes
+        scrollbarpolicy_horizontal = always_off
+        using = Background_DropDown
+
+        block "sltm_lvm_dropdown_visibility" {
+            visible = no
+        }
+
+        scrollwidget = {
+            vbox = {
+                layoutpolicy_horizontal = expanding
+                layoutpolicy_vertical = expanding
+                block "sltm_lvm_dropdown_options" { }
+            }
+        }
+
+        scrollbar_vertical = {
+            using = Scrollbar_Vertical
+        }
+    }
+}
+
+type sltm_lvm_dropdown_value_button = widget {
+    size = { 100% 33 }
+    alwaystransparent = no
+
+    block "sltm_lvm_selected_visibility" { }
+
+    # 这里复制本体 button_drop 的视觉属性；箭头已经包含在贴图中，
+    # 不再额外叠加 icon，也不在 button 本体上写文字属性。
+    button_normal = {
+        size = { 100% 33 }
+        button_trigger = none
+        gfxtype = framedbuttongfx
+        effectname = "NoHighlight"
+        upframe = 1
+        overframe = 2
+        downframe = 3
+        disableframe = 4
+        texture = "gfx/interface/buttons/button_drop_down.dds"
+        framesize = { 225 33 }
+        spriteType = Corneredtiled
+        spriteborder = { 75 11 }
+        clicksound = "event:/SFX/UI/Generic/sfx_ui_generic_checkbox"
+
+        block "sltm_lvm_selected_action" { }
+
+        buttonText = {
+            text_single = {
+                size = { 100% 100% }
+                autoresize = no
+                margin = { 15 0 }
+                margin_right = 25
+                align = left|nobaseline
+                default_format = "#clickable"
+                alwaystransparent = yes
+                elide = right
+
+                block "sltm_lvm_selected_text" { }
+            }
+        }
+    }
+}
+
+type sltm_lvm_dropdown_option_button = widget {
+    size = { 100% 30 }
+    alwaystransparent = no
+
+    # 这里复制本体 button_dropdown 的视觉属性；autoresize、elide、
+    # 边距全部放在内层 text_single。
+    button_normal = {
+        size = { 100% 30 }
+        button_trigger = none
+        gfxtype = framedbuttongfx
+        effectname = "NoHighlight"
+        shaderfile = "gfx/FX/pdxgui_pushbutton.shader"
+        upframe = 1
+        overframe = 2
+        downframe = 3
+        disableframe = 1
+        texture = "gfx/interface/buttons/button_interaction_menu.dds"
+        framesize = { 317 30 }
+        clicksound = "event:/SFX/UI/Generic/sfx_ui_generic_checkbox"
+
+        block "sltm_lvm_option_action" { }
+        onclick = "[GetVariableSystem.Clear('sltm_lvm_dropdown_open')]"
+
+        buttonText = {
+            text_single = {
+                size = { 100% 100% }
+                autoresize = no
+                margin_left = 10
+                margin_right = 8
+                align = left|nobaseline
+                default_format = "#clickable"
+                alwaystransparent = yes
+                elide = right
+
+                block "sltm_lvm_option_text" { }
+            }
+        }
+    }
+}
+
+}

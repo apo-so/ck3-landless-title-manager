@@ -1,0 +1,1322 @@
+﻿# R10-35A2-1F1 — 国库管理页双财政只读计算（不改人物列表生命周期）。
+# Character scope。私库（金钱）与行政/天朝国库（Treasury）严格分开。
+# AI min/ideal/max 均使用 CK3 1.19.0.6 原版同名 script value；这里只换算成金额，不覆盖原版 AI。
+# 任意 AI 的当前已集结状态军费仍无 Character GUI getter；B1 仅读取本体 script_docs 明确暴露的未集结 MAA 月维护费总计。
+
+# 私库：月总收入 / 月总支出。
+sltm_lvm_treasury_private_income_value = { value = monthly_character_income min = 0 }
+sltm_lvm_treasury_private_expenses_value = { value = monthly_character_expenses min = 0 }
+
+
+# R10-35A2-4B1 — 原版 Character 级 MAA 月维护费总计。
+# 1.19.0.6 script_docs 将这两个数值 trigger 定义为 scoped character 的 monthly military expenses
+# （unraised MAA costs）。与已实机通过的逐团 CostBreakdown 数值桥做总和交叉验证。
+sltm_lvm_treasury_actual_gold_maa_expense_value = {
+    value = monthly_character_men_at_arms_expense_gold
+    min = 0
+}
+
+sltm_lvm_treasury_actual_treasury_maa_expense_value = {
+    value = monthly_character_men_at_arms_expense_treasury
+    min = 0
+}
+
+sltm_lvm_treasury_gold_ai_maa_min_budget_value = {
+    value = monthly_character_income
+    min = 0
+    multiply = ai_men_at_arms_expense_gold_min
+}
+
+sltm_lvm_treasury_gold_ai_maa_ideal_budget_value = {
+    value = monthly_character_income
+    min = 0
+    multiply = ai_men_at_arms_expense_gold_ideal
+}
+
+sltm_lvm_treasury_gold_ai_maa_max_budget_value = {
+    value = monthly_character_income
+    min = 0
+    multiply = ai_men_at_arms_expense_gold_max
+}
+
+# Treasury：月总收入。净变化与存量继续直接读 Character GUI getter。
+sltm_lvm_treasury_income_value = { value = monthly_character_treasury_income min = 0 }
+
+sltm_lvm_treasury_ai_maa_min_budget_value = {
+    value = monthly_character_treasury_income
+    min = 0
+    multiply = ai_men_at_arms_expense_treasury_min
+}
+
+sltm_lvm_treasury_ai_maa_ideal_budget_value = {
+    value = monthly_character_treasury_income
+    min = 0
+    multiply = ai_men_at_arms_expense_treasury_ideal
+}
+
+sltm_lvm_treasury_ai_maa_max_budget_value = {
+    value = monthly_character_treasury_income
+    min = 0
+    multiply = ai_men_at_arms_expense_treasury_max
+}
+
+# R8-B2P1 — 预算逐人物到账诊断 Probe。
+# R8-B 实机失败：四项正式值全部为 0.0；不得继续把 0 当成有效结果。
+# 本段只用于定位原版数值链，不作为最终“预算获取”实现。
+# 原版已确认：预算窗口/国库支出 Tooltip 使用 ValueBreakdown，可得到逐项 GetFixedPointValue；
+# 但 NGUI.MAX_BREAKDOWN_ENTRIES=10 会把后续角色聚合为“其他封臣”，无法直接覆盖全列表。
+# 因此 P1 暴露：中央 category base rate、tax_to_liege、直接 modifier-tag 读取结果，以及
+# 天朝俸禄的“官阶 + 贤能 + 俸禄契约”核心候选值，供一次实机与原版 -1.6 等逐人金额对数。
+
+sltm_lvm_treasury_budget_salary_rate_probe_value = {
+    value = 0
+    if = {
+        limit = { exists = liege }
+        add = top_liege.treasury_budget_base_rate_salaries
+    }
+}
+
+sltm_lvm_treasury_budget_military_rate_probe_value = {
+    value = 0
+    if = {
+        limit = { exists = liege }
+        add = top_liege.treasury_budget_base_rate_military
+    }
+}
+
+sltm_lvm_treasury_budget_ministry_rate_probe_value = {
+    value = 0
+    if = {
+        limit = { exists = liege }
+        add = top_liege.treasury_budget_base_rate_ministries
+    }
+}
+
+sltm_lvm_treasury_budget_tax_to_liege_probe_value = {
+    value = 0
+    if = {
+        limit = { exists = liege }
+        add = tax_to_liege
+    }
+}
+
+# 直接 modifier-tag 读取 Probe：R8-B 曾把这些 token 当数值使用；实机结果将判断它们是否可读。
+# FIN011 RETIRED_UNAVAILABLE: # sltm_lvm_treasury_budget_salary_raw_base_probe_value = { value = monthly_treasury_from_salary_budget_base }
+# FIN011 RETIRED_UNAVAILABLE: # sltm_lvm_treasury_budget_salary_raw_mult_probe_value = { value = monthly_treasury_from_salary_budget_mult }
+# FIN011 RETIRED_UNAVAILABLE: # sltm_lvm_treasury_budget_development_raw_mult_probe_value = { value = monthly_treasury_from_liege_mult }
+# FIN011 RETIRED_UNAVAILABLE: # sltm_lvm_treasury_budget_development_raw_add_probe_value = { value = monthly_treasury_from_liege_add }
+# FIN011 RETIRED_UNAVAILABLE: # sltm_lvm_treasury_budget_military_raw_base_probe_value = { value = monthly_treasury_from_military_budget_base }
+# FIN011 RETIRED_UNAVAILABLE: # sltm_lvm_treasury_budget_military_raw_mult_probe_value = { value = monthly_treasury_from_military_budget_mult }
+# FIN011 RETIRED_UNAVAILABLE: # sltm_lvm_treasury_budget_ministry_raw_base_probe_value = { value = monthly_treasury_from_ministry_budget_base }
+# FIN011 RETIRED_UNAVAILABLE: # sltm_lvm_treasury_budget_ministry_raw_mult_probe_value = { value = monthly_treasury_from_ministry_budget_mult }
+
+# 天朝俸禄核心基础权重：只重建原版已静态确认的 celestial_salary_rank + merit_level 两部分。
+# 不包含家族抱负、生活方式、地产建筑、临时 modifier 等 salary mult，因此只叫“核心候选”。
+sltm_lvm_treasury_budget_salary_core_base_probe_value = {
+    value = 0
+
+    if = { limit = { vassal_contract_obligation_level:celestial_salary_rank = 1 } add = 0.30 }
+    else_if = { limit = { vassal_contract_obligation_level:celestial_salary_rank = 2 } add = 0.75 }
+    else_if = { limit = { vassal_contract_obligation_level:celestial_salary_rank = 3 } add = 1.00 }
+    else_if = { limit = { vassal_contract_obligation_level:celestial_salary_rank = 4 } add = 2.00 }
+    else_if = { limit = { vassal_contract_obligation_level:celestial_salary_rank = 5 } add = 3.00 }
+
+    if = { limit = { merit_level = 2 } add = 0.05 }
+    else_if = { limit = { merit_level = 3 } add = 0.10 }
+    else_if = { limit = { merit_level = 4 } add = 0.15 }
+    else_if = { limit = { merit_level = 5 } add = 0.20 }
+    else_if = { limit = { merit_level = 6 } add = 0.25 }
+    else_if = { limit = { merit_level = 7 } add = 0.30 }
+    else_if = { limit = { merit_level = 8 } add = 0.50 }
+    else_if = { limit = { merit_level = 9 } add = 0.75 }
+}
+
+# 天朝俸禄契约倍率：celestial_salary 0..4 对应 -50/-25/0/+25/+50%。
+sltm_lvm_treasury_budget_salary_contract_mult_probe_value = {
+    value = 0
+    if = { limit = { vassal_contract_obligation_level:celestial_salary = 0 } add = -0.50 }
+    else_if = { limit = { vassal_contract_obligation_level:celestial_salary = 1 } add = -0.25 }
+    else_if = { limit = { vassal_contract_obligation_level:celestial_salary = 3 } add = 0.25 }
+    else_if = { limit = { vassal_contract_obligation_level:celestial_salary = 4 } add = 0.50 }
+}
+
+# 核心候选 = 中央俸禄 base rate ×（salary rank + merit）×（1 + salary contract mult）。
+# 仅用于与原版逐人 Tooltip 做 A/B，对数通过以前不得用于列表正式显示。
+sltm_lvm_treasury_budget_salary_core_candidate_probe_value = {
+    value = sltm_lvm_treasury_budget_salary_rate_probe_value
+    multiply = sltm_lvm_treasury_budget_salary_core_base_probe_value
+    multiply = {
+        value = sltm_lvm_treasury_budget_salary_contract_mult_probe_value
+        add = 1
+    }
+    min = 0
+}
+
+# 发展金的最小候选只保留 tax_to_liege 原始值；不把本 Mod monthly_treasury_from_liege_add 固定拨款并入“发”。
+sltm_lvm_treasury_budget_development_tax_candidate_probe_value = {
+    value = sltm_lvm_treasury_budget_tax_to_liege_probe_value
+    min = 0
+}
+
+# R8-B2P4 — 天子支付视角的公式备选与“全封臣总量守恒”Probe。
+# 原则：以下值全部是 FALLBACK CANDIDATE，不是正式真值。正式真值仍是天子国库当前支出。
+# P4 必须同时满足：逐人物显式明细命中 + Σ全部封臣候选 ≈ 顶栏国库对应单项实际支出，才能升级可信度。
+# 俸禄特别依据用户实机：修改 celestial_salary（salary budget mult）会改变封臣收入侧，
+# 但天子国库对该人的俸禄预算支出没有同步变化。因此中央“俸”候选只取 *_base，不乘 salary mult。
+
+# 俸：中央支出候选 = 中央俸禄基础额 ×（官阶 + 贤能）base 权重；明确排除 salary budget mult。
+sltm_lvm_treasury_budget_salary_central_candidate_probe_value = {
+    value = sltm_lvm_treasury_budget_salary_rate_probe_value
+    multiply = sltm_lvm_treasury_budget_salary_core_base_probe_value
+    min = 0
+}
+
+# 军：P4M1 补齐 CK3 1.19.0.6 本体已确认的 military budget base 来源。
+# 优先级用于避免互斥行政类型/本 Mod 行营兼具多个 military flags 时重复记账。
+# 覆盖：本 Mod 特殊军事行营、天朝大司马/都护/军事行省、贤能制军事行省、
+# 行政制军事/边疆/海军主题；celestial_salary_rank county/duchy 仍按本体 -0.6/-0.3。
+# 外部 Mod 若覆盖同名契约数值或新增 base，必须由“逐人 + 受益人数 + 总量”三重验收发现，不在此静默猜值。
+sltm_lvm_treasury_budget_military_core_base_probe_value = {
+    value = 0
+
+    if = {
+        limit = { vassal_contract_has_flag = celestial_province_special_military }
+        add = 1.50
+    }
+    else_if = {
+        limit = { vassal_contract_has_flag = celestial_grand_marshal_obligation }
+        add = 2.50
+    }
+    else_if = {
+        limit = { vassal_contract_has_flag = celestial_province_protectorate }
+        add = 1.50
+    }
+    else_if = {
+        limit = { vassal_contract_has_flag = admin_theme_frontier }
+        add = 1.50
+    }
+    else_if = {
+        limit = { vassal_contract_has_flag = celestial_province_military }
+        add = 1.00
+    }
+    else_if = {
+        limit = { vassal_contract_has_flag = meritocratic_province_military }
+        add = 1.00
+    }
+    else_if = {
+        limit = { vassal_contract_has_flag = admin_theme_military }
+        add = 1.00
+    }
+    else_if = {
+        limit = { vassal_contract_has_flag = admin_theme_naval }
+        add = 1.00
+    }
+
+    if = { limit = { vassal_contract_obligation_level:celestial_salary_rank = 1 } add = -0.60 }
+    else_if = { limit = { vassal_contract_obligation_level:celestial_salary_rank = 2 } add = -0.30 }
+
+    min = 0
+}
+
+sltm_lvm_treasury_budget_military_central_candidate_probe_value = {
+    value = sltm_lvm_treasury_budget_military_rate_probe_value
+    multiply = sltm_lvm_treasury_budget_military_core_base_probe_value
+    min = 0
+}
+
+# 臣：当前天朝已静态确认的 ministry budget base 来源重建：
+# 大臣身份 +1；大臣预算契约 -0.5/0/+0.5；宠臣职位 +0.5；
+# 宠臣同时担任工部尚书（minister_works）再 +0.25。
+sltm_lvm_treasury_budget_ministry_core_base_probe_value = {
+    value = 0
+
+    if = {
+        limit = {
+            OR = {
+                vassal_contract_obligation_level:celestial_ministry_obligations = 1
+                vassal_contract_obligation_level:celestial_ministry_obligations = 2
+            }
+        }
+        add = 1.00
+    }
+
+    if = { limit = { vassal_contract_obligation_level:celestial_ministry_budget = 0 } add = -0.50 }
+    else_if = { limit = { vassal_contract_obligation_level:celestial_ministry_budget = 2 } add = 0.50 }
+
+    if = { limit = { has_court_position = favored_minister_court_position } add = 0.50 }
+    if = {
+        limit = {
+            has_court_position = favored_minister_court_position
+            has_council_position = minister_works
+        }
+        add = 0.25
+    }
+
+    min = 0
+}
+
+sltm_lvm_treasury_budget_ministry_central_candidate_probe_value = {
+    value = sltm_lvm_treasury_budget_ministry_rate_probe_value
+    multiply = sltm_lvm_treasury_budget_ministry_core_base_probe_value
+    min = 0
+}
+
+# 发：封臣发展金倍率重建。
+# P4 核心已覆盖：政府、人物最高头衔等级、财政契约。
+# P4D1 根据实机明细继续补齐 CK3 1.19.0.6 本体其余两类来源：
+# 1) 王朝周期五种政治运动成员：monthly_treasury_from_liege_mult = -0.20；
+# 2) celestial_governor 强族家族抱负：按等级 +0.02/+0.04/+0.06/+0.08/+0.10。
+# 外部 Mod 仍可追加同名 modifier；不冒充动态 getter，继续以逐人明细 + 全量守恒发现失配。
+sltm_lvm_treasury_budget_development_core_mult_probe_value = {
+    value = 0
+
+    if = { limit = { has_government = celestial_government } add = -0.25 }
+    else_if = { limit = { has_government = administrative_government } add = -0.15 }
+    else_if = { limit = { has_government = meritocratic_government } add = -0.40 }
+    else_if = { limit = { has_government = steppe_admin_government } add = -0.40 }
+
+    if = { limit = { highest_held_title_tier = tier_barony } add = -0.60 }
+    else_if = { limit = { highest_held_title_tier = tier_county } add = -0.40 }
+    else_if = { limit = { highest_held_title_tier = tier_duchy } add = -0.30 }
+    else_if = { limit = { highest_held_title_tier = tier_kingdom } add = -0.15 }
+
+    if = {
+        limit = { has_government = meritocratic_government }
+        if = { limit = { vassal_contract_obligation_level:meritocratic_treasury = 0 } add = -0.10 }
+        else_if = { limit = { vassal_contract_obligation_level:meritocratic_treasury = 1 } add = -0.05 }
+        else_if = { limit = { vassal_contract_obligation_level:meritocratic_treasury = 3 } add = 0.05 }
+        else_if = { limit = { vassal_contract_obligation_level:meritocratic_treasury = 4 } add = 0.10 }
+    }
+    else = {
+        if = { limit = { vassal_contract_obligation_level:celestial_treasury = 0 } add = -0.10 }
+        else_if = { limit = { vassal_contract_obligation_level:celestial_treasury = 1 } add = -0.05 }
+        else_if = { limit = { vassal_contract_obligation_level:celestial_treasury = 3 } add = 0.05 }
+        else_if = { limit = { vassal_contract_obligation_level:celestial_treasury = 4 } add = 0.10 }
+    }
+}
+
+# 王朝周期仅在“不稳定阶段”给五种政治运动 participant group -20%。
+sltm_lvm_treasury_budget_development_dynastic_cycle_mult_probe_value = {
+    value = 0
+    if = {
+        limit = {
+            situation:dynastic_cycle ?= {
+                situation_current_phase = situation_dynastic_cycle_phase_instability
+                OR = {
+                    situation_participant_group:pro_hegemon_movement = { participant_group_has_character = root }
+                    situation_participant_group:expansion_movement = { participant_group_has_character = root }
+                    situation_participant_group:advancement_movement = { participant_group_has_character = root }
+                    situation_participant_group:conservative_movement = { participant_group_has_character = root }
+                    situation_participant_group:undecided_movement = { participant_group_has_character = root }
+                }
+            }
+        }
+        add = -0.20
+    }
+}
+
+# celestial_governor 家族抱负只对 powerful family member 生效。
+# 用各等级唯一参数反推出抱负等级；Level 1 只有 inspection_activity_increases_salary。
+sltm_lvm_treasury_budget_development_house_aspiration_mult_probe_value = {
+    value = 0
+    if = {
+        limit = {
+            house ?= {
+                is_powerful_family = yes
+                has_house_aspiration_parameter = inspection_activity_increases_salary
+            }
+        }
+        if = { limit = { house = { has_house_aspiration_parameter = poet_trait_provides_candidate_score_4 } } add = 0.10 }
+        else_if = { limit = { house = { has_house_aspiration_parameter = poet_trait_provides_candidate_score_3 } } add = 0.08 }
+        else_if = { limit = { house = { has_house_aspiration_parameter = poet_trait_provides_candidate_score_2 } } add = 0.06 }
+        else_if = { limit = { house = { has_house_aspiration_parameter = poet_trait_provides_candidate_score_1 } } add = 0.04 }
+        else = { add = 0.02 }
+    }
+}
+
+sltm_lvm_treasury_budget_development_vanilla_mult_probe_value = {
+    value = sltm_lvm_treasury_budget_development_core_mult_probe_value
+    add = sltm_lvm_treasury_budget_development_dynastic_cycle_mult_probe_value
+    add = sltm_lvm_treasury_budget_development_house_aspiration_mult_probe_value
+}
+
+# R8-B2P4D3: GUI-side direct SubjectContract ratio bridge needs the final factor.
+# This remains the same D1 known-vanilla mult set, expressed as 1 + mult.
+sltm_lvm_treasury_budget_development_vanilla_factor_probe_value = {
+    value = 1
+    add = sltm_lvm_treasury_budget_development_vanilla_mult_probe_value
+    min = 0
+}
+
+# P4 旧候选保留做 A/B，对照 D1 补项究竟修正了多少。
+sltm_lvm_treasury_budget_development_p4_core_candidate_probe_value = {
+    value = sltm_lvm_treasury_budget_tax_to_liege_probe_value
+    multiply = {
+        value = sltm_lvm_treasury_budget_development_core_mult_probe_value
+        add = 1
+        min = 0
+    }
+    min = 0
+}
+
+# P4D1 当前正式诊断候选：tax_to_liege × (1 + 本体已知全部 mult)。
+sltm_lvm_treasury_budget_development_central_candidate_probe_value = {
+    value = sltm_lvm_treasury_budget_tax_to_liege_probe_value
+    multiply = {
+        value = sltm_lvm_treasury_budget_development_vanilla_mult_probe_value
+        add = 1
+        min = 0
+    }
+    min = 0
+}
+
+# 本 Mod 已知固定拨款（monthly_treasury_from_liege_add）单独统计；不并入“发”正式候选。
+sltm_lvm_treasury_budget_known_fixed_grant_probe_value = {
+    value = 0
+    if = { limit = { has_character_modifier = sltm_cmm34_junfu_stipend_10_probe_modifier } add = 10 }
+    else_if = { limit = { has_character_modifier = sltm_cmm34_junfu_stipend_20_probe_modifier } add = 20 }
+}
+
+# R8-B2P4D2 — “发”的基数桥诊断。
+# P4D1 已把本体 mult 侧拆到可与原版明细逐项对照；D2 不再盲补 mult，改查“赋税贡献”基数。
+# 受益者国库收入不是正式天子视角真值，只作为数值交叉校验：若该角色还有其他国库收入来源，本值会混入它们。
+sltm_lvm_treasury_budget_development_recipient_treasury_income_probe_value = {
+    value = monthly_character_treasury_income
+    min = 0
+}
+
+# 扣掉本 Mod 已知固定拨款后的受益者国库收入。仍可能包含原版/其他 Mod 的其他国库收入，只是诊断量。
+sltm_lvm_treasury_budget_development_recipient_income_less_known_grant_probe_value = {
+    value = sltm_lvm_treasury_budget_development_recipient_treasury_income_probe_value
+    subtract = sltm_lvm_treasury_budget_known_fixed_grant_probe_value
+    min = 0
+}
+
+# 反推“赋税贡献”候选 = （受益者国库收入 - 本 Mod 固定拨款） / (1 + D1 已知 mult)。
+# 只有当该角色没有其他国库收入来源时才有解释力；用于与 MyRealmWindowVassalItem.GetCachedTax 做 A/B。
+sltm_lvm_treasury_budget_development_implied_base_from_recipient_income_probe_value = {
+    value = sltm_lvm_treasury_budget_development_recipient_income_less_known_grant_probe_value
+    divide = {
+        value = sltm_lvm_treasury_budget_development_vanilla_mult_probe_value
+        add = 1
+        min = 0.01
+    }
+    min = 0
+}
+
+# R8-B2P4D5 — 原版 script-side 税收收入 Probe。
+# CK3 1.19.0.6 script docs: scriptedtests_gold_income_no_theocracy = tax income excluding theocratic lessee income.
+# 用户实机已证明：发展金“赋税贡献”与受益者账面“领主税”同额（李参 76.0）；
+# 本值测试是否给出领主税计算前的约 80.0 应税税收收入。若通过，可在 every_vassal_or_below 中直接聚合。
+sltm_lvm_treasury_budget_development_d5_tax_income_probe_value = {
+    value = scriptedtests_gold_income_no_theocracy
+    min = 0
+}
+
+# R8-B2P4D9 — 只使用 CK3 1.19.0.6 reference-verified Character numeric triggers。
+# D8 用户实机已经终结 tax_to_liege 聚合路线：直属 36.55、全层级 59.51，均不能重建原版“封臣税”约 75.7。
+# 同时复核 generated triggers.log 后确认：D7 的 monthly_domain_income / monthly_income_from_domain /
+# monthly_income_from_vassals 并不存在于 1.19.0.6 trigger 文档；这些猜测名称从活动 runtime 定义中删除。
+#
+# D9 回到两个有明确接口语义的问题：
+# 1) D5 scriptedtests_gold_income_no_theocracy 是否实际上与 monthly_character_income 同值；
+# 2) monthly_character_treasury_variable_income 文档明确是“monthly treasury income minus Vassal Development expenses”，
+#    因此 monthly_character_treasury_income - monthly_character_treasury_variable_income 可作为“封臣发展金总额”直接引擎差值 Probe。
+
+sltm_lvm_treasury_budget_development_d9_monthly_gold_income_probe_value = {
+    value = monthly_character_income
+}
+
+sltm_lvm_treasury_budget_development_d9_d5_minus_monthly_gold_income_probe_value = {
+    value = sltm_lvm_treasury_budget_development_d5_tax_income_probe_value
+    subtract = sltm_lvm_treasury_budget_development_d9_monthly_gold_income_probe_value
+}
+
+sltm_lvm_treasury_budget_development_d9_treasury_income_probe_value = {
+    value = monthly_character_treasury_income
+}
+
+sltm_lvm_treasury_budget_development_d9_treasury_variable_income_probe_value = {
+    value = monthly_character_treasury_variable_income
+}
+
+# 对任意 Character：如果 reference 文档语义在当前运行态按字面成立，此差值即该角色承担的 Vassal Development expenses。
+# 同一个 script value 在 GUI 中分别用 Character.MakeScope() 与 GetPlayer.MakeScope() 调用，避免新造 top_liege scope-chain。
+sltm_lvm_treasury_budget_development_d9_vassal_development_expense_delta_probe_value = {
+    value = sltm_lvm_treasury_budget_development_d9_treasury_income_probe_value
+    subtract = sltm_lvm_treasury_budget_development_d9_treasury_variable_income_probe_value
+}
+
+# 全封臣受益者国库收入总量，只做诊断。它可能包含“封臣发展金”以外的国库收入，不能直接当中央支出真值。
+sltm_lvm_treasury_budget_development_recipient_treasury_income_total_probe_value = {
+    value = 0
+    every_vassal_or_below = { add = sltm_lvm_treasury_budget_development_recipient_treasury_income_probe_value }
+}
+
+# 全封臣/下级封臣总量：直接从天子 Character scope 遍历 every_vassal_or_below，
+# 不依赖当前国库列表筛选，避免筛选后“合计”被误缩小。
+sltm_lvm_treasury_budget_salary_central_total_probe_value = {
+    value = 0
+    every_vassal_or_below = { add = sltm_lvm_treasury_budget_salary_central_candidate_probe_value }
+}
+sltm_lvm_treasury_budget_military_central_total_probe_value = {
+    value = 0
+    every_vassal_or_below = { add = sltm_lvm_treasury_budget_military_central_candidate_probe_value }
+}
+# P4M1：公式侧识别出的军费受益人数。与原版预算窗口 GetNewBudgetReceiverCount 做覆盖审计。
+# 这里只按“拥有已知正 base 来源”的身份计数；外部 Mod 新增/改写类别会通过人数差首先暴露。
+sltm_lvm_treasury_budget_military_known_receiver_count_probe_value = {
+    value = 0
+    every_vassal_or_below = {
+        limit = {
+            OR = {
+                vassal_contract_has_flag = celestial_province_special_military
+                vassal_contract_has_flag = celestial_grand_marshal_obligation
+                vassal_contract_has_flag = celestial_province_protectorate
+                vassal_contract_has_flag = celestial_province_military
+                vassal_contract_has_flag = meritocratic_province_military
+                vassal_contract_has_flag = admin_theme_military
+                vassal_contract_has_flag = admin_theme_frontier
+                vassal_contract_has_flag = admin_theme_naval
+            }
+        }
+        add = 1
+    }
+}
+sltm_lvm_treasury_budget_ministry_central_total_probe_value = {
+    value = 0
+    every_vassal_or_below = { add = sltm_lvm_treasury_budget_ministry_central_candidate_probe_value }
+}
+sltm_lvm_treasury_budget_development_p4_core_total_probe_value = {
+    value = 0
+    every_vassal_or_below = { add = sltm_lvm_treasury_budget_development_p4_core_candidate_probe_value }
+}
+sltm_lvm_treasury_budget_development_central_total_probe_value = {
+    value = 0
+    every_vassal_or_below = { add = sltm_lvm_treasury_budget_development_central_candidate_probe_value }
+}
+sltm_lvm_treasury_budget_known_fixed_grant_total_probe_value = {
+    value = 0
+    every_vassal_or_below = { add = sltm_lvm_treasury_budget_known_fixed_grant_probe_value }
+}
+sltm_lvm_treasury_budget_development_recipient_income_less_known_grant_total_probe_value = {
+    value = sltm_lvm_treasury_budget_development_recipient_treasury_income_total_probe_value
+    subtract = sltm_lvm_treasury_budget_known_fixed_grant_total_probe_value
+    min = 0
+}
+
+sltm_lvm_treasury_budget_development_plus_known_grant_total_probe_value = {
+    value = sltm_lvm_treasury_budget_development_central_total_probe_value
+    add = sltm_lvm_treasury_budget_known_fixed_grant_total_probe_value
+}
+
+
+# R8-B2P4D17 — D16 已实机证明 TaxSlot/MyRealm/AssignVassalWindow 都是窗口局部 controller，
+# 在国库页没有初始化，因此全部退役。D17 只测试 Character/script-side 可生产化路线。
+#
+# 路线 A：D5 宽口径金币收入，扣除本体 modifiers.log 明确属于 Character 的非应税候选：
+#   domicile_monthly_gold_add + subject_salary_income_gold_<tier>_add。
+# 该路线不把 modifier 名字猜成 trigger；这些 tag 均来自 1.19.0.6 generated modifiers.log。
+# FIN011 RETIRED_UNAVAILABLE: # sltm_lvm_treasury_d17_domicile_gold_add = {
+#     value = domicile_monthly_gold_add
+# }
+
+# FIN011 RETIRED_UNAVAILABLE: # sltm_lvm_treasury_d17_subject_salary_county_add = { value = subject_salary_income_gold_county_add }
+# FIN011 RETIRED_UNAVAILABLE: # sltm_lvm_treasury_d17_subject_salary_duchy_add = { value = subject_salary_income_gold_duchy_add }
+# FIN011 RETIRED_UNAVAILABLE: # sltm_lvm_treasury_d17_subject_salary_kingdom_add = { value = subject_salary_income_gold_kingdom_add }
+# FIN011 RETIRED_UNAVAILABLE: # sltm_lvm_treasury_d17_subject_salary_empire_add = { value = subject_salary_income_gold_empire_add }
+# FIN011 RETIRED_UNAVAILABLE: # sltm_lvm_treasury_d17_subject_salary_hegemony_add = { value = subject_salary_income_gold_hegemony_add }
+# FIN011 RETIRED_UNAVAILABLE: # sltm_lvm_treasury_d17_subject_salary_add_sum = {
+#     value = sltm_lvm_treasury_d17_subject_salary_county_add
+#     add = sltm_lvm_treasury_d17_subject_salary_duchy_add
+#     add = sltm_lvm_treasury_d17_subject_salary_kingdom_add
+#     add = sltm_lvm_treasury_d17_subject_salary_empire_add
+#     add = sltm_lvm_treasury_d17_subject_salary_hegemony_add
+# }
+
+# 乘区只做诊断：若 actual Subject Salary 的基值由引擎生成，add/mult 未必等于最终工资。
+# 因此 D17 不把 mult 纳入正式候选，只显示它来判断引擎是否把收入修正暴露为 modifier 值。
+# FIN011 RETIRED_UNAVAILABLE: # sltm_lvm_treasury_d17_subject_salary_county_mult = { value = subject_salary_income_gold_county_mult }
+# FIN011 RETIRED_UNAVAILABLE: # sltm_lvm_treasury_d17_subject_salary_duchy_mult = { value = subject_salary_income_gold_duchy_mult }
+# FIN011 RETIRED_UNAVAILABLE: # sltm_lvm_treasury_d17_subject_salary_kingdom_mult = { value = subject_salary_income_gold_kingdom_mult }
+# FIN011 RETIRED_UNAVAILABLE: # sltm_lvm_treasury_d17_subject_salary_empire_mult = { value = subject_salary_income_gold_empire_mult }
+# FIN011 RETIRED_UNAVAILABLE: # sltm_lvm_treasury_d17_subject_salary_hegemony_mult = { value = subject_salary_income_gold_hegemony_mult }
+# FIN011 RETIRED_UNAVAILABLE: # sltm_lvm_treasury_d17_subject_salary_mult_sum = {
+#     value = sltm_lvm_treasury_d17_subject_salary_county_mult
+#     add = sltm_lvm_treasury_d17_subject_salary_duchy_mult
+#     add = sltm_lvm_treasury_d17_subject_salary_kingdom_mult
+#     add = sltm_lvm_treasury_d17_subject_salary_empire_mult
+#     add = sltm_lvm_treasury_d17_subject_salary_hegemony_mult
+# }
+
+# FIN011 RETIRED_UNAVAILABLE: # sltm_lvm_treasury_d17_taxable_from_d5_less_known_nontax = {
+#     value = sltm_lvm_treasury_budget_development_d5_tax_income_probe_value
+#     subtract = sltm_lvm_treasury_d17_domicile_gold_add
+#     subtract = sltm_lvm_treasury_d17_subject_salary_add_sum
+# }
+
+# 路线 B1：完全独立于 D5。直接枚举 Character 持有的 barony，读取其 title_province.monthly_income。
+# every_held_title / title_province / province monthly_income 均有 1.19.0.6 原版脚本先例。
+sltm_lvm_treasury_d17_domain_income_held_barony = {
+    value = 0
+    every_held_title = {
+        limit = { tier = tier_barony }
+        title_province = { add = monthly_income }
+    }
+}
+
+# 路线 B2：第二种 domain 枚举，遍历 sub-realm barony 但只接受 holder=root。
+# 与 B1 的枚举集合不同，用于判定“角色是否显式持有资本 barony title”的边界。
+sltm_lvm_treasury_d17_domain_income_subrealm_holder = {
+    value = 0
+    every_sub_realm_barony = {
+        limit = { holder = root }
+        title_province = { add = monthly_income }
+    }
+}
+
+# 仅诊断：如果 A 的应税收入命中约80，而 B 命中直辖约4.2，则二者差值应为原版“封臣税”约75.7。
+# FIN011 RETIRED_UNAVAILABLE: # sltm_lvm_treasury_d17_vassal_tax_implied_b1 = {
+#     value = sltm_lvm_treasury_d17_taxable_from_d5_less_known_nontax
+#     subtract = sltm_lvm_treasury_d17_domain_income_held_barony
+# }
+# FIN011 RETIRED_UNAVAILABLE: # sltm_lvm_treasury_d17_vassal_tax_implied_b2 = {
+#     value = sltm_lvm_treasury_d17_taxable_from_d5_less_known_nontax
+#     subtract = sltm_lvm_treasury_d17_domain_income_subrealm_holder
+# }
+
+# 交叉对照：当前已验证的中央俸禄预算候选不是“臣属俸禄”金币收入，
+# 但同屏显示，避免误把两个 salary 系统混为一谈。
+sltm_lvm_treasury_d17_central_salary_control = {
+    value = sltm_lvm_treasury_budget_salary_central_candidate_probe_value
+}
+
+# R8-B2P4D19 — 剩余非应税项一次收口矩阵。
+# D17F1 已实机：D5=81.04；B1/B2 直辖均=4.22；D10 税额=76.01、税率=95%、factor=0.60。
+# 本卡不再猜新 getter，只测试 1.19.0.6 modifiers.log / vanilla callsite 已确认的剩余暴露量，
+# 并把此前已通过 3/3 的 salary recipient fallback 与当前“臣属俸禄”并排。
+
+# 住所：Character modifier 直读在 D17 为 add=0；补测 mult。
+# FIN011 RETIRED_UNAVAILABLE: # sltm_lvm_treasury_d19_domicile_gold_mult = { value = domicile_monthly_gold_mult }
+
+# 住所主宅链诊断：has_domicile_building_or_higher 是 Domicile-scope 原版 trigger。
+# 中国庄园 main 01..05 的 character_modifier 金币 add 分别 0.25/0.25/0.50/0.50/0.75。
+# 这里按“当前建筑或其升级”累计，仅用于判断用户原版 Breakdown 的“宅第 +0.50”是否就是 main 链累计；
+# 不声称覆盖其他 internal/external estate buildings，因此不是生产公式。
+sltm_lvm_treasury_d19_estate_main_level = {
+    value = 0
+    domicile ?= {
+        if = { limit = { has_domicile_building_or_higher = east_asian_estate_main_05 } add = 5 }
+        else_if = { limit = { has_domicile_building_or_higher = east_asian_estate_main_04 } add = 4 }
+        else_if = { limit = { has_domicile_building_or_higher = east_asian_estate_main_03 } add = 3 }
+        else_if = { limit = { has_domicile_building_or_higher = east_asian_estate_main_02 } add = 2 }
+        else_if = { limit = { has_domicile_building_or_higher = east_asian_estate_main_01 } add = 1 }
+    }
+}
+sltm_lvm_treasury_d19_estate_main_cumulative_gold = {
+    value = 0
+    domicile ?= {
+        if = { limit = { has_domicile_building_or_higher = east_asian_estate_main_01 } add = 0.25 }
+        if = { limit = { has_domicile_building_or_higher = east_asian_estate_main_02 } add = 0.25 }
+        if = { limit = { has_domicile_building_or_higher = east_asian_estate_main_03 } add = 0.50 }
+        if = { limit = { has_domicile_building_or_higher = east_asian_estate_main_04 } add = 0.50 }
+        if = { limit = { has_domicile_building_or_higher = east_asian_estate_main_05 } add = 0.75 }
+    }
+}
+
+# 臣属俸禄：generic 与 tier-specific modifier 都是 1.19.0.6 正式 definition。
+# D17 tier 全0，因此补测 generic add/mult，验证是否有未分 tier 的收入修正。
+# FIN011 RETIRED_UNAVAILABLE: # sltm_lvm_treasury_d19_subject_salary_generic_add = { value = subject_salary_income_gold_add }
+# FIN011 RETIRED_UNAVAILABLE: # sltm_lvm_treasury_d19_subject_salary_generic_mult = { value = subject_salary_income_gold_mult }
+
+# 受益者收入侧 fallback：此前韩琦/司马光/杨完 3/3 与原版一位小数收入命中。
+# = top_liege salary budget base rate × reconstructed (salary rank + merit) × (1 + celestial_salary mult)。
+# 与 central candidate（不乘 contract mult）并列，避免混淆中央支出和受益者 Gold 收入。
+sltm_lvm_treasury_d19_salary_recipient_candidate = {
+    value = sltm_lvm_treasury_budget_salary_core_candidate_probe_value
+}
+
+# 仅诊断 direct raw modifier 是否能替代重建 base/mult；不能仅凭数值相近转正。
+# FIN011 RETIRED_UNAVAILABLE: # sltm_lvm_treasury_d19_salary_raw_candidate = {
+#     value = sltm_lvm_treasury_budget_salary_rate_probe_value
+#     multiply = sltm_lvm_treasury_budget_salary_raw_base_probe_value
+#     multiply = {
+#         value = sltm_lvm_treasury_budget_salary_raw_mult_probe_value
+#         add = 1
+#     }
+#     min = 0
+# }
+
+############################################################
+# R8-B2P4D20 — 住所最终收入 + 臣属俸禄闭环 Probe。
+# 静态原版依据：
+# - NCharacter.SKILL_MODIFIER_OFFSET = -8；
+# - stewardship_modifier_with_offset: domicile_monthly_gold_mult = 0.04；
+# 因此“管理”对住所收入的引擎倍率 = (stewardship - 8) * 4%。
+# 李参 stewardship=5 => -12%，与原版住所 Breakdown 完全一致。
+############################################################
+
+# 先测试 modifier token 在 Domicile receiver 下能否直接给出聚合值；
+# 若仍为 0，则证明 modifier definition 不是公开 numeric getter，继续使用可证明的重建链。
+# FIN011 RETIRED_UNAVAILABLE: # sltm_lvm_treasury_d20_domicile_scope_gold_add = {
+#     value = 0
+#     domicile ?= { add = domicile_monthly_gold_add }
+# }
+# FIN011 RETIRED_UNAVAILABLE: # sltm_lvm_treasury_d20_domicile_scope_gold_mult = {
+#     value = 0
+#     domicile ?= { add = domicile_monthly_gold_mult }
+# }
+
+# 原版 skill-with-offset 精确重建。
+sltm_lvm_treasury_d20_stewardship_domicile_mult = {
+    value = stewardship
+    add = -8
+    multiply = 0.04
+}
+
+# 当前中国庄园主宅链 + 原版管理倍率。该值只覆盖主宅链，不声称覆盖其它可产生住所金币的建筑。
+sltm_lvm_treasury_d20_main_estate_after_stewardship = {
+    value = sltm_lvm_treasury_d19_estate_main_cumulative_gold
+    multiply = {
+        value = sltm_lvm_treasury_d20_stewardship_domicile_mult
+        add = 1
+    }
+    min = 0
+}
+
+# 若 Domicile receiver 能直接聚合 add/mult，则测试两种组合：
+# 1) scope add × (1 + scope mult)
+# 2) scope add × (1 + scope mult + skill-with-offset)
+# 第二种用于判断 scope mult 是否已经包含“管理”这项。
+# FIN011 RETIRED_UNAVAILABLE: # sltm_lvm_treasury_d20_domicile_scope_final_without_skill = {
+#     value = sltm_lvm_treasury_d20_domicile_scope_gold_add
+#     multiply = {
+#         value = sltm_lvm_treasury_d20_domicile_scope_gold_mult
+#         add = 1
+#     }
+#     min = 0
+# }
+# FIN011 RETIRED_UNAVAILABLE: # sltm_lvm_treasury_d20_domicile_scope_final_with_skill = {
+#     value = sltm_lvm_treasury_d20_domicile_scope_gold_add
+#     multiply = {
+#         value = sltm_lvm_treasury_d20_domicile_scope_gold_mult
+#         add = sltm_lvm_treasury_d20_stewardship_domicile_mult
+#         add = 1
+#     }
+#     min = 0
+# }
+
+# 当前样本闭环候选：D5宽口径 - 主宅实际收入 - 已验证受益者Gold俸禄。
+sltm_lvm_treasury_d20_taxable_main_salary_candidate = {
+    value = sltm_lvm_treasury_budget_development_d5_tax_income_probe_value
+    subtract = sltm_lvm_treasury_d20_main_estate_after_stewardship
+    subtract = sltm_lvm_treasury_d19_salary_recipient_candidate
+    min = 0
+}
+sltm_lvm_treasury_d20_implied_vassal_tax_candidate = {
+    value = sltm_lvm_treasury_d20_taxable_main_salary_candidate
+    subtract = sltm_lvm_treasury_d17_domain_income_held_barony
+    min = 0
+}
+
+# 若 Domicile-scope 聚合可用，则给一个更通用的候选；实机只负责判断其是否有值和是否命中。
+# FIN011 RETIRED_UNAVAILABLE: # sltm_lvm_treasury_d20_taxable_scope_salary_candidate = {
+#     value = sltm_lvm_treasury_budget_development_d5_tax_income_probe_value
+#     subtract = sltm_lvm_treasury_d20_domicile_scope_final_with_skill
+#     subtract = sltm_lvm_treasury_d19_salary_recipient_candidate
+#     min = 0
+# }
+
+
+############################################################
+# R8-B2P4D21 — 同状态闭环后的“全中国庄园建筑”通用化 Probe。
+# D20 USER RUNTIME PASS（李参同一时点）：
+#   Character-side 税候 75.908 / 发候 45.544；
+#   MyRealmWindowVassalItem CachedTax 75.90 / 发 45.54；
+#   反推应税 79.90 vs D20 79.903。
+# 因此样本公式已精确闭环。D21 不再改税率、发展金 factor 或俸禄链，
+# 只把住所从“主宅链”扩展为 vanilla 00_chinese_estate_buildings.txt 中全部
+# domicile_monthly_gold_add / domicile_monthly_gold_mult 建筑效果，并在 MyRealm owner-local
+# 与 CachedTax 同屏比较多封臣 residual，验证能否生产化到列表。
+############################################################
+
+# 由 CK3 1.19.0.6 00_chinese_estate_buildings.txt 自动生成。
+# 语义：每个已建等级的 character_modifier 都会累计；has_domicile_building_or_higher
+# 对升级链保留低级效果。D19 李参 main_02 的 0.25+0.25=0.50 已实机交叉通过。
+# 本值只重建“建筑本身”的 domicile 月金币 add，不包含 management/perk/temporary modifier。
+sltm_lvm_treasury_d21_east_asian_estate_building_gold_add = {
+    value = 0
+    domicile ?= {
+        if = { limit = { has_domicile_building_or_higher = east_asian_estate_main_01 } add = 0.25 }
+        if = { limit = { has_domicile_building_or_higher = east_asian_estate_main_02 } add = 0.25 }
+        if = { limit = { has_domicile_building_or_higher = east_asian_estate_main_03 } add = 0.5 }
+        if = { limit = { has_domicile_building_or_higher = east_asian_estate_main_04 } add = 0.5 }
+        if = { limit = { has_domicile_building_or_higher = east_asian_estate_main_05 } add = 0.75 }
+        if = { limit = { has_domicile_building_or_higher = east_asian_estate_taxation_01 } add = 0.15 }
+        if = { limit = { has_domicile_building_or_higher = east_asian_estate_taxation_02 } add = 0.15 }
+        if = { limit = { has_domicile_building_or_higher = east_asian_estate_taxation_03 } add = 0.15 }
+        if = { limit = { has_domicile_building_or_higher = east_asian_estate_taxation_04 } add = 0.15 }
+        if = { limit = { has_domicile_building_or_higher = east_asian_estate_block_printing_hall_01 } add = 0.15 }
+        if = { limit = { has_domicile_building_or_higher = east_asian_estate_block_printing_hall_02 } add = 0.15 }
+        if = { limit = { has_domicile_building_or_higher = east_asian_estate_block_printing_hall_03 } add = 0.15 }
+        if = { limit = { has_domicile_building_or_higher = east_asian_estate_block_printing_hall_04 } add = 0.15 }
+        if = { limit = { has_domicile_building_or_higher = east_asian_estate_rice_field_01 } add = 0.4 }
+        if = { limit = { has_domicile_building_or_higher = east_asian_estate_rice_field_02 } add = 0.4 }
+        if = { limit = { has_domicile_building_or_higher = east_asian_estate_rice_field_03 } add = 0.4 }
+        if = { limit = { has_domicile_building_or_higher = east_asian_estate_rice_field_04 } add = 0.4 }
+        if = { limit = { has_domicile_building_or_higher = east_asian_estate_rice_field_05 } add = 0.4 }
+        if = { limit = { has_domicile_building_or_higher = east_asian_estate_rice_field_06 } add = 0.4 }
+        if = { limit = { has_domicile_building_or_higher = east_asian_estate_tea_01 } add = 0.25 }
+        if = { limit = { has_domicile_building_or_higher = east_asian_estate_tea_02 } add = 0.25 }
+        if = { limit = { has_domicile_building_or_higher = east_asian_estate_tea_03 } add = 0.25 }
+        if = { limit = { has_domicile_building_or_higher = east_asian_estate_tea_04 } add = 0.25 }
+        if = { limit = { has_domicile_building_or_higher = east_asian_estate_tea_05 } add = 0.25 }
+        if = { limit = { has_domicile_building_or_higher = east_asian_estate_tea_06 } add = 0.25 }
+        if = { limit = { has_domicile_building_or_higher = east_asian_estate_market_01 } add = 0.1 }
+        if = { limit = { has_domicile_building_or_higher = east_asian_estate_market_02 } add = 0.1 }
+        if = { limit = { has_domicile_building_or_higher = east_asian_estate_market_03 } add = 0.2 }
+        if = { limit = { has_domicile_building_or_higher = east_asian_estate_market_04 } add = 0.4 }
+        if = { limit = { has_domicile_building_or_higher = east_asian_estate_market_05 } add = 0.8 }
+        if = { limit = { has_domicile_building_or_higher = east_asian_estate_market_06 } add = 1.6 }
+        if = { limit = { has_domicile_building_or_higher = east_asian_estate_health_01 } add = 0.2 }
+        if = { limit = { has_domicile_building_or_higher = east_asian_estate_health_02 } add = 0.2 }
+        if = { limit = { has_domicile_building_or_higher = east_asian_estate_health_03 } add = 0.2 }
+        if = { limit = { has_domicile_building_or_higher = east_asian_estate_health_04 } add = 0.2 }
+        if = { limit = { has_domicile_building_or_higher = east_asian_estate_health_05 } add = 0.2 }
+        if = { limit = { has_domicile_building_or_higher = east_asian_estate_health_06 } add = 0.2 }
+        if = { limit = { has_domicile_building_or_higher = east_asian_estate_silk_01 } add = 0.3 }
+        if = { limit = { has_domicile_building_or_higher = east_asian_estate_silk_02 } add = 0.3 }
+        if = { limit = { has_domicile_building_or_higher = east_asian_estate_silk_03 } add = 0.3 }
+        if = { limit = { has_domicile_building_or_higher = east_asian_estate_silk_04 } add = 0.3 }
+        if = { limit = { has_domicile_building_or_higher = east_asian_estate_silk_05 } add = 0.3 }
+        if = { limit = { has_domicile_building_or_higher = east_asian_estate_silk_06 } add = 0.3 }
+        if = { limit = { has_domicile_building_or_higher = east_asian_estate_garden_fruit_04 } add = 0.2 }
+        if = { limit = { has_domicile_building_or_higher = east_asian_estate_garden_fruit_05 } add = 0.2 }
+        if = { limit = { has_domicile_building_or_higher = east_asian_estate_garden_fruit_06 } add = 0.2 }
+        if = { limit = { has_domicile_building_or_higher = east_asian_estate_workshop_01 } add = 0.2 }
+        if = { limit = { has_domicile_building_or_higher = east_asian_estate_workshop_02 } add = 0.1 }
+        if = { limit = { has_domicile_building_or_higher = east_asian_estate_workshop_carpenter_03 } add = 0.1 }
+        if = { limit = { has_domicile_building_or_higher = east_asian_estate_workshop_carpenter_04 } add = 0.1 }
+        if = { limit = { has_domicile_building_or_higher = east_asian_estate_workshop_carpenter_05 } add = 0.1 }
+        if = { limit = { has_domicile_building_or_higher = east_asian_estate_workshop_carpenter_06 } add = 0.1 }
+        if = { limit = { has_domicile_building_or_higher = east_asian_estate_workshop_mason_03 } add = 0.1 }
+        if = { limit = { has_domicile_building_or_higher = east_asian_estate_workshop_mason_04 } add = 0.1 }
+        if = { limit = { has_domicile_building_or_higher = east_asian_estate_workshop_mason_05 } add = 0.1 }
+        if = { limit = { has_domicile_building_or_higher = east_asian_estate_workshop_mason_06 } add = 0.1 }
+        if = { limit = { has_domicile_building_or_higher = east_asian_estate_workshop_textile_03 } add = 0.2 }
+        if = { limit = { has_domicile_building_or_higher = east_asian_estate_workshop_textile_04 } add = 0.2 }
+        if = { limit = { has_domicile_building_or_higher = east_asian_estate_workshop_textile_05 } add = 0.2 }
+        if = { limit = { has_domicile_building_or_higher = east_asian_estate_workshop_textile_06 } add = 0.2 }
+        if = { limit = { has_domicile_building_or_higher = east_asian_estate_storage_warehouse_03 } add = 0.1 }
+        if = { limit = { has_domicile_building_or_higher = east_asian_estate_storage_warehouse_04 } add = 0.1 }
+        if = { limit = { has_domicile_building_or_higher = east_asian_estate_storage_warehouse_05 } add = 0.1 }
+        if = { limit = { has_domicile_building_or_higher = east_asian_estate_storage_warehouse_06 } add = 0.1 }
+        if = { limit = { has_domicile_building_or_higher = east_asian_estate_field_surveyors_office_01 } add = 0.15 }
+        if = { limit = { has_domicile_building_or_higher = east_asian_estate_field_surveyors_office_02 } add = 0.15 }
+        if = { limit = { has_domicile_building_or_higher = east_asian_estate_field_surveyors_office_03 } add = 0.15 }
+        if = { limit = { has_domicile_building_or_higher = east_asian_estate_field_surveyors_office_04 } add = 0.15 }
+        if = { limit = { has_domicile_building_or_higher = east_asian_estate_cellar_cave_01 } add = 0.2 }
+        if = { limit = { has_domicile_building_or_higher = east_asian_estate_cellar_cave_02 } add = 0.2 }
+        if = { limit = { has_domicile_building_or_higher = east_asian_estate_cellar_cave_03 } add = 0.2 }
+        if = { limit = { has_domicile_building_or_higher = east_asian_estate_cellar_cave_04 } add = 0.2 }
+        if = { limit = { has_domicile_building_or_higher = east_asian_estate_weighing_house_01 } add = 0.25 }
+        if = { limit = { has_domicile_building_or_higher = east_asian_estate_weighing_house_02 } add = 0.25 }
+        if = { limit = { has_domicile_building_or_higher = east_asian_estate_weighing_house_03 } add = 0.25 }
+        if = { limit = { has_domicile_building_or_higher = east_asian_estate_weighing_house_04 } add = 0.25 }
+        if = { limit = { has_domicile_building_or_higher = east_asian_estate_dye_works_01 } add = 0.15 }
+        if = { limit = { has_domicile_building_or_higher = east_asian_estate_dye_works_02 } add = 0.15 }
+        if = { limit = { has_domicile_building_or_higher = east_asian_estate_dye_works_03 } add = 0.15 }
+        if = { limit = { has_domicile_building_or_higher = east_asian_estate_dye_works_04 } add = 0.15 }
+        if = { limit = { has_domicile_building_or_higher = east_asian_estate_roasting_house_01 } add = 0.25 }
+        if = { limit = { has_domicile_building_or_higher = east_asian_estate_roasting_house_02 } add = 0.25 }
+        if = { limit = { has_domicile_building_or_higher = east_asian_estate_roasting_house_03 } add = 0.25 }
+        if = { limit = { has_domicile_building_or_higher = east_asian_estate_roasting_house_04 } add = 0.25 }
+        if = { limit = { has_domicile_building_or_higher = east_asian_estate_tea_tax_office_01 } add = 0.15 }
+        if = { limit = { has_domicile_building_or_higher = east_asian_estate_tea_tax_office_02 } add = 0.15 }
+        if = { limit = { has_domicile_building_or_higher = east_asian_estate_tea_tax_office_03 } add = 0.15 }
+        if = { limit = { has_domicile_building_or_higher = east_asian_estate_tea_tax_office_04 } add = 0.15 }
+        if = { limit = { has_domicile_building_or_higher = east_asian_estate_hot_baths_01 } add = 0.15 }
+        if = { limit = { has_domicile_building_or_higher = east_asian_estate_hot_baths_02 } add = 0.15 }
+        if = { limit = { has_domicile_building_or_higher = east_asian_estate_hot_baths_03 } add = 0.15 }
+        if = { limit = { has_domicile_building_or_higher = east_asian_estate_hot_baths_04 } add = 0.15 }
+        if = { limit = { has_domicile_building_or_higher = east_asian_estate_herb_drying_terrace_01 } add = 0.25 }
+        if = { limit = { has_domicile_building_or_higher = east_asian_estate_herb_drying_terrace_02 } add = 0.25 }
+        if = { limit = { has_domicile_building_or_higher = east_asian_estate_herb_drying_terrace_03 } add = 0.25 }
+        if = { limit = { has_domicile_building_or_higher = east_asian_estate_herb_drying_terrace_04 } add = 0.25 }
+        if = { limit = { has_domicile_building_or_higher = east_asian_estate_temple_land_office_01 } add = 0.25 }
+        if = { limit = { has_domicile_building_or_higher = east_asian_estate_temple_land_office_02 } add = 0.25 }
+        if = { limit = { has_domicile_building_or_higher = east_asian_estate_temple_land_office_03 } add = 0.25 }
+        if = { limit = { has_domicile_building_or_higher = east_asian_estate_temple_land_office_04 } add = 0.25 }
+        if = { limit = { has_domicile_building_or_higher = east_asian_estate_ancestral_orchard_01 } add = 0.15 }
+        if = { limit = { has_domicile_building_or_higher = east_asian_estate_ancestral_orchard_02 } add = 0.15 }
+        if = { limit = { has_domicile_building_or_higher = east_asian_estate_ancestral_orchard_03 } add = 0.15 }
+        if = { limit = { has_domicile_building_or_higher = east_asian_estate_ancestral_orchard_04 } add = 0.15 }
+        if = { limit = { has_domicile_building_or_higher = east_asian_estate_fruit_trees_01 } add = 0.15 }
+        if = { limit = { has_domicile_building_or_higher = east_asian_estate_fruit_trees_02 } add = 0.15 }
+        if = { limit = { has_domicile_building_or_higher = east_asian_estate_fruit_trees_03 } add = 0.15 }
+        if = { limit = { has_domicile_building_or_higher = east_asian_estate_fruit_trees_04 } add = 0.15 }
+        if = { limit = { has_domicile_building_or_higher = east_asian_estate_foaling_pens_01 } add = 0.15 }
+        if = { limit = { has_domicile_building_or_higher = east_asian_estate_foaling_pens_02 } add = 0.15 }
+        if = { limit = { has_domicile_building_or_higher = east_asian_estate_foaling_pens_03 } add = 0.15 }
+        if = { limit = { has_domicile_building_or_higher = east_asian_estate_foaling_pens_04 } add = 0.15 }
+        if = { limit = { has_domicile_building_or_higher = east_asian_estate_paper_mill_01 } add = 0.35 }
+        if = { limit = { has_domicile_building_or_higher = east_asian_estate_paper_mill_02 } add = 0.35 }
+        if = { limit = { has_domicile_building_or_higher = east_asian_estate_paper_mill_03 } add = 0.35 }
+        if = { limit = { has_domicile_building_or_higher = east_asian_estate_paper_mill_04 } add = 0.35 }
+        if = { limit = { has_domicile_building_or_higher = east_asian_estate_ink_brush_makers_01 } add = 0.15 }
+        if = { limit = { has_domicile_building_or_higher = east_asian_estate_ink_brush_makers_02 } add = 0.15 }
+        if = { limit = { has_domicile_building_or_higher = east_asian_estate_ink_brush_makers_03 } add = 0.15 }
+        if = { limit = { has_domicile_building_or_higher = east_asian_estate_ink_brush_makers_04 } add = 0.15 }
+        if = { limit = { has_domicile_building_or_higher = east_asian_estate_drying_loft_01 } add = 0.25 }
+        if = { limit = { has_domicile_building_or_higher = east_asian_estate_drying_loft_02 } add = 0.25 }
+        if = { limit = { has_domicile_building_or_higher = east_asian_estate_drying_loft_03 } add = 0.25 }
+        if = { limit = { has_domicile_building_or_higher = east_asian_estate_drying_loft_04 } add = 0.25 }
+        if = { limit = { has_domicile_building_or_higher = east_asian_estate_salt_lick_terraces_01 } add = 0.25 }
+        if = { limit = { has_domicile_building_or_higher = east_asian_estate_salt_lick_terraces_02 } add = 0.25 }
+        if = { limit = { has_domicile_building_or_higher = east_asian_estate_salt_lick_terraces_03 } add = 0.25 }
+        if = { limit = { has_domicile_building_or_higher = east_asian_estate_salt_lick_terraces_04 } add = 0.25 }
+        if = { limit = { has_domicile_building_or_higher = east_asian_estate_donation_box_01 } add = 0.25 }
+        if = { limit = { has_domicile_building_or_higher = east_asian_estate_donation_box_02 } add = 0.25 }
+        if = { limit = { has_domicile_building_or_higher = east_asian_estate_donation_box_03 } add = 0.25 }
+        if = { limit = { has_domicile_building_or_higher = east_asian_estate_donation_box_04 } add = 0.25 }
+    }
+}
+
+# 同上，重建所有中国庄园建筑贡献的 domicile 月金币 mult。
+sltm_lvm_treasury_d21_east_asian_estate_building_gold_mult = {
+    value = 0
+    domicile ?= {
+        if = { limit = { has_domicile_building_or_higher = east_asian_estate_main_03 } add = 0.02 }
+        if = { limit = { has_domicile_building_or_higher = east_asian_estate_main_04 } add = 0.03 }
+        if = { limit = { has_domicile_building_or_higher = east_asian_estate_main_05 } add = 0.05 }
+        if = { limit = { has_domicile_building_or_higher = east_asian_estate_clerks_hall_01 } add = 0.01 }
+        if = { limit = { has_domicile_building_or_higher = east_asian_estate_clerks_hall_02 } add = 0.01 }
+        if = { limit = { has_domicile_building_or_higher = east_asian_estate_clerks_hall_03 } add = 0.01 }
+        if = { limit = { has_domicile_building_or_higher = east_asian_estate_clerks_hall_04 } add = 0.01 }
+        if = { limit = { has_domicile_building_or_higher = east_asian_estate_storage_01 } add = 0.03 }
+        if = { limit = { has_domicile_building_or_higher = east_asian_estate_storage_02 } add = 0.03 }
+        if = { limit = { has_domicile_building_or_higher = east_asian_estate_storage_granary_03 } add = 0.03 }
+        if = { limit = { has_domicile_building_or_higher = east_asian_estate_storage_granary_04 } add = 0.03 }
+        if = { limit = { has_domicile_building_or_higher = east_asian_estate_storage_granary_05 } add = 0.03 }
+        if = { limit = { has_domicile_building_or_higher = east_asian_estate_storage_granary_06 } add = 0.03 }
+        if = { limit = { has_domicile_building_or_higher = east_asian_estate_gate_01 } add = 0.1 }
+        if = { limit = { has_domicile_building_or_higher = east_asian_estate_gate_02 } add = 0.02 }
+        if = { limit = { has_domicile_building_or_higher = east_asian_estate_gate_03 } add = 0.02 }
+        if = { limit = { has_domicile_building_or_higher = east_asian_estate_gate_04 } add = 0.02 }
+        if = { limit = { has_domicile_building_or_higher = east_asian_estate_gate_05 } add = 0.02 }
+        if = { limit = { has_domicile_building_or_higher = east_asian_estate_gate_06 } add = 0.02 }
+        if = { limit = { has_domicile_building_or_higher = east_asian_estate_rice_fish_duck_ponds_01 } add = 0.03 }
+        if = { limit = { has_domicile_building_or_higher = east_asian_estate_rice_fish_duck_ponds_02 } add = 0.03 }
+        if = { limit = { has_domicile_building_or_higher = east_asian_estate_rice_fish_duck_ponds_03 } add = 0.03 }
+        if = { limit = { has_domicile_building_or_higher = east_asian_estate_rice_fish_duck_ponds_04 } add = 0.03 }
+        if = { limit = { has_domicile_building_or_higher = east_asian_estate_weighing_house_01 } add = 0.02 }
+        if = { limit = { has_domicile_building_or_higher = east_asian_estate_weighing_house_02 } add = 0.02 }
+        if = { limit = { has_domicile_building_or_higher = east_asian_estate_weighing_house_03 } add = 0.02 }
+        if = { limit = { has_domicile_building_or_higher = east_asian_estate_weighing_house_04 } add = 0.02 }
+        if = { limit = { has_domicile_building_or_higher = east_asian_estate_night_watch_01 } add = 0.02 }
+        if = { limit = { has_domicile_building_or_higher = east_asian_estate_night_watch_02 } add = 0.02 }
+        if = { limit = { has_domicile_building_or_higher = east_asian_estate_night_watch_03 } add = 0.02 }
+        if = { limit = { has_domicile_building_or_higher = east_asian_estate_night_watch_04 } add = 0.02 }
+        if = { limit = { has_domicile_building_or_higher = east_asian_estate_mulberry_nursery_01 } add = 0.02 }
+        if = { limit = { has_domicile_building_or_higher = east_asian_estate_mulberry_nursery_02 } add = 0.02 }
+        if = { limit = { has_domicile_building_or_higher = east_asian_estate_mulberry_nursery_03 } add = 0.02 }
+        if = { limit = { has_domicile_building_or_higher = east_asian_estate_mulberry_nursery_04 } add = 0.02 }
+        if = { limit = { has_domicile_building_or_higher = east_asian_estate_bell_drum_tower_01 } add = 0.03 }
+        if = { limit = { has_domicile_building_or_higher = east_asian_estate_bell_drum_tower_02 } add = 0.03 }
+        if = { limit = { has_domicile_building_or_higher = east_asian_estate_bell_drum_tower_03 } add = 0.03 }
+        if = { limit = { has_domicile_building_or_higher = east_asian_estate_bell_drum_tower_04 } add = 0.03 }
+        if = { limit = { has_domicile_building_or_higher = east_asian_estate_regular_patrols_01 } add = 0.05 }
+        if = { limit = { has_domicile_building_or_higher = east_asian_estate_regular_patrols_02 } add = 0.05 }
+        if = { limit = { has_domicile_building_or_higher = east_asian_estate_regular_patrols_03 } add = 0.05 }
+        if = { limit = { has_domicile_building_or_higher = east_asian_estate_regular_patrols_04 } add = 0.05 }
+        if = { limit = { has_domicile_building_or_higher = east_asian_estate_farriers_office_01 } add = 0.03 }
+        if = { limit = { has_domicile_building_or_higher = east_asian_estate_farriers_office_02 } add = 0.03 }
+        if = { limit = { has_domicile_building_or_higher = east_asian_estate_farriers_office_03 } add = 0.03 }
+        if = { limit = { has_domicile_building_or_higher = east_asian_estate_farriers_office_04 } add = 0.03 }
+        if = { limit = { has_domicile_building_or_higher = east_asian_estate_ceramics_kiln_01 } add = 0.03 }
+        if = { limit = { has_domicile_building_or_higher = east_asian_estate_ceramics_kiln_02 } add = 0.03 }
+        if = { limit = { has_domicile_building_or_higher = east_asian_estate_ceramics_kiln_03 } add = 0.03 }
+        if = { limit = { has_domicile_building_or_higher = east_asian_estate_ceramics_kiln_04 } add = 0.03 }
+        if = { limit = { has_domicile_building_or_higher = east_asian_estate_ledger_office_01 } add = 0.03 }
+        if = { limit = { has_domicile_building_or_higher = east_asian_estate_ledger_office_02 } add = 0.03 }
+        if = { limit = { has_domicile_building_or_higher = east_asian_estate_ledger_office_03 } add = 0.03 }
+        if = { limit = { has_domicile_building_or_higher = east_asian_estate_ledger_office_04 } add = 0.03 }
+        if = { limit = { has_domicile_building_or_higher = east_asian_estate_watering_ditches_01 } add = 0.05 }
+        if = { limit = { has_domicile_building_or_higher = east_asian_estate_watering_ditches_02 } add = 0.05 }
+        if = { limit = { has_domicile_building_or_higher = east_asian_estate_watering_ditches_03 } add = 0.05 }
+        if = { limit = { has_domicile_building_or_higher = east_asian_estate_watering_ditches_04 } add = 0.05 }
+    }
+}
+
+# 当前可证明的住所总倍率候选 = 建筑 mult + 原版 stewardship-with-offset。
+# 其它 character/perk/temporary domicile gold mult 若存在，会由 MyRealm residual 直接暴露；
+# D21 不静默猜入，避免把一次样本命中冒充通用真值。
+sltm_lvm_treasury_d21_estate_total_known_mult = {
+    value = sltm_lvm_treasury_d21_east_asian_estate_building_gold_mult
+    add = sltm_lvm_treasury_d20_stewardship_domicile_mult
+}
+
+# 通用住所候选 = 全中国庄园建筑 gold add × (1 + 已知建筑 mult + 管理倍率)。
+sltm_lvm_treasury_d21_estate_known_factor = {
+    value = 1
+    add = sltm_lvm_treasury_d21_estate_total_known_mult
+    min = 0
+}
+
+sltm_lvm_treasury_d21_estate_income_candidate = {
+    value = sltm_lvm_treasury_d21_east_asian_estate_building_gold_add
+    multiply = {
+        value = sltm_lvm_treasury_d21_estate_total_known_mult
+        add = 1
+    }
+    min = 0
+}
+
+# 非应税重建 = 住所候选 + D19F1 已实机命中的受益者 Gold 俸禄。
+sltm_lvm_treasury_d21_nontax_rebuilt_candidate = {
+    value = sltm_lvm_treasury_d21_estate_income_candidate
+    add = sltm_lvm_treasury_d19_salary_recipient_candidate
+    min = 0
+}
+
+# 应税收入候选 = D5 宽口径 - 非应税重建。
+sltm_lvm_treasury_d21_taxable_rebuilt_candidate = {
+    value = sltm_lvm_treasury_budget_development_d5_tax_income_probe_value
+    subtract = sltm_lvm_treasury_d21_nontax_rebuilt_candidate
+    min = 0
+}
+
+
+############################################################
+# R8-B2P4D24 — 受益者实际到账候选 Probe。
+# 目标：不改变左表“天子发放”正式口径，只在右侧并列检查实际到账。
+# 静态依据：原版 Treasury income breakdown 对 salary/military/ministry 均有
+# BASE + MULT 项；D19F1 已实机证明 salary 收入侧 = 中央 base × (1 + mult)。
+# D24 将同型公式一次并列用于 military/ministry，并保留 raw modifier token
+# 作为控制。未通过原版 Character Treasury 明细前，均不升级为正式“收”。
+############################################################
+
+# 军事预算：原版中国庄园中全部 38 个 monthly_treasury_from_military_budget_mult
+# 建筑效果。与 D21 住所重建相同，按 has_domicile_building_or_higher 累加。
+sltm_lvm_treasury_d24_military_estate_mult = {
+    value = 0
+    domicile ?= {
+        if = { limit = { has_domicile_building_or_higher = east_asian_estate_barracks_01 } add = 0.01 }
+        if = { limit = { has_domicile_building_or_higher = east_asian_estate_barracks_02 } add = 0.01 }
+        if = { limit = { has_domicile_building_or_higher = east_asian_estate_barracks_03 } add = 0.01 }
+        if = { limit = { has_domicile_building_or_higher = east_asian_estate_barracks_04 } add = 0.01 }
+        if = { limit = { has_domicile_building_or_higher = east_asian_estate_barracks_05 } add = 0.01 }
+        if = { limit = { has_domicile_building_or_higher = east_asian_estate_barracks_06 } add = 0.01 }
+        if = { limit = { has_domicile_building_or_higher = east_asian_estate_stable_01 } add = 0.02 }
+        if = { limit = { has_domicile_building_or_higher = east_asian_estate_stable_02 } add = 0.02 }
+        if = { limit = { has_domicile_building_or_higher = east_asian_estate_stable_03 } add = 0.02 }
+        if = { limit = { has_domicile_building_or_higher = east_asian_estate_stable_grand_04 } add = 0.02 }
+        if = { limit = { has_domicile_building_or_higher = east_asian_estate_stable_grand_05 } add = 0.02 }
+        if = { limit = { has_domicile_building_or_higher = east_asian_estate_stable_grand_06 } add = 0.02 }
+        if = { limit = { has_domicile_building_or_higher = east_asian_estate_stable_kennel_04 } add = 0.02 }
+        if = { limit = { has_domicile_building_or_higher = east_asian_estate_stable_kennel_05 } add = 0.02 }
+        if = { limit = { has_domicile_building_or_higher = east_asian_estate_stable_kennel_06 } add = 0.02 }
+        if = { limit = { has_domicile_building_or_higher = east_asian_estate_grazing_land_01 } add = 0.01 }
+        if = { limit = { has_domicile_building_or_higher = east_asian_estate_grazing_land_02 } add = 0.01 }
+        if = { limit = { has_domicile_building_or_higher = east_asian_estate_grazing_land_03 } add = 0.01 }
+        if = { limit = { has_domicile_building_or_higher = east_asian_estate_grazing_land_04 } add = 0.01 }
+        if = { limit = { has_domicile_building_or_higher = east_asian_estate_grazing_land_05 } add = 0.01 }
+        if = { limit = { has_domicile_building_or_higher = east_asian_estate_grazing_land_06 } add = 0.01 }
+        if = { limit = { has_domicile_building_or_higher = east_asian_estate_horse_pasture_04 } add = 0.01 }
+        if = { limit = { has_domicile_building_or_higher = east_asian_estate_horse_pasture_05 } add = 0.01 }
+        if = { limit = { has_domicile_building_or_higher = east_asian_estate_horse_pasture_06 } add = 0.01 }
+        if = { limit = { has_domicile_building_or_higher = east_asian_estate_camel_pasture_04 } add = 0.01 }
+        if = { limit = { has_domicile_building_or_higher = east_asian_estate_camel_pasture_05 } add = 0.01 }
+        if = { limit = { has_domicile_building_or_higher = east_asian_estate_camel_pasture_06 } add = 0.01 }
+        if = { limit = { has_domicile_building_or_higher = east_asian_estate_elephant_pasture_04 } add = 0.01 }
+        if = { limit = { has_domicile_building_or_higher = east_asian_estate_elephant_pasture_05 } add = 0.01 }
+        if = { limit = { has_domicile_building_or_higher = east_asian_estate_elephant_pasture_06 } add = 0.01 }
+        if = { limit = { has_domicile_building_or_higher = east_asian_estate_field_surgeon_cart_01 } add = 0.01 }
+        if = { limit = { has_domicile_building_or_higher = east_asian_estate_field_surgeon_cart_02 } add = 0.01 }
+        if = { limit = { has_domicile_building_or_higher = east_asian_estate_field_surgeon_cart_03 } add = 0.01 }
+        if = { limit = { has_domicile_building_or_higher = east_asian_estate_field_surgeon_cart_04 } add = 0.01 }
+        if = { limit = { has_domicile_building_or_higher = east_asian_estate_sergeants_school_01 } add = 0.02 }
+        if = { limit = { has_domicile_building_or_higher = east_asian_estate_sergeants_school_02 } add = 0.02 }
+        if = { limit = { has_domicile_building_or_higher = east_asian_estate_sergeants_school_03 } add = 0.02 }
+        if = { limit = { has_domicile_building_or_higher = east_asian_estate_sergeants_school_04 } add = 0.02 }
+    }
+}
+
+# 天朝“武勋/将门”类强族抱负：celestial_warlord Level 1..5 = +2/+4/+6/+8/+10%。
+# 各等级的 movement_power_per_prestige_level_N 参数在本体中唯一。
+sltm_lvm_treasury_d24_military_celestial_house_mult = {
+    value = 0
+    if = {
+        limit = { house ?= { is_powerful_family = yes } }
+        if = { limit = { house = { has_house_aspiration_parameter = movement_power_per_prestige_level_5 } } add = 0.10 }
+        else_if = { limit = { house = { has_house_aspiration_parameter = movement_power_per_prestige_level_4 } } add = 0.08 }
+        else_if = { limit = { house = { has_house_aspiration_parameter = movement_power_per_prestige_level_3 } } add = 0.06 }
+        else_if = { limit = { house = { has_house_aspiration_parameter = movement_power_per_prestige_level_2 } } add = 0.04 }
+        else_if = { limit = { house = { has_house_aspiration_parameter = movement_power_per_prestige_level_1 } } add = 0.02 }
+    }
+}
+
+# 王朝周期“参与大征伐”临时修正：+20% military budget receipt。
+sltm_lvm_treasury_d24_military_dynastic_mult = {
+    value = 0
+    if = { limit = { has_character_modifier = tgp_joined_grand_campaign_modifier } add = 0.20 }
+}
+
+# D24 当前可静态重建的天朝 military mult。
+# 行政制旧版 army_quartermasters 抱负没有公开唯一 parameter，暂不猜；raw 控制可发现差值。
+sltm_lvm_treasury_d24_military_known_mult = {
+    value = sltm_lvm_treasury_d24_military_estate_mult
+    add = sltm_lvm_treasury_d24_military_celestial_house_mult
+    add = sltm_lvm_treasury_d24_military_dynastic_mult
+}
+
+# FIN011 RETIRED_UNAVAILABLE: # sltm_lvm_treasury_d24_military_receipt_raw_candidate = {
+#     value = sltm_lvm_treasury_budget_military_central_candidate_probe_value
+#     multiply = {
+#         value = sltm_lvm_treasury_budget_military_raw_mult_probe_value
+#         add = 1
+#     }
+#     min = 0
+# }
+
+sltm_lvm_treasury_d24_military_receipt_known_candidate = {
+    value = sltm_lvm_treasury_budget_military_central_candidate_probe_value
+    multiply = {
+        value = sltm_lvm_treasury_d24_military_known_mult
+        add = 1
+    }
+    min = 0
+}
+
+# 朝臣预算：minister_bureaucrat 最多 2 人；原版 scaling_employer_modifiers
+# 按 aptitude level 0..4 分别给 employer +1/+2/+3/+4/+5%。
+sltm_lvm_treasury_d24_ministry_bureaucrat_mult = {
+    value = 0
+    every_court_position_holder = {
+        type = minister_bureaucrat_court_position
+        if = { limit = { aptitude:minister_bureaucrat_court_position = 0 } add = 0.01 }
+        else_if = { limit = { aptitude:minister_bureaucrat_court_position = 1 } add = 0.02 }
+        else_if = { limit = { aptitude:minister_bureaucrat_court_position = 2 } add = 0.03 }
+        else_if = { limit = { aptitude:minister_bureaucrat_court_position = 3 } add = 0.04 }
+        else = { add = 0.05 }
+    }
+}
+
+# 个人荣典原版 modifier：ministry +200%。
+sltm_lvm_treasury_d24_ministry_personal_honors_mult = {
+    value = 0
+    if = { limit = { has_character_modifier = tgp_personal_honors_modifier } add = 2.00 }
+}
+
+sltm_lvm_treasury_d24_ministry_known_mult = {
+    value = sltm_lvm_treasury_d24_ministry_bureaucrat_mult
+    add = sltm_lvm_treasury_d24_ministry_personal_honors_mult
+}
+
+# FIN011 RETIRED_UNAVAILABLE: # sltm_lvm_treasury_d24_ministry_receipt_raw_candidate = {
+#     value = sltm_lvm_treasury_budget_ministry_central_candidate_probe_value
+#     multiply = {
+#         value = sltm_lvm_treasury_budget_ministry_raw_mult_probe_value
+#         add = 1
+#     }
+#     min = 0
+# }
+
+sltm_lvm_treasury_d24_ministry_receipt_known_candidate = {
+    value = sltm_lvm_treasury_budget_ministry_central_candidate_probe_value
+    multiply = {
+        value = sltm_lvm_treasury_d24_ministry_known_mult
+        add = 1
+    }
+    min = 0
+}
+
+############################################################
+# R8-B2P4D26 — 三预算实际到账：1.19.0.6 + 当前 Mod 可枚举来源全量重建。
+# D25F1 USER RUNTIME：
+# - Character.GetGoldIncomeBreakdown / GetTreasuryIncomeBreakdown 以及根候选均为空；
+# - 无后缀 monthly_treasury_from_*_budget 三项在多名明确有收入角色上恒 0。
+# 因此 D25 直接分类 getter 路线退役。D26 不再试新 getter，只重建原版已找到的
+# *_budget_mult 来源，并与 Character 原版 Gold/Treasury 完整明细人工对照。
+#
+# SOURCE COVERAGE（CK3 1.19.0.6）：
+# salary mult: 20 中国庄园建筑 + celestial_family 5级 + detailed_ledgers_perk
+#              + 4 个具名 character modifier + celestial/meritocratic salary contract。
+# military mult: 38 中国庄园建筑 + celestial_warlord 5级 + 大征伐 modifier
+#                + administrative army_quartermasters 3级（无脚本唯一 parameter，单列L1/L2/L3假设）。
+# ministry mult: minister_bureaucrat aptitude 5档 + personal_honors。
+# 当前 Mod runtime common 未新增 *_budget_mult，仅新增特殊军事行营 base=1.5。
+############################################################
+
+# D25 失败接口兼容键退役：不再触发未知/无效数值 token。
+sltm_lvm_treasury_d25_salary_unsuffixed_direct_probe = { value = 0 }
+sltm_lvm_treasury_d25_military_unsuffixed_direct_probe = { value = 0 }
+sltm_lvm_treasury_d25_ministry_unsuffixed_direct_probe = { value = 0 }
+
+# ---- 俸禄预算 recipient mult ----
+# 天朝/贤能制的 salary contract；行政制没有对应 salary mult。
+sltm_lvm_treasury_d26_salary_contract_mult = {
+    value = 0
+    if = {
+        limit = { has_government = meritocratic_government }
+        if = { limit = { vassal_contract_obligation_level:meritocratic_salary = 0 } add = -0.50 }
+        else_if = { limit = { vassal_contract_obligation_level:meritocratic_salary = 1 } add = -0.25 }
+        else_if = { limit = { vassal_contract_obligation_level:meritocratic_salary = 3 } add = 0.25 }
+        else_if = { limit = { vassal_contract_obligation_level:meritocratic_salary = 4 } add = 0.50 }
+    }
+    else_if = {
+        limit = { has_government = celestial_government }
+        add = sltm_lvm_treasury_budget_salary_contract_mult_probe_value
+    }
+}
+
+# 中国庄园 salary mult：由 vanilla 00_chinese_estate_buildings.txt 全部 20 个实际赋值点自动枚举。
+sltm_lvm_treasury_d26_salary_estate_mult = {
+    value = 0
+    domicile ?= {
+        if = { limit = { has_domicile_building_or_higher = east_asian_estate_archive_01 } add = 0.05 }
+        if = { limit = { has_domicile_building_or_higher = east_asian_estate_archive_02 } add = 0.05 }
+        if = { limit = { has_domicile_building_or_higher = east_asian_estate_archive_03 } add = 0.05 }
+        if = { limit = { has_domicile_building_or_higher = east_asian_estate_archive_04 } add = 0.05 }
+        if = { limit = { has_domicile_building_or_higher = east_asian_estate_revenue_audit_desk_01 } add = 0.01 }
+        if = { limit = { has_domicile_building_or_higher = east_asian_estate_revenue_audit_desk_02 } add = 0.01 }
+        if = { limit = { has_domicile_building_or_higher = east_asian_estate_revenue_audit_desk_03 } add = 0.01 }
+        if = { limit = { has_domicile_building_or_higher = east_asian_estate_revenue_audit_desk_04 } add = 0.01 }
+        if = { limit = { has_domicile_building_or_higher = east_asian_estate_inspection_office_01 } add = 0.01 }
+        if = { limit = { has_domicile_building_or_higher = east_asian_estate_inspection_office_02 } add = 0.01 }
+        if = { limit = { has_domicile_building_or_higher = east_asian_estate_inspection_office_03 } add = 0.01 }
+        if = { limit = { has_domicile_building_or_higher = east_asian_estate_inspection_office_04 } add = 0.01 }
+        if = { limit = { has_domicile_building_or_higher = east_asian_estate_rites_office_01 } add = 0.02 }
+        if = { limit = { has_domicile_building_or_higher = east_asian_estate_rites_office_02 } add = 0.02 }
+        if = { limit = { has_domicile_building_or_higher = east_asian_estate_rites_office_03 } add = 0.02 }
+        if = { limit = { has_domicile_building_or_higher = east_asian_estate_rites_office_04 } add = 0.02 }
+        if = { limit = { has_domicile_building_or_higher = east_asian_estate_pavilion_01 } add = 0.02 }
+        if = { limit = { has_domicile_building_or_higher = east_asian_estate_pavilion_02 } add = 0.02 }
+        if = { limit = { has_domicile_building_or_higher = east_asian_estate_pavilion_03 } add = 0.02 }
+        if = { limit = { has_domicile_building_or_higher = east_asian_estate_pavilion_04 } add = 0.02 }
+    }
+}
+
+# celestial_family powerful-family member：+2/+4/+6/+8/+10%。
+# inspection_activity_merit_bonus_N 是各等级可脚本识别参数。
+sltm_lvm_treasury_d26_salary_celestial_family_mult = {
+    value = 0
+    if = {
+        limit = { house ?= { is_powerful_family = yes } }
+        if = { limit = { house = { has_house_aspiration_parameter = inspection_activity_merit_bonus_5 } } add = 0.10 }
+        else_if = { limit = { house = { has_house_aspiration_parameter = inspection_activity_merit_bonus_4 } } add = 0.08 }
+        else_if = { limit = { house = { has_house_aspiration_parameter = inspection_activity_merit_bonus_3 } } add = 0.06 }
+        else_if = { limit = { house = { has_house_aspiration_parameter = inspection_activity_merit_bonus_2 } } add = 0.04 }
+        else_if = { limit = { house = { has_house_aspiration_parameter = inspection_activity_merit_bonus_1 } } add = 0.02 }
+    }
+}
+
+sltm_lvm_treasury_d26_salary_detailed_ledgers_mult = {
+    value = 0
+    if = { limit = { has_perk = detailed_ledgers_perk } add = 0.10 }
+}
+
+sltm_lvm_treasury_d26_salary_named_modifier_mult = {
+    value = 0
+    if = { limit = { has_character_modifier = tgp_minister_project_conduct_census_purge_treasury_debt_modifier } add = 0.20 }
+    if = { limit = { has_character_modifier = tgp_aspiration_great_salary_modifier } add = 0.20 }
+    if = { limit = { has_character_modifier = tgp_aspiration_modest_salary_modifier } add = 0.05 }
+}
+
+sltm_lvm_treasury_d26_salary_personal_honors_mult = {
+    value = 0
+    if = { limit = { has_character_modifier = tgp_personal_honors_modifier } add = 5.00 }
+}
+
+sltm_lvm_treasury_d26_salary_total_mult = {
+    value = sltm_lvm_treasury_d26_salary_contract_mult
+    add = sltm_lvm_treasury_d26_salary_estate_mult
+    add = sltm_lvm_treasury_d26_salary_celestial_family_mult
+    add = sltm_lvm_treasury_d26_salary_detailed_ledgers_mult
+    add = sltm_lvm_treasury_d26_salary_named_modifier_mult
+    add = sltm_lvm_treasury_d26_salary_personal_honors_mult
+}
+
+sltm_lvm_treasury_d26_salary_receipt_candidate = {
+    value = sltm_lvm_treasury_budget_salary_central_candidate_probe_value
+    multiply = {
+        value = sltm_lvm_treasury_d26_salary_total_mult
+        add = 1
+    }
+    min = 0
+}
+
+# ---- 军事预算 recipient mult ----
+# D24 的 estate + celestial_warlord + 大征伐三组保持；D26 将其明确视为
+# “可脚本自动重建部分”。行政制 army_quartermasters 没有唯一 parameter，
+# 无法在 Character script scope 安全识别，故给三个独立假设值而不偷偷猜。
+sltm_lvm_treasury_d26_military_total_known_mult = {
+    value = sltm_lvm_treasury_d24_military_known_mult
+}
+
+sltm_lvm_treasury_d26_military_receipt_known_candidate = {
+    value = sltm_lvm_treasury_budget_military_central_candidate_probe_value
+    multiply = {
+        value = sltm_lvm_treasury_d26_military_total_known_mult
+        add = 1
+    }
+    min = 0
+}
+
+sltm_lvm_treasury_d26_military_receipt_admin_qm_l1 = {
+    value = sltm_lvm_treasury_budget_military_central_candidate_probe_value
+    multiply = {
+        value = sltm_lvm_treasury_d26_military_total_known_mult
+        add = 1.05
+    }
+    min = 0
+}
+sltm_lvm_treasury_d26_military_receipt_admin_qm_l2 = {
+    value = sltm_lvm_treasury_budget_military_central_candidate_probe_value
+    multiply = {
+        value = sltm_lvm_treasury_d26_military_total_known_mult
+        add = 1.10
+    }
+    min = 0
+}
+sltm_lvm_treasury_d26_military_receipt_admin_qm_l3 = {
+    value = sltm_lvm_treasury_budget_military_central_candidate_probe_value
+    multiply = {
+        value = sltm_lvm_treasury_d26_military_total_known_mult
+        add = 1.15
+    }
+    min = 0
+}
+
+# ---- 朝臣预算 recipient mult ----
+# vanilla 全量只找到 employer 的 minister_bureaucrat aptitude 1..5% 与
+# tgp_personal_honors_modifier +200%；沿用 D24 已重建来源。
+sltm_lvm_treasury_d26_ministry_total_mult = {
+    value = sltm_lvm_treasury_d24_ministry_known_mult
+}
+
+sltm_lvm_treasury_d26_ministry_receipt_candidate = {
+    value = sltm_lvm_treasury_budget_ministry_central_candidate_probe_value
+    multiply = {
+        value = sltm_lvm_treasury_d26_ministry_total_mult
+        add = 1
+    }
+    min = 0
+}
+
+
+# R8-B2P4D27 — 三预算实际到账正式值。
+# D26 实机已经分别验证：俸禄 Gold 到账、军事预算 recipient mult（李参马厩 +2%）、
+# 朝臣预算 recipient mult（韩琦省部掾吏 +2%）。
+# 兼容键现在升级为正式生产值；发展金实际到账仍保留原版明细查看，不在本卡冒充直读。
+sltm_lvm_treasury_budget_salary_receipt_value = { value = sltm_lvm_treasury_d26_salary_receipt_candidate }
+sltm_lvm_treasury_budget_development_receipt_value = { value = 0 }
+# 行政制 army_quartermasters 由 GUI 的 HouseAspiration typed context 按 0/1/2 level index 自动切换 +5/+10/+15%；
+# 这里保留非 army_quartermasters 的完整 vanilla/current-mod 可枚举值。
+sltm_lvm_treasury_budget_military_receipt_value = { value = sltm_lvm_treasury_d26_military_receipt_known_candidate }
+sltm_lvm_treasury_budget_ministry_receipt_value = { value = sltm_lvm_treasury_d26_ministry_receipt_candidate }
+
+# 兼容旧名称，避免历史文档/未触及 GUI 片段失效。
+sltm_lvm_junfu_ai_maa_min_budget_value = { value = sltm_lvm_treasury_ai_maa_min_budget_value }
+sltm_lvm_junfu_ai_maa_ideal_budget_value = { value = sltm_lvm_treasury_ai_maa_ideal_budget_value }
+sltm_lvm_junfu_ai_maa_max_budget_value = { value = sltm_lvm_treasury_ai_maa_max_budget_value }

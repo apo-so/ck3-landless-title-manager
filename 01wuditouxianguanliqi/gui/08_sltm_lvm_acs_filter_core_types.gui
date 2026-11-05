@@ -1,0 +1,138 @@
+﻿############################################################
+# 无地头衔管理器 V2.8：ACS 式筛选行与分组容器
+############################################################
+
+template sltm_lvm_acs_toggle_filter {
+    name = "show"
+    alwaystransparent = no
+    texture = "gfx/interface/buttons/button_tree_expand.dds"
+    framesize = { 36 36 }
+    size = { 18 18 }
+    using = tooltip_ws
+    tooltip = EXPAND_FILTER
+    oversound = "event:/SFX/UI/Generic/sfx_ui_generic_icon_pointer_over"
+    clicksound = "event:/SFX/UI/Generic/sfx_ui_generic_icon_select"
+    onclick = "[GetVariableSystem.Toggle('sltm_lvm_acs_filter_group_basic_open')]"
+}
+
+types MytmLvmAcsFilterTypes {
+
+    type sltm_lvm_acs_filter_item = widget {
+        block "sltm_lvm_acs_filter_item_size" { size = { 560 43 } }
+        allow_outside = yes
+        hbox = {
+            layoutpolicy_horizontal = expanding
+            layoutpolicy_vertical = fixed
+            spacing = 10
+            margin_bottom = 10
+            allow_outside = yes
+            text_single = {
+                layoutpolicy_horizontal = expanding
+                block "sltm_lvm_acs_filter_name" { text = SLTM_LVM_FILTER_GENDER }
+                default_format = "#medium"
+                autoresize = no
+                align = nobaseline
+            }
+            block "sltm_lvm_acs_filter_item_expand" { expand = {} }
+            block "sltm_lvm_acs_dropdown_replace" { sltm_lvm_acs_dropdown = {} }
+        }
+    }
+
+    # V3.6.1：分组内部会直接承载 hbox 行，必须使用 vbox；flowcontainer 会触发引擎布局递归。
+    type sltm_lvm_acs_filter_group = vbox {
+        ignoreinvisible = yes
+        spacing = 7
+        allow_outside = yes
+
+        widget = {
+            size = { 580 26 }
+            block "sltm_lvm_acs_header_visible" { }
+            hbox = {
+                position = { 0 0 }
+                button = {
+                    using = sltm_lvm_acs_toggle_filter
+                    block "sltm_lvm_acs_group_toggle" {
+                        onclick = "[GetVariableSystem.Toggle('sltm_lvm_acs_filter_group_basic_open')]"
+                        frame = "[Select_int32(GetVariableSystem.Exists('sltm_lvm_acs_filter_group_basic_open'), '(int32)1', '(int32)2')]"
+                    }
+                }
+                text_label_center = {
+                    layoutpolicy_horizontal = expanding
+                    margin_right = 36
+                    name = "label"
+                    align = center
+                    block "sltm_lvm_acs_group_name" { text = SLTM_LVM_FILTER_GROUP_BASIC }
+                }
+            }
+        }
+
+        vbox = {
+            ignoreinvisible = yes
+            spacing = 5
+            margin_left = 10
+            margin_right = 10
+            allow_outside = yes
+            block "sltm_lvm_acs_filter_visible" { }
+            block "sltm_lvm_acs_filters" { }
+        }
+    }
+
+
+    type sltm_lvm_acs_token_checkbox_row = button_group {
+        size = { 560 30 }
+        using = tooltip_se
+        clicksound = "event:/SFX/UI/Generic/sfx_ui_generic_checkbox"
+        block "sltm_lvm_acs_token_action" { }
+
+        hbox = {
+            layoutpolicy_horizontal = expanding
+            spacing = 5
+            margin_left = 6
+
+            button_checkbox = {
+                block "sltm_lvm_acs_token_checkbox" { checked = no }
+            }
+            icon = {
+                size = { 18 18 }
+                texture = "gfx/interface/icons/symbols/icon_check.dds"
+                block "sltm_lvm_acs_token_pos_visible" { visible = no }
+            }
+            icon = {
+                size = { 18 18 }
+                texture = "gfx/interface/icons/symbols/icon_cross.dds"
+                block "sltm_lvm_acs_token_neg_visible" { visible = no }
+            }
+            text_single = {
+                layoutpolicy_horizontal = expanding
+                align = left|nobaseline
+                autoresize = no
+                default_format = "#clickable"
+                block "sltm_lvm_acs_token_text" { text = SLTM_LVM_TOKEN_BRAVE }
+            }
+        }
+    }
+    # 三列特质网格专用窄行；继承完整复选框、正选/排除图标与点击区域。
+    type sltm_lvm_acs_token_checkbox_row_small = sltm_lvm_acs_token_checkbox_row {
+        size = { 184 30 }
+    }
+    type sltm_lvm_acs_dropdown_block = vbox {
+        name = "sltm_lvm_acs_dropdown_block"
+        layoutpolicy_horizontal = expanding
+        layoutpolicy_vertical = expanding
+        spacing = 5
+        allow_outside = yes
+        # V3.6：无地封臣专用分组。人物关系、统治者/非统治者等无关条件不再挂载。
+        sltm_lvm_v36_group_manage = { }
+        sltm_lvm_v36_group_title_type = { }
+        sltm_lvm_v36_group_basic = { }
+        sltm_lvm_v36_group_government = { }
+        sltm_lvm_v36_group_merit = { }
+        sltm_lvm_v36_group_efficiency = { }
+        sltm_lvm_v36_group_ability = { }
+        sltm_lvm_v36_group_commander = { }
+        sltm_lvm_v36_group_lifestyle = { }
+        sltm_lvm_v36_group_base_traits = { }
+        widget = { size = { 1 1 } name = "sltm_lvm_acs_jitter" }
+    }
+}
+

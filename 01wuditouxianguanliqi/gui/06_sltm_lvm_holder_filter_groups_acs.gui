@@ -1,0 +1,719 @@
+﻿# V3.6 无地封臣专用筛选 GUI；由清单生成。
+types MytmLvmV36HolderFilterGroups {
+    type sltm_lvm_v36_group_manage = sltm_lvm_acs_filter_group {
+        blockoverride "sltm_lvm_acs_group_toggle" { onclick = "[GetVariableSystem.Toggle('sltm_lvm_v36_group_manage_open')]" frame = "[Select_int32(GetVariableSystem.Exists('sltm_lvm_v36_group_manage_open'), '(int32)1', '(int32)2')]" }
+        blockoverride "sltm_lvm_acs_group_name" { text = SLTM_LVM_V36_GROUP_MANAGE }
+        blockoverride "sltm_lvm_acs_filter_visible" { visible = "[GetVariableSystem.Exists('sltm_lvm_v36_group_manage_open')]" }
+        blockoverride "sltm_lvm_acs_filters" {
+                    text_single = { size = { 560 26 } text = SLTM_LVM_FILTER_MANAGED align = center default_format = "#high" }
+                    hbox = { size = { 560 30 } spacing = 4
+                        button_checkbox_label = { size = { 184 30 } onclick = "[GetScriptedGui('sltm_lvm_v36_managed_zero_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" blockoverride "checkbox" { checked = "[GetScriptedGui('sltm_lvm_v36_managed_zero_checked_gui').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" } blockoverride "text" { text = SLTM_LVM_V36_MANAGED_ZERO max_width = 144 tooltip = SLTM_LVM_V36_MANAGED_TT } }
+                        button_checkbox_label = { size = { 184 30 } onclick = "[GetScriptedGui('sltm_lvm_v36_managed_one_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" blockoverride "checkbox" { checked = "[GetScriptedGui('sltm_lvm_v36_managed_one_checked_gui').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" } blockoverride "text" { text = SLTM_LVM_V36_MANAGED_ONE max_width = 144 tooltip = SLTM_LVM_V36_MANAGED_TT } }
+                        button_checkbox_label = { size = { 184 30 } onclick = "[GetScriptedGui('sltm_lvm_v36_managed_two_three_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" blockoverride "checkbox" { checked = "[GetScriptedGui('sltm_lvm_v36_managed_two_three_checked_gui').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" } blockoverride "text" { text = SLTM_LVM_V36_MANAGED_TWO_THREE max_width = 144 tooltip = SLTM_LVM_V36_MANAGED_TT } }
+                    }
+                    hbox = { size = { 560 30 } spacing = 4
+                        button_checkbox_label = { size = { 184 30 } onclick = "[GetScriptedGui('sltm_lvm_v36_managed_four_plus_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" blockoverride "checkbox" { checked = "[GetScriptedGui('sltm_lvm_v36_managed_four_plus_checked_gui').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" } blockoverride "text" { text = SLTM_LVM_V36_MANAGED_FOUR_PLUS max_width = 144 tooltip = SLTM_LVM_V36_MANAGED_TT } }
+                        widget = { size = { 184 30 } }
+                        widget = { size = { 184 30 } }
+                    }
+                    text_single = { size = { 560 26 } text = SLTM_LVM_HOLDER_FILTER_PENDING_COUNT align = center default_format = "#high" }
+                    hbox = { size = { 560 30 } spacing = 4
+                        button_checkbox_label = { size = { 184 30 } onclick = "[GetScriptedGui('sltm_lvm_v36_pending_zero_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" blockoverride "checkbox" { checked = "[GetScriptedGui('sltm_lvm_v36_pending_zero_checked_gui').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" } blockoverride "text" { text = SLTM_LVM_V36_PENDING_ZERO max_width = 144 tooltip = SLTM_LVM_V36_PENDING_TT } }
+                        button_checkbox_label = { size = { 184 30 } onclick = "[GetScriptedGui('sltm_lvm_v36_pending_one_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" blockoverride "checkbox" { checked = "[GetScriptedGui('sltm_lvm_v36_pending_one_checked_gui').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" } blockoverride "text" { text = SLTM_LVM_V36_PENDING_ONE max_width = 144 tooltip = SLTM_LVM_V36_PENDING_TT } }
+                        button_checkbox_label = { size = { 184 30 } onclick = "[GetScriptedGui('sltm_lvm_v36_pending_two_plus_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" blockoverride "checkbox" { checked = "[GetScriptedGui('sltm_lvm_v36_pending_two_plus_checked_gui').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" } blockoverride "text" { text = SLTM_LVM_V36_PENDING_TWO_PLUS max_width = 144 tooltip = SLTM_LVM_V36_PENDING_TT } }
+                    }
+                    text_single = { size = { 560 26 } text = SLTM_LVM_FILTER_BLOCKED align = center default_format = "#high" }
+                    hbox = { size = { 560 30 } spacing = 4
+                        button_checkbox_label = { size = { 184 30 } onclick = "[GetScriptedGui('sltm_lvm_v36_blocked_zero_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" blockoverride "checkbox" { checked = "[GetScriptedGui('sltm_lvm_v36_blocked_zero_checked_gui').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" } blockoverride "text" { text = SLTM_LVM_V36_BLOCKED_ZERO max_width = 144 tooltip = SLTM_LVM_V36_BLOCKED_TT } }
+                        button_checkbox_label = { size = { 184 30 } onclick = "[GetScriptedGui('sltm_lvm_v36_blocked_one_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" blockoverride "checkbox" { checked = "[GetScriptedGui('sltm_lvm_v36_blocked_one_checked_gui').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" } blockoverride "text" { text = SLTM_LVM_V36_BLOCKED_ONE max_width = 144 tooltip = SLTM_LVM_V36_BLOCKED_TT } }
+                        button_checkbox_label = { size = { 184 30 } onclick = "[GetScriptedGui('sltm_lvm_v36_blocked_two_plus_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" blockoverride "checkbox" { checked = "[GetScriptedGui('sltm_lvm_v36_blocked_two_plus_checked_gui').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" } blockoverride "text" { text = SLTM_LVM_V36_BLOCKED_TWO_PLUS max_width = 144 tooltip = SLTM_LVM_V36_BLOCKED_TT } }
+                    }
+        }
+    }
+    type sltm_lvm_v36_group_title_type = sltm_lvm_acs_filter_group {
+        blockoverride "sltm_lvm_acs_group_toggle" { onclick = "[GetVariableSystem.Toggle('sltm_lvm_v36_group_title_type_open')]" frame = "[Select_int32(GetVariableSystem.Exists('sltm_lvm_v36_group_title_type_open'), '(int32)1', '(int32)2')]" }
+        blockoverride "sltm_lvm_acs_group_name" { text = SLTM_LVM_V36_GROUP_TITLE_TYPE }
+        blockoverride "sltm_lvm_acs_filter_visible" { visible = "[GetVariableSystem.Exists('sltm_lvm_v36_group_title_type_open')]" }
+        blockoverride "sltm_lvm_acs_filters" {
+                    hbox = { size = { 560 30 } spacing = 4
+                        button_checkbox_label = { size = { 184 30 } onclick = "[GetScriptedGui('sltm_lvm_v36_type_junfu_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" blockoverride "checkbox" { checked = "[GetScriptedGui('sltm_lvm_v36_type_junfu_checked_gui').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" } blockoverride "text" { text = SLTM_LVM_FILTER_TYPE_JUNFU max_width = 144 } }
+                        button_checkbox_label = { size = { 184 30 } onclick = "[GetScriptedGui('sltm_lvm_v36_type_chaochen_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" blockoverride "checkbox" { checked = "[GetScriptedGui('sltm_lvm_v36_type_chaochen_checked_gui').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" } blockoverride "text" { text = SLTM_LVM_FILTER_TYPE_CHAOCHEN max_width = 144 tooltip = SLTM_LVM_FILTER_TYPE_CHAOCHEN_TT } }
+                        button_checkbox_label = { size = { 184 30 } onclick = "[GetScriptedGui('sltm_lvm_v36_type_noble_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" blockoverride "checkbox" { checked = "[GetScriptedGui('sltm_lvm_v36_type_noble_checked_gui').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" } blockoverride "text" { text = SLTM_LVM_FILTER_TYPE_NOBLE max_width = 144 } }
+                    }
+                    hbox = { size = { 560 30 } spacing = 4
+                        button_checkbox_label = { size = { 184 30 } onclick = "[GetScriptedGui('sltm_lvm_v36_type_holy_order_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" blockoverride "checkbox" { checked = "[GetScriptedGui('sltm_lvm_v36_type_holy_order_checked_gui').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" } blockoverride "text" { text = SLTM_LVM_FILTER_TYPE_HOLY_ORDER max_width = 144 } }
+                        button_checkbox_label = { size = { 184 30 } onclick = "[GetScriptedGui('sltm_lvm_v36_type_mercenary_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" blockoverride "checkbox" { checked = "[GetScriptedGui('sltm_lvm_v36_type_mercenary_checked_gui').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" } blockoverride "text" { text = SLTM_LVM_FILTER_TYPE_MERCENARY max_width = 144 } }
+                        button_checkbox_label = { size = { 184 30 } onclick = "[GetScriptedGui('sltm_lvm_v36_type_religious_head_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" blockoverride "checkbox" { checked = "[GetScriptedGui('sltm_lvm_v36_type_religious_head_checked_gui').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" } blockoverride "text" { text = SLTM_LVM_FILTER_TYPE_RELIGIOUS_HEAD max_width = 144 } }
+                    }
+                    hbox = { size = { 560 30 } spacing = 4
+                        button_checkbox_label = { size = { 184 30 } onclick = "[GetScriptedGui('sltm_lvm_v36_type_other_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" blockoverride "checkbox" { checked = "[GetScriptedGui('sltm_lvm_v36_type_other_checked_gui').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" } blockoverride "text" { text = SLTM_LVM_FILTER_TYPE_OTHER max_width = 144 } }
+                        widget = { size = { 184 30 } }
+                        widget = { size = { 184 30 } }
+                    }
+        }
+    }
+    type sltm_lvm_v36_group_basic = sltm_lvm_acs_filter_group {
+        blockoverride "sltm_lvm_acs_group_toggle" { onclick = "[GetVariableSystem.Toggle('sltm_lvm_v36_group_basic_open')]" frame = "[Select_int32(GetVariableSystem.Exists('sltm_lvm_v36_group_basic_open'), '(int32)1', '(int32)2')]" }
+        blockoverride "sltm_lvm_acs_group_name" { text = SLTM_LVM_V36_GROUP_BASIC }
+        blockoverride "sltm_lvm_acs_filter_visible" { visible = "[GetVariableSystem.Exists('sltm_lvm_v36_group_basic_open')]" }
+        blockoverride "sltm_lvm_acs_filters" {
+                    text_single = { size = { 560 26 } text = SLTM_LVM_FILTER_GENDER align = center default_format = "#high" }
+                    hbox = { size = { 560 30 } spacing = 4
+                        button_checkbox_label = { size = { 184 30 } onclick = "[GetScriptedGui('sltm_lvm_v36_gender_male_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" blockoverride "checkbox" { checked = "[GetScriptedGui('sltm_lvm_v36_gender_male_checked_gui').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" } blockoverride "text" { text = SLTM_LVM_FILTER_GENDER_MALE max_width = 144 } }
+                        button_checkbox_label = { size = { 184 30 } onclick = "[GetScriptedGui('sltm_lvm_v36_gender_female_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" blockoverride "checkbox" { checked = "[GetScriptedGui('sltm_lvm_v36_gender_female_checked_gui').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" } blockoverride "text" { text = SLTM_LVM_FILTER_GENDER_FEMALE max_width = 144 } }
+                        widget = { size = { 184 30 } }
+                    }
+                    text_single = { size = { 560 26 } text = SLTM_LVM_FILTER_AGE_BAND align = center default_format = "#high" }
+                    hbox = { size = { 560 30 } spacing = 4
+                        button_checkbox_label = { size = { 184 30 } onclick = "[GetScriptedGui('sltm_lvm_v36_age_0_15_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" blockoverride "checkbox" { checked = "[GetScriptedGui('sltm_lvm_v36_age_0_15_checked_gui').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" } blockoverride "text" { text = SLTM_LVM_FILTER_AGE_0_15 max_width = 144 } }
+                        button_checkbox_label = { size = { 184 30 } onclick = "[GetScriptedGui('sltm_lvm_v36_age_16_29_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" blockoverride "checkbox" { checked = "[GetScriptedGui('sltm_lvm_v36_age_16_29_checked_gui').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" } blockoverride "text" { text = SLTM_LVM_FILTER_AGE_16_29 max_width = 144 } }
+                        button_checkbox_label = { size = { 184 30 } onclick = "[GetScriptedGui('sltm_lvm_v36_age_30_49_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" blockoverride "checkbox" { checked = "[GetScriptedGui('sltm_lvm_v36_age_30_49_checked_gui').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" } blockoverride "text" { text = SLTM_LVM_FILTER_AGE_30_49 max_width = 144 } }
+                    }
+                    hbox = { size = { 560 30 } spacing = 4
+                        button_checkbox_label = { size = { 184 30 } onclick = "[GetScriptedGui('sltm_lvm_v36_age_50_64_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" blockoverride "checkbox" { checked = "[GetScriptedGui('sltm_lvm_v36_age_50_64_checked_gui').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" } blockoverride "text" { text = SLTM_LVM_FILTER_AGE_50_64 max_width = 144 } }
+                        button_checkbox_label = { size = { 184 30 } onclick = "[GetScriptedGui('sltm_lvm_v36_age_65_plus_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" blockoverride "checkbox" { checked = "[GetScriptedGui('sltm_lvm_v36_age_65_plus_checked_gui').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" } blockoverride "text" { text = SLTM_LVM_FILTER_AGE_65_PLUS max_width = 144 } }
+                        widget = { size = { 184 30 } }
+                    }
+                    text_single = { size = { 560 26 } text = SLTM_LVM_FILTER_IMPRISONED align = center default_format = "#high" }
+                    hbox = { size = { 560 30 } spacing = 4
+                        button_checkbox_label = { size = { 184 30 } onclick = "[GetScriptedGui('sltm_lvm_v36_free_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" blockoverride "checkbox" { checked = "[GetScriptedGui('sltm_lvm_v36_free_checked_gui').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" } blockoverride "text" { text = SLTM_LVM_FILTER_IMPRISONED_FREE max_width = 144 } }
+                        button_checkbox_label = { size = { 184 30 } onclick = "[GetScriptedGui('sltm_lvm_v36_imprisoned_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" blockoverride "checkbox" { checked = "[GetScriptedGui('sltm_lvm_v36_imprisoned_checked_gui').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" } blockoverride "text" { text = SLTM_LVM_FILTER_IMPRISONED_YES max_width = 144 } }
+                        widget = { size = { 184 30 } }
+                    }
+        }
+    }
+    type sltm_lvm_v36_group_government = sltm_lvm_acs_filter_group {
+        blockoverride "sltm_lvm_acs_group_toggle" { onclick = "[GetVariableSystem.Toggle('sltm_lvm_v36_group_government_open')]" frame = "[Select_int32(GetVariableSystem.Exists('sltm_lvm_v36_group_government_open'), '(int32)1', '(int32)2')]" }
+        blockoverride "sltm_lvm_acs_group_name" { text = SLTM_LVM_V36_GROUP_GOVERNMENT }
+        blockoverride "sltm_lvm_acs_filter_visible" { visible = "[GetVariableSystem.Exists('sltm_lvm_v36_group_government_open')]" }
+        blockoverride "sltm_lvm_acs_filters" {
+                    hbox = { size = { 560 30 } spacing = 4
+                        button_checkbox_label = { size = { 184 30 } onclick = "[GetScriptedGui('sltm_lvm_v36_gov_feudal_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" blockoverride "checkbox" { checked = "[GetScriptedGui('sltm_lvm_v36_gov_feudal_checked_gui').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" } blockoverride "text" { text = feudal_government_filter_option max_width = 144 } }
+                        button_checkbox_label = { size = { 184 30 } onclick = "[GetScriptedGui('sltm_lvm_v36_gov_clan_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" blockoverride "checkbox" { checked = "[GetScriptedGui('sltm_lvm_v36_gov_clan_checked_gui').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" } blockoverride "text" { text = clan_government_filter_option max_width = 144 } }
+                        button_checkbox_label = { size = { 184 30 } onclick = "[GetScriptedGui('sltm_lvm_v36_gov_administrative_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" blockoverride "checkbox" { checked = "[GetScriptedGui('sltm_lvm_v36_gov_administrative_checked_gui').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" } blockoverride "text" { text = administrative_government_filter_option max_width = 144 } }
+                    }
+                    hbox = { size = { 560 30 } spacing = 4
+                        button_checkbox_label = { size = { 184 30 } onclick = "[GetScriptedGui('sltm_lvm_v36_gov_celestial_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" blockoverride "checkbox" { checked = "[GetScriptedGui('sltm_lvm_v36_gov_celestial_checked_gui').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" } blockoverride "text" { text = celestial_government_filter_option max_width = 144 } }
+                        button_checkbox_label = { size = { 184 30 } onclick = "[GetScriptedGui('sltm_lvm_v36_gov_meritocratic_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" blockoverride "checkbox" { checked = "[GetScriptedGui('sltm_lvm_v36_gov_meritocratic_checked_gui').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" } blockoverride "text" { text = meritocratic_government_filter_option max_width = 144 } }
+                        button_checkbox_label = { size = { 184 30 } onclick = "[GetScriptedGui('sltm_lvm_v36_gov_steppe_admin_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" blockoverride "checkbox" { checked = "[GetScriptedGui('sltm_lvm_v36_gov_steppe_admin_checked_gui').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" } blockoverride "text" { text = steppe_admin_government_filter_option max_width = 144 } }
+                    }
+                    hbox = { size = { 560 30 } spacing = 4
+                        button_checkbox_label = { size = { 184 30 } onclick = "[GetScriptedGui('sltm_lvm_v36_gov_japan_administrative_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" blockoverride "checkbox" { checked = "[GetScriptedGui('sltm_lvm_v36_gov_japan_administrative_checked_gui').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" } blockoverride "text" { text = japan_administrative_government_filter_option max_width = 144 } }
+                        button_checkbox_label = { size = { 184 30 } onclick = "[GetScriptedGui('sltm_lvm_v36_gov_japan_feudal_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" blockoverride "checkbox" { checked = "[GetScriptedGui('sltm_lvm_v36_gov_japan_feudal_checked_gui').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" } blockoverride "text" { text = japan_feudal_government_filter_option max_width = 144 } }
+                        button_checkbox_label = { size = { 184 30 } onclick = "[GetScriptedGui('sltm_lvm_v36_gov_tribal_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" blockoverride "checkbox" { checked = "[GetScriptedGui('sltm_lvm_v36_gov_tribal_checked_gui').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" } blockoverride "text" { text = tribal_government_filter_option max_width = 144 } }
+                    }
+                    hbox = { size = { 560 30 } spacing = 4
+                        button_checkbox_label = { size = { 184 30 } onclick = "[GetScriptedGui('sltm_lvm_v36_gov_nomad_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" blockoverride "checkbox" { checked = "[GetScriptedGui('sltm_lvm_v36_gov_nomad_checked_gui').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" } blockoverride "text" { text = nomad_government_filter_option max_width = 144 } }
+                        button_checkbox_label = { size = { 184 30 } onclick = "[GetScriptedGui('sltm_lvm_v36_gov_republic_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" blockoverride "checkbox" { checked = "[GetScriptedGui('sltm_lvm_v36_gov_republic_checked_gui').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" } blockoverride "text" { text = republic_government_filter_option max_width = 144 } }
+                        button_checkbox_label = { size = { 184 30 } onclick = "[GetScriptedGui('sltm_lvm_v36_gov_theocracy_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" blockoverride "checkbox" { checked = "[GetScriptedGui('sltm_lvm_v36_gov_theocracy_checked_gui').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" } blockoverride "text" { text = theocracy_government_filter_option max_width = 144 } }
+                    }
+                    hbox = { size = { 560 30 } spacing = 4
+                        button_checkbox_label = { size = { 184 30 } onclick = "[GetScriptedGui('sltm_lvm_v36_gov_mercenary_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" blockoverride "checkbox" { checked = "[GetScriptedGui('sltm_lvm_v36_gov_mercenary_checked_gui').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" } blockoverride "text" { text = mercenary_government_filter_option max_width = 144 } }
+                        button_checkbox_label = { size = { 184 30 } onclick = "[GetScriptedGui('sltm_lvm_v36_gov_holy_order_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" blockoverride "checkbox" { checked = "[GetScriptedGui('sltm_lvm_v36_gov_holy_order_checked_gui').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" } blockoverride "text" { text = holy_order_government_filter_option max_width = 144 } }
+                        button_checkbox_label = { size = { 184 30 } onclick = "[GetScriptedGui('sltm_lvm_v36_gov_adventurer_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" blockoverride "checkbox" { checked = "[GetScriptedGui('sltm_lvm_v36_gov_adventurer_checked_gui').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" } blockoverride "text" { text = landless_adventurer_government_filter_option max_width = 144 } }
+                    }
+                    hbox = { size = { 560 30 } spacing = 4
+                        button_checkbox_label = { size = { 184 30 } onclick = "[GetScriptedGui('sltm_lvm_v36_gov_herder_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" blockoverride "checkbox" { checked = "[GetScriptedGui('sltm_lvm_v36_gov_herder_checked_gui').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" } blockoverride "text" { text = herder_government_filter_option max_width = 144 } }
+                        button_checkbox_label = { size = { 184 30 } onclick = "[GetScriptedGui('sltm_lvm_v36_gov_wanua_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" blockoverride "checkbox" { checked = "[GetScriptedGui('sltm_lvm_v36_gov_wanua_checked_gui').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" } blockoverride "text" { text = wanua_government_filter_option max_width = 144 } }
+                        button_checkbox_label = { size = { 184 30 } onclick = "[GetScriptedGui('sltm_lvm_v36_gov_mandala_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" blockoverride "checkbox" { checked = "[GetScriptedGui('sltm_lvm_v36_gov_mandala_checked_gui').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" } blockoverride "text" { text = mandala_government_filter_option max_width = 144 } }
+                    }
+        }
+    }
+    type sltm_lvm_v36_group_merit = sltm_lvm_acs_filter_group {
+        blockoverride "sltm_lvm_acs_group_toggle" { onclick = "[GetVariableSystem.Toggle('sltm_lvm_v36_group_merit_open')]" frame = "[Select_int32(GetVariableSystem.Exists('sltm_lvm_v36_group_merit_open'), '(int32)1', '(int32)2')]" }
+        blockoverride "sltm_lvm_acs_group_name" { text = SLTM_LVM_V36_GROUP_MERIT }
+        blockoverride "sltm_lvm_acs_filter_visible" { visible = "[GetVariableSystem.Exists('sltm_lvm_v36_group_merit_open')]" }
+        blockoverride "sltm_lvm_acs_filters" {
+                    hbox = { size = { 560 30 } spacing = 4
+                        button_checkbox_label = { size = { 184 30 } onclick = "[GetScriptedGui('sltm_lvm_v36_merit_0_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" blockoverride "checkbox" { checked = "[GetScriptedGui('sltm_lvm_v36_merit_0_checked_gui').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" } blockoverride "text" { text = merit_level_0 max_width = 144 } }
+                        button_checkbox_label = { size = { 184 30 } onclick = "[GetScriptedGui('sltm_lvm_v36_merit_1_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" blockoverride "checkbox" { checked = "[GetScriptedGui('sltm_lvm_v36_merit_1_checked_gui').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" } blockoverride "text" { text = merit_level_1 max_width = 144 } }
+                        button_checkbox_label = { size = { 184 30 } onclick = "[GetScriptedGui('sltm_lvm_v36_merit_2_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" blockoverride "checkbox" { checked = "[GetScriptedGui('sltm_lvm_v36_merit_2_checked_gui').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" } blockoverride "text" { text = merit_level_2 max_width = 144 } }
+                    }
+                    hbox = { size = { 560 30 } spacing = 4
+                        button_checkbox_label = { size = { 184 30 } onclick = "[GetScriptedGui('sltm_lvm_v36_merit_3_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" blockoverride "checkbox" { checked = "[GetScriptedGui('sltm_lvm_v36_merit_3_checked_gui').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" } blockoverride "text" { text = merit_level_3 max_width = 144 } }
+                        button_checkbox_label = { size = { 184 30 } onclick = "[GetScriptedGui('sltm_lvm_v36_merit_4_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" blockoverride "checkbox" { checked = "[GetScriptedGui('sltm_lvm_v36_merit_4_checked_gui').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" } blockoverride "text" { text = merit_level_4 max_width = 144 } }
+                        button_checkbox_label = { size = { 184 30 } onclick = "[GetScriptedGui('sltm_lvm_v36_merit_5_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" blockoverride "checkbox" { checked = "[GetScriptedGui('sltm_lvm_v36_merit_5_checked_gui').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" } blockoverride "text" { text = merit_level_5 max_width = 144 } }
+                    }
+                    hbox = { size = { 560 30 } spacing = 4
+                        button_checkbox_label = { size = { 184 30 } onclick = "[GetScriptedGui('sltm_lvm_v36_merit_6_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" blockoverride "checkbox" { checked = "[GetScriptedGui('sltm_lvm_v36_merit_6_checked_gui').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" } blockoverride "text" { text = merit_level_6 max_width = 144 } }
+                        button_checkbox_label = { size = { 184 30 } onclick = "[GetScriptedGui('sltm_lvm_v36_merit_7_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" blockoverride "checkbox" { checked = "[GetScriptedGui('sltm_lvm_v36_merit_7_checked_gui').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" } blockoverride "text" { text = merit_level_7 max_width = 144 } }
+                        button_checkbox_label = { size = { 184 30 } onclick = "[GetScriptedGui('sltm_lvm_v36_merit_8_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" blockoverride "checkbox" { checked = "[GetScriptedGui('sltm_lvm_v36_merit_8_checked_gui').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" } blockoverride "text" { text = merit_level_8 max_width = 144 } }
+                    }
+                    hbox = { size = { 560 30 } spacing = 4
+                        button_checkbox_label = { size = { 184 30 } onclick = "[GetScriptedGui('sltm_lvm_v36_merit_9_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" blockoverride "checkbox" { checked = "[GetScriptedGui('sltm_lvm_v36_merit_9_checked_gui').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" } blockoverride "text" { text = merit_level_9 max_width = 144 } }
+                        widget = { size = { 184 30 } }
+                        widget = { size = { 184 30 } }
+                    }
+        }
+    }
+    type sltm_lvm_v36_group_efficiency = sltm_lvm_acs_filter_group {
+        blockoverride "sltm_lvm_acs_group_toggle" { onclick = "[GetVariableSystem.Toggle('sltm_lvm_v36_group_efficiency_open')]" frame = "[Select_int32(GetVariableSystem.Exists('sltm_lvm_v36_group_efficiency_open'), '(int32)1', '(int32)2')]" }
+        blockoverride "sltm_lvm_acs_group_name" { text = SLTM_LVM_V36_GROUP_EFFICIENCY }
+        blockoverride "sltm_lvm_acs_filter_visible" { visible = "[GetVariableSystem.Exists('sltm_lvm_v36_group_efficiency_open')]" }
+        blockoverride "sltm_lvm_acs_filters" {
+                    hbox = { size = { 560 30 } spacing = 4
+                        button_checkbox_label = { size = { 184 30 } onclick = "[GetScriptedGui('sltm_lvm_v36_eff_na_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" blockoverride "checkbox" { checked = "[GetScriptedGui('sltm_lvm_v36_eff_na_checked_gui').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" } blockoverride "text" { text = SLTM_LVM_V36_EFF_NA max_width = 144 tooltip = SLTM_LVM_V36_EFF_TT } }
+                        button_checkbox_label = { size = { 184 30 } onclick = "[GetScriptedGui('sltm_lvm_v36_eff_negative_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" blockoverride "checkbox" { checked = "[GetScriptedGui('sltm_lvm_v36_eff_negative_checked_gui').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" } blockoverride "text" { text = SLTM_LVM_V36_EFF_NEGATIVE max_width = 144 tooltip = SLTM_LVM_V36_EFF_TT } }
+                        button_checkbox_label = { size = { 184 30 } onclick = "[GetScriptedGui('sltm_lvm_v36_eff_0_9_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" blockoverride "checkbox" { checked = "[GetScriptedGui('sltm_lvm_v36_eff_0_9_checked_gui').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" } blockoverride "text" { text = SLTM_LVM_V36_EFF_0_9 max_width = 144 tooltip = SLTM_LVM_V36_EFF_TT } }
+                    }
+                    hbox = { size = { 560 30 } spacing = 4
+                        button_checkbox_label = { size = { 184 30 } onclick = "[GetScriptedGui('sltm_lvm_v36_eff_10_24_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" blockoverride "checkbox" { checked = "[GetScriptedGui('sltm_lvm_v36_eff_10_24_checked_gui').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" } blockoverride "text" { text = SLTM_LVM_V36_EFF_10_24 max_width = 144 tooltip = SLTM_LVM_V36_EFF_TT } }
+                        button_checkbox_label = { size = { 184 30 } onclick = "[GetScriptedGui('sltm_lvm_v36_eff_25_39_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" blockoverride "checkbox" { checked = "[GetScriptedGui('sltm_lvm_v36_eff_25_39_checked_gui').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" } blockoverride "text" { text = SLTM_LVM_V36_EFF_25_39 max_width = 144 tooltip = SLTM_LVM_V36_EFF_TT } }
+                        button_checkbox_label = { size = { 184 30 } onclick = "[GetScriptedGui('sltm_lvm_v36_eff_40_50_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" blockoverride "checkbox" { checked = "[GetScriptedGui('sltm_lvm_v36_eff_40_50_checked_gui').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" } blockoverride "text" { text = SLTM_LVM_V36_EFF_40_50 max_width = 144 tooltip = SLTM_LVM_V36_EFF_TT } }
+                    }
+        }
+    }
+    type sltm_lvm_v36_group_ability = sltm_lvm_acs_filter_group {
+        blockoverride "sltm_lvm_acs_group_toggle" { onclick = "[GetVariableSystem.Toggle('sltm_lvm_v36_group_ability_open')]" frame = "[Select_int32(GetVariableSystem.Exists('sltm_lvm_v36_group_ability_open'), '(int32)1', '(int32)2')]" }
+        blockoverride "sltm_lvm_acs_group_name" { text = SLTM_LVM_FILTER_GROUP_ABILITY }
+        blockoverride "sltm_lvm_acs_filter_visible" { visible = "[GetVariableSystem.Exists('sltm_lvm_v36_group_ability_open')]" }
+        blockoverride "sltm_lvm_acs_filters" {
+                    text_single = { size = { 560 24 } text = diplomacy align = center default_format = "#high" }
+                    hbox = { size = { 560 28 } spacing = 5
+                        button_radio_label = { size = { 108 28 } onclick = "[GetScriptedGui('sltm_lvm_v36_skill_diplomacy_all_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" blockoverride "radio" { frame = "[BoolTo1And2(ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_hf_diplomacy_band').GetFlagName, 'all'))]" } blockoverride "text" { text = SLTM_LVM_FILTER_ALL max_width = 76 } }
+                        button_radio_label = { size = { 108 28 } onclick = "[GetScriptedGui('sltm_lvm_v36_skill_diplomacy_8_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" blockoverride "radio" { frame = "[BoolTo1And2(ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_hf_diplomacy_band').GetFlagName, '8'))]" } blockoverride "text" { text = SLTM_LVM_FILTER_SKILL_GE_8 max_width = 76 } }
+                        button_radio_label = { size = { 108 28 } onclick = "[GetScriptedGui('sltm_lvm_v36_skill_diplomacy_12_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" blockoverride "radio" { frame = "[BoolTo1And2(ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_hf_diplomacy_band').GetFlagName, '12'))]" } blockoverride "text" { text = SLTM_LVM_FILTER_SKILL_GE_12 max_width = 76 } }
+                        button_radio_label = { size = { 108 28 } onclick = "[GetScriptedGui('sltm_lvm_v36_skill_diplomacy_16_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" blockoverride "radio" { frame = "[BoolTo1And2(ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_hf_diplomacy_band').GetFlagName, '16'))]" } blockoverride "text" { text = SLTM_LVM_FILTER_SKILL_GE_16 max_width = 76 } }
+                        button_radio_label = { size = { 108 28 } onclick = "[GetScriptedGui('sltm_lvm_v36_skill_diplomacy_20_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" blockoverride "radio" { frame = "[BoolTo1And2(ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_hf_diplomacy_band').GetFlagName, '20'))]" } blockoverride "text" { text = SLTM_LVM_FILTER_SKILL_GE_20 max_width = 76 } }
+                    }
+                    text_single = { size = { 560 24 } text = martial align = center default_format = "#high" }
+                    hbox = { size = { 560 28 } spacing = 5
+                        button_radio_label = { size = { 108 28 } onclick = "[GetScriptedGui('sltm_lvm_v36_skill_martial_all_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" blockoverride "radio" { frame = "[BoolTo1And2(ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_hf_martial_band').GetFlagName, 'all'))]" } blockoverride "text" { text = SLTM_LVM_FILTER_ALL max_width = 76 } }
+                        button_radio_label = { size = { 108 28 } onclick = "[GetScriptedGui('sltm_lvm_v36_skill_martial_8_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" blockoverride "radio" { frame = "[BoolTo1And2(ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_hf_martial_band').GetFlagName, '8'))]" } blockoverride "text" { text = SLTM_LVM_FILTER_SKILL_GE_8 max_width = 76 } }
+                        button_radio_label = { size = { 108 28 } onclick = "[GetScriptedGui('sltm_lvm_v36_skill_martial_12_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" blockoverride "radio" { frame = "[BoolTo1And2(ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_hf_martial_band').GetFlagName, '12'))]" } blockoverride "text" { text = SLTM_LVM_FILTER_SKILL_GE_12 max_width = 76 } }
+                        button_radio_label = { size = { 108 28 } onclick = "[GetScriptedGui('sltm_lvm_v36_skill_martial_16_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" blockoverride "radio" { frame = "[BoolTo1And2(ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_hf_martial_band').GetFlagName, '16'))]" } blockoverride "text" { text = SLTM_LVM_FILTER_SKILL_GE_16 max_width = 76 } }
+                        button_radio_label = { size = { 108 28 } onclick = "[GetScriptedGui('sltm_lvm_v36_skill_martial_20_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" blockoverride "radio" { frame = "[BoolTo1And2(ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_hf_martial_band').GetFlagName, '20'))]" } blockoverride "text" { text = SLTM_LVM_FILTER_SKILL_GE_20 max_width = 76 } }
+                    }
+                    text_single = { size = { 560 24 } text = stewardship align = center default_format = "#high" }
+                    hbox = { size = { 560 28 } spacing = 5
+                        button_radio_label = { size = { 108 28 } onclick = "[GetScriptedGui('sltm_lvm_v36_skill_stewardship_all_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" blockoverride "radio" { frame = "[BoolTo1And2(ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_hf_stewardship_band').GetFlagName, 'all'))]" } blockoverride "text" { text = SLTM_LVM_FILTER_ALL max_width = 76 } }
+                        button_radio_label = { size = { 108 28 } onclick = "[GetScriptedGui('sltm_lvm_v36_skill_stewardship_8_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" blockoverride "radio" { frame = "[BoolTo1And2(ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_hf_stewardship_band').GetFlagName, '8'))]" } blockoverride "text" { text = SLTM_LVM_FILTER_SKILL_GE_8 max_width = 76 } }
+                        button_radio_label = { size = { 108 28 } onclick = "[GetScriptedGui('sltm_lvm_v36_skill_stewardship_12_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" blockoverride "radio" { frame = "[BoolTo1And2(ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_hf_stewardship_band').GetFlagName, '12'))]" } blockoverride "text" { text = SLTM_LVM_FILTER_SKILL_GE_12 max_width = 76 } }
+                        button_radio_label = { size = { 108 28 } onclick = "[GetScriptedGui('sltm_lvm_v36_skill_stewardship_16_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" blockoverride "radio" { frame = "[BoolTo1And2(ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_hf_stewardship_band').GetFlagName, '16'))]" } blockoverride "text" { text = SLTM_LVM_FILTER_SKILL_GE_16 max_width = 76 } }
+                        button_radio_label = { size = { 108 28 } onclick = "[GetScriptedGui('sltm_lvm_v36_skill_stewardship_20_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" blockoverride "radio" { frame = "[BoolTo1And2(ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_hf_stewardship_band').GetFlagName, '20'))]" } blockoverride "text" { text = SLTM_LVM_FILTER_SKILL_GE_20 max_width = 76 } }
+                    }
+                    text_single = { size = { 560 24 } text = intrigue align = center default_format = "#high" }
+                    hbox = { size = { 560 28 } spacing = 5
+                        button_radio_label = { size = { 108 28 } onclick = "[GetScriptedGui('sltm_lvm_v36_skill_intrigue_all_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" blockoverride "radio" { frame = "[BoolTo1And2(ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_hf_intrigue_band').GetFlagName, 'all'))]" } blockoverride "text" { text = SLTM_LVM_FILTER_ALL max_width = 76 } }
+                        button_radio_label = { size = { 108 28 } onclick = "[GetScriptedGui('sltm_lvm_v36_skill_intrigue_8_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" blockoverride "radio" { frame = "[BoolTo1And2(ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_hf_intrigue_band').GetFlagName, '8'))]" } blockoverride "text" { text = SLTM_LVM_FILTER_SKILL_GE_8 max_width = 76 } }
+                        button_radio_label = { size = { 108 28 } onclick = "[GetScriptedGui('sltm_lvm_v36_skill_intrigue_12_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" blockoverride "radio" { frame = "[BoolTo1And2(ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_hf_intrigue_band').GetFlagName, '12'))]" } blockoverride "text" { text = SLTM_LVM_FILTER_SKILL_GE_12 max_width = 76 } }
+                        button_radio_label = { size = { 108 28 } onclick = "[GetScriptedGui('sltm_lvm_v36_skill_intrigue_16_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" blockoverride "radio" { frame = "[BoolTo1And2(ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_hf_intrigue_band').GetFlagName, '16'))]" } blockoverride "text" { text = SLTM_LVM_FILTER_SKILL_GE_16 max_width = 76 } }
+                        button_radio_label = { size = { 108 28 } onclick = "[GetScriptedGui('sltm_lvm_v36_skill_intrigue_20_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" blockoverride "radio" { frame = "[BoolTo1And2(ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_hf_intrigue_band').GetFlagName, '20'))]" } blockoverride "text" { text = SLTM_LVM_FILTER_SKILL_GE_20 max_width = 76 } }
+                    }
+                    text_single = { size = { 560 24 } text = learning align = center default_format = "#high" }
+                    hbox = { size = { 560 28 } spacing = 5
+                        button_radio_label = { size = { 108 28 } onclick = "[GetScriptedGui('sltm_lvm_v36_skill_learning_all_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" blockoverride "radio" { frame = "[BoolTo1And2(ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_hf_learning_band').GetFlagName, 'all'))]" } blockoverride "text" { text = SLTM_LVM_FILTER_ALL max_width = 76 } }
+                        button_radio_label = { size = { 108 28 } onclick = "[GetScriptedGui('sltm_lvm_v36_skill_learning_8_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" blockoverride "radio" { frame = "[BoolTo1And2(ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_hf_learning_band').GetFlagName, '8'))]" } blockoverride "text" { text = SLTM_LVM_FILTER_SKILL_GE_8 max_width = 76 } }
+                        button_radio_label = { size = { 108 28 } onclick = "[GetScriptedGui('sltm_lvm_v36_skill_learning_12_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" blockoverride "radio" { frame = "[BoolTo1And2(ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_hf_learning_band').GetFlagName, '12'))]" } blockoverride "text" { text = SLTM_LVM_FILTER_SKILL_GE_12 max_width = 76 } }
+                        button_radio_label = { size = { 108 28 } onclick = "[GetScriptedGui('sltm_lvm_v36_skill_learning_16_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" blockoverride "radio" { frame = "[BoolTo1And2(ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_hf_learning_band').GetFlagName, '16'))]" } blockoverride "text" { text = SLTM_LVM_FILTER_SKILL_GE_16 max_width = 76 } }
+                        button_radio_label = { size = { 108 28 } onclick = "[GetScriptedGui('sltm_lvm_v36_skill_learning_20_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" blockoverride "radio" { frame = "[BoolTo1And2(ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_hf_learning_band').GetFlagName, '20'))]" } blockoverride "text" { text = SLTM_LVM_FILTER_SKILL_GE_20 max_width = 76 } }
+                    }
+                    text_single = { size = { 560 24 } text = prowess align = center default_format = "#high" }
+                    hbox = { size = { 560 28 } spacing = 5
+                        button_radio_label = { size = { 108 28 } onclick = "[GetScriptedGui('sltm_lvm_v36_skill_prowess_all_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" blockoverride "radio" { frame = "[BoolTo1And2(ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_hf_prowess_band').GetFlagName, 'all'))]" } blockoverride "text" { text = SLTM_LVM_FILTER_ALL max_width = 76 } }
+                        button_radio_label = { size = { 108 28 } onclick = "[GetScriptedGui('sltm_lvm_v36_skill_prowess_8_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" blockoverride "radio" { frame = "[BoolTo1And2(ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_hf_prowess_band').GetFlagName, '8'))]" } blockoverride "text" { text = SLTM_LVM_FILTER_SKILL_GE_8 max_width = 76 } }
+                        button_radio_label = { size = { 108 28 } onclick = "[GetScriptedGui('sltm_lvm_v36_skill_prowess_12_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" blockoverride "radio" { frame = "[BoolTo1And2(ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_hf_prowess_band').GetFlagName, '12'))]" } blockoverride "text" { text = SLTM_LVM_FILTER_SKILL_GE_12 max_width = 76 } }
+                        button_radio_label = { size = { 108 28 } onclick = "[GetScriptedGui('sltm_lvm_v36_skill_prowess_16_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" blockoverride "radio" { frame = "[BoolTo1And2(ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_hf_prowess_band').GetFlagName, '16'))]" } blockoverride "text" { text = SLTM_LVM_FILTER_SKILL_GE_16 max_width = 76 } }
+                        button_radio_label = { size = { 108 28 } onclick = "[GetScriptedGui('sltm_lvm_v36_skill_prowess_20_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" blockoverride "radio" { frame = "[BoolTo1And2(ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_hf_prowess_band').GetFlagName, '20'))]" } blockoverride "text" { text = SLTM_LVM_FILTER_SKILL_GE_20 max_width = 76 } }
+                    }
+        }
+    }
+    type sltm_lvm_v36_group_commander = sltm_lvm_acs_filter_group {
+        blockoverride "sltm_lvm_acs_group_toggle" { onclick = "[GetVariableSystem.Toggle('sltm_lvm_v36_group_commander_open')]" frame = "[Select_int32(GetVariableSystem.Exists('sltm_lvm_v36_group_commander_open'), '(int32)1', '(int32)2')]" }
+        blockoverride "sltm_lvm_acs_group_name" { text = SLTM_LVM_V36_GROUP_COMMANDER }
+        blockoverride "sltm_lvm_acs_filter_visible" { visible = "[GetVariableSystem.Exists('sltm_lvm_v36_group_commander_open')]" }
+        blockoverride "sltm_lvm_acs_filters" {
+                    hbox = { size = { 560 30 } spacing = 4
+                        sltm_lvm_acs_token_checkbox_row_small = {
+                            blockoverride "sltm_lvm_acs_token_action" { onclick = "[GetScriptedGui('sltm_lvm_v36_token_logistician_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" }
+                            blockoverride "sltm_lvm_acs_token_checkbox" { checked = "[Or(ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_hf_tok_logistician').GetFlagName, 'pos'), ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_hf_tok_logistician').GetFlagName, 'neg'))]" }
+                            blockoverride "sltm_lvm_acs_token_pos_visible" { visible = "[ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_hf_tok_logistician').GetFlagName, 'pos')]" }
+                            blockoverride "sltm_lvm_acs_token_neg_visible" { visible = "[ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_hf_tok_logistician').GetFlagName, 'neg')]" }
+                            blockoverride "sltm_lvm_acs_token_text" { text = trait_logistician }
+                        }
+                        sltm_lvm_acs_token_checkbox_row_small = {
+                            blockoverride "sltm_lvm_acs_token_action" { onclick = "[GetScriptedGui('sltm_lvm_v36_token_military_engineer_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" }
+                            blockoverride "sltm_lvm_acs_token_checkbox" { checked = "[Or(ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_hf_tok_military_engineer').GetFlagName, 'pos'), ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_hf_tok_military_engineer').GetFlagName, 'neg'))]" }
+                            blockoverride "sltm_lvm_acs_token_pos_visible" { visible = "[ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_hf_tok_military_engineer').GetFlagName, 'pos')]" }
+                            blockoverride "sltm_lvm_acs_token_neg_visible" { visible = "[ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_hf_tok_military_engineer').GetFlagName, 'neg')]" }
+                            blockoverride "sltm_lvm_acs_token_text" { text = trait_military_engineer }
+                        }
+                        sltm_lvm_acs_token_checkbox_row_small = {
+                            blockoverride "sltm_lvm_acs_token_action" { onclick = "[GetScriptedGui('sltm_lvm_v36_token_aggressive_attacker_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" }
+                            blockoverride "sltm_lvm_acs_token_checkbox" { checked = "[Or(ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_hf_tok_aggressive_attacker').GetFlagName, 'pos'), ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_hf_tok_aggressive_attacker').GetFlagName, 'neg'))]" }
+                            blockoverride "sltm_lvm_acs_token_pos_visible" { visible = "[ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_hf_tok_aggressive_attacker').GetFlagName, 'pos')]" }
+                            blockoverride "sltm_lvm_acs_token_neg_visible" { visible = "[ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_hf_tok_aggressive_attacker').GetFlagName, 'neg')]" }
+                            blockoverride "sltm_lvm_acs_token_text" { text = trait_aggressive_attacker }
+                        }
+                    }
+                    hbox = { size = { 560 30 } spacing = 4
+                        sltm_lvm_acs_token_checkbox_row_small = {
+                            blockoverride "sltm_lvm_acs_token_action" { onclick = "[GetScriptedGui('sltm_lvm_v36_token_unyielding_defender_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" }
+                            blockoverride "sltm_lvm_acs_token_checkbox" { checked = "[Or(ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_hf_tok_unyielding_defender').GetFlagName, 'pos'), ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_hf_tok_unyielding_defender').GetFlagName, 'neg'))]" }
+                            blockoverride "sltm_lvm_acs_token_pos_visible" { visible = "[ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_hf_tok_unyielding_defender').GetFlagName, 'pos')]" }
+                            blockoverride "sltm_lvm_acs_token_neg_visible" { visible = "[ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_hf_tok_unyielding_defender').GetFlagName, 'neg')]" }
+                            blockoverride "sltm_lvm_acs_token_text" { text = trait_unyielding_defender }
+                        }
+                        sltm_lvm_acs_token_checkbox_row_small = {
+                            blockoverride "sltm_lvm_acs_token_action" { onclick = "[GetScriptedGui('sltm_lvm_v36_token_forder_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" }
+                            blockoverride "sltm_lvm_acs_token_checkbox" { checked = "[Or(ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_hf_tok_forder').GetFlagName, 'pos'), ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_hf_tok_forder').GetFlagName, 'neg'))]" }
+                            blockoverride "sltm_lvm_acs_token_pos_visible" { visible = "[ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_hf_tok_forder').GetFlagName, 'pos')]" }
+                            blockoverride "sltm_lvm_acs_token_neg_visible" { visible = "[ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_hf_tok_forder').GetFlagName, 'neg')]" }
+                            blockoverride "sltm_lvm_acs_token_text" { text = trait_forder }
+                        }
+                        sltm_lvm_acs_token_checkbox_row_small = {
+                            blockoverride "sltm_lvm_acs_token_action" { onclick = "[GetScriptedGui('sltm_lvm_v36_token_flexible_leader_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" }
+                            blockoverride "sltm_lvm_acs_token_checkbox" { checked = "[Or(ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_hf_tok_flexible_leader').GetFlagName, 'pos'), ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_hf_tok_flexible_leader').GetFlagName, 'neg'))]" }
+                            blockoverride "sltm_lvm_acs_token_pos_visible" { visible = "[ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_hf_tok_flexible_leader').GetFlagName, 'pos')]" }
+                            blockoverride "sltm_lvm_acs_token_neg_visible" { visible = "[ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_hf_tok_flexible_leader').GetFlagName, 'neg')]" }
+                            blockoverride "sltm_lvm_acs_token_text" { text = trait_flexible_leader }
+                        }
+                    }
+                    hbox = { size = { 560 30 } spacing = 4
+                        sltm_lvm_acs_token_checkbox_row_small = {
+                            blockoverride "sltm_lvm_acs_token_action" { onclick = "[GetScriptedGui('sltm_lvm_v36_token_desert_warrior_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" }
+                            blockoverride "sltm_lvm_acs_token_checkbox" { checked = "[Or(ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_hf_tok_desert_warrior').GetFlagName, 'pos'), ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_hf_tok_desert_warrior').GetFlagName, 'neg'))]" }
+                            blockoverride "sltm_lvm_acs_token_pos_visible" { visible = "[ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_hf_tok_desert_warrior').GetFlagName, 'pos')]" }
+                            blockoverride "sltm_lvm_acs_token_neg_visible" { visible = "[ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_hf_tok_desert_warrior').GetFlagName, 'neg')]" }
+                            blockoverride "sltm_lvm_acs_token_text" { text = trait_desert_warrior }
+                        }
+                        sltm_lvm_acs_token_checkbox_row_small = {
+                            blockoverride "sltm_lvm_acs_token_action" { onclick = "[GetScriptedGui('sltm_lvm_v36_token_jungle_stalker_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" }
+                            blockoverride "sltm_lvm_acs_token_checkbox" { checked = "[Or(ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_hf_tok_jungle_stalker').GetFlagName, 'pos'), ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_hf_tok_jungle_stalker').GetFlagName, 'neg'))]" }
+                            blockoverride "sltm_lvm_acs_token_pos_visible" { visible = "[ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_hf_tok_jungle_stalker').GetFlagName, 'pos')]" }
+                            blockoverride "sltm_lvm_acs_token_neg_visible" { visible = "[ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_hf_tok_jungle_stalker').GetFlagName, 'neg')]" }
+                            blockoverride "sltm_lvm_acs_token_text" { text = trait_jungle_stalker }
+                        }
+                        sltm_lvm_acs_token_checkbox_row_small = {
+                            blockoverride "sltm_lvm_acs_token_action" { onclick = "[GetScriptedGui('sltm_lvm_v36_token_reaver_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" }
+                            blockoverride "sltm_lvm_acs_token_checkbox" { checked = "[Or(ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_hf_tok_reaver').GetFlagName, 'pos'), ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_hf_tok_reaver').GetFlagName, 'neg'))]" }
+                            blockoverride "sltm_lvm_acs_token_pos_visible" { visible = "[ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_hf_tok_reaver').GetFlagName, 'pos')]" }
+                            blockoverride "sltm_lvm_acs_token_neg_visible" { visible = "[ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_hf_tok_reaver').GetFlagName, 'neg')]" }
+                            blockoverride "sltm_lvm_acs_token_text" { text = trait_reaver }
+                        }
+                    }
+                    hbox = { size = { 560 30 } spacing = 4
+                        sltm_lvm_acs_token_checkbox_row_small = {
+                            blockoverride "sltm_lvm_acs_token_action" { onclick = "[GetScriptedGui('sltm_lvm_v36_token_reckless_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" }
+                            blockoverride "sltm_lvm_acs_token_checkbox" { checked = "[Or(ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_hf_tok_reckless').GetFlagName, 'pos'), ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_hf_tok_reckless').GetFlagName, 'neg'))]" }
+                            blockoverride "sltm_lvm_acs_token_pos_visible" { visible = "[ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_hf_tok_reckless').GetFlagName, 'pos')]" }
+                            blockoverride "sltm_lvm_acs_token_neg_visible" { visible = "[ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_hf_tok_reckless').GetFlagName, 'neg')]" }
+                            blockoverride "sltm_lvm_acs_token_text" { text = trait_reckless }
+                        }
+                        sltm_lvm_acs_token_checkbox_row_small = {
+                            blockoverride "sltm_lvm_acs_token_action" { onclick = "[GetScriptedGui('sltm_lvm_v36_token_holy_warrior_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" }
+                            blockoverride "sltm_lvm_acs_token_checkbox" { checked = "[Or(ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_hf_tok_holy_warrior').GetFlagName, 'pos'), ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_hf_tok_holy_warrior').GetFlagName, 'neg'))]" }
+                            blockoverride "sltm_lvm_acs_token_pos_visible" { visible = "[ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_hf_tok_holy_warrior').GetFlagName, 'pos')]" }
+                            blockoverride "sltm_lvm_acs_token_neg_visible" { visible = "[ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_hf_tok_holy_warrior').GetFlagName, 'neg')]" }
+                            blockoverride "sltm_lvm_acs_token_text" { text = trait_holy_warrior }
+                        }
+                        sltm_lvm_acs_token_checkbox_row_small = {
+                            blockoverride "sltm_lvm_acs_token_action" { onclick = "[GetScriptedGui('sltm_lvm_v36_token_open_terrain_expert_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" }
+                            blockoverride "sltm_lvm_acs_token_checkbox" { checked = "[Or(ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_hf_tok_open_terrain_expert').GetFlagName, 'pos'), ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_hf_tok_open_terrain_expert').GetFlagName, 'neg'))]" }
+                            blockoverride "sltm_lvm_acs_token_pos_visible" { visible = "[ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_hf_tok_open_terrain_expert').GetFlagName, 'pos')]" }
+                            blockoverride "sltm_lvm_acs_token_neg_visible" { visible = "[ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_hf_tok_open_terrain_expert').GetFlagName, 'neg')]" }
+                            blockoverride "sltm_lvm_acs_token_text" { text = trait_open_terrain_expert }
+                        }
+                    }
+                    hbox = { size = { 560 30 } spacing = 4
+                        sltm_lvm_acs_token_checkbox_row_small = {
+                            blockoverride "sltm_lvm_acs_token_action" { onclick = "[GetScriptedGui('sltm_lvm_v36_token_rough_terrain_expert_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" }
+                            blockoverride "sltm_lvm_acs_token_checkbox" { checked = "[Or(ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_hf_tok_rough_terrain_expert').GetFlagName, 'pos'), ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_hf_tok_rough_terrain_expert').GetFlagName, 'neg'))]" }
+                            blockoverride "sltm_lvm_acs_token_pos_visible" { visible = "[ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_hf_tok_rough_terrain_expert').GetFlagName, 'pos')]" }
+                            blockoverride "sltm_lvm_acs_token_neg_visible" { visible = "[ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_hf_tok_rough_terrain_expert').GetFlagName, 'neg')]" }
+                            blockoverride "sltm_lvm_acs_token_text" { text = trait_rough_terrain_expert }
+                        }
+                        sltm_lvm_acs_token_checkbox_row_small = {
+                            blockoverride "sltm_lvm_acs_token_action" { onclick = "[GetScriptedGui('sltm_lvm_v36_token_forest_fighter_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" }
+                            blockoverride "sltm_lvm_acs_token_checkbox" { checked = "[Or(ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_hf_tok_forest_fighter').GetFlagName, 'pos'), ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_hf_tok_forest_fighter').GetFlagName, 'neg'))]" }
+                            blockoverride "sltm_lvm_acs_token_pos_visible" { visible = "[ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_hf_tok_forest_fighter').GetFlagName, 'pos')]" }
+                            blockoverride "sltm_lvm_acs_token_neg_visible" { visible = "[ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_hf_tok_forest_fighter').GetFlagName, 'neg')]" }
+                            blockoverride "sltm_lvm_acs_token_text" { text = trait_forest_fighter }
+                        }
+                        sltm_lvm_acs_token_checkbox_row_small = {
+                            blockoverride "sltm_lvm_acs_token_action" { onclick = "[GetScriptedGui('sltm_lvm_v36_token_cautious_leader_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" }
+                            blockoverride "sltm_lvm_acs_token_checkbox" { checked = "[Or(ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_hf_tok_cautious_leader').GetFlagName, 'pos'), ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_hf_tok_cautious_leader').GetFlagName, 'neg'))]" }
+                            blockoverride "sltm_lvm_acs_token_pos_visible" { visible = "[ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_hf_tok_cautious_leader').GetFlagName, 'pos')]" }
+                            blockoverride "sltm_lvm_acs_token_neg_visible" { visible = "[ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_hf_tok_cautious_leader').GetFlagName, 'neg')]" }
+                            blockoverride "sltm_lvm_acs_token_text" { text = trait_cautious_leader }
+                        }
+                    }
+                    hbox = { size = { 560 30 } spacing = 4
+                        sltm_lvm_acs_token_checkbox_row_small = {
+                            blockoverride "sltm_lvm_acs_token_action" { onclick = "[GetScriptedGui('sltm_lvm_v36_token_organizer_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" }
+                            blockoverride "sltm_lvm_acs_token_checkbox" { checked = "[Or(ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_hf_tok_organizer').GetFlagName, 'pos'), ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_hf_tok_organizer').GetFlagName, 'neg'))]" }
+                            blockoverride "sltm_lvm_acs_token_pos_visible" { visible = "[ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_hf_tok_organizer').GetFlagName, 'pos')]" }
+                            blockoverride "sltm_lvm_acs_token_neg_visible" { visible = "[ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_hf_tok_organizer').GetFlagName, 'neg')]" }
+                            blockoverride "sltm_lvm_acs_token_text" { text = trait_organizer }
+                        }
+                        sltm_lvm_acs_token_checkbox_row_small = {
+                            blockoverride "sltm_lvm_acs_token_action" { onclick = "[GetScriptedGui('sltm_lvm_v36_token_winter_soldier_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" }
+                            blockoverride "sltm_lvm_acs_token_checkbox" { checked = "[Or(ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_hf_tok_winter_soldier').GetFlagName, 'pos'), ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_hf_tok_winter_soldier').GetFlagName, 'neg'))]" }
+                            blockoverride "sltm_lvm_acs_token_pos_visible" { visible = "[ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_hf_tok_winter_soldier').GetFlagName, 'pos')]" }
+                            blockoverride "sltm_lvm_acs_token_neg_visible" { visible = "[ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_hf_tok_winter_soldier').GetFlagName, 'neg')]" }
+                            blockoverride "sltm_lvm_acs_token_text" { text = trait_winter_soldier }
+                        }
+                        widget = { size = { 184 30 } }
+                    }
+        }
+    }
+    type sltm_lvm_v36_group_lifestyle = sltm_lvm_acs_filter_group {
+        blockoverride "sltm_lvm_acs_group_toggle" { onclick = "[GetVariableSystem.Toggle('sltm_lvm_v36_group_lifestyle_open')]" frame = "[Select_int32(GetVariableSystem.Exists('sltm_lvm_v36_group_lifestyle_open'), '(int32)1', '(int32)2')]" }
+        blockoverride "sltm_lvm_acs_group_name" { text = SLTM_LVM_V36_GROUP_LIFESTYLE }
+        blockoverride "sltm_lvm_acs_filter_visible" { visible = "[GetVariableSystem.Exists('sltm_lvm_v36_group_lifestyle_open')]" }
+        blockoverride "sltm_lvm_acs_filters" {
+                    hbox = { size = { 560 30 } spacing = 4
+                        sltm_lvm_acs_token_checkbox_row_small = {
+                            blockoverride "sltm_lvm_acs_token_action" { onclick = "[GetScriptedGui('sltm_lvm_v36_token_lifestyle_physician_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" }
+                            blockoverride "sltm_lvm_acs_token_checkbox" { checked = "[Or(ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_hf_tok_lifestyle_physician').GetFlagName, 'pos'), ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_hf_tok_lifestyle_physician').GetFlagName, 'neg'))]" }
+                            blockoverride "sltm_lvm_acs_token_pos_visible" { visible = "[ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_hf_tok_lifestyle_physician').GetFlagName, 'pos')]" }
+                            blockoverride "sltm_lvm_acs_token_neg_visible" { visible = "[ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_hf_tok_lifestyle_physician').GetFlagName, 'neg')]" }
+                            blockoverride "sltm_lvm_acs_token_text" { text = trait_lifestyle_physician }
+                        }
+                        sltm_lvm_acs_token_checkbox_row_small = {
+                            blockoverride "sltm_lvm_acs_token_action" { onclick = "[GetScriptedGui('sltm_lvm_v36_token_lifestyle_mystic_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" }
+                            blockoverride "sltm_lvm_acs_token_checkbox" { checked = "[Or(ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_hf_tok_lifestyle_mystic').GetFlagName, 'pos'), ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_hf_tok_lifestyle_mystic').GetFlagName, 'neg'))]" }
+                            blockoverride "sltm_lvm_acs_token_pos_visible" { visible = "[ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_hf_tok_lifestyle_mystic').GetFlagName, 'pos')]" }
+                            blockoverride "sltm_lvm_acs_token_neg_visible" { visible = "[ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_hf_tok_lifestyle_mystic').GetFlagName, 'neg')]" }
+                            blockoverride "sltm_lvm_acs_token_text" { text = trait_lifestyle_mystic }
+                        }
+                        sltm_lvm_acs_token_checkbox_row_small = {
+                            blockoverride "sltm_lvm_acs_token_action" { onclick = "[GetScriptedGui('sltm_lvm_v36_token_governor_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" }
+                            blockoverride "sltm_lvm_acs_token_checkbox" { checked = "[Or(ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_hf_tok_governor').GetFlagName, 'pos'), ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_hf_tok_governor').GetFlagName, 'neg'))]" }
+                            blockoverride "sltm_lvm_acs_token_pos_visible" { visible = "[ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_hf_tok_governor').GetFlagName, 'pos')]" }
+                            blockoverride "sltm_lvm_acs_token_neg_visible" { visible = "[ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_hf_tok_governor').GetFlagName, 'neg')]" }
+                            blockoverride "sltm_lvm_acs_token_text" { text = trait_governor }
+                        }
+                    }
+                    hbox = { size = { 560 30 } spacing = 4
+                        sltm_lvm_acs_token_checkbox_row_small = {
+                            blockoverride "sltm_lvm_acs_token_action" { onclick = "[GetScriptedGui('sltm_lvm_v36_token_lifestyle_hunter_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" }
+                            blockoverride "sltm_lvm_acs_token_checkbox" { checked = "[Or(ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_hf_tok_lifestyle_hunter').GetFlagName, 'pos'), ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_hf_tok_lifestyle_hunter').GetFlagName, 'neg'))]" }
+                            blockoverride "sltm_lvm_acs_token_pos_visible" { visible = "[ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_hf_tok_lifestyle_hunter').GetFlagName, 'pos')]" }
+                            blockoverride "sltm_lvm_acs_token_neg_visible" { visible = "[ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_hf_tok_lifestyle_hunter').GetFlagName, 'neg')]" }
+                            blockoverride "sltm_lvm_acs_token_text" { text = trait_lifestyle_hunter }
+                        }
+                        sltm_lvm_acs_token_checkbox_row_small = {
+                            blockoverride "sltm_lvm_acs_token_action" { onclick = "[GetScriptedGui('sltm_lvm_v36_token_tourney_participant_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" }
+                            blockoverride "sltm_lvm_acs_token_checkbox" { checked = "[Or(ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_hf_tok_tourney_participant').GetFlagName, 'pos'), ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_hf_tok_tourney_participant').GetFlagName, 'neg'))]" }
+                            blockoverride "sltm_lvm_acs_token_pos_visible" { visible = "[ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_hf_tok_tourney_participant').GetFlagName, 'pos')]" }
+                            blockoverride "sltm_lvm_acs_token_neg_visible" { visible = "[ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_hf_tok_tourney_participant').GetFlagName, 'neg')]" }
+                            blockoverride "sltm_lvm_acs_token_text" { text = trait_tourney_participant }
+                        }
+                        sltm_lvm_acs_token_checkbox_row_small = {
+                            blockoverride "sltm_lvm_acs_token_action" { onclick = "[GetScriptedGui('sltm_lvm_v36_token_lifestyle_blademaster_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" }
+                            blockoverride "sltm_lvm_acs_token_checkbox" { checked = "[Or(ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_hf_tok_lifestyle_blademaster').GetFlagName, 'pos'), ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_hf_tok_lifestyle_blademaster').GetFlagName, 'neg'))]" }
+                            blockoverride "sltm_lvm_acs_token_pos_visible" { visible = "[ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_hf_tok_lifestyle_blademaster').GetFlagName, 'pos')]" }
+                            blockoverride "sltm_lvm_acs_token_neg_visible" { visible = "[ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_hf_tok_lifestyle_blademaster').GetFlagName, 'neg')]" }
+                            blockoverride "sltm_lvm_acs_token_text" { text = trait_lifestyle_blademaster }
+                        }
+                    }
+                    hbox = { size = { 560 30 } spacing = 4
+                        sltm_lvm_acs_token_checkbox_row_small = {
+                            blockoverride "sltm_lvm_acs_token_action" { onclick = "[GetScriptedGui('sltm_lvm_v36_token_lifestyle_reveler_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" }
+                            blockoverride "sltm_lvm_acs_token_checkbox" { checked = "[Or(ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_hf_tok_lifestyle_reveler').GetFlagName, 'pos'), ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_hf_tok_lifestyle_reveler').GetFlagName, 'neg'))]" }
+                            blockoverride "sltm_lvm_acs_token_pos_visible" { visible = "[ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_hf_tok_lifestyle_reveler').GetFlagName, 'pos')]" }
+                            blockoverride "sltm_lvm_acs_token_neg_visible" { visible = "[ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_hf_tok_lifestyle_reveler').GetFlagName, 'neg')]" }
+                            blockoverride "sltm_lvm_acs_token_text" { text = trait_lifestyle_reveler }
+                        }
+                        sltm_lvm_acs_token_checkbox_row_small = {
+                            blockoverride "sltm_lvm_acs_token_action" { onclick = "[GetScriptedGui('sltm_lvm_v36_token_lifestyle_traveler_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" }
+                            blockoverride "sltm_lvm_acs_token_checkbox" { checked = "[Or(ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_hf_tok_lifestyle_traveler').GetFlagName, 'pos'), ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_hf_tok_lifestyle_traveler').GetFlagName, 'neg'))]" }
+                            blockoverride "sltm_lvm_acs_token_pos_visible" { visible = "[ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_hf_tok_lifestyle_traveler').GetFlagName, 'pos')]" }
+                            blockoverride "sltm_lvm_acs_token_neg_visible" { visible = "[ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_hf_tok_lifestyle_traveler').GetFlagName, 'neg')]" }
+                            blockoverride "sltm_lvm_acs_token_text" { text = trait_lifestyle_traveler }
+                        }
+                        sltm_lvm_acs_token_checkbox_row_small = {
+                            blockoverride "sltm_lvm_acs_token_action" { onclick = "[GetScriptedGui('sltm_lvm_v36_token_lifestyle_herbalist_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" }
+                            blockoverride "sltm_lvm_acs_token_checkbox" { checked = "[Or(ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_hf_tok_lifestyle_herbalist').GetFlagName, 'pos'), ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_hf_tok_lifestyle_herbalist').GetFlagName, 'neg'))]" }
+                            blockoverride "sltm_lvm_acs_token_pos_visible" { visible = "[ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_hf_tok_lifestyle_herbalist').GetFlagName, 'pos')]" }
+                            blockoverride "sltm_lvm_acs_token_neg_visible" { visible = "[ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_hf_tok_lifestyle_herbalist').GetFlagName, 'neg')]" }
+                            blockoverride "sltm_lvm_acs_token_text" { text = trait_lifestyle_herbalist }
+                        }
+                    }
+                    hbox = { size = { 560 30 } spacing = 4
+                        sltm_lvm_acs_token_checkbox_row_small = {
+                            blockoverride "sltm_lvm_acs_token_action" { onclick = "[GetScriptedGui('sltm_lvm_v36_token_diplomat_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" }
+                            blockoverride "sltm_lvm_acs_token_checkbox" { checked = "[Or(ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_hf_tok_diplomat').GetFlagName, 'pos'), ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_hf_tok_diplomat').GetFlagName, 'neg'))]" }
+                            blockoverride "sltm_lvm_acs_token_pos_visible" { visible = "[ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_hf_tok_diplomat').GetFlagName, 'pos')]" }
+                            blockoverride "sltm_lvm_acs_token_neg_visible" { visible = "[ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_hf_tok_diplomat').GetFlagName, 'neg')]" }
+                            blockoverride "sltm_lvm_acs_token_text" { text = trait_diplomat }
+                        }
+                        sltm_lvm_acs_token_checkbox_row_small = {
+                            blockoverride "sltm_lvm_acs_token_action" { onclick = "[GetScriptedGui('sltm_lvm_v36_token_family_first_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" }
+                            blockoverride "sltm_lvm_acs_token_checkbox" { checked = "[Or(ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_hf_tok_family_first').GetFlagName, 'pos'), ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_hf_tok_family_first').GetFlagName, 'neg'))]" }
+                            blockoverride "sltm_lvm_acs_token_pos_visible" { visible = "[ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_hf_tok_family_first').GetFlagName, 'pos')]" }
+                            blockoverride "sltm_lvm_acs_token_neg_visible" { visible = "[ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_hf_tok_family_first').GetFlagName, 'neg')]" }
+                            blockoverride "sltm_lvm_acs_token_text" { text = trait_family_first }
+                        }
+                        sltm_lvm_acs_token_checkbox_row_small = {
+                            blockoverride "sltm_lvm_acs_token_action" { onclick = "[GetScriptedGui('sltm_lvm_v36_token_august_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" }
+                            blockoverride "sltm_lvm_acs_token_checkbox" { checked = "[Or(ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_hf_tok_august').GetFlagName, 'pos'), ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_hf_tok_august').GetFlagName, 'neg'))]" }
+                            blockoverride "sltm_lvm_acs_token_pos_visible" { visible = "[ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_hf_tok_august').GetFlagName, 'pos')]" }
+                            blockoverride "sltm_lvm_acs_token_neg_visible" { visible = "[ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_hf_tok_august').GetFlagName, 'neg')]" }
+                            blockoverride "sltm_lvm_acs_token_text" { text = trait_august }
+                        }
+                    }
+                    hbox = { size = { 560 30 } spacing = 4
+                        sltm_lvm_acs_token_checkbox_row_small = {
+                            blockoverride "sltm_lvm_acs_token_action" { onclick = "[GetScriptedGui('sltm_lvm_v36_token_strategist_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" }
+                            blockoverride "sltm_lvm_acs_token_checkbox" { checked = "[Or(ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_hf_tok_strategist').GetFlagName, 'pos'), ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_hf_tok_strategist').GetFlagName, 'neg'))]" }
+                            blockoverride "sltm_lvm_acs_token_pos_visible" { visible = "[ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_hf_tok_strategist').GetFlagName, 'pos')]" }
+                            blockoverride "sltm_lvm_acs_token_neg_visible" { visible = "[ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_hf_tok_strategist').GetFlagName, 'neg')]" }
+                            blockoverride "sltm_lvm_acs_token_text" { text = trait_strategist }
+                        }
+                        sltm_lvm_acs_token_checkbox_row_small = {
+                            blockoverride "sltm_lvm_acs_token_action" { onclick = "[GetScriptedGui('sltm_lvm_v36_token_overseer_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" }
+                            blockoverride "sltm_lvm_acs_token_checkbox" { checked = "[Or(ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_hf_tok_overseer').GetFlagName, 'pos'), ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_hf_tok_overseer').GetFlagName, 'neg'))]" }
+                            blockoverride "sltm_lvm_acs_token_pos_visible" { visible = "[ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_hf_tok_overseer').GetFlagName, 'pos')]" }
+                            blockoverride "sltm_lvm_acs_token_neg_visible" { visible = "[ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_hf_tok_overseer').GetFlagName, 'neg')]" }
+                            blockoverride "sltm_lvm_acs_token_text" { text = trait_overseer }
+                        }
+                        sltm_lvm_acs_token_checkbox_row_small = {
+                            blockoverride "sltm_lvm_acs_token_action" { onclick = "[GetScriptedGui('sltm_lvm_v36_token_gallant_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" }
+                            blockoverride "sltm_lvm_acs_token_checkbox" { checked = "[Or(ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_hf_tok_gallant').GetFlagName, 'pos'), ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_hf_tok_gallant').GetFlagName, 'neg'))]" }
+                            blockoverride "sltm_lvm_acs_token_pos_visible" { visible = "[ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_hf_tok_gallant').GetFlagName, 'pos')]" }
+                            blockoverride "sltm_lvm_acs_token_neg_visible" { visible = "[ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_hf_tok_gallant').GetFlagName, 'neg')]" }
+                            blockoverride "sltm_lvm_acs_token_text" { text = trait_gallant }
+                        }
+                    }
+                    hbox = { size = { 560 30 } spacing = 4
+                        sltm_lvm_acs_token_checkbox_row_small = {
+                            blockoverride "sltm_lvm_acs_token_action" { onclick = "[GetScriptedGui('sltm_lvm_v36_token_architect_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" }
+                            blockoverride "sltm_lvm_acs_token_checkbox" { checked = "[Or(ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_hf_tok_architect').GetFlagName, 'pos'), ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_hf_tok_architect').GetFlagName, 'neg'))]" }
+                            blockoverride "sltm_lvm_acs_token_pos_visible" { visible = "[ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_hf_tok_architect').GetFlagName, 'pos')]" }
+                            blockoverride "sltm_lvm_acs_token_neg_visible" { visible = "[ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_hf_tok_architect').GetFlagName, 'neg')]" }
+                            blockoverride "sltm_lvm_acs_token_text" { text = trait_architect }
+                        }
+                        sltm_lvm_acs_token_checkbox_row_small = {
+                            blockoverride "sltm_lvm_acs_token_action" { onclick = "[GetScriptedGui('sltm_lvm_v36_token_administrator_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" }
+                            blockoverride "sltm_lvm_acs_token_checkbox" { checked = "[Or(ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_hf_tok_administrator').GetFlagName, 'pos'), ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_hf_tok_administrator').GetFlagName, 'neg'))]" }
+                            blockoverride "sltm_lvm_acs_token_pos_visible" { visible = "[ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_hf_tok_administrator').GetFlagName, 'pos')]" }
+                            blockoverride "sltm_lvm_acs_token_neg_visible" { visible = "[ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_hf_tok_administrator').GetFlagName, 'neg')]" }
+                            blockoverride "sltm_lvm_acs_token_text" { text = trait_administrator }
+                        }
+                        sltm_lvm_acs_token_checkbox_row_small = {
+                            blockoverride "sltm_lvm_acs_token_action" { onclick = "[GetScriptedGui('sltm_lvm_v36_token_avaricious_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" }
+                            blockoverride "sltm_lvm_acs_token_checkbox" { checked = "[Or(ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_hf_tok_avaricious').GetFlagName, 'pos'), ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_hf_tok_avaricious').GetFlagName, 'neg'))]" }
+                            blockoverride "sltm_lvm_acs_token_pos_visible" { visible = "[ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_hf_tok_avaricious').GetFlagName, 'pos')]" }
+                            blockoverride "sltm_lvm_acs_token_neg_visible" { visible = "[ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_hf_tok_avaricious').GetFlagName, 'neg')]" }
+                            blockoverride "sltm_lvm_acs_token_text" { text = trait_avaricious }
+                        }
+                    }
+                    hbox = { size = { 560 30 } spacing = 4
+                        sltm_lvm_acs_token_checkbox_row_small = {
+                            blockoverride "sltm_lvm_acs_token_action" { onclick = "[GetScriptedGui('sltm_lvm_v36_token_schemer_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" }
+                            blockoverride "sltm_lvm_acs_token_checkbox" { checked = "[Or(ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_hf_tok_schemer').GetFlagName, 'pos'), ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_hf_tok_schemer').GetFlagName, 'neg'))]" }
+                            blockoverride "sltm_lvm_acs_token_pos_visible" { visible = "[ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_hf_tok_schemer').GetFlagName, 'pos')]" }
+                            blockoverride "sltm_lvm_acs_token_neg_visible" { visible = "[ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_hf_tok_schemer').GetFlagName, 'neg')]" }
+                            blockoverride "sltm_lvm_acs_token_text" { text = trait_schemer }
+                        }
+                        sltm_lvm_acs_token_checkbox_row_small = {
+                            blockoverride "sltm_lvm_acs_token_action" { onclick = "[GetScriptedGui('sltm_lvm_v36_token_seducer_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" }
+                            blockoverride "sltm_lvm_acs_token_checkbox" { checked = "[Or(ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_hf_tok_seducer').GetFlagName, 'pos'), ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_hf_tok_seducer').GetFlagName, 'neg'))]" }
+                            blockoverride "sltm_lvm_acs_token_pos_visible" { visible = "[ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_hf_tok_seducer').GetFlagName, 'pos')]" }
+                            blockoverride "sltm_lvm_acs_token_neg_visible" { visible = "[ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_hf_tok_seducer').GetFlagName, 'neg')]" }
+                            blockoverride "sltm_lvm_acs_token_text" { text = trait_seducer }
+                        }
+                        sltm_lvm_acs_token_checkbox_row_small = {
+                            blockoverride "sltm_lvm_acs_token_action" { onclick = "[GetScriptedGui('sltm_lvm_v36_token_torturer_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" }
+                            blockoverride "sltm_lvm_acs_token_checkbox" { checked = "[Or(ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_hf_tok_torturer').GetFlagName, 'pos'), ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_hf_tok_torturer').GetFlagName, 'neg'))]" }
+                            blockoverride "sltm_lvm_acs_token_pos_visible" { visible = "[ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_hf_tok_torturer').GetFlagName, 'pos')]" }
+                            blockoverride "sltm_lvm_acs_token_neg_visible" { visible = "[ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_hf_tok_torturer').GetFlagName, 'neg')]" }
+                            blockoverride "sltm_lvm_acs_token_text" { text = trait_torturer }
+                        }
+                    }
+                    hbox = { size = { 560 30 } spacing = 4
+                        sltm_lvm_acs_token_checkbox_row_small = {
+                            blockoverride "sltm_lvm_acs_token_action" { onclick = "[GetScriptedGui('sltm_lvm_v36_token_whole_of_body_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" }
+                            blockoverride "sltm_lvm_acs_token_checkbox" { checked = "[Or(ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_hf_tok_whole_of_body').GetFlagName, 'pos'), ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_hf_tok_whole_of_body').GetFlagName, 'neg'))]" }
+                            blockoverride "sltm_lvm_acs_token_pos_visible" { visible = "[ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_hf_tok_whole_of_body').GetFlagName, 'pos')]" }
+                            blockoverride "sltm_lvm_acs_token_neg_visible" { visible = "[ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_hf_tok_whole_of_body').GetFlagName, 'neg')]" }
+                            blockoverride "sltm_lvm_acs_token_text" { text = trait_whole_of_body }
+                        }
+                        sltm_lvm_acs_token_checkbox_row_small = {
+                            blockoverride "sltm_lvm_acs_token_action" { onclick = "[GetScriptedGui('sltm_lvm_v36_token_scholar_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" }
+                            blockoverride "sltm_lvm_acs_token_checkbox" { checked = "[Or(ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_hf_tok_scholar').GetFlagName, 'pos'), ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_hf_tok_scholar').GetFlagName, 'neg'))]" }
+                            blockoverride "sltm_lvm_acs_token_pos_visible" { visible = "[ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_hf_tok_scholar').GetFlagName, 'pos')]" }
+                            blockoverride "sltm_lvm_acs_token_neg_visible" { visible = "[ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_hf_tok_scholar').GetFlagName, 'neg')]" }
+                            blockoverride "sltm_lvm_acs_token_text" { text = trait_erudite }
+                        }
+                        sltm_lvm_acs_token_checkbox_row_small = {
+                            blockoverride "sltm_lvm_acs_token_action" { onclick = "[GetScriptedGui('sltm_lvm_v36_token_theologian_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" }
+                            blockoverride "sltm_lvm_acs_token_checkbox" { checked = "[Or(ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_hf_tok_theologian').GetFlagName, 'pos'), ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_hf_tok_theologian').GetFlagName, 'neg'))]" }
+                            blockoverride "sltm_lvm_acs_token_pos_visible" { visible = "[ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_hf_tok_theologian').GetFlagName, 'pos')]" }
+                            blockoverride "sltm_lvm_acs_token_neg_visible" { visible = "[ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_hf_tok_theologian').GetFlagName, 'neg')]" }
+                            blockoverride "sltm_lvm_acs_token_text" { text = trait_theologian }
+                        }
+                    }
+                    hbox = { size = { 560 30 } spacing = 4
+                        sltm_lvm_acs_token_checkbox_row_small = {
+                            blockoverride "sltm_lvm_acs_token_action" { onclick = "[GetScriptedGui('sltm_lvm_v36_token_lifestyle_voyager_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" }
+                            blockoverride "sltm_lvm_acs_token_checkbox" { checked = "[Or(ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_hf_tok_lifestyle_voyager').GetFlagName, 'pos'), ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_hf_tok_lifestyle_voyager').GetFlagName, 'neg'))]" }
+                            blockoverride "sltm_lvm_acs_token_pos_visible" { visible = "[ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_hf_tok_lifestyle_voyager').GetFlagName, 'pos')]" }
+                            blockoverride "sltm_lvm_acs_token_neg_visible" { visible = "[ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_hf_tok_lifestyle_voyager').GetFlagName, 'neg')]" }
+                            blockoverride "sltm_lvm_acs_token_text" { text = trait_lifestyle_voyager }
+                        }
+                        sltm_lvm_acs_token_checkbox_row_small = {
+                            blockoverride "sltm_lvm_acs_token_action" { onclick = "[GetScriptedGui('sltm_lvm_v36_token_lifestyle_wayfarer_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" }
+                            blockoverride "sltm_lvm_acs_token_checkbox" { checked = "[Or(ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_hf_tok_lifestyle_wayfarer').GetFlagName, 'pos'), ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_hf_tok_lifestyle_wayfarer').GetFlagName, 'neg'))]" }
+                            blockoverride "sltm_lvm_acs_token_pos_visible" { visible = "[ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_hf_tok_lifestyle_wayfarer').GetFlagName, 'pos')]" }
+                            blockoverride "sltm_lvm_acs_token_neg_visible" { visible = "[ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_hf_tok_lifestyle_wayfarer').GetFlagName, 'neg')]" }
+                            blockoverride "sltm_lvm_acs_token_text" { text = trait_lifestyle_wayfarer }
+                        }
+                        sltm_lvm_acs_token_checkbox_row_small = {
+                            blockoverride "sltm_lvm_acs_token_action" { onclick = "[GetScriptedGui('sltm_lvm_v36_token_lifestyle_surveyor_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" }
+                            blockoverride "sltm_lvm_acs_token_checkbox" { checked = "[Or(ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_hf_tok_lifestyle_surveyor').GetFlagName, 'pos'), ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_hf_tok_lifestyle_surveyor').GetFlagName, 'neg'))]" }
+                            blockoverride "sltm_lvm_acs_token_pos_visible" { visible = "[ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_hf_tok_lifestyle_surveyor').GetFlagName, 'pos')]" }
+                            blockoverride "sltm_lvm_acs_token_neg_visible" { visible = "[ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_hf_tok_lifestyle_surveyor').GetFlagName, 'neg')]" }
+                            blockoverride "sltm_lvm_acs_token_text" { text = trait_lifestyle_surveyor }
+                        }
+                    }
+        }
+    }
+    type sltm_lvm_v36_group_base_traits = sltm_lvm_acs_filter_group {
+        blockoverride "sltm_lvm_acs_group_toggle" { onclick = "[GetVariableSystem.Toggle('sltm_lvm_v36_group_base_traits_open')]" frame = "[Select_int32(GetVariableSystem.Exists('sltm_lvm_v36_group_base_traits_open'), '(int32)1', '(int32)2')]" }
+        blockoverride "sltm_lvm_acs_group_name" { text = SLTM_LVM_FILTER_GROUP_TRAIT_EDU_GENETIC }
+        blockoverride "sltm_lvm_acs_filter_visible" { visible = "[GetVariableSystem.Exists('sltm_lvm_v36_group_base_traits_open')]" }
+        blockoverride "sltm_lvm_acs_filters" {
+                    hbox = { size = { 560 30 } spacing = 4
+                        sltm_lvm_acs_token_checkbox_row_small = {
+                            blockoverride "sltm_lvm_acs_token_action" { onclick = "[GetScriptedGui('sltm_lvm_v36_token_brave_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" }
+                            blockoverride "sltm_lvm_acs_token_checkbox" { checked = "[Or(ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_hf_tok_brave').GetFlagName, 'pos'), ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_hf_tok_brave').GetFlagName, 'neg'))]" }
+                            blockoverride "sltm_lvm_acs_token_pos_visible" { visible = "[ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_hf_tok_brave').GetFlagName, 'pos')]" }
+                            blockoverride "sltm_lvm_acs_token_neg_visible" { visible = "[ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_hf_tok_brave').GetFlagName, 'neg')]" }
+                            blockoverride "sltm_lvm_acs_token_text" { text = SLTM_LVM_TOKEN_BRAVE }
+                        }
+                        sltm_lvm_acs_token_checkbox_row_small = {
+                            blockoverride "sltm_lvm_acs_token_action" { onclick = "[GetScriptedGui('sltm_lvm_v36_token_cowardly_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" }
+                            blockoverride "sltm_lvm_acs_token_checkbox" { checked = "[Or(ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_hf_tok_cowardly').GetFlagName, 'pos'), ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_hf_tok_cowardly').GetFlagName, 'neg'))]" }
+                            blockoverride "sltm_lvm_acs_token_pos_visible" { visible = "[ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_hf_tok_cowardly').GetFlagName, 'pos')]" }
+                            blockoverride "sltm_lvm_acs_token_neg_visible" { visible = "[ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_hf_tok_cowardly').GetFlagName, 'neg')]" }
+                            blockoverride "sltm_lvm_acs_token_text" { text = SLTM_LVM_TOKEN_COWARDLY }
+                        }
+                        sltm_lvm_acs_token_checkbox_row_small = {
+                            blockoverride "sltm_lvm_acs_token_action" { onclick = "[GetScriptedGui('sltm_lvm_v36_token_martial_edu_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" }
+                            blockoverride "sltm_lvm_acs_token_checkbox" { checked = "[Or(ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_hf_tok_martial_edu').GetFlagName, 'pos'), ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_hf_tok_martial_edu').GetFlagName, 'neg'))]" }
+                            blockoverride "sltm_lvm_acs_token_pos_visible" { visible = "[ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_hf_tok_martial_edu').GetFlagName, 'pos')]" }
+                            blockoverride "sltm_lvm_acs_token_neg_visible" { visible = "[ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_hf_tok_martial_edu').GetFlagName, 'neg')]" }
+                            blockoverride "sltm_lvm_acs_token_text" { text = SLTM_LVM_TOKEN_MARTIAL_EDU }
+                        }
+                    }
+                    hbox = { size = { 560 30 } spacing = 4
+                        sltm_lvm_acs_token_checkbox_row_small = {
+                            blockoverride "sltm_lvm_acs_token_action" { onclick = "[GetScriptedGui('sltm_lvm_v36_token_steward_edu_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" }
+                            blockoverride "sltm_lvm_acs_token_checkbox" { checked = "[Or(ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_hf_tok_steward_edu').GetFlagName, 'pos'), ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_hf_tok_steward_edu').GetFlagName, 'neg'))]" }
+                            blockoverride "sltm_lvm_acs_token_pos_visible" { visible = "[ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_hf_tok_steward_edu').GetFlagName, 'pos')]" }
+                            blockoverride "sltm_lvm_acs_token_neg_visible" { visible = "[ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_hf_tok_steward_edu').GetFlagName, 'neg')]" }
+                            blockoverride "sltm_lvm_acs_token_text" { text = SLTM_LVM_TOKEN_STEWARD_EDU }
+                        }
+                        sltm_lvm_acs_token_checkbox_row_small = {
+                            blockoverride "sltm_lvm_acs_token_action" { onclick = "[GetScriptedGui('sltm_lvm_v36_token_good_genetic_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" }
+                            blockoverride "sltm_lvm_acs_token_checkbox" { checked = "[Or(ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_hf_tok_good_genetic').GetFlagName, 'pos'), ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_hf_tok_good_genetic').GetFlagName, 'neg'))]" }
+                            blockoverride "sltm_lvm_acs_token_pos_visible" { visible = "[ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_hf_tok_good_genetic').GetFlagName, 'pos')]" }
+                            blockoverride "sltm_lvm_acs_token_neg_visible" { visible = "[ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_hf_tok_good_genetic').GetFlagName, 'neg')]" }
+                            blockoverride "sltm_lvm_acs_token_text" { text = SLTM_LVM_TOKEN_GOOD_GENETIC }
+                        }
+                        sltm_lvm_acs_token_checkbox_row_small = {
+                            blockoverride "sltm_lvm_acs_token_action" { onclick = "[GetScriptedGui('sltm_lvm_v36_token_bad_genetic_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" }
+                            blockoverride "sltm_lvm_acs_token_checkbox" { checked = "[Or(ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_hf_tok_bad_genetic').GetFlagName, 'pos'), ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_hf_tok_bad_genetic').GetFlagName, 'neg'))]" }
+                            blockoverride "sltm_lvm_acs_token_pos_visible" { visible = "[ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_hf_tok_bad_genetic').GetFlagName, 'pos')]" }
+                            blockoverride "sltm_lvm_acs_token_neg_visible" { visible = "[ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_hf_tok_bad_genetic').GetFlagName, 'neg')]" }
+                            blockoverride "sltm_lvm_acs_token_text" { text = SLTM_LVM_TOKEN_BAD_GENETIC }
+                        }
+                    }
+                    hbox = { size = { 560 30 } spacing = 4
+                        sltm_lvm_acs_token_checkbox_row_small = {
+                            blockoverride "sltm_lvm_acs_token_action" { onclick = "[GetScriptedGui('sltm_lvm_v36_token_ambitious_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" }
+                            blockoverride "sltm_lvm_acs_token_checkbox" { checked = "[Or(ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_hf_tok_ambitious').GetFlagName, 'pos'), ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_hf_tok_ambitious').GetFlagName, 'neg'))]" }
+                            blockoverride "sltm_lvm_acs_token_pos_visible" { visible = "[ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_hf_tok_ambitious').GetFlagName, 'pos')]" }
+                            blockoverride "sltm_lvm_acs_token_neg_visible" { visible = "[ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_hf_tok_ambitious').GetFlagName, 'neg')]" }
+                            blockoverride "sltm_lvm_acs_token_text" { text = SLTM_LVM_TOKEN_AMBITIOUS }
+                        }
+                        sltm_lvm_acs_token_checkbox_row_small = {
+                            blockoverride "sltm_lvm_acs_token_action" { onclick = "[GetScriptedGui('sltm_lvm_v36_token_content_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" }
+                            blockoverride "sltm_lvm_acs_token_checkbox" { checked = "[Or(ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_hf_tok_content').GetFlagName, 'pos'), ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_hf_tok_content').GetFlagName, 'neg'))]" }
+                            blockoverride "sltm_lvm_acs_token_pos_visible" { visible = "[ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_hf_tok_content').GetFlagName, 'pos')]" }
+                            blockoverride "sltm_lvm_acs_token_neg_visible" { visible = "[ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_hf_tok_content').GetFlagName, 'neg')]" }
+                            blockoverride "sltm_lvm_acs_token_text" { text = SLTM_LVM_TOKEN_CONTENT }
+                        }
+                        sltm_lvm_acs_token_checkbox_row_small = {
+                            blockoverride "sltm_lvm_acs_token_action" { onclick = "[GetScriptedGui('sltm_lvm_v36_token_just_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" }
+                            blockoverride "sltm_lvm_acs_token_checkbox" { checked = "[Or(ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_hf_tok_just').GetFlagName, 'pos'), ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_hf_tok_just').GetFlagName, 'neg'))]" }
+                            blockoverride "sltm_lvm_acs_token_pos_visible" { visible = "[ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_hf_tok_just').GetFlagName, 'pos')]" }
+                            blockoverride "sltm_lvm_acs_token_neg_visible" { visible = "[ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_hf_tok_just').GetFlagName, 'neg')]" }
+                            blockoverride "sltm_lvm_acs_token_text" { text = SLTM_LVM_TOKEN_JUST }
+                        }
+                    }
+                    hbox = { size = { 560 30 } spacing = 4
+                        sltm_lvm_acs_token_checkbox_row_small = {
+                            blockoverride "sltm_lvm_acs_token_action" { onclick = "[GetScriptedGui('sltm_lvm_v36_token_arbitrary_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" }
+                            blockoverride "sltm_lvm_acs_token_checkbox" { checked = "[Or(ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_hf_tok_arbitrary').GetFlagName, 'pos'), ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_hf_tok_arbitrary').GetFlagName, 'neg'))]" }
+                            blockoverride "sltm_lvm_acs_token_pos_visible" { visible = "[ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_hf_tok_arbitrary').GetFlagName, 'pos')]" }
+                            blockoverride "sltm_lvm_acs_token_neg_visible" { visible = "[ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_hf_tok_arbitrary').GetFlagName, 'neg')]" }
+                            blockoverride "sltm_lvm_acs_token_text" { text = SLTM_LVM_TOKEN_ARBITRARY }
+                        }
+                        sltm_lvm_acs_token_checkbox_row_small = {
+                            blockoverride "sltm_lvm_acs_token_action" { onclick = "[GetScriptedGui('sltm_lvm_v36_token_calm_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" }
+                            blockoverride "sltm_lvm_acs_token_checkbox" { checked = "[Or(ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_hf_tok_calm').GetFlagName, 'pos'), ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_hf_tok_calm').GetFlagName, 'neg'))]" }
+                            blockoverride "sltm_lvm_acs_token_pos_visible" { visible = "[ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_hf_tok_calm').GetFlagName, 'pos')]" }
+                            blockoverride "sltm_lvm_acs_token_neg_visible" { visible = "[ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_hf_tok_calm').GetFlagName, 'neg')]" }
+                            blockoverride "sltm_lvm_acs_token_text" { text = SLTM_LVM_TOKEN_CALM }
+                        }
+                        sltm_lvm_acs_token_checkbox_row_small = {
+                            blockoverride "sltm_lvm_acs_token_action" { onclick = "[GetScriptedGui('sltm_lvm_v36_token_wrathful_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" }
+                            blockoverride "sltm_lvm_acs_token_checkbox" { checked = "[Or(ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_hf_tok_wrathful').GetFlagName, 'pos'), ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_hf_tok_wrathful').GetFlagName, 'neg'))]" }
+                            blockoverride "sltm_lvm_acs_token_pos_visible" { visible = "[ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_hf_tok_wrathful').GetFlagName, 'pos')]" }
+                            blockoverride "sltm_lvm_acs_token_neg_visible" { visible = "[ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_hf_tok_wrathful').GetFlagName, 'neg')]" }
+                            blockoverride "sltm_lvm_acs_token_text" { text = SLTM_LVM_TOKEN_WRATHFUL }
+                        }
+                    }
+                    hbox = { size = { 560 30 } spacing = 4
+                        sltm_lvm_acs_token_checkbox_row_small = {
+                            blockoverride "sltm_lvm_acs_token_action" { onclick = "[GetScriptedGui('sltm_lvm_v36_token_patient_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" }
+                            blockoverride "sltm_lvm_acs_token_checkbox" { checked = "[Or(ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_hf_tok_patient').GetFlagName, 'pos'), ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_hf_tok_patient').GetFlagName, 'neg'))]" }
+                            blockoverride "sltm_lvm_acs_token_pos_visible" { visible = "[ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_hf_tok_patient').GetFlagName, 'pos')]" }
+                            blockoverride "sltm_lvm_acs_token_neg_visible" { visible = "[ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_hf_tok_patient').GetFlagName, 'neg')]" }
+                            blockoverride "sltm_lvm_acs_token_text" { text = SLTM_LVM_TOKEN_PATIENT }
+                        }
+                        sltm_lvm_acs_token_checkbox_row_small = {
+                            blockoverride "sltm_lvm_acs_token_action" { onclick = "[GetScriptedGui('sltm_lvm_v36_token_impatient_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" }
+                            blockoverride "sltm_lvm_acs_token_checkbox" { checked = "[Or(ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_hf_tok_impatient').GetFlagName, 'pos'), ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_hf_tok_impatient').GetFlagName, 'neg'))]" }
+                            blockoverride "sltm_lvm_acs_token_pos_visible" { visible = "[ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_hf_tok_impatient').GetFlagName, 'pos')]" }
+                            blockoverride "sltm_lvm_acs_token_neg_visible" { visible = "[ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_hf_tok_impatient').GetFlagName, 'neg')]" }
+                            blockoverride "sltm_lvm_acs_token_text" { text = SLTM_LVM_TOKEN_IMPATIENT }
+                        }
+                        sltm_lvm_acs_token_checkbox_row_small = {
+                            blockoverride "sltm_lvm_acs_token_action" { onclick = "[GetScriptedGui('sltm_lvm_v36_token_diligent_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" }
+                            blockoverride "sltm_lvm_acs_token_checkbox" { checked = "[Or(ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_hf_tok_diligent').GetFlagName, 'pos'), ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_hf_tok_diligent').GetFlagName, 'neg'))]" }
+                            blockoverride "sltm_lvm_acs_token_pos_visible" { visible = "[ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_hf_tok_diligent').GetFlagName, 'pos')]" }
+                            blockoverride "sltm_lvm_acs_token_neg_visible" { visible = "[ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_hf_tok_diligent').GetFlagName, 'neg')]" }
+                            blockoverride "sltm_lvm_acs_token_text" { text = SLTM_LVM_TOKEN_DILIGENT }
+                        }
+                    }
+                    hbox = { size = { 560 30 } spacing = 4
+                        sltm_lvm_acs_token_checkbox_row_small = {
+                            blockoverride "sltm_lvm_acs_token_action" { onclick = "[GetScriptedGui('sltm_lvm_v36_token_lazy_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" }
+                            blockoverride "sltm_lvm_acs_token_checkbox" { checked = "[Or(ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_hf_tok_lazy').GetFlagName, 'pos'), ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_hf_tok_lazy').GetFlagName, 'neg'))]" }
+                            blockoverride "sltm_lvm_acs_token_pos_visible" { visible = "[ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_hf_tok_lazy').GetFlagName, 'pos')]" }
+                            blockoverride "sltm_lvm_acs_token_neg_visible" { visible = "[ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_hf_tok_lazy').GetFlagName, 'neg')]" }
+                            blockoverride "sltm_lvm_acs_token_text" { text = SLTM_LVM_TOKEN_LAZY }
+                        }
+                        sltm_lvm_acs_token_checkbox_row_small = {
+                            blockoverride "sltm_lvm_acs_token_action" { onclick = "[GetScriptedGui('sltm_lvm_v36_token_honest_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" }
+                            blockoverride "sltm_lvm_acs_token_checkbox" { checked = "[Or(ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_hf_tok_honest').GetFlagName, 'pos'), ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_hf_tok_honest').GetFlagName, 'neg'))]" }
+                            blockoverride "sltm_lvm_acs_token_pos_visible" { visible = "[ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_hf_tok_honest').GetFlagName, 'pos')]" }
+                            blockoverride "sltm_lvm_acs_token_neg_visible" { visible = "[ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_hf_tok_honest').GetFlagName, 'neg')]" }
+                            blockoverride "sltm_lvm_acs_token_text" { text = SLTM_LVM_TOKEN_HONEST }
+                        }
+                        sltm_lvm_acs_token_checkbox_row_small = {
+                            blockoverride "sltm_lvm_acs_token_action" { onclick = "[GetScriptedGui('sltm_lvm_v36_token_deceitful_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" }
+                            blockoverride "sltm_lvm_acs_token_checkbox" { checked = "[Or(ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_hf_tok_deceitful').GetFlagName, 'pos'), ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_hf_tok_deceitful').GetFlagName, 'neg'))]" }
+                            blockoverride "sltm_lvm_acs_token_pos_visible" { visible = "[ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_hf_tok_deceitful').GetFlagName, 'pos')]" }
+                            blockoverride "sltm_lvm_acs_token_neg_visible" { visible = "[ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_hf_tok_deceitful').GetFlagName, 'neg')]" }
+                            blockoverride "sltm_lvm_acs_token_text" { text = SLTM_LVM_TOKEN_DECEITFUL }
+                        }
+                    }
+        }
+    }
+}

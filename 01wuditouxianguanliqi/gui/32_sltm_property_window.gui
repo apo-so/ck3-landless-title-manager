@@ -1,0 +1,348 @@
+window = { name = "sltm_title_property_window" position = { 290 95 } size = { 1180 800 } movable = no layer = middle visible = "[GetScriptedGui('sltm_ui_window_or_chooser').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+icon = { name = "window_background" position = { 0 -17 } size = { 1180 817 } texture = "gfx/sltm_property_window/window_background_stretch.dds" alwaystransparent = yes 
+
+}
+icon = { name = "deco_top" position = { 0 0 } size = { 1180 22 } texture = "gfx/sltm_property_window/deco_top.dds" alwaystransparent = yes 
+
+}
+icon = { name = "deco_bottom" position = { 0 778 } size = { 1180 22 } texture = "gfx/sltm_property_window/deco_bottom.dds" alwaystransparent = yes 
+
+}
+icon = { name = "deco_top_center" position = { 519 -38 } size = { 142 60 } texture = "gfx/sltm_property_window/deco_top_center.dds" alwaystransparent = yes 
+
+}
+textbox = { name = "window_title" position = { 22 30 } size = { 132 24 } text = "SLTM_PROP_WINDOW_TITLE" fontsize = 19 font = StandardGameFont fontcolor = { 0.870588 0.839216 0.749020 1 } align = left|nobaseline autoresize = no alwaystransparent = yes
+
+}
+textbox = { name = "layout_badge" position = { 162 34 } size = { 68 18 } text = "SLTM_PROP_LAYOUT_BADGE" fontsize = 11 font = StandardGameFont fontcolor = { 0.400000 0.388235 0.368627 1 } align = left|nobaseline autoresize = no alwaystransparent = yes
+
+}
+widget = { name = "property_with_target" size = { 1180 800 } visible = "[GetScriptedGui('sltm_ui_window_live').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+textbox = { name = "target_badge" position = { 238 34 } size = { 68 18 } text = "SLTM_PROP_TARGET_BADGE" fontsize = 11 font = StandardGameFont fontcolor = { 0.400000 0.388235 0.368627 1 } align = left|nobaseline autoresize = no alwaystransparent = yes
+
+}
+widget = { name = "title_coa" position = { 22 58 } size = { 52 81 } datacontext = "[GetPlayer.MakeScope.Var('sltm_edit_target').Title]" coa_title_small_crown = {} }
+textbox = { name = "title_name" position = { 88 58 } size = { 208 26 } text = "[GetPlayer.MakeScope.Var('sltm_edit_target').Title.GetName]" fontsize = 20 font = StandardGameFont fontcolor = { 0.870588 0.839216 0.749020 1 } align = left|nobaseline autoresize = no alwaystransparent = yes
+
+}
+textbox = { name = "title_tier" position = { 88 88 } size = { 208 19 } text = "[GetPlayer.Custom('sltm_ui_tier')]" fontsize = 12 font = StandardGameFont fontcolor = { 0.400000 0.388235 0.368627 1 } align = left|nobaseline autoresize = no alwaystransparent = yes
+
+}
+portrait_button = { name = "holder_portrait" position = { 310 58 } size = { 44 52 } visible = "[GetPlayer.MakeScope.Var('sltm_edit_target').Title.HasHolder]" datacontext = "[GetPlayer.MakeScope.Var('sltm_edit_target').Title.GetHolder]" using = portrait_base portrait_texture = "[Character.GetPortrait('environment_head', 'camera_head', 'idle', PdxGetWidgetScreenSize(PdxGuiWidget.Self))]" }
+textbox = { name = "holder_name" position = { 362 61 } size = { 130 20 } elide = right text = "[GetPlayer.Custom('sltm_ui_holder')]" fontsize = 15 font = StandardGameFont fontcolor = { 0.870588 0.839216 0.749020 1 } align = left|nobaseline autoresize = no alwaystransparent = yes
+
+}
+textbox = { name = "holder_info" position = { 362 84 } size = { 176 18 } text = "SLTM_UI_HOLDER_INFO" fontsize = 12 font = StandardGameFont fontcolor = { 0.400000 0.388235 0.368627 1 } align = left|nobaseline autoresize = no alwaystransparent = yes
+
+}
+textbox = { name = "current_capital" position = { 500 60 } size = { 158 20 } text = "[GetPlayer.Custom('sltm_ui_capital')]" fontsize = 13 font = StandardGameFont fontcolor = { 0.611765 0.600000 0.560784 1 } align = left|nobaseline autoresize = no alwaystransparent = yes
+
+}
+textbox = { name = "domicile" position = { 670 60 } size = { 158 20 } text = "[GetPlayer.Custom('sltm_ui_domicile')]" fontsize = 13 font = StandardGameFont fontcolor = { 0.776471 0.517647 0.376471 1 } align = left|nobaseline autoresize = no alwaystransparent = yes
+
+}
+textbox = { name = "current_liege" position = { 500 84 } size = { 158 20 } text = "[GetPlayer.Custom('sltm_ui_dejure')]" fontsize = 13 font = StandardGameFont fontcolor = { 0.611765 0.600000 0.560784 1 } align = left|nobaseline autoresize = no alwaystransparent = yes
+
+}
+textbox = { name = "current_laws" position = { 670 84 } size = { 158 20 } text = "SLTM_UI_LAWS_LINK" fontsize = 13 font = StandardGameFont fontcolor = { 0.611765 0.600000 0.560784 1 } align = left|nobaseline autoresize = no alwaystransparent = yes
+
+}
+button = { enabled = "[GetScriptedGui('sltm_ui_detail_gui').IsValid(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"  onclick = "[GetScriptedGui('sltm_ui_detail_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"  name = "detail_button" position = { 1084 58 } size = { 74 26 } texture = "gfx/sltm_property_window/btn_detail_button.dds" gfxtype = buttongfx 
+textbox = { name = "detail_button_label" position = { 0 0 } size = { 74 26 } text = "SLTM_PROP_DETAIL_BUTTON_LABEL" fontsize = 13 font = StandardGameFont fontcolor = { 0.678431 0.560784 0.411765 1 } align = center|nobaseline autoresize = no alwaystransparent = yes
+
+}
+}
+widget = { name = "marked_bar" position = { 22 148 } size = { 1136 34 } visible = "[GetScriptedGui('sltm_ui_has_mark').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+icon = { name = "marked_bg" position = { 0 0 } size = { 1136 34 } texture = "gfx/sltm_property_window/mark_bar.dds" alwaystransparent = yes 
+
+}
+textbox = { name = "marked_caption" position = { 8 6 } size = { 78 20 } text = "SLTM_PROP_MARKED_CAPTION" fontsize = 11 font = StandardGameFont fontcolor = { 0.400000 0.388235 0.368627 1 } align = left|nobaseline autoresize = no alwaystransparent = yes
+
+}
+widget = { name = "marked_coa" position = { 90 1 } size = { 20 32 } datacontext = "[GetPlayer.MakeScope.Var('sltm_designee_title').Title]" coa_title_small_crown = { scale = 0.38 } }
+textbox = { name = "marked_name" position = { 120 6 } size = { 228 20 } elide = right text = "[GetPlayer.MakeScope.Var('sltm_designee_title').Title.GetName]" fontsize = 14 font = StandardGameFont fontcolor = { 0.870588 0.839216 0.749020 1 } align = left|nobaseline autoresize = no alwaystransparent = yes
+
+}
+textbox = { name = "marked_tier" position = { 360 7 } size = { 208 20 } text = "[GetPlayer.Custom('sltm_look_mark_role')]" fontsize = 12 font = StandardGameFont fontcolor = { 0.400000 0.388235 0.368627 1 } align = left|nobaseline autoresize = no alwaystransparent = yes
+
+}
+textbox = { name = "marked_holder" position = { 582 6 } size = { 390 20 } elide = right text = "[GetPlayer.Custom('sltm_ui_mark_holder')]" fontsize = 13 font = StandardGameFont fontcolor = { 0.611765 0.600000 0.560784 1 } align = left|nobaseline autoresize = no alwaystransparent = yes
+
+}
+button = { onclick = "[DefaultOnCoatOfArmsClick(Title.GetID)]"  datacontext = "[GetPlayer.MakeScope.Var('sltm_designee_title').Title]"  name = "marked_view" position = { 1004 6 } size = { 50 22 } texture = "gfx/sltm_property_window/btn_marked_view.dds" gfxtype = buttongfx 
+textbox = { name = "marked_view_label" position = { 0 0 } size = { 50 22 } text = "SLTM_PROP_MARKED_VIEW_LABEL" fontsize = 12 font = StandardGameFont fontcolor = { 0.678431 0.560784 0.411765 1 } align = center|nobaseline autoresize = no alwaystransparent = yes
+
+}
+}
+button = { enabled = "[GetScriptedGui('sltm_ui_clear_mark_gui').IsValid(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"  name = "sample_clear_mark" position = { 1062 6 } size = { 72 22 } texture = "gfx/sltm_property_window/btn_sample_clear_mark.dds" gfxtype = buttongfx onclick = "[GetScriptedGui('sltm_ui_clear_mark_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" 
+textbox = { name = "sample_clear_mark_label" position = { 0 0 } size = { 72 22 } text = "SLTM_PROP_SAMPLE_CLEAR_MARK_LABEL" fontsize = 12 font = StandardGameFont fontcolor = { 0.678431 0.560784 0.411765 1 } align = center|nobaseline autoresize = no alwaystransparent = yes
+
+}
+}
+}
+widget = { name = "no_mark_bar" position = { 22 148 } size = { 1136 34 } visible = "[GetScriptedGui('sltm_ui_has_no_mark').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+icon = { name = "no_mark_background" position = { 0 0 } size = { 1136 34 } texture = "gfx/sltm_property_window/no_mark_bar.dds" alwaystransparent = yes 
+
+}
+textbox = { name = "no_mark_caption" position = { 8 8 } size = { 90 20 } text = "SLTM_PROP_NO_MARK_CAPTION" fontsize = 11 font = StandardGameFont fontcolor = { 0.400000 0.388235 0.368627 1 } align = left|nobaseline autoresize = no alwaystransparent = yes
+
+}
+textbox = { name = "no_mark_text" position = { 100 6 } size = { 150 20 } text = "SLTM_PROP_NO_MARK_TEXT" fontsize = 13 font = StandardGameFont fontcolor = { 0.400000 0.388235 0.368627 1 } align = left|nobaseline autoresize = no alwaystransparent = yes
+
+}
+textbox = { name = "no_mark_hint" position = { 260 6 } size = { 820 20 } text = "SLTM_PROP_NO_MARK_HINT" fontsize = 12 font = StandardGameFont fontcolor = { 0.400000 0.388235 0.368627 1 } align = left|nobaseline autoresize = no alwaystransparent = yes
+
+}
+}
+button = { name = "cat_basic" onclick = "[GetScriptedGui('sltm_ui_basic_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" position = { 22 190 } size = { 150 38 } texture = "gfx/sltm_property_window/rail_appearance.dds" gfxtype = buttongfx 
+textbox = { name = "cat_basic_label" position = { 10 9 } size = { 130 20 } text = "SLTM_PROP_CAT_BASIC_LABEL" fontsize = 14 font = StandardGameFont fontcolor = { 0.611765 0.600000 0.560784 1 } align = left|nobaseline autoresize = no alwaystransparent = yes
+
+}
+}
+icon = { name = "cat_basic_selected" position = { 22 193 } size = { 3 32 } texture = "gfx/interface/colors/white.dds" tintcolor = { 0.76 0.60 0.32 1 } visible = "[GetScriptedGui('sltm_tab_basic_visible').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" alwaystransparent = yes }
+button = { name = "cat_appearance" position = { 22 233 } size = { 150 38 } texture = "gfx/sltm_property_window/rail_appearance.dds" gfxtype = buttongfx onclick = "[GetScriptedGui('sltm_ui_appearance_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" enabled = "[GetScriptedGui('sltm_ui_appearance_gui').IsValid(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" textbox = { name = "rail_name_appearance" position = { 10 9 } size = { 130 20 } text = "SLTM_PROP_RAIL_NAME_APPEARANCE" fontsize = 14 font = StandardGameFont fontcolor = { 0.611765 0.600000 0.560784 1 } align = left|nobaseline autoresize = no alwaystransparent = yes
+
+} }
+
+icon = { name = "cat_appearance_selected" position = { 22 236 } size = { 3 32 } texture = "gfx/interface/colors/white.dds" tintcolor = { 0.76 0.60 0.32 1 } visible = "[GetScriptedGui('sltm_tab_appearance_visible').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" alwaystransparent = yes }
+button = { name = "cat_geo" position = { 22 276 } size = { 150 38 } texture = "gfx/sltm_property_window/rail_geo.dds" gfxtype = buttongfx onclick = "[GetScriptedGui('sltm_ui_geo_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" enabled = "[GetScriptedGui('sltm_ui_geo_gui').IsValid(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" textbox = { name = "rail_name_geo" position = { 10 9 } size = { 130 20 } text = "SLTM_PROP_RAIL_NAME_GEO" fontsize = 14 font = StandardGameFont fontcolor = { 0.611765 0.600000 0.560784 1 } align = left|nobaseline autoresize = no alwaystransparent = yes
+
+} }
+icon = { name = "cat_geo_selected" position = { 22 279 } size = { 3 32 } texture = "gfx/interface/colors/white.dds" tintcolor = { 0.76 0.60 0.32 1 } visible = "[GetScriptedGui('sltm_tab_geo_visible').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" alwaystransparent = yes }
+
+button = { name = "cat_succ" position = { 22 319 } size = { 150 38 } texture = "gfx/sltm_property_window/rail_succ.dds" gfxtype = buttongfx onclick = "[GetScriptedGui('sltm_ui_succ_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" enabled = "[GetScriptedGui('sltm_ui_succ_gui').IsValid(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" textbox = { name = "rail_name_succ" position = { 10 9 } size = { 130 20 } text = "SLTM_PROP_RAIL_NAME_SUCC" fontsize = 14 font = StandardGameFont fontcolor = { 0.611765 0.600000 0.560784 1 } align = left|nobaseline autoresize = no alwaystransparent = yes
+
+} }
+icon = { name = "cat_succ_selected" position = { 22 322 } size = { 3 32 } texture = "gfx/interface/colors/white.dds" tintcolor = { 0.76 0.60 0.32 1 } visible = "[GetScriptedGui('sltm_tab_succ_visible').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" alwaystransparent = yes }
+
+button = { name = "cat_life" position = { 22 362 } size = { 150 38 } texture = "gfx/sltm_property_window/rail_life.dds" gfxtype = buttongfx onclick = "[GetScriptedGui('sltm_ui_life_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" enabled = "[GetScriptedGui('sltm_ui_life_gui').IsValid(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" textbox = { name = "rail_name_life" position = { 10 9 } size = { 130 20 } text = "SLTM_PROP_RAIL_NAME_LIFE" fontsize = 14 font = StandardGameFont fontcolor = { 0.611765 0.600000 0.560784 1 } align = left|nobaseline autoresize = no alwaystransparent = yes
+
+} }
+icon = { name = "cat_life_selected" position = { 22 365 } size = { 3 32 } texture = "gfx/interface/colors/white.dds" tintcolor = { 0.76 0.60 0.32 1 } visible = "[GetScriptedGui('sltm_tab_life_visible').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" alwaystransparent = yes }
+
+button = { name = "cat_dom" position = { 22 405 } size = { 150 38 } texture = "gfx/sltm_property_window/rail_dom.dds" gfxtype = buttongfx onclick = "[GetScriptedGui('sltm_ui_dom_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" enabled = "[GetScriptedGui('sltm_ui_dom_gui').IsValid(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" textbox = { name = "rail_name_dom" position = { 10 9 } size = { 130 20 } text = "SLTM_PROP_RAIL_NAME_DOM" fontsize = 14 font = StandardGameFont fontcolor = { 0.611765 0.600000 0.560784 1 } align = left|nobaseline autoresize = no alwaystransparent = yes
+
+} }
+icon = { name = "cat_dom_selected" position = { 22 408 } size = { 3 32 } texture = "gfx/interface/colors/white.dds" tintcolor = { 0.76 0.60 0.32 1 } visible = "[GetScriptedGui('sltm_tab_dom_visible').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" alwaystransparent = yes }
+
+button = { name = "cat_transfer" position = { 22 448 } size = { 150 38 } texture = "gfx/sltm_property_window/rail_transfer.dds" gfxtype = buttongfx onclick = "[GetScriptedGui('sltm_ui_transfer_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" enabled = "[GetScriptedGui('sltm_ui_transfer_gui').IsValid(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" textbox = { name = "rail_name_transfer" position = { 10 9 } size = { 130 20 } text = "SLTM_PROP_RAIL_NAME_TRANSFER" fontsize = 14 font = StandardGameFont fontcolor = { 0.611765 0.600000 0.560784 1 } align = left|nobaseline autoresize = no alwaystransparent = yes
+
+} }
+icon = { name = "cat_transfer_selected" position = { 22 451 } size = { 3 32 } texture = "gfx/interface/colors/white.dds" tintcolor = { 0.76 0.60 0.32 1 } visible = "[GetScriptedGui('sltm_tab_transfer_visible').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" alwaystransparent = yes }
+
+textbox = { name = "form_title" visible = "[GetScriptedGui('sltm_tab_basic_visible').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" position = { 182 190 } size = { 690 22 } text = "SLTM_PROP_FORM_TITLE" fontsize = 16 font = StandardGameFont fontcolor = { 0.870588 0.839216 0.749020 1 } align = left|nobaseline autoresize = no alwaystransparent = yes
+
+}
+textbox = { name = "form_hint" visible = "[GetScriptedGui('sltm_tab_basic_visible').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" position = { 182 212 } size = { 690 16 } text = "SLTM_PROP_FORM_HINT" fontsize = 12 font = StandardGameFont fontcolor = { 0.400000 0.388235 0.368627 1 } align = left|nobaseline autoresize = no alwaystransparent = yes
+
+}
+textbox = { name = "summary_title" position = { 882 190 } size = { 220 22 } text = "SLTM_PROP_SUMMARY_TITLE" fontsize = 15 font = StandardGameFont fontcolor = { 0.870588 0.839216 0.749020 1 } align = left|nobaseline autoresize = no alwaystransparent = yes
+
+}
+textbox = { name = "summary_count" position = { 1110 190 } size = { 48 22 } text = "[GetPlayer.Custom('sltm_ui_summary_count')]" fontsize = 12 font = StandardGameFont fontcolor = { 0.400000 0.388235 0.368627 1 } align = left|nobaseline autoresize = no alwaystransparent = yes
+
+}
+textbox = { visible = "[GetScriptedGui('sltm_ui_has_no_changes').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"  name = "summary_empty_title" position = { 886 309 } size = { 268 22 } text = "SLTM_PROP_SUMMARY_EMPTY_TITLE" fontsize = 14 font = StandardGameFont fontcolor = { 0.611765 0.600000 0.560784 1 } align = left|nobaseline autoresize = no alwaystransparent = yes
+
+}
+textbox = { visible = "[GetScriptedGui('sltm_ui_has_no_changes').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"  name = "summary_line_1" position = { 886 342 } size = { 268 20 } text = "SLTM_PROP_SUMMARY_LINE_1" fontsize = 12 font = StandardGameFont fontcolor = { 0.400000 0.388235 0.368627 1 } align = left|nobaseline autoresize = no alwaystransparent = yes
+
+}
+textbox = { visible = "[GetScriptedGui('sltm_ui_has_no_changes').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"  name = "summary_line_2" position = { 886 365 } size = { 268 20 } text = "SLTM_PROP_SUMMARY_LINE_2" fontsize = 12 font = StandardGameFont fontcolor = { 0.400000 0.388235 0.368627 1 } align = left|nobaseline autoresize = no alwaystransparent = yes
+
+}
+textbox = { visible = "[GetScriptedGui('sltm_ui_has_no_changes').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"  name = "summary_line_3" position = { 886 388 } size = { 268 20 } text = "SLTM_PROP_SUMMARY_LINE_3" fontsize = 12 font = StandardGameFont fontcolor = { 0.400000 0.388235 0.368627 1 } align = left|nobaseline autoresize = no alwaystransparent = yes
+
+}
+scrollarea = { name = "form_scroll" visible = "[GetScriptedGui('sltm_tab_basic_visible').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" position = { 182 234 } size = { 690 482 } scrollbarpolicy_horizontal = always_off scrollbarpolicy_vertical = as_needed
+scrollwidget = { widget = { name = "form_content" position = { 0 0 } size = { 690 626 } 
+textbox = { name = "field_display_name" position = { 0 10 } size = { 180 20 } text = "SLTM_PROP_FIELD_DISPLAY_NAME" fontsize = 14 font = StandardGameFont fontcolor = { 0.870588 0.839216 0.749020 1 } align = left|nobaseline autoresize = no alwaystransparent = yes
+
+}
+textbox = { name = "current_display_name" position = { 64 12 } size = { 360 18 } text = "[GetPlayer.Custom('sltm_ui_name_current')]" fontsize = 12 font = StandardGameFont fontcolor = { 0.400000 0.388235 0.368627 1 } align = left|nobaseline autoresize = no alwaystransparent = yes
+
+}
+textbox = { name = "desc_display_name_0" position = { 0 33 } size = { 672 19 } text = "SLTM_PROP_DESC_DISPLAY_NAME_0" fontsize = 12 font = StandardGameFont fontcolor = { 0.400000 0.388235 0.368627 1 } align = left|nobaseline autoresize = no alwaystransparent = yes
+
+}
+icon = { name = "input_bg_display_name" position = { 0 60 } size = { 260 30 } texture = "gfx/sltm_property_window/input_display_name.dds" alwaystransparent = yes 
+
+}
+button = { name = "input_display_name_open" position = { 0 60 } size = { 260 30 } texture = "gfx/sltm_property_window/input_display_name.dds" gfxtype = buttongfx onclick = "[GetScriptedGui('sltm_ui_name_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" enabled = "[GetScriptedGui('sltm_ui_name_gui').IsValid(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+textbox = { name = "input_display_name" position = { 8 5 } size = { 244 22 } text = "[GetPlayer.Custom('sltm_ui_name_draft')]" fontsize = 15 font = StandardGameFont fontcolor = { 0.870588 0.839216 0.749020 1 } align = left|nobaseline autoresize = no alwaystransparent = yes
+
+}
+}
+button = { enabled = "[GetScriptedGui('sltm_ui_name_reset_gui').IsValid(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"  onclick = "[GetScriptedGui('sltm_ui_name_reset_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"  name = "reset_display_name" position = { 268 62 } size = { 66 26 } texture = "gfx/sltm_property_window/btn_reset_display_name.dds" gfxtype = buttongfx 
+textbox = { name = "reset_display_name_label" position = { 0 0 } size = { 66 26 } text = "SLTM_PROP_RESET_DISPLAY_NAME_LABEL" fontsize = 12 font = StandardGameFont fontcolor = { 0.678431 0.560784 0.411765 1 } align = center|nobaseline autoresize = no alwaystransparent = yes
+
+}
+}
+icon = { name = "divider_display_name" position = { 0 102 } size = { 672 1 } texture = "gfx/sltm_property_window/line.dds" alwaystransparent = yes 
+
+}
+textbox = { name = "field_name_prefix" position = { 0 113 } size = { 180 20 } text = "SLTM_PROP_FIELD_NAME_PREFIX" fontsize = 14 font = StandardGameFont fontcolor = { 0.870588 0.839216 0.749020 1 } align = left|nobaseline autoresize = no alwaystransparent = yes
+
+}
+textbox = { name = "current_name_prefix" position = { 64 115 } size = { 360 18 } text = "sltm_ui_prefix_current" fontsize = 12 font = StandardGameFont fontcolor = { 0.400000 0.388235 0.368627 1 } align = left|nobaseline autoresize = no alwaystransparent = yes
+
+}
+textbox = { name = "desc_name_prefix_0" position = { 0 136 } size = { 672 19 } text = "SLTM_PROP_DESC_NAME_PREFIX_0" fontsize = 12 font = StandardGameFont fontcolor = { 0.400000 0.388235 0.368627 1 } align = left|nobaseline autoresize = no alwaystransparent = yes
+
+}
+icon = { name = "input_bg_name_prefix" position = { 0 163 } size = { 260 30 } texture = "gfx/sltm_property_window/input_name_prefix.dds" alwaystransparent = yes 
+
+}
+button = { name = "input_name_prefix_open" position = { 0 163 } size = { 260 30 } texture = "gfx/sltm_property_window/input_name_prefix.dds" gfxtype = buttongfx onclick = "[GetScriptedGui('sltm_ui_prefix_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" enabled = "[GetScriptedGui('sltm_ui_prefix_gui').IsValid(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+textbox = { name = "input_name_prefix" position = { 8 5 } size = { 244 22 } text = "[GetPlayer.Custom('sltm_ui_prefix_draft')]" fontsize = 15 font = StandardGameFont fontcolor = { 0.870588 0.839216 0.749020 1 } align = left|nobaseline autoresize = no alwaystransparent = yes
+
+}
+}
+button = { enabled = "[GetScriptedGui('sltm_ui_prefix_reset_gui').IsValid(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"  onclick = "[GetScriptedGui('sltm_ui_prefix_reset_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"  name = "reset_name_prefix" position = { 268 165 } size = { 66 26 } texture = "gfx/sltm_property_window/btn_reset_name_prefix.dds" gfxtype = buttongfx 
+textbox = { name = "reset_name_prefix_label" position = { 0 0 } size = { 66 26 } text = "SLTM_PROP_RESET_NAME_PREFIX_LABEL" fontsize = 12 font = StandardGameFont fontcolor = { 0.678431 0.560784 0.411765 1 } align = center|nobaseline autoresize = no alwaystransparent = yes
+
+}
+}
+icon = { name = "divider_name_prefix" position = { 0 205 } size = { 672 1 } texture = "gfx/sltm_property_window/line.dds" alwaystransparent = yes 
+
+}
+textbox = { name = "field_definitive_form" position = { 0 216 } size = { 180 20 } text = "SLTM_PROP_FIELD_DEFINITIVE_FORM" fontsize = 14 font = StandardGameFont fontcolor = { 0.870588 0.839216 0.749020 1 } align = left|nobaseline autoresize = no alwaystransparent = yes
+
+}
+textbox = { name = "current_definitive_form" position = { 92 218 } size = { 360 18 } text = "sltm_ui_unknown" fontsize = 12 font = StandardGameFont fontcolor = { 0.400000 0.388235 0.368627 1 } align = left|nobaseline autoresize = no alwaystransparent = yes
+
+}
+textbox = { name = "desc_definitive_form_0" position = { 0 239 } size = { 672 19 } text = "SLTM_PROP_DESC_DEFINITIVE_FORM_0" fontsize = 12 font = StandardGameFont fontcolor = { 0.400000 0.388235 0.368627 1 } align = left|nobaseline autoresize = no alwaystransparent = yes
+
+}
+textbox = { name = "desc_definitive_form_1" position = { 0 258 } size = { 672 19 } text = "SLTM_PROP_DESC_DEFINITIVE_FORM_1" fontsize = 12 font = StandardGameFont fontcolor = { 0.400000 0.388235 0.368627 1 } align = left|nobaseline autoresize = no alwaystransparent = yes
+
+}
+button = { down = "[GetScriptedGui('sltm_ui_definitive_keep_state').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"  enabled = "[GetScriptedGui('sltm_ui_definitive_keep_gui').IsValid(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"  onclick = "[GetScriptedGui('sltm_ui_definitive_keep_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"  name = "tri_definitive_form_keep" position = { 0 284 } size = { 58 26 } texture = "gfx/sltm_property_window/btn_tri_definitive_form_true.dds" gfxtype = buttongfx 
+icon = { name = "tri_definitive_form_keep_selected" position = { 0 0 } size = { 58 26 } texture = "gfx/sltm_property_window/btn_tri_definitive_form_keep.dds" alwaystransparent = yes visible = "[GetScriptedGui('sltm_ui_definitive_keep_state').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" }
+textbox = { name = "tri_definitive_form_keep_label" position = { 0 0 } size = { 58 26 } text = "SLTM_PROP_TRI_DEFINITIVE_FORM_KEEP_LABEL" fontsize = 13 font = StandardGameFont fontcolor = { 0.678431 0.560784 0.411765 1 } align = center|nobaseline autoresize = no alwaystransparent = yes
+
+}
+}
+button = { down = "[GetScriptedGui('sltm_ui_definitive_true_state').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"  enabled = "[GetScriptedGui('sltm_ui_definitive_true_gui').IsValid(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"  onclick = "[GetScriptedGui('sltm_ui_definitive_true_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"  name = "tri_definitive_form_true" position = { 62 284 } size = { 58 26 } texture = "gfx/sltm_property_window/btn_tri_definitive_form_true.dds" gfxtype = buttongfx 
+icon = { name = "tri_definitive_form_true_selected" position = { 0 0 } size = { 58 26 } texture = "gfx/sltm_property_window/btn_tri_definitive_form_keep.dds" alwaystransparent = yes visible = "[GetScriptedGui('sltm_ui_definitive_true_state').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" }
+textbox = { name = "tri_definitive_form_true_label" position = { 0 0 } size = { 58 26 } text = "SLTM_PROP_TRI_DEFINITIVE_FORM_TRUE_LABEL" fontsize = 13 font = StandardGameFont fontcolor = { 0.678431 0.560784 0.411765 1 } align = center|nobaseline autoresize = no alwaystransparent = yes
+
+}
+}
+button = { down = "[GetScriptedGui('sltm_ui_definitive_false_state').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"  enabled = "[GetScriptedGui('sltm_ui_definitive_false_gui').IsValid(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"  onclick = "[GetScriptedGui('sltm_ui_definitive_false_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"  name = "tri_definitive_form_false" position = { 124 284 } size = { 58 26 } texture = "gfx/sltm_property_window/btn_tri_definitive_form_true.dds" gfxtype = buttongfx 
+icon = { name = "tri_definitive_form_false_selected" position = { 0 0 } size = { 58 26 } texture = "gfx/sltm_property_window/btn_tri_definitive_form_keep.dds" alwaystransparent = yes visible = "[GetScriptedGui('sltm_ui_definitive_false_state').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" }
+textbox = { name = "tri_definitive_form_false_label" position = { 0 0 } size = { 58 26 } text = "SLTM_PROP_TRI_DEFINITIVE_FORM_FALSE_LABEL" fontsize = 13 font = StandardGameFont fontcolor = { 0.678431 0.560784 0.411765 1 } align = center|nobaseline autoresize = no alwaystransparent = yes
+
+}
+}
+icon = { name = "divider_definitive_form" position = { 0 322 } size = { 672 1 } texture = "gfx/sltm_property_window/line.dds" alwaystransparent = yes 
+
+}
+textbox = { name = "field_can_be_named_after_dynasty" position = { 0 333 } size = { 180 20 } text = "SLTM_PROP_FIELD_CAN_BE_NAMED_AFTER_DYNASTY" fontsize = 14 font = StandardGameFont fontcolor = { 0.870588 0.839216 0.749020 1 } align = left|nobaseline autoresize = no alwaystransparent = yes
+
+}
+textbox = { name = "current_can_be_named_after_dynasty" position = { 92 335 } size = { 360 18 } text = "sltm_ui_unknown" fontsize = 12 font = StandardGameFont fontcolor = { 0.400000 0.388235 0.368627 1 } align = left|nobaseline autoresize = no alwaystransparent = yes
+
+}
+textbox = { name = "desc_can_be_named_after_dynasty_0" position = { 0 356 } size = { 672 19 } text = "SLTM_PROP_DESC_CAN_BE_NAMED_AFTER_DYNASTY_0" fontsize = 12 font = StandardGameFont fontcolor = { 0.400000 0.388235 0.368627 1 } align = left|nobaseline autoresize = no alwaystransparent = yes
+
+}
+button = { down = "[GetScriptedGui('sltm_ui_dynasty_keep_state').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"  enabled = "[GetScriptedGui('sltm_ui_dynasty_keep_gui').IsValid(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"  onclick = "[GetScriptedGui('sltm_ui_dynasty_keep_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"  name = "tri_can_be_named_after_dynasty_keep" position = { 0 383 } size = { 58 26 } texture = "gfx/sltm_property_window/btn_tri_can_be_named_after_dynasty_true.dds" gfxtype = buttongfx 
+icon = { name = "tri_can_be_named_after_dynasty_keep_selected" position = { 0 0 } size = { 58 26 } texture = "gfx/sltm_property_window/btn_tri_can_be_named_after_dynasty_keep.dds" alwaystransparent = yes visible = "[GetScriptedGui('sltm_ui_dynasty_keep_state').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" }
+textbox = { name = "tri_can_be_named_after_dynasty_keep_label" position = { 0 0 } size = { 58 26 } text = "SLTM_PROP_TRI_CAN_BE_NAMED_AFTER_DYNASTY_KEEP_LABEL" fontsize = 13 font = StandardGameFont fontcolor = { 0.678431 0.560784 0.411765 1 } align = center|nobaseline autoresize = no alwaystransparent = yes
+
+}
+}
+button = { down = "[GetScriptedGui('sltm_ui_dynasty_true_state').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"  enabled = "[GetScriptedGui('sltm_ui_dynasty_true_gui').IsValid(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"  onclick = "[GetScriptedGui('sltm_ui_dynasty_true_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"  name = "tri_can_be_named_after_dynasty_true" position = { 62 383 } size = { 58 26 } texture = "gfx/sltm_property_window/btn_tri_can_be_named_after_dynasty_true.dds" gfxtype = buttongfx 
+icon = { name = "tri_can_be_named_after_dynasty_true_selected" position = { 0 0 } size = { 58 26 } texture = "gfx/sltm_property_window/btn_tri_can_be_named_after_dynasty_keep.dds" alwaystransparent = yes visible = "[GetScriptedGui('sltm_ui_dynasty_true_state').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" }
+textbox = { name = "tri_can_be_named_after_dynasty_true_label" position = { 0 0 } size = { 58 26 } text = "SLTM_PROP_TRI_CAN_BE_NAMED_AFTER_DYNASTY_TRUE_LABEL" fontsize = 13 font = StandardGameFont fontcolor = { 0.678431 0.560784 0.411765 1 } align = center|nobaseline autoresize = no alwaystransparent = yes
+
+}
+}
+button = { down = "[GetScriptedGui('sltm_ui_dynasty_false_state').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"  enabled = "[GetScriptedGui('sltm_ui_dynasty_false_gui').IsValid(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"  onclick = "[GetScriptedGui('sltm_ui_dynasty_false_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"  name = "tri_can_be_named_after_dynasty_false" position = { 124 383 } size = { 58 26 } texture = "gfx/sltm_property_window/btn_tri_can_be_named_after_dynasty_true.dds" gfxtype = buttongfx 
+icon = { name = "tri_can_be_named_after_dynasty_false_selected" position = { 0 0 } size = { 58 26 } texture = "gfx/sltm_property_window/btn_tri_can_be_named_after_dynasty_keep.dds" alwaystransparent = yes visible = "[GetScriptedGui('sltm_ui_dynasty_false_state').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" }
+textbox = { name = "tri_can_be_named_after_dynasty_false_label" position = { 0 0 } size = { 58 26 } text = "SLTM_PROP_TRI_CAN_BE_NAMED_AFTER_DYNASTY_FALSE_LABEL" fontsize = 13 font = StandardGameFont fontcolor = { 0.678431 0.560784 0.411765 1 } align = center|nobaseline autoresize = no alwaystransparent = yes
+
+}
+}
+icon = { name = "divider_can_be_named_after_dynasty" position = { 0 421 } size = { 672 1 } texture = "gfx/sltm_property_window/line.dds" alwaystransparent = yes 
+
+}
+textbox = { name = "field_can_use_nomadic_naming" position = { 0 432 } size = { 180 20 } text = "SLTM_PROP_FIELD_CAN_USE_NOMADIC_NAMING" fontsize = 14 font = StandardGameFont fontcolor = { 0.870588 0.839216 0.749020 1 } align = left|nobaseline autoresize = no alwaystransparent = yes
+
+}
+textbox = { name = "current_can_use_nomadic_naming" position = { 92 434 } size = { 360 18 } text = "sltm_ui_unknown" fontsize = 12 font = StandardGameFont fontcolor = { 0.400000 0.388235 0.368627 1 } align = left|nobaseline autoresize = no alwaystransparent = yes
+
+}
+textbox = { name = "desc_can_use_nomadic_naming_0" position = { 0 455 } size = { 672 19 } text = "SLTM_PROP_DESC_CAN_USE_NOMADIC_NAMING_0" fontsize = 12 font = StandardGameFont fontcolor = { 0.400000 0.388235 0.368627 1 } align = left|nobaseline autoresize = no alwaystransparent = yes
+
+}
+button = { down = "[GetScriptedGui('sltm_ui_nomadic_keep_state').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"  enabled = "[GetScriptedGui('sltm_ui_nomadic_keep_gui').IsValid(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"  onclick = "[GetScriptedGui('sltm_ui_nomadic_keep_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"  name = "tri_can_use_nomadic_naming_keep" position = { 0 482 } size = { 58 26 } texture = "gfx/sltm_property_window/btn_tri_can_use_nomadic_naming_true.dds" gfxtype = buttongfx 
+icon = { name = "tri_can_use_nomadic_naming_keep_selected" position = { 0 0 } size = { 58 26 } texture = "gfx/sltm_property_window/btn_tri_can_use_nomadic_naming_keep.dds" alwaystransparent = yes visible = "[GetScriptedGui('sltm_ui_nomadic_keep_state').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" }
+textbox = { name = "tri_can_use_nomadic_naming_keep_label" position = { 0 0 } size = { 58 26 } text = "SLTM_PROP_TRI_CAN_USE_NOMADIC_NAMING_KEEP_LABEL" fontsize = 13 font = StandardGameFont fontcolor = { 0.678431 0.560784 0.411765 1 } align = center|nobaseline autoresize = no alwaystransparent = yes
+
+}
+}
+button = { down = "[GetScriptedGui('sltm_ui_nomadic_true_state').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"  enabled = "[GetScriptedGui('sltm_ui_nomadic_true_gui').IsValid(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"  onclick = "[GetScriptedGui('sltm_ui_nomadic_true_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"  name = "tri_can_use_nomadic_naming_true" position = { 62 482 } size = { 58 26 } texture = "gfx/sltm_property_window/btn_tri_can_use_nomadic_naming_true.dds" gfxtype = buttongfx 
+icon = { name = "tri_can_use_nomadic_naming_true_selected" position = { 0 0 } size = { 58 26 } texture = "gfx/sltm_property_window/btn_tri_can_use_nomadic_naming_keep.dds" alwaystransparent = yes visible = "[GetScriptedGui('sltm_ui_nomadic_true_state').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" }
+textbox = { name = "tri_can_use_nomadic_naming_true_label" position = { 0 0 } size = { 58 26 } text = "SLTM_PROP_TRI_CAN_USE_NOMADIC_NAMING_TRUE_LABEL" fontsize = 13 font = StandardGameFont fontcolor = { 0.678431 0.560784 0.411765 1 } align = center|nobaseline autoresize = no alwaystransparent = yes
+
+}
+}
+button = { down = "[GetScriptedGui('sltm_ui_nomadic_false_state').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"  enabled = "[GetScriptedGui('sltm_ui_nomadic_false_gui').IsValid(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"  onclick = "[GetScriptedGui('sltm_ui_nomadic_false_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"  name = "tri_can_use_nomadic_naming_false" position = { 124 482 } size = { 58 26 } texture = "gfx/sltm_property_window/btn_tri_can_use_nomadic_naming_true.dds" gfxtype = buttongfx 
+icon = { name = "tri_can_use_nomadic_naming_false_selected" position = { 0 0 } size = { 58 26 } texture = "gfx/sltm_property_window/btn_tri_can_use_nomadic_naming_keep.dds" alwaystransparent = yes visible = "[GetScriptedGui('sltm_ui_nomadic_false_state').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" }
+textbox = { name = "tri_can_use_nomadic_naming_false_label" position = { 0 0 } size = { 58 26 } text = "SLTM_PROP_TRI_CAN_USE_NOMADIC_NAMING_FALSE_LABEL" fontsize = 13 font = StandardGameFont fontcolor = { 0.678431 0.560784 0.411765 1 } align = center|nobaseline autoresize = no alwaystransparent = yes
+
+}
+}
+icon = { name = "divider_can_use_nomadic_naming" position = { 0 520 } size = { 672 1 } texture = "gfx/sltm_property_window/line.dds" alwaystransparent = yes 
+
+}
+textbox = { name = "field_readonly" position = { 0 531 } size = { 180 20 } text = "SLTM_PROP_FIELD_READONLY" fontsize = 14 font = StandardGameFont fontcolor = { 0.870588 0.839216 0.749020 1 } align = left|nobaseline autoresize = no alwaystransparent = yes
+
+}
+textbox = { name = "current_readonly" position = { 64 533 } size = { 360 18 } text = "SLTM_PROP_CURRENT_READONLY" fontsize = 12 font = StandardGameFont fontcolor = { 0.400000 0.388235 0.368627 1 } align = left|nobaseline autoresize = no alwaystransparent = yes
+
+}
+textbox = { name = "desc_readonly_0" position = { 0 554 } size = { 672 19 } text = "SLTM_PROP_DESC_READONLY_0" fontsize = 12 font = StandardGameFont fontcolor = { 0.400000 0.388235 0.368627 1 } align = left|nobaseline autoresize = no alwaystransparent = yes
+
+}
+textbox = { name = "readonly_value" position = { 0 581 } size = { 650 22 } text = "[GetPlayer.MakeScope.Var('sltm_edit_target').Title.GetID]" fontsize = 12 font = StandardGameFont fontcolor = { 0.611765 0.600000 0.560784 1 } align = left|nobaseline autoresize = no alwaystransparent = yes
+
+}
+} }
+scrollbar_vertical = { using = Scrollbar_Vertical }
+}
+textbox = { name = "footer_hint" position = { 22 739 } size = { 560 24 } text = "SLTM_PROP_FOOTER_HINT" fontsize = 12 font = StandardGameFont fontcolor = { 0.400000 0.388235 0.368627 1 } align = left|nobaseline autoresize = no alwaystransparent = yes
+
+}
+button = { enabled = "[GetScriptedGui('sltm_ui_close_gui').IsValid(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"  onclick = "[GetScriptedGui('sltm_ui_close_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"  name = "footer_cancel" position = { 838 732 } size = { 70 33 } texture = "gfx/sltm_property_window/btn_footer_cancel.dds" gfxtype = buttongfx 
+textbox = { name = "footer_cancel_label" position = { 0 0 } size = { 70 33 } text = "SLTM_PROP_FOOTER_CANCEL_LABEL" fontsize = 15 font = StandardGameFont fontcolor = { 0.678431 0.560784 0.411765 1 } align = center|nobaseline autoresize = no alwaystransparent = yes
+
+}
+}
+button = { onclick = "[GetScriptedGui('sltm_ui_restore_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"  name = "footer_restore" position = { 918 732 } size = { 130 33 } texture = "gfx/sltm_property_window/btn_footer_restore.dds" gfxtype = buttongfx enabled = "[GetScriptedGui('sltm_ui_restore_gui').IsValid(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" 
+textbox = { name = "footer_restore_label" position = { 0 0 } size = { 130 33 } text = "SLTM_PROP_FOOTER_RESTORE_LABEL" fontsize = 15 font = StandardGameFont fontcolor = { 0.400000 0.388235 0.368627 1 } align = center|nobaseline autoresize = no alwaystransparent = yes
+
+}
+}
+button = { onclick = "[GetScriptedGui('sltm_ui_review_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"  name = "footer_review" position = { 1058 732 } size = { 100 33 } texture = "gfx/sltm_property_window/btn_footer_review.dds" gfxtype = buttongfx enabled = "[GetScriptedGui('sltm_ui_review_gui').IsValid(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" 
+textbox = { name = "footer_review_label" position = { 0 0 } size = { 100 33 } text = "SLTM_PROP_FOOTER_REVIEW_LABEL" fontsize = 15 font = StandardGameFont fontcolor = { 0.400000 0.388235 0.368627 1 } align = center|nobaseline autoresize = no alwaystransparent = yes
+
+}
+}
+
+
+
+
+using = sltm_appearance_panel
+using = sltm_geo_panel
+using = sltm_succ_panel
+using = sltm_life_panel
+using = sltm_dom_panel
+using = sltm_transfer_panel
+using = sltm_draft_summary_panel
+} # property_with_target
+using = sltm_choose_target_panel
+}

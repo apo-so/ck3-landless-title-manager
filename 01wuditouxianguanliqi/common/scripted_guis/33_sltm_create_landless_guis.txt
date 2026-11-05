@@ -1,0 +1,490 @@
+﻿# 创立无地头衔 · 两步选择窗口的脚本 UI
+# 全部 scope = character（窗口挂在玩家身上），只读写本窗口草稿变量。
+
+sltm_clw_live = {
+	scope = character
+	is_shown = { sltm_clw_open_trigger = yes }
+}
+
+sltm_clw_page1 = {
+	scope = character
+	is_shown = { sltm_clw_open_trigger = yes sltm_clw_step_one_trigger = yes }
+}
+
+sltm_clw_page2 = {
+	scope = character
+	is_shown = { sltm_clw_open_trigger = yes sltm_clw_step_two_trigger = yes }
+}
+
+sltm_clw_no_dom = {
+	scope = character
+	is_shown = { sltm_clw_domicile_missing_trigger = yes }
+}
+
+sltm_clw_back = {
+	scope = character
+	is_shown = { sltm_clw_step_two_trigger = yes }
+	is_valid = { sltm_clw_open_trigger = yes sltm_clw_step_two_trigger = yes }
+	effect = { sltm_clw_back_effect = yes }
+}
+
+sltm_clw_cancel = {
+	scope = character
+	is_shown = { sltm_clw_open_trigger = yes }
+	is_valid = { sltm_clw_open_trigger = yes }
+	effect = { sltm_clw_cancel_effect = yes }
+}
+
+sltm_clw_primary = {
+	scope = character
+	is_shown = { sltm_clw_open_trigger = yes }
+	is_valid = { sltm_atlas_can_create_trigger = yes }
+	effect = { sltm_clw_primary_effect = yes }
+}
+
+sltm_clw_pick_k1 = {
+	scope = character
+	is_shown = { sltm_clw_open_trigger = yes sltm_clw_has_category_trigger = yes var:sltm_clw_kind ?= 1 }
+	is_valid = { sltm_clw_open_trigger = yes sltm_clw_step_one_trigger = yes }
+	effect = { sltm_clw_select_category_effect = { CATEGORY = 1 } }
+}
+
+sltm_clw_pick_k2 = {
+	scope = character
+	is_shown = { sltm_clw_open_trigger = yes sltm_clw_has_category_trigger = yes var:sltm_clw_kind ?= 2 }
+	is_valid = { sltm_clw_open_trigger = yes sltm_clw_step_one_trigger = yes }
+	effect = { sltm_clw_select_category_effect = { CATEGORY = 2 } }
+}
+
+sltm_clw_pick_k3 = {
+	scope = character
+	is_shown = { sltm_clw_open_trigger = yes sltm_clw_has_category_trigger = yes var:sltm_clw_kind ?= 3 }
+	is_valid = { sltm_clw_open_trigger = yes sltm_clw_step_one_trigger = yes }
+	effect = { sltm_clw_select_category_effect = { CATEGORY = 3 } }
+}
+
+sltm_clw_pick_k4 = {
+	scope = character
+	is_shown = { sltm_clw_open_trigger = yes sltm_clw_has_category_trigger = yes var:sltm_clw_kind ?= 4 }
+	is_valid = { sltm_clw_open_trigger = yes sltm_clw_step_one_trigger = yes }
+	effect = { sltm_clw_select_category_effect = { CATEGORY = 4 } }
+}
+
+sltm_clw_pick_k5 = {
+	scope = character
+	is_shown = { sltm_clw_open_trigger = yes sltm_clw_has_category_trigger = yes var:sltm_clw_kind ?= 5 }
+	is_valid = { sltm_clw_open_trigger = yes sltm_clw_step_one_trigger = yes }
+	effect = { sltm_clw_select_category_effect = { CATEGORY = 5 } }
+}
+
+sltm_clw_pick_k6 = {
+	scope = character
+	is_shown = { sltm_clw_open_trigger = yes sltm_clw_has_category_trigger = yes var:sltm_clw_kind ?= 6 }
+	is_valid = { sltm_clw_open_trigger = yes sltm_clw_step_one_trigger = yes }
+	effect = { sltm_clw_select_category_effect = { CATEGORY = 6 } }
+}
+
+sltm_clw_pick_k7 = {
+	scope = character
+	is_shown = { sltm_clw_open_trigger = yes sltm_clw_has_category_trigger = yes var:sltm_clw_kind ?= 7 }
+	is_valid = { sltm_clw_open_trigger = yes sltm_clw_step_one_trigger = yes }
+	effect = { sltm_clw_select_category_effect = { CATEGORY = 7 } }
+}
+
+sltm_clw_pick_k8 = {
+	scope = character
+	is_shown = { sltm_clw_open_trigger = yes sltm_clw_has_category_trigger = yes var:sltm_clw_kind ?= 8 }
+	is_valid = { sltm_clw_open_trigger = yes sltm_clw_step_one_trigger = yes }
+	effect = { sltm_clw_select_category_effect = { CATEGORY = 8 } }
+}
+
+sltm_clw_pick_d1 = {
+	scope = character
+	is_shown = { sltm_clw_open_trigger = yes sltm_clw_has_domicile_type_trigger = yes var:sltm_clw_domicile_type = flag:camp }
+	is_valid = { sltm_clw_open_trigger = yes sltm_clw_step_two_trigger = yes sltm_clw_category_is_domicile_trigger = yes }
+	effect = { sltm_clw_select_domicile_effect = { DWELLING = camp } }
+}
+
+sltm_clw_pick_d2 = {
+	scope = character
+	is_shown = { sltm_clw_open_trigger = yes sltm_clw_has_domicile_type_trigger = yes var:sltm_clw_domicile_type = flag:estate }
+	is_valid = { sltm_clw_open_trigger = yes sltm_clw_step_two_trigger = yes sltm_clw_category_is_domicile_trigger = yes }
+	effect = { sltm_clw_select_domicile_effect = { DWELLING = estate } }
+}
+
+sltm_clw_pick_d3 = {
+	scope = character
+	is_shown = { sltm_clw_open_trigger = yes sltm_clw_has_domicile_type_trigger = yes var:sltm_clw_domicile_type = flag:yurt }
+	is_valid = { sltm_clw_open_trigger = yes sltm_clw_step_two_trigger = yes sltm_clw_category_is_domicile_trigger = yes }
+	effect = { sltm_clw_select_domicile_effect = { DWELLING = yurt } }
+}
+
+sltm_clw_pick_d4 = {
+	scope = character
+	is_shown = { sltm_clw_open_trigger = yes sltm_clw_has_domicile_type_trigger = yes var:sltm_clw_domicile_type = flag:east_asian_estate }
+	is_valid = { sltm_clw_open_trigger = yes sltm_clw_step_two_trigger = yes sltm_clw_category_is_domicile_trigger = yes }
+	effect = { sltm_clw_select_domicile_effect = { DWELLING = east_asian_estate } }
+}
+
+sltm_clw_pick_d5 = {
+	scope = character
+	is_shown = { sltm_clw_open_trigger = yes sltm_clw_has_domicile_type_trigger = yes var:sltm_clw_domicile_type = flag:ecclesiastical_domicile }
+	is_valid = { sltm_clw_open_trigger = yes sltm_clw_step_two_trigger = yes sltm_clw_category_is_domicile_trigger = yes }
+	effect = { sltm_clw_select_domicile_effect = { DWELLING = ecclesiastical_domicile } }
+}
+
+sltm_clw_pick_d6 = {
+	scope = character
+	is_shown = { sltm_clw_open_trigger = yes sltm_clw_has_domicile_type_trigger = yes var:sltm_clw_domicile_type = flag:japanese_manor }
+	is_valid = { sltm_clw_open_trigger = yes sltm_clw_step_two_trigger = yes sltm_clw_category_is_domicile_trigger = yes }
+	effect = { sltm_clw_select_domicile_effect = { DWELLING = japanese_manor } }
+}
+
+sltm_clw_pick_d7 = {
+	scope = character
+	is_shown = { sltm_clw_open_trigger = yes sltm_clw_has_domicile_type_trigger = yes var:sltm_clw_domicile_type = flag:sltm_residence }
+	is_valid = { sltm_clw_open_trigger = yes sltm_clw_step_two_trigger = yes sltm_clw_category_is_domicile_trigger = yes }
+	effect = { sltm_clw_select_domicile_effect = { DWELLING = sltm_residence } }
+}
+
+sltm_atlas_read = {
+ scope = character
+ is_shown = { sltm_atlas_read_trigger = yes }
+}
+
+sltm_atlas_overview = {
+ scope = character
+ is_shown = { NOT = { sltm_atlas_read_trigger = yes } }
+}
+
+sltm_atlas_back = {
+ scope = character
+ is_valid = { sltm_clw_open_trigger = yes sltm_atlas_read_trigger = yes }
+ effect = { set_variable = { name = sltm_atlas_view value = 1 } remove_variable = sltm_atlas_picker }
+}
+
+sltm_atlas_picker = {
+ scope = character
+ is_shown = { has_variable = sltm_atlas_picker var:sltm_atlas_picker = 1 }
+ is_valid = { sltm_clw_open_trigger = yes sltm_atlas_read_trigger = yes sltm_clw_supported_trigger = yes sltm_clw_category_is_domicile_trigger = yes }
+ effect = { sltm_atlas_toggle_menu_effect = { MENU = 1 } }
+}
+
+sltm_atlas_filter_0 = {
+ scope = character
+ is_shown = { NOT = { has_variable = sltm_atlas_filter } }
+ is_valid = { sltm_clw_open_trigger = yes }
+ effect = { remove_variable = sltm_atlas_spread remove_variable = sltm_atlas_filter remove_variable = sltm_atlas_picker remove_variable = sltm_atlas_receipt_target }
+}
+
+sltm_atlas_filter_1 = {
+ scope = character
+ is_shown = { has_variable = sltm_atlas_filter var:sltm_atlas_filter = 1 }
+ is_valid = { sltm_clw_open_trigger = yes }
+ effect = { set_variable = { name = sltm_atlas_filter value = 1 } remove_variable = sltm_atlas_spread if = { limit = { sltm_clw_has_category_trigger = yes OR = { var:sltm_clw_kind ?= 2 } } sltm_clw_select_category_effect = { CATEGORY = var:sltm_clw_kind } set_variable = { name = sltm_atlas_index value = 1 } } else = { sltm_clw_select_category_effect = { CATEGORY = 2 } set_variable = { name = sltm_atlas_index value = 1 } } }
+}
+
+sltm_atlas_filter_2 = {
+ scope = character
+ is_shown = { has_variable = sltm_atlas_filter var:sltm_atlas_filter = 2 }
+ is_valid = { sltm_clw_open_trigger = yes }
+ effect = { set_variable = { name = sltm_atlas_filter value = 2 } remove_variable = sltm_atlas_spread if = { limit = { sltm_clw_has_category_trigger = yes OR = { var:sltm_clw_kind ?= 3 var:sltm_clw_kind ?= 4 var:sltm_clw_kind ?= 5 var:sltm_clw_kind ?= 1 } } sltm_clw_select_category_effect = { CATEGORY = var:sltm_clw_kind } set_variable = { name = sltm_atlas_index value = 2 } } else = { sltm_clw_select_category_effect = { CATEGORY = 3 } set_variable = { name = sltm_atlas_index value = 2 } } }
+}
+
+sltm_atlas_filter_3 = {
+ scope = character
+ is_shown = { has_variable = sltm_atlas_filter var:sltm_atlas_filter = 3 }
+ is_valid = { sltm_clw_open_trigger = yes }
+ effect = { set_variable = { name = sltm_atlas_filter value = 3 } remove_variable = sltm_atlas_spread if = { limit = { sltm_clw_has_category_trigger = yes OR = { var:sltm_clw_kind ?= 1 var:sltm_clw_kind ?= 7 var:sltm_clw_kind ?= 6 var:sltm_clw_kind ?= 9 var:sltm_clw_kind ?= 10 } } sltm_clw_select_category_effect = { CATEGORY = var:sltm_clw_kind } set_variable = { name = sltm_atlas_index value = 3 } } else = { sltm_clw_select_category_effect = { CATEGORY = 1 } set_variable = { name = sltm_atlas_index value = 3 } } }
+}
+
+sltm_atlas_filter_4 = {
+ scope = character
+ is_shown = { has_variable = sltm_atlas_filter var:sltm_atlas_filter = 4 }
+ is_valid = { sltm_clw_open_trigger = yes }
+ effect = { set_variable = { name = sltm_atlas_filter value = 4 } remove_variable = sltm_atlas_spread if = { limit = { sltm_clw_has_category_trigger = yes OR = { var:sltm_clw_kind ?= 6 var:sltm_clw_kind ?= 8 } } sltm_clw_select_category_effect = { CATEGORY = var:sltm_clw_kind } set_variable = { name = sltm_atlas_index value = 4 } } else = { sltm_clw_select_category_effect = { CATEGORY = 6 } set_variable = { name = sltm_atlas_index value = 4 } } }
+}
+
+sltm_atlas_row_plain_1 = {
+ scope = character
+ is_shown = { sltm_clw_has_category_trigger = yes var:sltm_clw_kind ?= 2 has_variable = sltm_atlas_index var:sltm_atlas_index = 1 }
+ is_valid = { sltm_clw_open_trigger = yes }
+ effect = { sltm_clw_select_category_effect = { CATEGORY = 2 } set_variable = { name = sltm_atlas_index value = 1 } }
+}
+
+sltm_atlas_row_home_2 = {
+ scope = character
+ is_shown = { sltm_clw_has_category_trigger = yes var:sltm_clw_kind ?= 3 has_variable = sltm_atlas_index var:sltm_atlas_index = 2 }
+ is_valid = { sltm_clw_open_trigger = yes }
+ effect = { sltm_clw_select_category_effect = { CATEGORY = 3 } set_variable = { name = sltm_atlas_index value = 2 } }
+}
+
+sltm_atlas_row_nomad_2 = {
+ scope = character
+ is_shown = { sltm_clw_has_category_trigger = yes var:sltm_clw_kind ?= 4 has_variable = sltm_atlas_index var:sltm_atlas_index = 2 }
+ is_valid = { sltm_clw_open_trigger = yes }
+ effect = { sltm_clw_select_category_effect = { CATEGORY = 4 } set_variable = { name = sltm_atlas_index value = 2 } }
+}
+
+sltm_atlas_row_adventurer_2 = {
+ scope = character
+ is_shown = { sltm_clw_has_category_trigger = yes var:sltm_clw_kind ?= 5 has_variable = sltm_atlas_index var:sltm_atlas_index = 2 }
+ is_valid = { sltm_clw_open_trigger = yes }
+ effect = { sltm_clw_select_category_effect = { CATEGORY = 5 } set_variable = { name = sltm_atlas_index value = 2 } }
+}
+
+sltm_atlas_row_diocese_3 = {
+ scope = character
+ is_shown = { sltm_clw_has_category_trigger = yes var:sltm_clw_kind ?= 1 has_variable = sltm_atlas_index var:sltm_atlas_index = 3 }
+ is_valid = { sltm_clw_open_trigger = yes }
+ effect = { sltm_clw_select_category_effect = { CATEGORY = 1 } set_variable = { name = sltm_atlas_index value = 3 } }
+}
+
+sltm_atlas_row_diocese_2 = {
+ scope = character
+ is_shown = { sltm_clw_has_category_trigger = yes var:sltm_clw_kind ?= 1 has_variable = sltm_atlas_index var:sltm_atlas_index = 2 }
+ is_valid = { sltm_clw_open_trigger = yes }
+ effect = { sltm_clw_select_category_effect = { CATEGORY = 1 } set_variable = { name = sltm_atlas_index value = 2 } }
+}
+
+sltm_atlas_row_order_3 = {
+ scope = character
+ is_shown = { sltm_clw_has_category_trigger = yes var:sltm_clw_kind ?= 7 has_variable = sltm_atlas_index var:sltm_atlas_index = 3 }
+ is_valid = { sltm_clw_open_trigger = yes }
+ effect = { sltm_clw_select_category_effect = { CATEGORY = 7 } set_variable = { name = sltm_atlas_index value = 3 } }
+}
+
+sltm_atlas_row_military_3 = {
+ scope = character
+ is_shown = { sltm_clw_has_category_trigger = yes var:sltm_clw_kind ?= 6 has_variable = sltm_atlas_index var:sltm_atlas_index = 3 }
+ is_valid = { sltm_clw_open_trigger = yes }
+ effect = { sltm_clw_select_category_effect = { CATEGORY = 6 } set_variable = { name = sltm_atlas_index value = 3 } }
+}
+
+sltm_atlas_row_military_4 = {
+ scope = character
+ is_shown = { sltm_clw_has_category_trigger = yes var:sltm_clw_kind ?= 6 has_variable = sltm_atlas_index var:sltm_atlas_index = 4 }
+ is_valid = { sltm_clw_open_trigger = yes }
+ effect = { sltm_clw_select_category_effect = { CATEGORY = 6 } set_variable = { name = sltm_atlas_index value = 4 } }
+}
+
+sltm_atlas_row_company_4 = {
+ scope = character
+ is_shown = { sltm_clw_has_category_trigger = yes var:sltm_clw_kind ?= 8 has_variable = sltm_atlas_index var:sltm_atlas_index = 4 }
+ is_valid = { sltm_clw_open_trigger = yes }
+ effect = { sltm_clw_select_category_effect = { CATEGORY = 8 } set_variable = { name = sltm_atlas_index value = 4 } }
+}
+
+sltm_atlas_spread_0 = {
+ scope = character
+ is_shown = { NOT = { has_variable = sltm_atlas_spread } }
+}
+
+sltm_atlas_supported = {
+ scope = character
+ is_shown = { sltm_clw_open_trigger = yes sltm_atlas_read_trigger = yes sltm_clw_supported_trigger = yes }
+}
+
+sltm_atlas_tier_row = {
+ scope = character
+ is_shown = { sltm_clw_open_trigger = yes sltm_atlas_read_trigger = yes sltm_clw_supported_trigger = yes NOT = { sltm_clw_category_is_domicile_trigger = yes } NOT = { sltm_atlas_institution_trigger = yes } }
+}
+
+sltm_atlas_create_edit = {
+ scope = character
+ is_valid = { sltm_atlas_can_create_trigger = yes }
+ effect = { sltm_atlas_submit_effect = { MODE = 2 } }
+}
+
+sltm_atlas_tier_1 = {
+ scope = character
+ is_shown = { var:sltm_create_tier = 1 }
+ is_valid = { sltm_clw_open_trigger = yes sltm_atlas_read_trigger = yes sltm_clw_supported_trigger = yes has_variable = sltm_atlas_picker var:sltm_atlas_picker = 2 NOT = { var:sltm_clw_kind ?= 2 } }
+ effect = { sltm_clear_promotion_confirmation_effect = yes set_variable = { name = sltm_create_tier value = 1 } remove_variable = sltm_atlas_picker }
+}
+
+sltm_atlas_tier_2 = {
+ scope = character
+ is_shown = { var:sltm_create_tier = 2 }
+ is_valid = { sltm_clw_open_trigger = yes sltm_atlas_read_trigger = yes sltm_clw_supported_trigger = yes has_variable = sltm_atlas_picker var:sltm_atlas_picker = 2 }
+ effect = { sltm_clear_promotion_confirmation_effect = yes set_variable = { name = sltm_create_tier value = 2 } remove_variable = sltm_atlas_picker }
+}
+
+sltm_atlas_tier_3 = {
+ scope = character
+ is_shown = { var:sltm_create_tier = 3 }
+ is_valid = { sltm_clw_open_trigger = yes sltm_atlas_read_trigger = yes sltm_clw_supported_trigger = yes has_variable = sltm_atlas_picker var:sltm_atlas_picker = 2 }
+ effect = { sltm_clear_promotion_confirmation_effect = yes set_variable = { name = sltm_create_tier value = 3 } remove_variable = sltm_atlas_picker }
+}
+
+sltm_atlas_tier_4 = {
+ scope = character
+ is_shown = { var:sltm_create_tier = 4 }
+ is_valid = { sltm_clw_open_trigger = yes sltm_atlas_read_trigger = yes sltm_clw_supported_trigger = yes has_variable = sltm_atlas_picker var:sltm_atlas_picker = 2 }
+ effect = { sltm_clear_promotion_confirmation_effect = yes set_variable = { name = sltm_create_tier value = 4 } remove_variable = sltm_atlas_picker }
+}
+
+sltm_atlas_tier_5 = {
+ scope = character
+ is_shown = { var:sltm_create_tier = 5 }
+ is_valid = { sltm_clw_open_trigger = yes sltm_atlas_read_trigger = yes sltm_clw_supported_trigger = yes has_variable = sltm_atlas_picker var:sltm_atlas_picker = 2 }
+ effect = { sltm_clear_promotion_confirmation_effect = yes set_variable = { name = sltm_create_tier value = 5 } remove_variable = sltm_atlas_picker }
+}
+
+sltm_atlas_gov_east = {
+ scope = character
+ is_shown = { sltm_clw_open_trigger = yes sltm_atlas_read_trigger = yes sltm_clw_supported_trigger = yes sltm_clw_category_is_domicile_trigger = yes has_variable = sltm_clw_domicile_type var:sltm_clw_domicile_type = flag:east_asian_estate }
+}
+
+sltm_atlas_profile_4 = {
+ scope = character
+ is_shown = { NOT = { AND = { has_variable = sltm_create_native_profile OR = { var:sltm_create_native_profile = 5 var:sltm_create_native_profile = 6 } } } }
+ is_valid = { sltm_clw_open_trigger = yes sltm_atlas_read_trigger = yes sltm_clw_supported_trigger = yes sltm_clw_category_is_domicile_trigger = yes has_variable = sltm_clw_domicile_type var:sltm_clw_domicile_type = flag:east_asian_estate has_variable = sltm_atlas_picker var:sltm_atlas_picker = 3 }
+ effect = { sltm_clear_promotion_confirmation_effect = yes set_variable = { name = sltm_create_native_profile value = 4 } remove_variable = sltm_atlas_picker }
+}
+
+sltm_atlas_profile_5 = {
+ scope = character
+ is_shown = { has_variable = sltm_create_native_profile var:sltm_create_native_profile = 5 }
+ is_valid = { sltm_clw_open_trigger = yes sltm_atlas_read_trigger = yes sltm_clw_supported_trigger = yes sltm_clw_category_is_domicile_trigger = yes has_variable = sltm_clw_domicile_type var:sltm_clw_domicile_type = flag:east_asian_estate has_variable = sltm_atlas_picker var:sltm_atlas_picker = 3 }
+ effect = { sltm_clear_promotion_confirmation_effect = yes set_variable = { name = sltm_create_native_profile value = 5 } remove_variable = sltm_atlas_picker }
+}
+
+sltm_atlas_profile_6 = {
+ scope = character
+ is_shown = { has_variable = sltm_create_native_profile var:sltm_create_native_profile = 6 }
+ is_valid = { sltm_clw_open_trigger = yes sltm_atlas_read_trigger = yes sltm_clw_supported_trigger = yes sltm_clw_category_is_domicile_trigger = yes has_variable = sltm_clw_domicile_type var:sltm_clw_domicile_type = flag:east_asian_estate has_variable = sltm_atlas_picker var:sltm_atlas_picker = 3 }
+ effect = { sltm_clear_promotion_confirmation_effect = yes set_variable = { name = sltm_create_native_profile value = 6 } remove_variable = sltm_atlas_picker }
+}
+
+sltm_atlas_gov_japan = {
+ scope = character
+ is_shown = { sltm_clw_open_trigger = yes sltm_atlas_read_trigger = yes sltm_clw_supported_trigger = yes sltm_clw_category_is_domicile_trigger = yes has_variable = sltm_clw_domicile_type var:sltm_clw_domicile_type = flag:japanese_manor }
+}
+
+sltm_atlas_profile_7 = {
+ scope = character
+ is_shown = { NOT = { AND = { has_variable = sltm_create_native_profile OR = { var:sltm_create_native_profile = 8 } } } }
+ is_valid = { sltm_clw_open_trigger = yes sltm_atlas_read_trigger = yes sltm_clw_supported_trigger = yes sltm_clw_category_is_domicile_trigger = yes has_variable = sltm_clw_domicile_type var:sltm_clw_domicile_type = flag:japanese_manor has_variable = sltm_atlas_picker var:sltm_atlas_picker = 3 }
+ effect = { sltm_clear_promotion_confirmation_effect = yes set_variable = { name = sltm_create_native_profile value = 7 } remove_variable = sltm_atlas_picker }
+}
+
+sltm_atlas_profile_8 = {
+ scope = character
+ is_shown = { has_variable = sltm_create_native_profile var:sltm_create_native_profile = 8 }
+ is_valid = { sltm_clw_open_trigger = yes sltm_atlas_read_trigger = yes sltm_clw_supported_trigger = yes sltm_clw_category_is_domicile_trigger = yes has_variable = sltm_clw_domicile_type var:sltm_clw_domicile_type = flag:japanese_manor has_variable = sltm_atlas_picker var:sltm_atlas_picker = 3 }
+ effect = { sltm_clear_promotion_confirmation_effect = yes set_variable = { name = sltm_create_native_profile value = 8 } remove_variable = sltm_atlas_picker }
+}
+
+sltm_atlas_home_hint = {
+ scope = character
+ is_shown = { NOT = { AND = { sltm_clw_category_is_domicile_trigger = yes has_variable = sltm_clw_domicile_type OR = { var:sltm_clw_domicile_type = flag:east_asian_estate var:sltm_clw_domicile_type = flag:japanese_manor } } } }
+}
+
+sltm_atlas_tier_menu = {
+ scope = character
+ is_shown = { has_variable = sltm_atlas_picker var:sltm_atlas_picker = 2 }
+ is_valid = { sltm_clw_open_trigger = yes sltm_atlas_read_trigger = yes sltm_clw_supported_trigger = yes }
+ effect = { sltm_atlas_toggle_menu_effect = { MENU = 2 } }
+}
+
+sltm_atlas_government_menu = {
+ scope = character
+ is_shown = { has_variable = sltm_atlas_picker var:sltm_atlas_picker = 3 }
+ is_valid = { sltm_clw_open_trigger = yes sltm_atlas_read_trigger = yes sltm_clw_supported_trigger = yes sltm_clw_category_is_domicile_trigger = yes has_variable = sltm_clw_domicile_type OR = { var:sltm_clw_domicile_type = flag:east_asian_estate var:sltm_clw_domicile_type = flag:japanese_manor } }
+ effect = { sltm_atlas_toggle_menu_effect = { MENU = 3 } }
+}
+
+sltm_atlas_close_menu = {
+ scope = character
+ is_shown = { has_variable = sltm_atlas_picker }
+ is_valid = { sltm_clw_open_trigger = yes sltm_atlas_read_trigger = yes sltm_clw_supported_trigger = yes has_variable = sltm_atlas_picker }
+ effect = { remove_variable = sltm_atlas_picker }
+}
+
+sltm_atlas_receipt = {
+ scope = character
+ is_shown = { sltm_clw_open_trigger = yes exists = var:sltm_atlas_receipt_target }
+}
+
+sltm_atlas_receipt_partial = {
+ scope = character
+ is_shown = { sltm_clw_open_trigger = yes exists = var:sltm_atlas_receipt_target var:sltm_create_result = 1 }
+}
+
+sltm_atlas_receipt_done = {
+ scope = character
+ is_valid = { sltm_clw_open_trigger = yes exists = var:sltm_atlas_receipt_target }
+ effect = { remove_variable = sltm_atlas_receipt_target }
+}
+
+sltm_atlas_receipt_edit = {
+ scope = character
+ is_valid = { sltm_clw_open_trigger = yes exists = var:sltm_atlas_receipt_target }
+ effect = { set_variable = { name = sltm_lvm_selected_title value = var:sltm_atlas_receipt_target } sltm_ui_open_fixed_effect = yes }
+}
+sltm_atlas_spread_1 = {
+ scope = character
+ is_shown = { has_variable = sltm_atlas_spread }
+}
+sltm_atlas_turn_0_1 = {
+ scope = character
+ is_valid = { sltm_clw_open_trigger = yes NOT = { has_variable = sltm_atlas_filter } NOT = { sltm_atlas_read_trigger = yes } }
+ effect = { set_variable = sltm_atlas_spread }
+}
+sltm_atlas_turn_1_0 = {
+ scope = character
+ is_valid = { sltm_clw_open_trigger = yes NOT = { has_variable = sltm_atlas_filter } NOT = { sltm_atlas_read_trigger = yes } }
+ effect = { remove_variable = sltm_atlas_spread }
+}
+sltm_clw_pick_k9 = {
+ scope = character
+ is_shown = { sltm_clw_has_category_trigger = yes var:sltm_clw_kind ?= 9 }
+ is_valid = { sltm_clw_open_trigger = yes }
+ effect = { sltm_clw_select_category_effect = { CATEGORY = 9 } }
+}
+sltm_atlas_row_head_3 = {
+ scope = character
+ is_shown = { sltm_clw_has_category_trigger = yes var:sltm_clw_kind ?= 9 has_variable = sltm_atlas_index var:sltm_atlas_index = 3 }
+ is_valid = { sltm_clw_open_trigger = yes }
+ effect = { sltm_clw_select_category_effect = { CATEGORY = 9 } set_variable = { name = sltm_atlas_index value = 3 } }
+}
+sltm_clw_pick_k10 = {
+ scope = character
+ is_shown = { sltm_clw_has_category_trigger = yes var:sltm_clw_kind ?= 10 }
+ is_valid = { sltm_clw_open_trigger = yes }
+ effect = { sltm_clw_select_category_effect = { CATEGORY = 10 } }
+}
+sltm_atlas_row_cardinal_3 = {
+ scope = character
+ is_shown = { sltm_clw_has_category_trigger = yes var:sltm_clw_kind ?= 10 has_variable = sltm_atlas_index var:sltm_atlas_index = 3 }
+ is_valid = { sltm_clw_open_trigger = yes }
+ effect = { sltm_clw_select_category_effect = { CATEGORY = 10 } set_variable = { name = sltm_atlas_index value = 3 } }
+}
+
+sltm_mc_open_last = {
+ scope = character
+ is_shown = { var:sltm_clw_kind ?= 8 var:sltm_last_chartered_title ?= { holder = root.var:sltm_create_holder } }
+ is_valid = { sltm_clw_open_trigger = yes var:sltm_clw_kind ?= 8 var:sltm_last_chartered_title ?= { holder = root.var:sltm_create_holder } }
+ effect = { set_variable = { name = sltm_lvm_selected_title value = var:sltm_last_chartered_title } sltm_ui_open_fixed_effect = yes }
+}
+sltm_mc_cancel = {
+    scope = character
+    is_shown = { var:sltm_clw_kind ?= 8 sltm_legacy_request_visible_trigger = yes }
+    is_valid = { sltm_clw_open_trigger = yes var:sltm_clw_kind ?= 8 sltm_legacy_request_visible_trigger = yes }
+    effect = {
+        var:sltm_create_holder = { sltm_merc_cancel_effect = yes }
+    }
+}
+sltm_mc_archive = {
+    scope = character
+    is_shown = { var:sltm_clw_kind ?= 8 sltm_legacy_request_visible_trigger = yes var:sltm_create_holder.var:sltm_merc_resolution ?= 4 }
+    is_valid = { sltm_clw_open_trigger = yes var:sltm_clw_kind ?= 8 sltm_legacy_request_visible_trigger = yes var:sltm_create_holder.var:sltm_merc_resolution ?= 4 }
+    effect = {
+        var:sltm_create_holder = {
+            set_variable = { name = sltm_merc_resolution value = 2 }
+            sltm_merc_clear_request_effect = yes
+        }
+    }
+}
+

@@ -1,0 +1,261 @@
+﻿# 创立无地头衔 · 两步选择窗口的自定义本地化
+# 全部 type = character，只读草稿变量。
+
+sltm_clw_step = {
+	type = character
+	text = { trigger = { sltm_clw_step_two_trigger = yes } localization_key = SLTM_CLW_STEP_2 }
+	text = { localization_key = SLTM_CLW_STEP_1 }
+}
+
+sltm_clw_list_caption = {
+	type = character
+	text = { trigger = { sltm_clw_step_two_trigger = yes } localization_key = SLTM_CLW_LIST_CAPTION_DOM }
+	text = { localization_key = SLTM_CLW_LIST_CAPTION_CAT }
+}
+
+sltm_clw_cat_name = {
+	type = character
+	text = { trigger = { sltm_clw_has_category_trigger = yes var:sltm_clw_kind = 1 } localization_key = SLTM_CLW_CAT_1 }
+	text = { trigger = { sltm_clw_has_category_trigger = yes var:sltm_clw_kind = 2 } localization_key = SLTM_CLW_CAT_2 }
+	text = { trigger = { sltm_clw_has_category_trigger = yes var:sltm_clw_kind = 3 } localization_key = SLTM_CLW_CAT_3 }
+	text = { trigger = { sltm_clw_has_category_trigger = yes var:sltm_clw_kind = 4 } localization_key = SLTM_CLW_CAT_4 }
+	text = { trigger = { sltm_clw_has_category_trigger = yes var:sltm_clw_kind = 5 } localization_key = SLTM_CLW_CAT_5 }
+	text = { trigger = { sltm_clw_has_category_trigger = yes var:sltm_clw_kind = 6 } localization_key = SLTM_CLW_CAT_6 }
+	text = { trigger = { sltm_clw_has_category_trigger = yes var:sltm_clw_kind = 7 } localization_key = SLTM_CLW_CAT_7 }
+	text = { trigger = { sltm_clw_has_category_trigger = yes var:sltm_clw_kind = 8 } localization_key = SLTM_CLW_CAT_8 }
+	text = { trigger = { sltm_clw_has_category_trigger = yes var:sltm_clw_kind = 9 } localization_key = SLTM_CLW_CAT_9 }
+	text = { trigger = { sltm_clw_has_category_trigger = yes var:sltm_clw_kind = 10 } localization_key = SLTM_CLW_CAT_10 }
+	text = { localization_key = SLTM_CLW_SIDE_NONE }
+}
+
+sltm_clw_cat_desc = {
+	type = character
+	text = { trigger = { sltm_clw_has_category_trigger = yes var:sltm_clw_kind = 1 } localization_key = SLTM_CLW_CAT_DESC_1 }
+	text = { trigger = { sltm_clw_has_category_trigger = yes var:sltm_clw_kind = 2 } localization_key = SLTM_CLW_CAT_DESC_2 }
+	text = { trigger = { sltm_clw_has_category_trigger = yes var:sltm_clw_kind = 3 } localization_key = SLTM_CLW_CAT_DESC_3 }
+	text = { trigger = { sltm_clw_has_category_trigger = yes var:sltm_clw_kind = 4 } localization_key = SLTM_CLW_CAT_DESC_4 }
+	text = { trigger = { sltm_clw_has_category_trigger = yes var:sltm_clw_kind = 5 } localization_key = SLTM_CLW_CAT_DESC_5 }
+	text = { trigger = { sltm_clw_has_category_trigger = yes var:sltm_clw_kind = 6 } localization_key = SLTM_CLW_CAT_DESC_6 }
+	text = { trigger = { sltm_clw_has_category_trigger = yes var:sltm_clw_kind = 7 } localization_key = SLTM_CLW_CAT_DESC_7 }
+	text = { trigger = { sltm_clw_has_category_trigger = yes var:sltm_clw_kind = 8 } localization_key = SLTM_CLW_CAT_DESC_8 }
+	text = { trigger = { sltm_clw_has_category_trigger = yes var:sltm_clw_kind = 9 } localization_key = SLTM_CLW_CAT_DESC_9 }
+	text = { trigger = { sltm_clw_has_category_trigger = yes var:sltm_clw_kind = 10 } localization_key = SLTM_CLW_CAT_DESC_10 }
+	text = { localization_key = SLTM_CLW_SIDE_NONE }
+}
+
+sltm_clw_cat_route = {
+	type = character
+	text = { trigger = { sltm_clw_has_category_trigger = yes var:sltm_clw_kind = 1 } localization_key = SLTM_CLW_CAT_ROUTE_1 }
+	text = { trigger = { sltm_clw_has_category_trigger = yes var:sltm_clw_kind = 2 } localization_key = SLTM_CLW_CAT_ROUTE_2 }
+	text = { trigger = { sltm_clw_has_category_trigger = yes var:sltm_clw_kind = 3 } localization_key = SLTM_CLW_CAT_ROUTE_3 }
+	text = { trigger = { sltm_clw_has_category_trigger = yes var:sltm_clw_kind = 4 } localization_key = SLTM_CLW_CAT_ROUTE_4 }
+	text = { trigger = { sltm_clw_has_category_trigger = yes var:sltm_clw_kind = 5 } localization_key = SLTM_CLW_CAT_ROUTE_5 }
+	text = { trigger = { sltm_clw_has_category_trigger = yes var:sltm_clw_kind = 6 } localization_key = SLTM_CLW_CAT_ROUTE_6 }
+	text = { trigger = { sltm_clw_has_category_trigger = yes var:sltm_clw_kind = 7 } localization_key = SLTM_CLW_CAT_ROUTE_7 }
+	text = { trigger = { sltm_clw_has_category_trigger = yes var:sltm_clw_kind = 8 } localization_key = SLTM_CLW_CAT_ROUTE_8 }
+	text = { trigger = { sltm_clw_has_category_trigger = yes var:sltm_clw_kind = 9 } localization_key = SLTM_CLW_CAT_ROUTE_9 }
+	text = { trigger = { sltm_clw_has_category_trigger = yes var:sltm_clw_kind = 10 } localization_key = SLTM_CLW_CAT_ROUTE_10 }
+	text = { localization_key = SLTM_CLW_SIDE_NONE }
+}
+
+sltm_clw_cat_state = {
+	type = character
+	text = { trigger = { sltm_clw_has_category_trigger = yes var:sltm_clw_kind = 1 } localization_key = SLTM_CLW_CAT_STATE_1 }
+	text = { trigger = { sltm_clw_has_category_trigger = yes var:sltm_clw_kind = 2 } localization_key = SLTM_CLW_CAT_STATE_2 }
+	text = { trigger = { sltm_clw_has_category_trigger = yes var:sltm_clw_kind = 3 } localization_key = SLTM_CLW_CAT_STATE_3 }
+	text = { trigger = { sltm_clw_has_category_trigger = yes var:sltm_clw_kind = 4 } localization_key = SLTM_CLW_CAT_STATE_4 }
+	text = { trigger = { sltm_clw_has_category_trigger = yes var:sltm_clw_kind = 5 } localization_key = SLTM_CLW_CAT_STATE_5 }
+	text = { trigger = { sltm_clw_has_category_trigger = yes var:sltm_clw_kind = 6 } localization_key = SLTM_CLW_CAT_STATE_6 }
+	text = { trigger = { sltm_clw_has_category_trigger = yes var:sltm_clw_kind = 7 } localization_key = SLTM_CLW_CAT_STATE_7 }
+	text = { trigger = { sltm_clw_has_category_trigger = yes var:sltm_clw_kind = 8 } localization_key = SLTM_CLW_CAT_STATE_8 }
+	text = { trigger = { sltm_clw_has_category_trigger = yes var:sltm_clw_kind = 9 } localization_key = SLTM_CLW_CAT_STATE_9 }
+	text = { trigger = { sltm_clw_has_category_trigger = yes var:sltm_clw_kind = 10 } localization_key = SLTM_CLW_CAT_STATE_10 }
+	text = { localization_key = SLTM_CLW_SIDE_NONE }
+}
+
+sltm_clw_cat_note = {
+	type = character
+	text = { trigger = { sltm_clw_has_category_trigger = yes var:sltm_clw_kind = 1 } localization_key = SLTM_CLW_CAT_NOTE_1 }
+	text = { trigger = { sltm_clw_has_category_trigger = yes var:sltm_clw_kind = 2 } localization_key = SLTM_CLW_CAT_NOTE_2 }
+	text = { trigger = { sltm_clw_has_category_trigger = yes var:sltm_clw_kind = 3 } localization_key = SLTM_CLW_CAT_NOTE_3 }
+	text = { trigger = { sltm_clw_has_category_trigger = yes var:sltm_clw_kind = 4 } localization_key = SLTM_CLW_CAT_NOTE_4 }
+	text = { trigger = { sltm_clw_has_category_trigger = yes var:sltm_clw_kind = 5 } localization_key = SLTM_CLW_CAT_NOTE_5 }
+	text = { trigger = { sltm_clw_has_category_trigger = yes var:sltm_clw_kind = 6 } localization_key = SLTM_CLW_CAT_NOTE_6 }
+	text = { trigger = { sltm_clw_has_category_trigger = yes var:sltm_clw_kind = 7 } localization_key = SLTM_CLW_CAT_NOTE_7 }
+	text = { trigger = { sltm_clw_has_category_trigger = yes var:sltm_clw_kind = 8 } localization_key = SLTM_CLW_CAT_NOTE_8 }
+	text = { trigger = { sltm_clw_has_category_trigger = yes var:sltm_clw_kind = 9 } localization_key = SLTM_CLW_CAT_NOTE_9 }
+	text = { trigger = { sltm_clw_has_category_trigger = yes var:sltm_clw_kind = 10 } localization_key = SLTM_CLW_CAT_NOTE_10 }
+	text = { localization_key = SLTM_CLW_SIDE_NONE }
+}
+
+sltm_clw_cat_next = {
+	type = character
+	text = { trigger = { sltm_clw_has_category_trigger = yes var:sltm_clw_kind = 1 } localization_key = SLTM_CLW_CAT_NEXT_1 }
+	text = { trigger = { sltm_clw_has_category_trigger = yes var:sltm_clw_kind = 2 } localization_key = SLTM_CLW_CAT_NEXT_2 }
+	text = { trigger = { sltm_clw_has_category_trigger = yes var:sltm_clw_kind = 3 } localization_key = SLTM_CLW_CAT_NEXT_3 }
+	text = { trigger = { sltm_clw_has_category_trigger = yes var:sltm_clw_kind = 4 } localization_key = SLTM_CLW_CAT_NEXT_4 }
+	text = { trigger = { sltm_clw_has_category_trigger = yes var:sltm_clw_kind = 5 } localization_key = SLTM_CLW_CAT_NEXT_5 }
+	text = { trigger = { sltm_clw_has_category_trigger = yes var:sltm_clw_kind = 6 } localization_key = SLTM_CLW_CAT_NEXT_6 }
+	text = { trigger = { sltm_clw_has_category_trigger = yes var:sltm_clw_kind = 7 } localization_key = SLTM_CLW_CAT_NEXT_7 }
+	text = { trigger = { sltm_clw_has_category_trigger = yes var:sltm_clw_kind = 8 } localization_key = SLTM_CLW_CAT_NEXT_8 }
+	text = { localization_key = SLTM_CLW_SIDE_NONE }
+}
+
+sltm_clw_cat_id = {
+	type = character
+	text = { trigger = { sltm_clw_has_category_trigger = yes var:sltm_clw_kind = 1 } localization_key = SLTM_CLW_KIND_VAR_1 }
+	text = { trigger = { sltm_clw_has_category_trigger = yes var:sltm_clw_kind = 2 } localization_key = SLTM_CLW_KIND_VAR_2 }
+	text = { trigger = { sltm_clw_has_category_trigger = yes var:sltm_clw_kind = 3 } localization_key = SLTM_CLW_KIND_VAR_3 }
+	text = { trigger = { sltm_clw_has_category_trigger = yes var:sltm_clw_kind = 4 } localization_key = SLTM_CLW_KIND_VAR_4 }
+	text = { trigger = { sltm_clw_has_category_trigger = yes var:sltm_clw_kind = 5 } localization_key = SLTM_CLW_KIND_VAR_5 }
+	text = { trigger = { sltm_clw_has_category_trigger = yes var:sltm_clw_kind = 6 } localization_key = SLTM_CLW_KIND_VAR_6 }
+	text = { trigger = { sltm_clw_has_category_trigger = yes var:sltm_clw_kind = 7 } localization_key = SLTM_CLW_KIND_VAR_7 }
+	text = { trigger = { sltm_clw_has_category_trigger = yes var:sltm_clw_kind = 8 } localization_key = SLTM_CLW_KIND_VAR_8 }
+	text = { localization_key = SLTM_CLW_SIDE_NONE }
+}
+
+sltm_clw_write_cat = {
+	type = character
+ text = { trigger = { OR = { var:sltm_clw_kind = 4 var:sltm_clw_kind = 5 } } localization_key = SLTM_CLW_WRITE_SHELL }
+	text = { trigger = { sltm_clw_has_category_trigger = yes var:sltm_clw_kind = 2 } localization_key = SLTM_CLW_WRITE_PLAIN }
+	text = { trigger = { sltm_clw_has_category_trigger = yes var:sltm_clw_kind = 3 } localization_key = SLTM_CLW_WRITE_DOM }
+	text = { trigger = { sltm_clw_has_category_trigger = yes } localization_key = SLTM_CLW_WRITE_PENDING }
+	text = { localization_key = SLTM_CLW_SIDE_NONE }
+}
+
+sltm_clw_dom_name = {
+	type = character
+	text = { trigger = { sltm_clw_has_domicile_type_trigger = yes var:sltm_clw_domicile_type = flag:camp } localization_key = SLTM_CLW_DOM_NAME_1 }
+	text = { trigger = { sltm_clw_has_domicile_type_trigger = yes var:sltm_clw_domicile_type = flag:estate } localization_key = SLTM_CLW_DOM_NAME_2 }
+	text = { trigger = { sltm_clw_has_domicile_type_trigger = yes var:sltm_clw_domicile_type = flag:yurt } localization_key = SLTM_CLW_DOM_NAME_3 }
+	text = { trigger = { sltm_clw_has_domicile_type_trigger = yes var:sltm_clw_domicile_type = flag:east_asian_estate } localization_key = SLTM_CLW_DOM_NAME_4 }
+	text = { trigger = { sltm_clw_has_domicile_type_trigger = yes var:sltm_clw_domicile_type = flag:ecclesiastical_domicile } localization_key = SLTM_CLW_DOM_NAME_5 }
+	text = { trigger = { sltm_clw_has_domicile_type_trigger = yes var:sltm_clw_domicile_type = flag:japanese_manor } localization_key = SLTM_CLW_DOM_NAME_6 }
+	text = { trigger = { sltm_clw_has_domicile_type_trigger = yes var:sltm_clw_domicile_type = flag:sltm_residence } localization_key = SLTM_CLW_DOM_NAME_7 }
+	text = { localization_key = SLTM_CLW_BLANK }
+}
+
+sltm_clw_dom_desc = {
+	type = character
+	text = { trigger = { sltm_clw_has_domicile_type_trigger = yes var:sltm_clw_domicile_type = flag:camp } localization_key = SLTM_CLW_DOM_DESC_1 }
+	text = { trigger = { sltm_clw_has_domicile_type_trigger = yes var:sltm_clw_domicile_type = flag:estate } localization_key = SLTM_CLW_DOM_DESC_2 }
+	text = { trigger = { sltm_clw_has_domicile_type_trigger = yes var:sltm_clw_domicile_type = flag:yurt } localization_key = SLTM_CLW_DOM_DESC_3 }
+	text = { trigger = { sltm_clw_has_domicile_type_trigger = yes var:sltm_clw_domicile_type = flag:east_asian_estate } localization_key = SLTM_CLW_DOM_DESC_4 }
+	text = { trigger = { sltm_clw_has_domicile_type_trigger = yes var:sltm_clw_domicile_type = flag:ecclesiastical_domicile } localization_key = SLTM_CLW_DOM_DESC_5 }
+	text = { trigger = { sltm_clw_has_domicile_type_trigger = yes var:sltm_clw_domicile_type = flag:japanese_manor } localization_key = SLTM_CLW_DOM_DESC_6 }
+	text = { trigger = { sltm_clw_has_domicile_type_trigger = yes var:sltm_clw_domicile_type = flag:sltm_residence } localization_key = SLTM_CLW_DOM_DESC_7 }
+	text = { localization_key = SLTM_CLW_BLANK }
+}
+
+sltm_clw_dom_source = {
+	type = character
+	text = { trigger = { sltm_clw_has_domicile_type_trigger = yes var:sltm_clw_domicile_type = flag:camp } localization_key = SLTM_CLW_DOM_SOURCE_1 }
+	text = { trigger = { sltm_clw_has_domicile_type_trigger = yes var:sltm_clw_domicile_type = flag:estate } localization_key = SLTM_CLW_DOM_SOURCE_2 }
+	text = { trigger = { sltm_clw_has_domicile_type_trigger = yes var:sltm_clw_domicile_type = flag:yurt } localization_key = SLTM_CLW_DOM_SOURCE_3 }
+	text = { trigger = { sltm_clw_has_domicile_type_trigger = yes var:sltm_clw_domicile_type = flag:east_asian_estate } localization_key = SLTM_CLW_DOM_SOURCE_4 }
+	text = { trigger = { sltm_clw_has_domicile_type_trigger = yes var:sltm_clw_domicile_type = flag:ecclesiastical_domicile } localization_key = SLTM_CLW_DOM_SOURCE_5 }
+	text = { trigger = { sltm_clw_has_domicile_type_trigger = yes var:sltm_clw_domicile_type = flag:japanese_manor } localization_key = SLTM_CLW_DOM_SOURCE_6 }
+	text = { trigger = { sltm_clw_has_domicile_type_trigger = yes var:sltm_clw_domicile_type = flag:sltm_residence } localization_key = SLTM_CLW_DOM_SOURCE_7 }
+	text = { localization_key = SLTM_CLW_BLANK }
+}
+
+sltm_clw_dom_id = {
+	type = character
+	text = { trigger = { sltm_clw_has_domicile_type_trigger = yes var:sltm_clw_domicile_type = flag:camp } localization_key = SLTM_CLW_DOM_ID_1 }
+	text = { trigger = { sltm_clw_has_domicile_type_trigger = yes var:sltm_clw_domicile_type = flag:estate } localization_key = SLTM_CLW_DOM_ID_2 }
+	text = { trigger = { sltm_clw_has_domicile_type_trigger = yes var:sltm_clw_domicile_type = flag:yurt } localization_key = SLTM_CLW_DOM_ID_3 }
+	text = { trigger = { sltm_clw_has_domicile_type_trigger = yes var:sltm_clw_domicile_type = flag:east_asian_estate } localization_key = SLTM_CLW_DOM_ID_4 }
+	text = { trigger = { sltm_clw_has_domicile_type_trigger = yes var:sltm_clw_domicile_type = flag:ecclesiastical_domicile } localization_key = SLTM_CLW_DOM_ID_5 }
+	text = { trigger = { sltm_clw_has_domicile_type_trigger = yes var:sltm_clw_domicile_type = flag:japanese_manor } localization_key = SLTM_CLW_DOM_ID_6 }
+	text = { trigger = { sltm_clw_has_domicile_type_trigger = yes var:sltm_clw_domicile_type = flag:sltm_residence } localization_key = SLTM_CLW_DOM_ID_7 }
+	text = { localization_key = SLTM_CLW_BLANK }
+}
+
+sltm_clw_dom_note = {
+	type = character
+	text = { trigger = { sltm_clw_has_domicile_type_trigger = yes var:sltm_clw_domicile_type = flag:camp } localization_key = SLTM_CLW_DOM_NOTE_1 }
+	text = { trigger = { sltm_clw_has_domicile_type_trigger = yes var:sltm_clw_domicile_type = flag:estate } localization_key = SLTM_CLW_DOM_NOTE_2 }
+	text = { trigger = { sltm_clw_has_domicile_type_trigger = yes var:sltm_clw_domicile_type = flag:yurt } localization_key = SLTM_CLW_DOM_NOTE_3 }
+	text = { trigger = { sltm_clw_has_domicile_type_trigger = yes var:sltm_clw_domicile_type = flag:east_asian_estate } localization_key = SLTM_CLW_DOM_NOTE_4 }
+	text = { trigger = { sltm_clw_has_domicile_type_trigger = yes var:sltm_clw_domicile_type = flag:ecclesiastical_domicile } localization_key = SLTM_CLW_DOM_NOTE_5 }
+	text = { trigger = { sltm_clw_has_domicile_type_trigger = yes var:sltm_clw_domicile_type = flag:japanese_manor } localization_key = SLTM_CLW_DOM_NOTE_6 }
+	text = { trigger = { sltm_clw_has_domicile_type_trigger = yes var:sltm_clw_domicile_type = flag:sltm_residence } localization_key = SLTM_CLW_DOM_NOTE_7 }
+	text = { localization_key = SLTM_CLW_BLANK }
+}
+
+sltm_clw_side_summary = {
+	type = character
+	text = { trigger = { sltm_clw_category_is_domicile_trigger = yes sltm_clw_has_domicile_type_trigger = yes var:sltm_clw_domicile_type = flag:camp } localization_key = SLTM_CLW_SUM_DOM_1 }
+	text = { trigger = { sltm_clw_category_is_domicile_trigger = yes sltm_clw_has_domicile_type_trigger = yes var:sltm_clw_domicile_type = flag:estate } localization_key = SLTM_CLW_SUM_DOM_2 }
+	text = { trigger = { sltm_clw_category_is_domicile_trigger = yes sltm_clw_has_domicile_type_trigger = yes var:sltm_clw_domicile_type = flag:yurt } localization_key = SLTM_CLW_SUM_DOM_3 }
+	text = { trigger = { sltm_clw_category_is_domicile_trigger = yes sltm_clw_has_domicile_type_trigger = yes var:sltm_clw_domicile_type = flag:east_asian_estate } localization_key = SLTM_CLW_SUM_DOM_4 }
+	text = { trigger = { sltm_clw_category_is_domicile_trigger = yes sltm_clw_has_domicile_type_trigger = yes var:sltm_clw_domicile_type = flag:ecclesiastical_domicile } localization_key = SLTM_CLW_SUM_DOM_5 }
+	text = { trigger = { sltm_clw_category_is_domicile_trigger = yes sltm_clw_has_domicile_type_trigger = yes var:sltm_clw_domicile_type = flag:japanese_manor } localization_key = SLTM_CLW_SUM_DOM_6 }
+	text = { trigger = { sltm_clw_category_is_domicile_trigger = yes sltm_clw_has_domicile_type_trigger = yes var:sltm_clw_domicile_type = flag:sltm_residence } localization_key = SLTM_CLW_SUM_DOM_7 }
+	text = { trigger = { sltm_clw_category_is_domicile_trigger = yes } localization_key = SLTM_CLW_SUM_DOM_NONE }
+ text = { trigger = { var:sltm_clw_kind = 1 } localization_key = SLTM_CLW_CAT_1 }
+ text = { trigger = { var:sltm_clw_kind = 2 } localization_key = SLTM_CLW_CAT_2 }
+ text = { trigger = { var:sltm_clw_kind = 4 } localization_key = SLTM_CLW_CAT_4 }
+ text = { trigger = { var:sltm_clw_kind = 5 } localization_key = SLTM_CLW_CAT_5 }
+ text = { trigger = { var:sltm_clw_kind = 6 } localization_key = SLTM_CLW_CAT_6 }
+ text = { trigger = { var:sltm_clw_kind = 7 } localization_key = SLTM_CLW_CAT_7 }
+ text = { trigger = { var:sltm_clw_kind = 8 } localization_key = SLTM_CLW_CAT_8 }
+ text = { localization_key = SLTM_CLW_SIDE_NONE }
+}
+
+sltm_clw_primary_label = {
+	type = character
+	text = { trigger = { sltm_clw_step_two_trigger = yes } localization_key = SLTM_CLW_PRIMARY_CONFIRM_DOM }
+	text = { trigger = { sltm_clw_primary_is_next_trigger = yes } localization_key = SLTM_CLW_PRIMARY_NEXT }
+	text = { trigger = { sltm_clw_supported_trigger = yes } localization_key = SLTM_CLW_PRIMARY_CONFIRM_CAT }
+ text = { trigger = { sltm_clw_has_category_trigger = yes } localization_key = SLTM_CLW_UNAVAILABLE }
+	text = { localization_key = SLTM_CLW_PRIMARY_NEED_CAT }
+}
+
+sltm_clw_footer_hint = {
+	type = character
+	text = { trigger = { sltm_clw_step_two_trigger = yes } localization_key = SLTM_CLW_FOOTER_HINT }
+	text = { localization_key = SLTM_CLW_FOOTER_HINT }
+}
+
+sltm_hof_warning = {
+ type = character
+ text = { trigger = { exists = var:sltm_hof_confirm_title } localization_key = SLTM_SP_HEAD_AGAIN }
+ text = { localization_key = SLTM_AT_FORM_HEAD }
+}
+sltm_special_failure_reason = {
+ type = character
+ text = { trigger = { var:sltm_clw_kind = 1 } localization_key = SLTM_SP_NO_REGION }
+ text = { trigger = { var:sltm_clw_kind = 10 } localization_key = SLTM_SP_NO_CARDINAL }
+ text = { trigger = { OR = { var:sltm_clw_kind = 6 var:sltm_clw_kind = 7 } } localization_key = SLTM_SP_NO_ORDER }
+ text = { localization_key = SLTM_SP_NO_OBJECT }
+}
+
+sltm_mc_status = {
+ type = character
+ text = { trigger = { var:sltm_create_holder.var:sltm_merc_resolution ?= 4 } localization_key = SLTM_MC_RES_4 }
+ text = { trigger = { var:sltm_create_holder.var:sltm_merc_resolution ?= 3 } localization_key = SLTM_MC_RES_3 }
+ text = { trigger = { var:sltm_create_holder.var:sltm_merc_resolution ?= 2 } localization_key = SLTM_MC_RES_2 }
+ text = { trigger = { var:sltm_create_holder.var:sltm_merc_resolution ?= 1 } localization_key = SLTM_MC_RES_1 }
+ text = { trigger = { var:sltm_create_holder.var:sltm_merc_sponsor ?= this } localization_key = SLTM_MC_WAIT }
+ text = { trigger = { exists = var:sltm_create_holder.var:sltm_merc_sponsor } localization_key = SLTM_MC_OTHER_DESC }
+ text = { localization_key = SLTM_MC_CLOSED_STATUS }
+}
+
+sltm_rank_button_direct = {
+ type = character
+ text = { trigger = { sltm_atlas_promotes_primary_trigger = yes sltm_atlas_promotion_current_trigger = yes var:sltm_rank_mode ?= 1 } localization_key = SLTM_RANK_APPROVE_DIRECT }
+ text = { localization_key = SLTM_AT_CREATE }
+}
+
+sltm_rank_button_edit = {
+ type = character
+ text = { trigger = { sltm_atlas_promotes_primary_trigger = yes sltm_atlas_promotion_current_trigger = yes var:sltm_rank_mode ?= 2 } localization_key = SLTM_RANK_APPROVE_EDIT }
+ text = { localization_key = SLTM_AT_CREATE_EDIT }
+}
+
+sltm_rank_warning_text = {
+ type = character
+ text = { trigger = { sltm_atlas_promotes_primary_trigger = yes } localization_key = SLTM_RANK_WARNING }
+ text = { localization_key = SLTM_RANK_EMPTY }
+}

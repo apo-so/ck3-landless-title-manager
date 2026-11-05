@@ -1,0 +1,26 @@
+﻿sltm_cmm_compat_rit_rules_valid_recipient_realm = {
+	categories = {
+		difficulty multiplayer
+	}
+	default = sltm_cmm_compat_rit_rules_valid_recipient_realm_all
+	sltm_cmm_compat_rit_rules_valid_recipient_realm_all = {
+	}
+	sltm_cmm_compat_rit_rules_valid_recipient_realm_only_realm = {
+	}
+	sltm_cmm_compat_rit_rules_valid_recipient_realm_only_family = {
+	}
+	sltm_cmm_compat_rit_rules_valid_recipient_realm_only_self = {
+	}
+	sltm_cmm_compat_rit_rules_valid_recipient_realm_only_debug = {
+	}
+}
+sltm_cmm_compat_rit_rules_realm_manager_cost = {
+	categories = {
+		difficulty multiplayer
+	}
+	default = sltm_cmm_compat_rit_rules_realm_manager_cost_on
+	sltm_cmm_compat_rit_rules_realm_manager_cost_on = {
+	}
+	sltm_cmm_compat_rit_rules_realm_manager_cost_off = {
+	}
+}

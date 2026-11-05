@@ -1,0 +1,280 @@
+{
+  "version": "0.3.0",
+  "design_revision": "DESIGN002",
+  "fields": [
+    {
+      "field": "display_name",
+      "source_status": "SCRIPT_PATH_PRESENT",
+      "implemented_path": "input/reset; requested without reliable stored-string getter",
+      "engine_parse": "NOT RUN",
+      "runtime": "NOT RUN",
+      "note": "Source readback branch is implemented; it has not been executed in CK3."
+    },
+    {
+      "field": "name_forms",
+      "source_status": "RESERVED_INTERFACE",
+      "implemented_path": "No callable setter in this release; interface retained",
+      "engine_parse": "NOT RUN",
+      "runtime": "NOT RUN",
+      "note": "No false success or unsupported conversion button."
+    },
+    {
+      "field": "definitive_form",
+      "source_status": "SCRIPT_PATH_PRESENT",
+      "implemented_path": "yes/no requested",
+      "engine_parse": "NOT RUN",
+      "runtime": "NOT RUN",
+      "note": "Source readback branch is implemented; it has not been executed in CK3."
+    },
+    {
+      "field": "dynasty_naming",
+      "source_status": "SCRIPT_PATH_PRESENT",
+      "implemented_path": "yes/no requested",
+      "engine_parse": "NOT RUN",
+      "runtime": "NOT RUN",
+      "note": "Source readback branch is implemented; it has not been executed in CK3."
+    },
+    {
+      "field": "nomadic_naming",
+      "source_status": "SCRIPT_PATH_PRESENT",
+      "implemented_path": "yes/no requested",
+      "engine_parse": "NOT RUN",
+      "runtime": "NOT RUN",
+      "note": "Source readback branch is implemented; it has not been executed in CK3."
+    },
+    {
+      "field": "coat_of_arms",
+      "source_status": "SCRIPT_PATH_PRESENT",
+      "implemented_path": "random/copy; requested",
+      "engine_parse": "NOT RUN",
+      "runtime": "NOT RUN",
+      "note": "Source readback branch is implemented; it has not been executed in CK3."
+    },
+    {
+      "field": "color",
+      "source_status": "SCRIPT_PATH_PRESENT",
+      "implemented_path": "copy; requested",
+      "engine_parse": "NOT RUN",
+      "runtime": "NOT RUN",
+      "note": "Source readback branch is implemented; it has not been executed in CK3."
+    },
+    {
+      "field": "capital_county",
+      "source_status": "SCRIPT_PATH_PRESENT",
+      "implemented_path": "copy selected county; native readback",
+      "engine_parse": "NOT RUN",
+      "runtime": "NOT RUN",
+      "note": "Source readback branch is implemented; it has not been executed in CK3."
+    },
+    {
+      "field": "de_jure_liege",
+      "source_status": "SCRIPT_PATH_PRESENT",
+      "implemented_path": "set higher marked title; native readback",
+      "engine_parse": "NOT RUN",
+      "runtime": "NOT RUN",
+      "note": "Source readback branch is implemented; it has not been executed in CK3."
+    },
+    {
+      "field": "primary_heir_policy",
+      "source_status": "SCRIPT_PATH_PRESENT",
+      "implemented_path": "yes/no requested; future partition NOT RUN",
+      "engine_parse": "NOT RUN",
+      "runtime": "NOT RUN",
+      "note": "Source readback branch is implemented; it has not been executed in CK3."
+    },
+    {
+      "field": "automatic_claims",
+      "source_status": "SCRIPT_PATH_PRESENT",
+      "implemented_path": "yes/no requested; future claim outcomes NOT RUN",
+      "engine_parse": "NOT RUN",
+      "runtime": "NOT RUN",
+      "note": "Source readback branch is implemented; it has not been executed in CK3."
+    },
+    {
+      "field": "title_law",
+      "source_status": "SCRIPT_PATH_PRESENT",
+      "implemented_path": "9 literal laws add/remove single item; native readback",
+      "engine_parse": "NOT RUN",
+      "runtime": "NOT RUN",
+      "note": "Source readback branch is implemented; it has not been executed in CK3."
+    },
+    {
+      "field": "landless",
+      "source_status": "SCRIPT_PATH_PRESENT",
+      "implemented_path": "plain carriers only; yes/no requested",
+      "engine_parse": "NOT RUN",
+      "runtime": "NOT RUN",
+      "note": "Source readback branch is implemented; it has not been executed in CK3."
+    },
+    {
+      "field": "destroy_on_succession",
+      "source_status": "SCRIPT_PATH_PRESENT",
+      "implemented_path": "plain carriers only; yes/no requested",
+      "engine_parse": "NOT RUN",
+      "runtime": "NOT RUN",
+      "note": "Source readback branch is implemented; it has not been executed in CK3."
+    },
+    {
+      "field": "destroy_if_invalid_heir",
+      "source_status": "SCRIPT_PATH_PRESENT",
+      "implemented_path": "plain carriers only; yes/no requested",
+      "engine_parse": "NOT RUN",
+      "runtime": "NOT RUN",
+      "note": "Source readback branch is implemented; it has not been executed in CK3."
+    },
+    {
+      "field": "destroy_on_gain_same_tier",
+      "source_status": "SCRIPT_PATH_PRESENT",
+      "implemented_path": "plain carriers only; yes/no requested",
+      "engine_parse": "NOT RUN",
+      "runtime": "NOT RUN",
+      "note": "Source readback branch is implemented; it has not been executed in CK3."
+    },
+    {
+      "field": "delete_on_destroy",
+      "source_status": "RESERVED_INTERFACE",
+      "implemented_path": "No callable setter in this release; interface retained",
+      "engine_parse": "NOT RUN",
+      "runtime": "NOT RUN",
+      "note": "No false success or unsupported conversion button."
+    },
+    {
+      "field": "holder",
+      "source_status": "SCRIPT_PATH_PRESENT",
+      "implemented_path": "plain carriers only; separate transaction and actual holder readback",
+      "engine_parse": "NOT RUN",
+      "runtime": "NOT RUN",
+      "note": "Source readback branch is implemented; it has not been executed in CK3."
+    },
+    {
+      "field": "primary_title",
+      "source_status": "RESERVED_INTERFACE",
+      "implemented_path": "No callable setter in this release; interface retained",
+      "engine_parse": "NOT RUN",
+      "runtime": "NOT RUN",
+      "note": "No false success or unsupported conversion button."
+    },
+    {
+      "field": "liege",
+      "source_status": "RESERVED_INTERFACE",
+      "implemented_path": "No callable setter in this release; interface retained",
+      "engine_parse": "NOT RUN",
+      "runtime": "NOT RUN",
+      "note": "No false success or unsupported conversion button."
+    },
+    {
+      "field": "government",
+      "source_status": "RESERVED_INTERFACE",
+      "implemented_path": "No callable setter in this release; interface retained",
+      "engine_parse": "NOT RUN",
+      "runtime": "NOT RUN",
+      "note": "No false success or unsupported conversion button."
+    },
+    {
+      "field": "domicile_location",
+      "source_status": "SCRIPT_PATH_PRESENT",
+      "implemented_path": "exact title_domicile move; native location readback",
+      "engine_parse": "NOT RUN",
+      "runtime": "NOT RUN",
+      "note": "Source readback branch is implemented; it has not been executed in CK3."
+    },
+    {
+      "field": "domicile_name",
+      "source_status": "RESERVED_INTERFACE",
+      "implemented_path": "No callable setter in this release; interface retained",
+      "engine_parse": "NOT RUN",
+      "runtime": "NOT RUN",
+      "note": "No false success or unsupported conversion button."
+    },
+    {
+      "field": "domicile_culture",
+      "source_status": "RESERVED_INTERFACE",
+      "implemented_path": "No callable setter in this release; interface retained",
+      "engine_parse": "NOT RUN",
+      "runtime": "NOT RUN",
+      "note": "No false success or unsupported conversion button."
+    },
+    {
+      "field": "domicile_faith",
+      "source_status": "RESERVED_INTERFACE",
+      "implemented_path": "No callable setter in this release; interface retained",
+      "engine_parse": "NOT RUN",
+      "runtime": "NOT RUN",
+      "note": "No false success or unsupported conversion button."
+    },
+    {
+      "field": "domicile_buildings",
+      "source_status": "SCRIPT_PATH_PRESENT",
+      "implemented_path": "own minimum main building ensure; native readback; other buildings via native exact-object window",
+      "engine_parse": "NOT RUN",
+      "runtime": "NOT RUN",
+      "note": "Source readback branch is implemented; it has not been executed in CK3."
+    },
+    {
+      "field": "domicile_resources",
+      "source_status": "RESERVED_INTERFACE",
+      "implemented_path": "No callable setter in this release; interface retained",
+      "engine_parse": "NOT RUN",
+      "runtime": "NOT RUN",
+      "note": "No false success or unsupported conversion button."
+    },
+    {
+      "field": "native_default_domicile",
+      "source_status": "RESERVED_INTERFACE",
+      "implemented_path": "No callable setter in this release; interface retained",
+      "engine_parse": "NOT RUN",
+      "runtime": "NOT RUN",
+      "note": "No false success or unsupported conversion button."
+    },
+    {
+      "field": "tier",
+      "source_status": "RESERVED_INTERFACE",
+      "implemented_path": "No callable setter in this release; interface retained",
+      "engine_parse": "NOT RUN",
+      "runtime": "NOT RUN",
+      "note": "No false success or unsupported conversion button."
+    },
+    {
+      "field": "internal_key",
+      "source_status": "RESERVED_INTERFACE",
+      "implemented_path": "No callable setter in this release; interface retained",
+      "engine_parse": "NOT RUN",
+      "runtime": "NOT RUN",
+      "note": "No false success or unsupported conversion button."
+    },
+    {
+      "field": "domicile_type",
+      "source_status": "RESERVED_INTERFACE",
+      "implemented_path": "No callable setter in this release; interface retained",
+      "engine_parse": "NOT RUN",
+      "runtime": "NOT RUN",
+      "note": "No false success or unsupported conversion button."
+    },
+    {
+      "field": "special_identity",
+      "source_status": "RESERVED_INTERFACE",
+      "implemented_path": "No callable setter in this release; interface retained",
+      "engine_parse": "NOT RUN",
+      "runtime": "NOT RUN",
+      "note": "No false success or unsupported conversion button."
+    }
+  ],
+  "runtime": "NOT RUN",
+  "public_wrappers": [
+    "sltm_create_open_effect",
+    "sltm_create_commit_effect",
+    "sltm_edit_open_effect",
+    "sltm_edit_read_snapshot_effect",
+    "sltm_edit_read_capabilities_effect",
+    "sltm_edit_apply_effect",
+    "sltm_edit_transfer_effect",
+    "sltm_residence_ensure_effect",
+    "sltm_open_exact_domicile_effect"
+  ],
+  "edit_field_receipt": "actor.var:sltm_edit_result_<field>: 0 skipped, 1 native readback matched, 2 requested_unverified, 3 failed. These are outputs when executed, not current proof.",
+  "conversion": "reserved; cannot promise ID continuity",
+  "native_default_switch": "reserved; opening exact domicile changes only viewed object",
+  "workflow_revision": "IMPLEMENT002",
+  "incremental_runtime": "NOT RUN",
+  "known_runtime_gap": "Native text controller stale-page writes; numeric event scope inheritance unverified"
+}

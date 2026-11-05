@@ -1,0 +1,30 @@
+﻿# Player-scoped title sort caption; read-only and no state migration.
+sltm_lvm_title_sort_caption = {
+    type = character
+
+    text = {
+        trigger = {
+            has_variable = sltm_lvm_title_sort
+            trigger_if = { limit = { has_variable = sltm_lvm_title_sort } var:sltm_lvm_title_sort = flag:status }
+        }
+        localization_key = SLTM_LVM_SORT_TITLE_STATUS
+    }
+    text = {
+        trigger = {
+            has_variable = sltm_lvm_title_sort
+            trigger_if = { limit = { has_variable = sltm_lvm_title_sort } var:sltm_lvm_title_sort = flag:type }
+        }
+        localization_key = SLTM_LVM_SORT_TITLE_TYPE
+    }
+    text = {
+        trigger = {
+            has_variable = sltm_lvm_title_sort
+            trigger_if = { limit = { has_variable = sltm_lvm_title_sort } var:sltm_lvm_title_sort = flag:role }
+        }
+        localization_key = SLTM_LVM_SORT_TITLE_ROLE
+    }
+    text = {
+        fallback = yes
+        localization_key = SLTM_LVM_SORT_TITLE_TIER
+    }
+}

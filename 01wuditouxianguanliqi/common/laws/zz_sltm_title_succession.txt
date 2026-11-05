@@ -1,0 +1,121 @@
+﻿sltm_title_male_preference_law = {
+    law_group_type = succession_gender_laws
+    index = 201
+    can_title_have = { has_variable = sltm_managed_succession }
+    can_realm_have = { always = no }
+    should_start_with = { always = no }
+    should_show_for_title = { has_variable = sltm_managed_succession }
+	succession = {
+		gender_law = male_preference
+	}
+	flag = men_can_have_multiple_spouses
+	flag = men_can_have_consorts
+	flag = no_female_commanders
+}
+
+sltm_title_equal_law = {
+    law_group_type = succession_gender_laws
+    index = 202
+    can_title_have = { has_variable = sltm_managed_succession }
+    can_realm_have = { always = no }
+    should_start_with = { always = no }
+    should_show_for_title = { has_variable = sltm_managed_succession }
+	succession = {
+		gender_law = equal
+	}
+	flag = men_can_have_multiple_spouses
+	flag = men_can_have_consorts
+	flag = women_can_have_multiple_spouses
+	flag = women_can_have_consorts
+}
+
+sltm_title_female_preference_law = {
+    law_group_type = succession_gender_laws
+    index = 203
+    can_title_have = { has_variable = sltm_managed_succession }
+    can_realm_have = { always = no }
+    should_start_with = { always = no }
+    should_show_for_title = { has_variable = sltm_managed_succession }
+	succession = {
+		gender_law = female_preference
+	}
+	flag = women_can_have_multiple_spouses
+	flag = women_can_have_consorts
+}
+
+sltm_title_male_only_law = {
+    law_group_type = succession_gender_laws
+    index = 204
+    can_title_have = { has_variable = sltm_managed_succession }
+    can_realm_have = { always = no }
+    should_start_with = { always = no }
+    should_show_for_title = { has_variable = sltm_managed_succession }
+	succession = {
+		gender_law = male_only
+	}
+	flag = men_can_have_multiple_spouses
+	flag = men_can_have_consorts
+	flag = no_female_commanders
+}
+
+sltm_title_female_only_law = {
+    law_group_type = succession_gender_laws
+    index = 205
+    can_title_have = { has_variable = sltm_managed_succession }
+    can_realm_have = { always = no }
+    should_start_with = { always = no }
+    should_show_for_title = { has_variable = sltm_managed_succession }
+	succession = {
+		gender_law = female_only
+	}
+	flag = women_can_have_multiple_spouses
+	flag = women_can_have_consorts
+}
+
+sltm_title_single_heir_succession_law = {
+    law_group_type = succession_order_laws
+    index = 206
+    can_title_have = { has_variable = sltm_managed_succession }
+    can_realm_have = { always = no }
+    should_start_with = { always = no }
+    should_show_for_title = { has_variable = sltm_managed_succession }
+	succession = {
+		order_of_succession = inheritance
+		traversal_order = children
+		rank = oldest
+		title_division = single_heir
+	}
+	flag = advanced_succession_law
+}
+
+sltm_title_single_heir_succession_law_youngest = {
+    law_group_type = succession_order_laws
+    index = 207
+    can_title_have = { has_variable = sltm_managed_succession }
+    can_realm_have = { always = no }
+    should_start_with = { always = no }
+    should_show_for_title = { has_variable = sltm_managed_succession }
+	succession = {
+		order_of_succession = inheritance
+		traversal_order = children
+		rank = youngest
+		title_division = single_heir
+	}
+	flag = advanced_succession_law
+}
+
+sltm_title_single_heir_dynasty_house = {
+    law_group_type = succession_order_laws
+    index = 208
+    can_title_have = { has_variable = sltm_managed_succession }
+    can_realm_have = { always = no }
+    should_start_with = { always = no }
+    should_show_for_title = { has_variable = sltm_managed_succession }
+	succession = {
+		order_of_succession = inheritance
+		traversal_order = dynasty_house
+		rank = oldest
+		title_division = single_heir
+	}
+	flag = advanced_succession_law
+}

@@ -1,0 +1,222 @@
+﻿# 2026-07-18（V3.3-D）无地头衔管理器：把“无地头衔管理”互动的 8 个功能做成详情面板按钮。
+# 语境固定：actor = 玩家；target = 管理器当前选中头衔（var:sltm_lvm_selected_title）；recipient = 该头衔持有者。
+# 各动作分支照抄 common/character_interactions/sltm_title_management_interactions.txt 的 on_accept，去掉仅预览用的 custom_tooltip。
+# 互动文件保持不变（避免回归）。
+
+# 公共前置：从选中头衔建全与互动同名的 scope。调用前须确保 exists = var:sltm_lvm_selected_title。
+sltm_lvm_prepare_title_action_scopes_effect = {
+    save_scope_as = actor
+    var:sltm_lvm_selected_title = {
+        save_scope_as = target
+        save_scope_as = sltm_target_title
+    }
+    if = {
+        limit = { scope:target = { exists = holder } }
+        scope:target.holder = {
+            save_scope_as = recipient
+            save_scope_as = sltm_target_title_holder
+        }
+    }
+    if = {
+        limit = { exists = var:sltm_designee_title }
+        var:sltm_designee_title = { save_scope_as = sltm_designee_title }
+    }
+    # 目标伯爵领
+    if = {
+        limit = { scope:target = { tier = tier_barony } }
+        scope:target.de_jure_liege = { save_scope_as = sltm_target_capital_county }
+    }
+    else_if = {
+        limit = { scope:target = { tier = tier_county } }
+        scope:target = { save_scope_as = sltm_target_capital_county }
+    }
+    else = {
+        scope:target.title_capital_county = { save_scope_as = sltm_target_capital_county }
+    }
+    # 目标省份（搬庄园用）
+    if = {
+        limit = { scope:target = { tier = tier_barony } }
+        scope:target.title_province = { save_scope_as = sltm_target_relocation_province }
+    }
+    else_if = {
+        limit = { scope:target = { tier = tier_county } }
+        scope:target.title_province = { save_scope_as = sltm_target_relocation_province }
+    }
+    else = {
+        scope:target.title_capital_county.title_province = { save_scope_as = sltm_target_relocation_province }
+    }
+}
+
+# 任何非危险动作点击时解除剥夺/销毁的“确认”待触发状态。
+sltm_lvm_disarm_title_actions_effect = {
+    remove_variable = sltm_lvm_arm_revoke
+    remove_variable = sltm_lvm_arm_destroy
+}
+
+# 功能1：标记头衔
+sltm_lvm_title_mark_current_effect = {
+    sltm_lvm_disarm_title_actions_effect = yes
+    sltm_lvm_prepare_title_action_scopes_effect = yes
+    if = {
+        limit = { exists = scope:sltm_designee_title }
+        scope:actor = { remove_variable = sltm_designee_title }
+    }
+    scope:actor = { set_variable = { name = sltm_designee_title value = scope:target } }
+}
+
+# 功能2：创立无地头衔（以选中头衔为模板，须伯爵级以上；沿用命名事件）
+sltm_lvm_title_create_current_effect = {
+sltm_lvm_disarm_title_actions_effect = yes
+sltm_create_open_effect = yes
+}
+
+# 功能3：剥夺当前选中头衔（危险，两段式确认）
+sltm_lvm_title_revoke_current_effect = {
+    if = {
+        limit = { exists = var:sltm_lvm_arm_revoke }
+        remove_variable = sltm_lvm_arm_revoke
+        sltm_lvm_prepare_title_action_scopes_effect = yes
+        if = {
+            limit = {
+                exists = scope:sltm_target_title_holder
+                scope:sltm_target_title = { sltm_plain_title_action_trigger = yes }
+                scope:sltm_target_title_holder != scope:actor
+            }
+            create_title_and_vassal_change = {
+                type = revoked
+                save_scope_as = sltm_revoke_selected_title_change
+                add_claim_on_loss = no
+            }
+            scope:sltm_target_title = {
+                change_title_holder = {
+                    holder = scope:actor
+                    change = scope:sltm_revoke_selected_title_change
+                    take_baronies = no
+                    government_base = scope:actor
+                }
+            }
+            resolve_title_and_vassal_change = scope:sltm_revoke_selected_title_change
+        }
+    }
+    else = {
+        remove_variable = sltm_lvm_arm_destroy
+        set_variable = { name = sltm_lvm_arm_revoke value = flag:yes }
+    }
+}
+
+# 功能4：授予已标记头衔给当前选中头衔的持有者
+sltm_lvm_title_grant_marked_current_effect = {
+    sltm_lvm_disarm_title_actions_effect = yes
+    sltm_lvm_prepare_title_action_scopes_effect = yes
+    if = {
+        limit = {
+            scope:actor = { exists = var:sltm_designee_title var:sltm_designee_title = { sltm_plain_title_action_trigger = yes } }
+            exists = scope:recipient
+            scope:actor != scope:recipient
+        }
+        scope:actor.var:sltm_designee_title = { add_to_temporary_list = target_titles }
+        scope:recipient = {
+            create_title_and_vassal_change = {
+                type = granted
+                save_scope_as = sltm_grant_marked_title_change
+                add_claim_on_loss = no
+            }
+            every_in_list = {
+                list = target_titles
+                change_title_holder = {
+                    holder = scope:recipient
+                    change = scope:sltm_grant_marked_title_change
+                    take_baronies = no
+                }
+            }
+            resolve_title_and_vassal_change = scope:sltm_grant_marked_title_change
+        }
+    }
+}
+
+# 功能5：迁移已标记头衔法理首府到选中头衔首府
+sltm_lvm_title_move_marked_capital_current_effect = {
+    sltm_lvm_disarm_title_actions_effect = yes
+    sltm_lvm_prepare_title_action_scopes_effect = yes
+    if = {
+        limit = {
+            exists = scope:sltm_designee_title
+            exists = scope:target
+            scope:target = {
+                exists = holder
+                holder = scope:recipient
+                tier >= tier_county
+            }
+        }
+        scope:sltm_designee_title = { save_scope_as = current_de_jure_scope }
+        if = {
+            limit = { scope:target.tier = tier_county }
+            scope:target = { save_scope_as = current_capital_scope }
+        }
+        else = {
+            scope:target.title_capital_county = { save_scope_as = current_capital_scope }
+        }
+        sltm_set_capital_county_effect = yes
+    }
+}
+
+# 功能6：搬迁已标记头衔持有者的庄园到选中头衔首府
+sltm_lvm_title_move_marked_domicile_current_effect = {
+    sltm_lvm_disarm_title_actions_effect = yes
+    sltm_lvm_prepare_title_action_scopes_effect = yes
+    if = {
+        limit = {
+            exists = scope:sltm_designee_title
+            scope:sltm_designee_title = {
+                exists = holder
+                exists = title_domicile
+            }
+            exists = scope:sltm_target_relocation_province
+        }
+        scope:sltm_target_relocation_province = { save_scope_as = relocation_destination }
+        scope:sltm_designee_title.title_domicile = { move_domicile = scope:relocation_destination }
+    }
+}
+
+# 功能7：调整选中头衔的法理归属到已标记头衔下
+sltm_lvm_title_transfer_de_jure_current_effect = {
+    sltm_lvm_disarm_title_actions_effect = yes
+    sltm_lvm_prepare_title_action_scopes_effect = yes
+    if = {
+        limit = {
+            scope:actor = { exists = var:sltm_designee_title }
+            exists = scope:target
+            scope:target = {
+                exists = holder
+                holder = scope:recipient
+                NOT = { this = scope:actor.var:sltm_designee_title }
+                tier < scope:actor.var:sltm_designee_title.tier
+                NOT = { target_is_de_jure_liege_or_above = scope:actor.var:sltm_designee_title }
+            }
+        }
+        scope:target = { set_de_jure_liege_title = scope:actor.var:sltm_designee_title }
+    }
+}
+
+# 功能8：销毁当前选中头衔（危险，两段式确认）
+sltm_lvm_title_destroy_current_effect = {
+    if = {
+        limit = { exists = var:sltm_lvm_arm_destroy }
+        remove_variable = sltm_lvm_arm_destroy
+        sltm_lvm_prepare_title_action_scopes_effect = yes
+        if = {
+            limit = {
+                exists = scope:target
+                scope:target = {
+                    exists = holder
+                    holder = scope:recipient
+                }
+            }
+            sltm_guarded_destroy_effect = yes
+        }
+    }
+    else = {
+        remove_variable = sltm_lvm_arm_revoke
+        set_variable = { name = sltm_lvm_arm_destroy value = flag:yes }
+    }
+}

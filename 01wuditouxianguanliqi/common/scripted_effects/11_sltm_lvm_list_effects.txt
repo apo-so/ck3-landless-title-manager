@@ -1,0 +1,276 @@
+﻿# 无地头衔管理器：过滤、排序前的可见列表管线。
+# 这些 effect 均从玩家角色 scope 执行。
+
+# 旧名已退役；保留兼容入口，转调新的双页重置。
+sltm_lvm_reset_view_state_effect = {
+    sltm_lvm_reset_title_filters_effect = yes
+    sltm_lvm_reset_holder_filters_effect = yes
+}
+
+# 批次 2/9：默认 ensure 委托给 12 文件的完整实现（tf_*/hf_* 全部纳入）。
+sltm_lvm_ensure_view_state_effect = {
+    sltm_lvm_ensure_filter_state_effect = yes
+    sltm_lvm_ensure_title_multiselect_state_effect = yes
+    sltm_lvm_v36_ensure_state_effect = yes
+}
+
+# 批次 1：拆成 title / holder 两条互相独立的管线。
+# 头衔管线只读 title-scope，不引用任何人物筛选结果。
+sltm_lvm_apply_title_filters_effect = {
+    clear_variable_list = sltm_lvm_filtered_titles
+    set_variable = { name = sltm_lvm_filtered_title_count value = 0 }
+    save_temporary_scope_as = sltm_lvm_filter_player
+
+    every_in_list = {
+        variable = sltm_lvm_all_titles
+        limit = { sltm_lvm_title_matches_all_multiselect_filters_trigger = yes }
+        save_temporary_scope_as = sltm_lvm_matching_title
+        scope:sltm_lvm_filter_player = {
+            add_to_variable_list = {
+                name = sltm_lvm_filtered_titles
+                target = scope:sltm_lvm_matching_title
+            }
+            change_variable = { name = sltm_lvm_filtered_title_count add = 1 }
+        }
+    }
+}
+
+# 人物管线完全独立：直接遍历 sltm_lvm_all_holders，不依赖过滤后的头衔列表。
+# 批次 1 阶段 holder 触发器仅含 relation（默认 all），因此结果恒等于 sltm_lvm_holder_count。
+sltm_lvm_apply_holder_filters_effect = {
+    clear_variable_list = sltm_lvm_filtered_holders
+    set_variable = { name = sltm_lvm_filtered_holder_count value = 0 }
+    save_temporary_scope_as = sltm_lvm_filter_player
+
+    every_in_list = {
+        variable = sltm_lvm_all_holders
+        save_temporary_scope_as = sltm_lvm_filter_candidate
+        limit = { sltm_lvm_holder_matches_all_filters_trigger = yes }
+        scope:sltm_lvm_filter_player = {
+            add_to_variable_list = {
+                name = sltm_lvm_filtered_holders
+                target = scope:sltm_lvm_filter_candidate
+            }
+            change_variable = { name = sltm_lvm_filtered_holder_count add = 1 }
+        }
+    }
+}
+
+sltm_lvm_build_title_visible_list_effect = {
+    clear_variable_list = sltm_lvm_visible_titles
+    save_temporary_scope_as = sltm_lvm_sort_player
+
+    ordered_in_list = {
+        variable = sltm_lvm_filtered_titles
+        order_by = sltm_lvm_title_sort_value
+        max = 9999
+        check_range_bounds = no
+        save_temporary_scope_as = sltm_lvm_sorted_title
+        scope:sltm_lvm_sort_player = {
+            add_to_variable_list = {
+                name = sltm_lvm_visible_titles
+                target = scope:sltm_lvm_sorted_title
+            }
+        }
+    }
+}
+
+sltm_lvm_build_holder_visible_list_effect = {
+    clear_variable_list = sltm_lvm_visible_holders
+    save_temporary_scope_as = sltm_lvm_sort_player
+
+    ordered_in_list = {
+        variable = sltm_lvm_filtered_holders
+        order_by = sltm_lvm_holder_sort_value
+        max = 9999
+        check_range_bounds = no
+        save_temporary_scope_as = sltm_lvm_sorted_holder
+        scope:sltm_lvm_sort_player = {
+            add_to_variable_list = {
+                name = sltm_lvm_visible_holders
+                target = scope:sltm_lvm_sorted_holder
+            }
+        }
+    }
+}
+
+# 选中人物详情的无地头衔子列表。
+# 该列表独立于当前筛选结果，因此详情能说明该人物完整的管理负担，
+# 而不是只显示当前筛选后剩下的项目。
+sltm_lvm_rebuild_selected_holder_titles_effect = {
+    clear_variable_list = sltm_lvm_selected_holder_titles
+    set_variable = { name = sltm_lvm_selected_holder_title_count value = 0 }
+
+    if = {
+        limit = { has_variable = sltm_lvm_selected_character }
+        save_temporary_scope_as = sltm_lvm_selected_holder_player
+
+        var:sltm_lvm_selected_character = {
+            every_held_title = {
+                limit = { sltm_lvm_is_managed_title_trigger = yes }
+                save_temporary_scope_as = sltm_lvm_selected_holder_title
+
+                scope:sltm_lvm_selected_holder_player = {
+                    add_to_variable_list = {
+                        name = sltm_lvm_selected_holder_titles
+                        target = scope:sltm_lvm_selected_holder_title
+                    }
+                    change_variable = {
+                        name = sltm_lvm_selected_holder_title_count
+                        add = 1
+                    }
+                }
+            }
+        }
+    }
+}
+
+# 2026-07-18（V3.3-F）头衔详情：选中头衔持有者的“全部头衔”列表（不限无地，供持有者信息区展示）。
+sltm_lvm_rebuild_selected_title_holder_all_titles_effect = {
+    clear_variable_list = sltm_lvm_sel_title_holder_all_titles
+    set_variable = { name = sltm_lvm_sel_title_holder_all_count value = 0 }
+    if = {
+        limit = { has_variable = sltm_lvm_selected_title }
+        if = {
+            limit = { var:sltm_lvm_selected_title = { exists = holder } }
+            save_temporary_scope_as = sltm_lvm_all_titles_player
+            var:sltm_lvm_selected_title.holder = {
+                every_held_title = {
+                    save_temporary_scope_as = sltm_lvm_all_titles_iter
+                    scope:sltm_lvm_all_titles_player = {
+                        add_to_variable_list = {
+                            name = sltm_lvm_sel_title_holder_all_titles
+                            target = scope:sltm_lvm_all_titles_iter
+                        }
+                        change_variable = {
+                            name = sltm_lvm_sel_title_holder_all_count
+                            add = 1
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+sltm_lvm_validate_title_selection_effect = {
+    # UI005: resolve the player-owned selection before entering row scopes.
+    if = {
+        limit = { has_variable = sltm_lvm_selected_title }
+        var:sltm_lvm_selected_title = { save_temporary_scope_as = sltm_lvm_checked_title }
+        if = {
+            limit = {
+                NOT = {
+                    any_in_list = {
+                        variable = sltm_lvm_visible_titles
+                        this = scope:sltm_lvm_checked_title
+                    }
+                }
+            }
+            remove_variable = sltm_lvm_selected_title
+            clear_variable_list = sltm_lvm_selected_holder_titles
+            set_variable = { name = sltm_lvm_selected_holder_title_count value = 0 }
+        }
+    }
+}
+
+sltm_lvm_validate_holder_selection_effect = {
+    # UI005: resolve the player-owned selection before entering row scopes.
+    if = {
+        limit = { has_variable = sltm_lvm_selected_character }
+        var:sltm_lvm_selected_character = { save_temporary_scope_as = sltm_lvm_checked_holder }
+        if = {
+            limit = {
+                NOT = {
+                    any_in_list = {
+                        variable = sltm_lvm_visible_holders
+                        this = scope:sltm_lvm_checked_holder
+                    }
+                }
+            }
+            remove_variable = sltm_lvm_selected_character
+            clear_variable_list = sltm_lvm_selected_holder_titles
+            set_variable = { name = sltm_lvm_selected_holder_title_count value = 0 }
+        }
+    }
+}
+
+# R10-35A1：国库页复用 sltm_lvm_visible_holders，因此其选择有效性也必须跟随同一列表。
+sltm_lvm_validate_treasury_bridge_selection_effect = {
+    # UI005: resolve the player-owned selection before entering row scopes.
+    if = {
+        limit = { has_variable = sltm_lvm_treasury_selected_character }
+        var:sltm_lvm_treasury_selected_character = { save_temporary_scope_as = sltm_lvm_checked_treasury_holder }
+        if = {
+            limit = {
+                NOT = {
+                    any_in_list = {
+                        variable = sltm_lvm_visible_holders
+                        this = scope:sltm_lvm_checked_treasury_holder
+                    }
+                }
+            }
+            remove_variable = sltm_lvm_treasury_selected_character
+        }
+    }
+}
+
+# 批次 1：页面级重算，每条管线只重算自己，互不污染。
+sltm_lvm_recompute_title_view_effect = {
+    sltm_lvm_apply_title_filters_effect = yes
+    sltm_lvm_build_title_visible_list_effect = yes
+    sltm_lvm_validate_title_selection_effect = yes
+}
+
+sltm_lvm_recompute_holder_view_effect = {
+    sltm_lvm_apply_holder_filters_effect = yes
+    sltm_lvm_build_holder_visible_list_effect = yes
+    sltm_lvm_validate_holder_selection_effect = yes
+    sltm_lvm_validate_treasury_bridge_selection_effect = yes
+}
+
+sltm_lvm_recompute_all_views_effect = {
+    sltm_lvm_recompute_title_view_effect = yes
+    sltm_lvm_recompute_holder_view_effect = yes
+    # R10-35A0-BRIDGE：第三页暂时直接消费已经实机工作的 holder visible list。
+    # 独立 treasury source 管线保留但不在打开/刷新生命周期中执行，避免继续把问题混在一起。
+}
+
+# 向后兼容别名：现有所有筛选按钮仍调用本 effect，内部转两条管线。
+sltm_lvm_recompute_view_effect = {
+    sltm_lvm_recompute_all_views_effect = yes
+}
+
+sltm_lvm_open_manager_effect = {
+    # Explicitly opening the manager supersedes an older native draft/event.
+    if = { limit = { OR = { has_variable = sltm_create_route_clw has_variable = sltm_ui_origin } }
+        remove_variable = sltm_window_from_manager
+        sltm_workflow_new_session_effect = yes
+        sltm_create_clear_draft_effect = yes
+        sltm_edit_clear_draft_effect = yes
+    }
+    # CMM UI004: skip internal-state description generation; execute the unchanged initializer normally.
+    hidden_effect_new_object = {
+    remove_variable = sltm_lvm_selected_title
+    remove_variable = sltm_lvm_selected_character
+    remove_variable = sltm_lvm_treasury_selected_character
+    clear_variable_list = sltm_lvm_selected_holder_titles
+    set_variable = { name = sltm_lvm_selected_holder_title_count value = 0 }
+    # 批次 9：open 先迁移旧变量（仅一次），再 ensure 默认值（已存在的条件保留）。
+    sltm_lvm_migrate_v26_effect = yes
+    sltm_lvm_ensure_view_state_effect = yes
+    sltm_lvm_rebuild_cache_effect = yes
+    sltm_lvm_recompute_view_effect = yes
+    set_variable = { name = sltm_lvm_open value = flag:yes }
+    }
+}
+
+sltm_lvm_refresh_manager_effect = {
+    # 批次 2：刷新保留筛选条件与仍有效的选中对象；失效项由 per-page validate 清除。
+    sltm_lvm_ensure_title_multiselect_state_effect = yes
+    sltm_lvm_rebuild_cache_effect = yes
+    sltm_lvm_recompute_view_effect = yes
+    sltm_lvm_rebuild_selected_holder_titles_effect = yes
+    sltm_lvm_rebuild_selected_title_holder_all_titles_effect = yes
+    set_variable = { name = sltm_lvm_open value = flag:yes }
+}

@@ -1,0 +1,984 @@
+﻿@sltm_lvm_filter_window_width = 600
+@sltm_lvm_filter_window_height = 700
+
+############################################################
+# 无地头衔管理器：V2.6 双对象筛选子窗
+#
+# 设计原则（沿用 V2.2 可靠模式）：
+# 普通 scripted GUI 无法获得原版 C++ DataModel 驱动的 dropDown 弹层，
+# 因此这里使用原版 button_radio_label 单选行 + 可折叠分组（button_expand）。
+# 每个可见选项都是真正的按钮，不依赖越出 scrollbox 的伪浮层。
+#
+# 重要偏差（手册 §10.4/10.5 的"根层选项宿主下拉"在缺乏实跑验证时风险高，
+# 故不实现该下拉宿主，统一使用单选行 + 可折叠分组这种手册认可的可靠回退）。
+#
+# 两个互相独立的筛选窗，互不干扰：
+#   sltm_lvm_title_filter_panel  —— 仅头衔属性（类型/等级/状态/角色）
+#   sltm_lvm_holder_filter_panel —— 仅人物（封臣）属性 + 三态 token
+############################################################
+
+types MytmLvmFilterTypes {
+
+    # ===================== 头衔筛选窗 =====================
+    type sltm_lvm_title_filter_panel = window {
+        name = "sltm_lvm_title_filter_window"
+        datacontext = "[GetPlayer]"
+        datacontext = "[GetVariableSystem]"
+
+        visible_at_creation = no
+        visible = "[GetVariableSystem.Exists('sltm_lvm_title_filters_open')]"
+
+        parentanchor = center
+        widgetanchor = center
+        position = { 0 0 }
+        size = { @sltm_lvm_filter_window_width @sltm_lvm_filter_window_height }
+        focuspolicy = click
+        filter_mouse = all
+        allow_outside = yes
+
+        using = Window_Movable
+        using = Window_Background_Subwindow
+
+        state = {
+            name = _show
+            using = Animation_FadeIn_Quick
+            using = Sound_WindowShow_Standard
+            on_start = "[PdxGuiWidget.StackTop]"
+        }
+        state = {
+            name = _hide
+            using = Animation_FadeOut_Quick
+            using = Sound_WindowHide_Standard
+        }
+
+        vbox = {
+            margin = { 4 4 }
+            spacing = 8
+            size = { 100% 100% }
+
+            header_pattern = {
+                layoutpolicy_horizontal = expanding
+                blockoverride "header_text" { text = SLTM_LVM_TITLE_FILTERS }
+                blockoverride "button_close" {
+                    onclick = "[GetVariableSystem.Clear('sltm_lvm_title_filters_open')]"
+                }
+            }
+
+            # 活动条件数 + 结果数
+            hbox = {
+                layoutpolicy_horizontal = expanding
+                margin_left = 8
+                margin_right = 8
+                text_single = { text = SLTM_LVM_FILTER_ACTIVE_COUNT using = Font_Size_Small default_format = "#low" align = left|nobaseline autoresize = yes }
+                text_single = {
+                    size = { 40 100% }
+                    text = "[GetPlayer.MakeScope.Var('sltm_lvm_title_active_filter_count').GetValue|0]"
+                    using = Font_Size_Small
+                    default_format = "#high"
+                    align = center
+                }
+                expand = {}
+                text_single = { text = SLTM_LVM_RESULT_COUNT using = Font_Size_Small default_format = "#low" align = left|nobaseline autoresize = yes }
+                text_single = {
+                    size = { 50 100% }
+                    text = "[GetPlayer.MakeScope.Var('sltm_lvm_filtered_title_count').GetValue|0]"
+                    using = Font_Size_Small
+                    default_format = "#high"
+                    align = center
+                }
+                text_single = { raw_text = "/" using = Font_Size_Small }
+                text_single = {
+                    size = { 50 100% }
+                    text = "[GetPlayer.MakeScope.Var('sltm_lvm_title_count').GetValue|0]"
+                    using = Font_Size_Small
+                    align = center
+                }
+            }
+
+            # 预设槽（头衔页）
+            hbox = {
+                layoutpolicy_horizontal = expanding
+                margin_left = 6
+                margin_right = 6
+                spacing = 4
+                text_single = { text = SLTM_LVM_FILTER_PRESETS using = Font_Size_Small default_format = "#low" align = left|nobaseline autoresize = yes }
+                expand = {}
+                # 2026-07-17（V3.2）预设行改为“选槽下拉 + 保存/加载”。以下旧六按钮（槽1/2/3 各保存+读取）注释停用、保留备查：
+                # button_standard_small = { size = { 56 26 } text = SLTM_LVM_FILTER_PRESET_SLOT_1 onclick = "[GetScriptedGui('sltm_lvm_title_preset_1_save_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" tooltip = SLTM_LVM_FILTER_PRESET_SAVE_TT }
+                # button_standard_small = { size = { 56 26 } text = SLTM_LVM_FILTER_PRESET_SLOT_1 onclick = "[GetScriptedGui('sltm_lvm_title_preset_1_load_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" enabled = "[GetScriptedGui('sltm_lvm_title_preset_1_load_gui').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" tooltip = SLTM_LVM_FILTER_PRESET_LOAD_TT }
+                # button_standard_small = { size = { 56 26 } text = SLTM_LVM_FILTER_PRESET_SLOT_2 onclick = "[GetScriptedGui('sltm_lvm_title_preset_2_save_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" tooltip = SLTM_LVM_FILTER_PRESET_SAVE_TT }
+                # button_standard_small = { size = { 56 26 } text = SLTM_LVM_FILTER_PRESET_SLOT_2 onclick = "[GetScriptedGui('sltm_lvm_title_preset_2_load_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" enabled = "[GetScriptedGui('sltm_lvm_title_preset_2_load_gui').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" tooltip = SLTM_LVM_FILTER_PRESET_LOAD_TT }
+                # button_standard_small = { size = { 56 26 } text = SLTM_LVM_FILTER_PRESET_SLOT_3 onclick = "[GetScriptedGui('sltm_lvm_title_preset_3_save_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" tooltip = SLTM_LVM_FILTER_PRESET_SAVE_TT }
+                # button_standard_small = { size = { 56 26 } text = SLTM_LVM_FILTER_PRESET_SLOT_3 onclick = "[GetScriptedGui('sltm_lvm_title_preset_3_load_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" enabled = "[GetScriptedGui('sltm_lvm_title_preset_3_load_gui').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" tooltip = SLTM_LVM_FILTER_PRESET_LOAD_TT }
+                # 当前槽下拉：点开选槽弹层
+                button_standard_small = {
+                    size = { 88 26 }
+                    text = SLTM_LVM_PRESET_SLOT_CURRENT
+                    onclick = "[GetVariableSystem.Toggle('sltm_lvm_title_preset_menu_open')]"
+                    tooltip = SLTM_LVM_PRESET_SLOT_MENU_TT
+                }
+                # 保存到当前槽
+                button_standard_small = {
+                    size = { 56 26 }
+                    text = SLTM_LVM_PRESET_SAVE_BTN
+                    onclick = "[GetScriptedGui('sltm_lvm_title_preset_save_current_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+                    tooltip = SLTM_LVM_FILTER_PRESET_SAVE_TT
+                }
+                # 读取当前槽（仅当该槽已保存时可用）
+                button_standard_small = {
+                    size = { 56 26 }
+                    text = SLTM_LVM_PRESET_LOAD_BTN
+                    onclick = "[GetScriptedGui('sltm_lvm_title_preset_load_current_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+                    enabled = "[GetScriptedGui('sltm_lvm_title_preset_load_current_gui').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+                    tooltip = SLTM_LVM_FILTER_PRESET_LOAD_TT
+                }
+            }
+
+            divider = { layoutpolicy_horizontal = expanding }
+
+            scrollbox = {
+                layoutpolicy_horizontal = expanding
+                layoutpolicy_vertical = expanding
+                scrollbarpolicy_horizontal = always_off
+
+                blockoverride "scrollbox_content" {
+                    vbox = {
+                        layoutpolicy_horizontal = expanding
+                        margin_left = 10
+                        margin_right = 10
+                        spacing = 5
+
+                        # ---- 类型组 ----
+                        hbox = {
+                            layoutpolicy_horizontal = expanding
+                            margin_top = 4
+                            button_expand = {
+                                frame = "[Select_int32(GetVariableSystem.Exists('sltm_lvm_title_filter_group_type_open'), '(int32)2', '(int32)1')]"
+                                onclick = "[GetVariableSystem.Toggle('sltm_lvm_title_filter_group_type_open')]"
+                                tooltip = EXPAND_FILTER
+                                using = tooltip_ws
+                            }
+                            text_label_center = {
+                                layoutpolicy_horizontal = expanding
+                                margin_right = 36
+                                text = SLTM_LVM_FILTER_TYPE_GROUP
+                                align = center
+                            }
+                        }
+                        vbox = {
+                            visible = "[GetVariableSystem.Exists('sltm_lvm_title_filter_group_type_open')]"
+                            layoutpolicy_horizontal = expanding
+                            spacing = 2
+                            margin_left = 12
+                            margin_right = 6
+                            button_checkbox_label = {
+                                layoutpolicy_horizontal = expanding
+                                onclick = "[GetScriptedGui('sltm_lvm_tf_ms_type_all_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+                        # 2026-07-17 停用（P0复选框修复）：checkbutton 状态须绑定 checked 而非 frame，原行注释保留备查
+                        # blockoverride "checkbox" { frame = "[BoolTo1And2(GetScriptedGui('sltm_lvm_tf_ms_type_all_checked_gui').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End))]" }
+                        blockoverride "checkbox" { checked = "[GetScriptedGui('sltm_lvm_tf_ms_type_all_checked_gui').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" }
+                                blockoverride "text" { text = SLTM_LVM_FILTER_TYPE_ALL max_width = 360 }
+                            }
+                            button_checkbox_label = {
+                                layoutpolicy_horizontal = expanding
+                                onclick = "[GetScriptedGui('sltm_lvm_tf_ms_type_junfu_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+                        # 2026-07-17 停用（P0复选框修复）：checkbutton 状态须绑定 checked 而非 frame，原行注释保留备查
+                        # blockoverride "checkbox" { frame = "[BoolTo1And2(GetScriptedGui('sltm_lvm_tf_ms_type_junfu_checked_gui').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End))]" }
+                        blockoverride "checkbox" { checked = "[GetScriptedGui('sltm_lvm_tf_ms_type_junfu_checked_gui').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" }
+                                blockoverride "text" { text = SLTM_LVM_FILTER_TYPE_JUNFU max_width = 360 tooltip = SLTM_LVM_FILTER_TYPE_JUNFU_TT }
+                            }
+                            # 2026-07-17 新增（V3.1）：朝臣类型 = 天朝制九个固定无地帝国大臣头衔（e_minister_*）。
+                            button_checkbox_label = {
+                                layoutpolicy_horizontal = expanding
+                                onclick = "[GetScriptedGui('sltm_lvm_tf_ms_type_chaochen_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+                        blockoverride "checkbox" { checked = "[GetScriptedGui('sltm_lvm_tf_ms_type_chaochen_checked_gui').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" }
+                                blockoverride "text" { text = SLTM_LVM_FILTER_TYPE_CHAOCHEN max_width = 360 tooltip = SLTM_LVM_FILTER_TYPE_CHAOCHEN_TT }
+                            }
+                            button_checkbox_label = {
+                                layoutpolicy_horizontal = expanding
+                                onclick = "[GetScriptedGui('sltm_lvm_tf_ms_type_noble_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+                        # 2026-07-17 停用（P0复选框修复）：checkbutton 状态须绑定 checked 而非 frame，原行注释保留备查
+                        # blockoverride "checkbox" { frame = "[BoolTo1And2(GetScriptedGui('sltm_lvm_tf_ms_type_noble_checked_gui').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End))]" }
+                        blockoverride "checkbox" { checked = "[GetScriptedGui('sltm_lvm_tf_ms_type_noble_checked_gui').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" }
+                                blockoverride "text" { text = SLTM_LVM_FILTER_TYPE_NOBLE max_width = 360 tooltip = SLTM_LVM_FILTER_TYPE_NOBLE_TT }
+                            }
+                            button_checkbox_label = {
+                                layoutpolicy_horizontal = expanding
+                                onclick = "[GetScriptedGui('sltm_lvm_tf_ms_type_holy_order_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+                        # 2026-07-17 停用（P0复选框修复）：checkbutton 状态须绑定 checked 而非 frame，原行注释保留备查
+                        # blockoverride "checkbox" { frame = "[BoolTo1And2(GetScriptedGui('sltm_lvm_tf_ms_type_holy_order_checked_gui').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End))]" }
+                        blockoverride "checkbox" { checked = "[GetScriptedGui('sltm_lvm_tf_ms_type_holy_order_checked_gui').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" }
+                                blockoverride "text" { text = SLTM_LVM_FILTER_TYPE_HOLY_ORDER max_width = 360 }
+                            }
+                            button_checkbox_label = {
+                                layoutpolicy_horizontal = expanding
+                                onclick = "[GetScriptedGui('sltm_lvm_tf_ms_type_mercenary_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+                        # 2026-07-17 停用（P0复选框修复）：checkbutton 状态须绑定 checked 而非 frame，原行注释保留备查
+                        # blockoverride "checkbox" { frame = "[BoolTo1And2(GetScriptedGui('sltm_lvm_tf_ms_type_mercenary_checked_gui').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End))]" }
+                        blockoverride "checkbox" { checked = "[GetScriptedGui('sltm_lvm_tf_ms_type_mercenary_checked_gui').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" }
+                                blockoverride "text" { text = SLTM_LVM_FILTER_TYPE_MERCENARY max_width = 360 }
+                            }
+                            button_checkbox_label = {
+                                layoutpolicy_horizontal = expanding
+                                onclick = "[GetScriptedGui('sltm_lvm_tf_ms_type_religious_head_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+                        # 2026-07-17 停用（P0复选框修复）：checkbutton 状态须绑定 checked 而非 frame，原行注释保留备查
+                        # blockoverride "checkbox" { frame = "[BoolTo1And2(GetScriptedGui('sltm_lvm_tf_ms_type_religious_head_checked_gui').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End))]" }
+                        blockoverride "checkbox" { checked = "[GetScriptedGui('sltm_lvm_tf_ms_type_religious_head_checked_gui').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" }
+                                blockoverride "text" { text = SLTM_LVM_FILTER_TYPE_RELIGIOUS_HEAD max_width = 360 }
+                            }
+                            button_checkbox_label = {
+                                layoutpolicy_horizontal = expanding
+                                onclick = "[GetScriptedGui('sltm_lvm_tf_ms_type_other_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+                        # 2026-07-17 停用（P0复选框修复）：checkbutton 状态须绑定 checked 而非 frame，原行注释保留备查
+                        # blockoverride "checkbox" { frame = "[BoolTo1And2(GetScriptedGui('sltm_lvm_tf_ms_type_other_checked_gui').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End))]" }
+                        blockoverride "checkbox" { checked = "[GetScriptedGui('sltm_lvm_tf_ms_type_other_checked_gui').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" }
+                                blockoverride "text" { text = SLTM_LVM_FILTER_TYPE_OTHER max_width = 360 tooltip = SLTM_LVM_FILTER_TYPE_OTHER_TT }
+                            }
+                        }
+
+                        widget = { size = { 100% 5 } }
+                        divider = { layoutpolicy_horizontal = expanding }
+
+                        # ---- 创立状态组 ----
+                        hbox = {
+                            layoutpolicy_horizontal = expanding
+                            margin_top = 4
+                            button_expand = {
+                                frame = "[Select_int32(GetVariableSystem.Exists('sltm_lvm_title_filter_group_creation_open'), '(int32)2', '(int32)1')]"
+                                onclick = "[GetVariableSystem.Toggle('sltm_lvm_title_filter_group_creation_open')]"
+                                tooltip = EXPAND_FILTER
+                                using = tooltip_ws
+                            }
+                            text_label_center = {
+                                layoutpolicy_horizontal = expanding
+                                margin_right = 36
+                                text = SLTM_LVM_FILTER_CREATION_GROUP
+                                align = center
+                            }
+                        }
+                        vbox = {
+                            visible = "[GetVariableSystem.Exists('sltm_lvm_title_filter_group_creation_open')]"
+                            layoutpolicy_horizontal = expanding
+                            spacing = 2
+                            margin_left = 12
+                            margin_right = 6
+                            button_checkbox_label = {
+                                layoutpolicy_horizontal = expanding
+                                onclick = "[GetScriptedGui('sltm_lvm_tf_ms_creation_all_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+                                blockoverride "checkbox" { checked = "[GetScriptedGui('sltm_lvm_tf_ms_creation_all_checked_gui').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" }
+                                blockoverride "text" { text = SLTM_LVM_FILTER_CREATION_ALL max_width = 360 }
+                            }
+                            button_checkbox_label = {
+                                layoutpolicy_horizontal = expanding
+                                onclick = "[GetScriptedGui('sltm_lvm_tf_ms_creation_created_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+                                blockoverride "checkbox" { checked = "[GetScriptedGui('sltm_lvm_tf_ms_creation_created_checked_gui').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" }
+                                blockoverride "text" { text = SLTM_LVM_FILTER_CREATION_CREATED max_width = 360 tooltip = SLTM_LVM_FILTER_CREATION_CREATED_TT }
+                            }
+                            button_checkbox_label = {
+                                layoutpolicy_horizontal = expanding
+                                onclick = "[GetScriptedGui('sltm_lvm_tf_ms_creation_uncreated_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+                                blockoverride "checkbox" { checked = "[GetScriptedGui('sltm_lvm_tf_ms_creation_uncreated_checked_gui').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" }
+                                blockoverride "text" { text = SLTM_LVM_FILTER_CREATION_UNCREATED max_width = 360 tooltip = SLTM_LVM_FILTER_CREATION_UNCREATED_TT }
+                            }
+                        }
+
+                        widget = { size = { 100% 5 } }
+                        divider = { layoutpolicy_horizontal = expanding }
+
+                        # ---- 等级组 ----
+                        hbox = {
+                            layoutpolicy_horizontal = expanding
+                            margin_top = 4
+                            button_expand = {
+                                frame = "[Select_int32(GetVariableSystem.Exists('sltm_lvm_title_filter_group_tier_open'), '(int32)2', '(int32)1')]"
+                                onclick = "[GetVariableSystem.Toggle('sltm_lvm_title_filter_group_tier_open')]"
+                                tooltip = EXPAND_FILTER
+                                using = tooltip_ws
+                            }
+                            text_label_center = {
+                                layoutpolicy_horizontal = expanding
+                                margin_right = 36
+                                text = SLTM_LVM_FILTER_TIER_GROUP
+                                align = center
+                            }
+                        }
+                        vbox = {
+                            visible = "[GetVariableSystem.Exists('sltm_lvm_title_filter_group_tier_open')]"
+                            layoutpolicy_horizontal = expanding
+                            spacing = 2
+                            margin_left = 12
+                            margin_right = 6
+                            button_checkbox_label = {
+                                layoutpolicy_horizontal = expanding
+                                onclick = "[GetScriptedGui('sltm_lvm_tf_ms_tier_all_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+                        # 2026-07-17 停用（P0复选框修复）：checkbutton 状态须绑定 checked 而非 frame，原行注释保留备查
+                        # blockoverride "checkbox" { frame = "[BoolTo1And2(GetScriptedGui('sltm_lvm_tf_ms_tier_all_checked_gui').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End))]" }
+                        blockoverride "checkbox" { checked = "[GetScriptedGui('sltm_lvm_tf_ms_tier_all_checked_gui').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" }
+                                blockoverride "text" { text = SLTM_LVM_TIER_TAB_ALL max_width = 360 }
+                            }
+                            button_checkbox_label = {
+                                layoutpolicy_horizontal = expanding
+                                onclick = "[GetScriptedGui('sltm_lvm_tf_ms_tier_barony_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+                        # 2026-07-17 停用（P0复选框修复）：checkbutton 状态须绑定 checked 而非 frame，原行注释保留备查
+                        # blockoverride "checkbox" { frame = "[BoolTo1And2(GetScriptedGui('sltm_lvm_tf_ms_tier_barony_checked_gui').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End))]" }
+                        blockoverride "checkbox" { checked = "[GetScriptedGui('sltm_lvm_tf_ms_tier_barony_checked_gui').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" }
+                                blockoverride "text" { text = SLTM_LVM_TIER_TAB_BARONY max_width = 360 }
+                            }
+                            button_checkbox_label = {
+                                layoutpolicy_horizontal = expanding
+                                onclick = "[GetScriptedGui('sltm_lvm_tf_ms_tier_county_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+                        # 2026-07-17 停用（P0复选框修复）：checkbutton 状态须绑定 checked 而非 frame，原行注释保留备查
+                        # blockoverride "checkbox" { frame = "[BoolTo1And2(GetScriptedGui('sltm_lvm_tf_ms_tier_county_checked_gui').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End))]" }
+                        blockoverride "checkbox" { checked = "[GetScriptedGui('sltm_lvm_tf_ms_tier_county_checked_gui').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" }
+                                blockoverride "text" { text = SLTM_LVM_TIER_TAB_COUNTY max_width = 360 }
+                            }
+                            button_checkbox_label = {
+                                layoutpolicy_horizontal = expanding
+                                onclick = "[GetScriptedGui('sltm_lvm_tf_ms_tier_duchy_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+                        # 2026-07-17 停用（P0复选框修复）：checkbutton 状态须绑定 checked 而非 frame，原行注释保留备查
+                        # blockoverride "checkbox" { frame = "[BoolTo1And2(GetScriptedGui('sltm_lvm_tf_ms_tier_duchy_checked_gui').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End))]" }
+                        blockoverride "checkbox" { checked = "[GetScriptedGui('sltm_lvm_tf_ms_tier_duchy_checked_gui').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" }
+                                blockoverride "text" { text = SLTM_LVM_TIER_TAB_DUCHY max_width = 360 }
+                            }
+                            button_checkbox_label = {
+                                layoutpolicy_horizontal = expanding
+                                onclick = "[GetScriptedGui('sltm_lvm_tf_ms_tier_kingdom_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+                        # 2026-07-17 停用（P0复选框修复）：checkbutton 状态须绑定 checked 而非 frame，原行注释保留备查
+                        # blockoverride "checkbox" { frame = "[BoolTo1And2(GetScriptedGui('sltm_lvm_tf_ms_tier_kingdom_checked_gui').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End))]" }
+                        blockoverride "checkbox" { checked = "[GetScriptedGui('sltm_lvm_tf_ms_tier_kingdom_checked_gui').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" }
+                                blockoverride "text" { text = SLTM_LVM_TIER_TAB_KINGDOM max_width = 360 }
+                            }
+                            button_checkbox_label = {
+                                layoutpolicy_horizontal = expanding
+                                onclick = "[GetScriptedGui('sltm_lvm_tf_ms_tier_empire_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+                        # 2026-07-17 停用（P0复选框修复）：checkbutton 状态须绑定 checked 而非 frame，原行注释保留备查
+                        # blockoverride "checkbox" { frame = "[BoolTo1And2(GetScriptedGui('sltm_lvm_tf_ms_tier_empire_checked_gui').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End))]" }
+                        blockoverride "checkbox" { checked = "[GetScriptedGui('sltm_lvm_tf_ms_tier_empire_checked_gui').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" }
+                                blockoverride "text" { text = SLTM_LVM_TIER_TAB_EMPIRE max_width = 360 }
+                            }
+                            button_checkbox_label = {
+                                layoutpolicy_horizontal = expanding
+                                onclick = "[GetScriptedGui('sltm_lvm_tf_ms_tier_hegemony_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+                        blockoverride "checkbox" { checked = "[GetScriptedGui('sltm_lvm_tf_ms_tier_hegemony_checked_gui').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" }
+                                blockoverride "text" { text = SLTM_LVM_TIER_TAB_HEGEMONY max_width = 360 }
+                            }
+                        }
+
+                        widget = { size = { 100% 5 } }
+                        divider = { layoutpolicy_horizontal = expanding }
+
+                        # ---- 状态组（与角色可组合）----
+                        hbox = {
+                            layoutpolicy_horizontal = expanding
+                            margin_top = 4
+                            button_expand = {
+                                frame = "[Select_int32(GetVariableSystem.Exists('sltm_lvm_title_filter_group_status_open'), '(int32)2', '(int32)1')]"
+                                onclick = "[GetVariableSystem.Toggle('sltm_lvm_title_filter_group_status_open')]"
+                                tooltip = EXPAND_FILTER
+                                using = tooltip_ws
+                            }
+                            text_label_center = {
+                                layoutpolicy_horizontal = expanding
+                                margin_right = 36
+                                text = SLTM_LVM_FILTER_STATUS_GROUP
+                                align = center
+                            }
+                        }
+                        vbox = {
+                            visible = "[GetVariableSystem.Exists('sltm_lvm_title_filter_group_status_open')]"
+                            layoutpolicy_horizontal = expanding
+                            spacing = 2
+                            margin_left = 12
+                            margin_right = 6
+                            button_checkbox_label = {
+                                layoutpolicy_horizontal = expanding
+                                onclick = "[GetScriptedGui('sltm_lvm_tf_ms_status_all_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+                        # 2026-07-17 停用（P0复选框修复）：checkbutton 状态须绑定 checked 而非 frame，原行注释保留备查
+                        # blockoverride "checkbox" { frame = "[BoolTo1And2(GetScriptedGui('sltm_lvm_tf_ms_status_all_checked_gui').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End))]" }
+                        blockoverride "checkbox" { checked = "[GetScriptedGui('sltm_lvm_tf_ms_status_all_checked_gui').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" }
+                                blockoverride "text" { text = SLTM_LVM_FILTER_ALL_STATUS max_width = 360 }
+                            }
+                            button_checkbox_label = {
+                                layoutpolicy_horizontal = expanding
+                                onclick = "[GetScriptedGui('sltm_lvm_tf_ms_status_normal_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+                        # 2026-07-17 停用（P0复选框修复）：checkbutton 状态须绑定 checked 而非 frame，原行注释保留备查
+                        # blockoverride "checkbox" { frame = "[BoolTo1And2(GetScriptedGui('sltm_lvm_tf_ms_status_normal_checked_gui').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End))]" }
+                        blockoverride "checkbox" { checked = "[GetScriptedGui('sltm_lvm_tf_ms_status_normal_checked_gui').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" }
+                                blockoverride "text" { text = SLTM_LVM_FILTER_STATUS_NORMAL max_width = 360 }
+                            }
+                            button_checkbox_label = {
+                                layoutpolicy_horizontal = expanding
+                                onclick = "[GetScriptedGui('sltm_lvm_tf_ms_status_pending_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+                        # 2026-07-17 停用（P0复选框修复）：checkbutton 状态须绑定 checked 而非 frame，原行注释保留备查
+                        # blockoverride "checkbox" { frame = "[BoolTo1And2(GetScriptedGui('sltm_lvm_tf_ms_status_pending_checked_gui').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End))]" }
+                        blockoverride "checkbox" { checked = "[GetScriptedGui('sltm_lvm_tf_ms_status_pending_checked_gui').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" }
+                                blockoverride "text" { text = SLTM_LVM_FILTER_STATUS_PENDING max_width = 360 tooltip = SLTM_LVM_STATUS_PENDING_TT }
+                            }
+                            button_checkbox_label = {
+                                layoutpolicy_horizontal = expanding
+                                onclick = "[GetScriptedGui('sltm_lvm_tf_ms_status_blocked_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+                        # 2026-07-17 停用（P0复选框修复）：checkbutton 状态须绑定 checked 而非 frame，原行注释保留备查
+                        # blockoverride "checkbox" { frame = "[BoolTo1And2(GetScriptedGui('sltm_lvm_tf_ms_status_blocked_checked_gui').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End))]" }
+                        blockoverride "checkbox" { checked = "[GetScriptedGui('sltm_lvm_tf_ms_status_blocked_checked_gui').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" }
+                                blockoverride "text" { text = SLTM_LVM_FILTER_STATUS_BLOCKED max_width = 360 tooltip = SLTM_LVM_STATUS_BLOCKED_TT }
+                            }
+                        }
+
+                        widget = { size = { 100% 5 } }
+                        divider = { layoutpolicy_horizontal = expanding }
+
+                        # ---- 角色组（与主/兼任可组合）----
+                        hbox = {
+                            layoutpolicy_horizontal = expanding
+                            margin_top = 4
+                            button_expand = {
+                                frame = "[Select_int32(GetVariableSystem.Exists('sltm_lvm_title_filter_group_role_open'), '(int32)2', '(int32)1')]"
+                                onclick = "[GetVariableSystem.Toggle('sltm_lvm_title_filter_group_role_open')]"
+                                tooltip = EXPAND_FILTER
+                                using = tooltip_ws
+                            }
+                            text_label_center = {
+                                layoutpolicy_horizontal = expanding
+                                margin_right = 36
+                                text = SLTM_LVM_FILTER_ROLE_GROUP
+                                align = center
+                            }
+                        }
+                        vbox = {
+                            visible = "[GetVariableSystem.Exists('sltm_lvm_title_filter_group_role_open')]"
+                            layoutpolicy_horizontal = expanding
+                            spacing = 2
+                            margin_left = 12
+                            margin_right = 6
+                            button_checkbox_label = {
+                                layoutpolicy_horizontal = expanding
+                                onclick = "[GetScriptedGui('sltm_lvm_tf_ms_role_all_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+                        # 2026-07-17 停用（P0复选框修复）：checkbutton 状态须绑定 checked 而非 frame，原行注释保留备查
+                        # blockoverride "checkbox" { frame = "[BoolTo1And2(GetScriptedGui('sltm_lvm_tf_ms_role_all_checked_gui').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End))]" }
+                        blockoverride "checkbox" { checked = "[GetScriptedGui('sltm_lvm_tf_ms_role_all_checked_gui').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" }
+                                blockoverride "text" { text = SLTM_LVM_FILTER_ROLE_ALL max_width = 360 }
+                            }
+                            button_checkbox_label = {
+                                layoutpolicy_horizontal = expanding
+                                onclick = "[GetScriptedGui('sltm_lvm_tf_ms_role_primary_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+                        # 2026-07-17 停用（P0复选框修复）：checkbutton 状态须绑定 checked 而非 frame，原行注释保留备查
+                        # blockoverride "checkbox" { frame = "[BoolTo1And2(GetScriptedGui('sltm_lvm_tf_ms_role_primary_checked_gui').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End))]" }
+                        blockoverride "checkbox" { checked = "[GetScriptedGui('sltm_lvm_tf_ms_role_primary_checked_gui').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" }
+                                blockoverride "text" { text = SLTM_LVM_FILTER_STATUS_PRIMARY max_width = 360 tooltip = SLTM_LVM_STATUS_PRIMARY_TT }
+                            }
+                            button_checkbox_label = {
+                                layoutpolicy_horizontal = expanding
+                                onclick = "[GetScriptedGui('sltm_lvm_tf_ms_role_concurrent_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+                        # 2026-07-17 停用（P0复选框修复）：checkbutton 状态须绑定 checked 而非 frame，原行注释保留备查
+                        # blockoverride "checkbox" { frame = "[BoolTo1And2(GetScriptedGui('sltm_lvm_tf_ms_role_concurrent_checked_gui').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End))]" }
+                        blockoverride "checkbox" { checked = "[GetScriptedGui('sltm_lvm_tf_ms_role_concurrent_checked_gui').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" }
+                                blockoverride "text" { text = SLTM_LVM_FILTER_STATUS_CONCURRENT max_width = 360 tooltip = SLTM_LVM_STATUS_CONCURRENT_TT }
+                            }
+                        }
+
+                        widget = { size = { 100% 5 } }
+                        divider = { layoutpolicy_horizontal = expanding }
+
+                        # ---- 持有人组：朝臣持有 ----
+                        hbox = {
+                            layoutpolicy_horizontal = expanding
+                            margin_top = 4
+                            button_expand = {
+                                frame = "[Select_int32(GetVariableSystem.Exists('sltm_lvm_title_filter_group_holder_open'), '(int32)2', '(int32)1')]"
+                                onclick = "[GetVariableSystem.Toggle('sltm_lvm_title_filter_group_holder_open')]"
+                                tooltip = EXPAND_FILTER
+                                using = tooltip_ws
+                            }
+                            text_label_center = {
+                                layoutpolicy_horizontal = expanding
+                                margin_right = 36
+                                text = SLTM_LVM_FILTER_HOLDER_GROUP
+                                align = center
+                            }
+                        }
+                        vbox = {
+                            visible = "[GetVariableSystem.Exists('sltm_lvm_title_filter_group_holder_open')]"
+                            layoutpolicy_horizontal = expanding
+                            spacing = 2
+                            margin_left = 12
+                            margin_right = 6
+                            button_checkbox_label = {
+                                layoutpolicy_horizontal = expanding
+                                onclick = "[GetScriptedGui('sltm_lvm_tf_ms_holder_all_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+                        # 2026-07-17 停用（P0复选框修复）：checkbutton 状态须绑定 checked 而非 frame，原行注释保留备查
+                        # blockoverride "checkbox" { frame = "[BoolTo1And2(GetScriptedGui('sltm_lvm_tf_ms_holder_all_checked_gui').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End))]" }
+                        blockoverride "checkbox" { checked = "[GetScriptedGui('sltm_lvm_tf_ms_holder_all_checked_gui').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" }
+                                blockoverride "text" { text = SLTM_LVM_FILTER_HOLDER_ALL max_width = 360 }
+                            }
+                            button_checkbox_label = {
+                                layoutpolicy_horizontal = expanding
+                                onclick = "[GetScriptedGui('sltm_lvm_tf_ms_holder_courtier_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+                        # 2026-07-17 停用（P0复选框修复）：checkbutton 状态须绑定 checked 而非 frame，原行注释保留备查
+                        # blockoverride "checkbox" { frame = "[BoolTo1And2(GetScriptedGui('sltm_lvm_tf_ms_holder_courtier_checked_gui').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End))]" }
+                        blockoverride "checkbox" { checked = "[GetScriptedGui('sltm_lvm_tf_ms_holder_courtier_checked_gui').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" }
+                                blockoverride "text" { text = SLTM_LVM_FILTER_HOLDER_COURTIER max_width = 360 }
+                            }
+                            # 2026-07-18（V3.4-C）头衔兵士：勾选后只显示名下有头衔兵团的头衔
+                            button_checkbox_label = {
+                                layoutpolicy_horizontal = expanding
+                                onclick = "[GetScriptedGui('sltm_lvm_tf_ms_has_maa_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+                                blockoverride "checkbox" { checked = "[GetScriptedGui('sltm_lvm_tf_ms_has_maa_checked_gui').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" }
+                                blockoverride "text" { text = SLTM_LVM_FILTER_HAS_MAA max_width = 360 }
+                            }
+                        }
+                    }
+                }
+            }
+
+            hbox = {
+                layoutpolicy_horizontal = expanding
+                margin_bottom = 10
+                expand = {}
+                button_standard = {
+                    name = "title_drop_filters"
+                    size = { 150 34 }
+                    text = SLTM_LVM_RESET_FILTERS
+                    focuspolicy = click
+                    enabled = "[GetScriptedGui('sltm_lvm_title_multiselect_active_gui').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+                    onclick = "[GetScriptedGui('sltm_lvm_title_multiselect_reset_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+                }
+                button_standard = {
+                    size = { 90 34 }
+                    text = SLTM_LVM_FILTER_UNDO
+                    focuspolicy = click
+                    enabled = "[GetScriptedGui('sltm_lvm_title_multiselect_undo_gui').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+                    tooltip = SLTM_LVM_FILTER_UNDO_TT
+                    onclick = "[GetScriptedGui('sltm_lvm_title_multiselect_undo_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+                }
+                expand = {}
+            }
+        }
+    }
+
+    # ===================== 封臣（人物）筛选窗 =====================
+    type sltm_lvm_holder_filter_panel = window {
+        name = "sltm_lvm_holder_filter_window"
+        datacontext = "[GetPlayer]"
+        datacontext = "[GetVariableSystem]"
+
+        visible_at_creation = no
+        visible = "[GetVariableSystem.Exists('sltm_lvm_holder_filters_open')]"
+
+        parentanchor = center
+        widgetanchor = center
+        position = { 0 20 }
+        size = { @sltm_lvm_filter_window_width @sltm_lvm_filter_window_height }
+        movable = yes
+        focuspolicy = click
+        filter_mouse = all
+        allow_outside = yes
+
+        using = Window_Movable
+        using = Window_Background_Subwindow
+
+        state = {
+            name = _show
+            using = Animation_FadeIn_Quick
+            using = Sound_WindowShow_Standard
+            on_start = "[PdxGuiWidget.StackTop]"
+        }
+        state = {
+            name = _hide
+            using = Animation_FadeOut_Quick
+            using = Sound_WindowHide_Standard
+        }
+
+        vbox = {
+            margin = { 4 4 }
+            spacing = 8
+            size = { 100% 100% }
+
+            header_pattern = {
+                layoutpolicy_horizontal = expanding
+                blockoverride "header_text" { text = SLTM_LVM_HOLDER_FILTERS }
+                blockoverride "button_close" {
+                    onclick = "[GetVariableSystem.Clear('sltm_lvm_holder_filters_open')]"
+                    onclick = "[GetVariableSystem.Clear('sltm_lvm_dropdown_open')]"
+                }
+            }
+
+            # 活动分组数 + 已选项数 + 结果数
+            hbox = {
+                layoutpolicy_horizontal = expanding
+                margin_left = 8
+                margin_right = 8
+                text_single = { text = SLTM_LVM_FILTER_ACTIVE_COUNT using = Font_Size_Small default_format = "#low" align = left|nobaseline autoresize = yes }
+                text_single = {
+                    size = { 40 100% }
+                    text = "[GetPlayer.MakeScope.Var('sltm_lvm_holder_active_filter_count').GetValue|0]"
+                    using = Font_Size_Small
+                    default_format = "#high"
+                    align = center
+                }
+                text_single = { text = SLTM_LVM_V36_SELECTED_COUNT using = Font_Size_Small default_format = "#low" align = left|nobaseline autoresize = yes }
+                text_single = {
+                    size = { 40 100% }
+                    text = "[GetPlayer.MakeScope.Var('sltm_lvm_holder_selected_filter_count').GetValue|0]"
+                    using = Font_Size_Small
+                    default_format = "#high"
+                    align = center
+                }
+                expand = {}
+                text_single = { text = SLTM_LVM_RESULT_COUNT using = Font_Size_Small default_format = "#low" align = left|nobaseline autoresize = yes }
+                text_single = {
+                    size = { 50 100% }
+                    text = "[GetPlayer.MakeScope.Var('sltm_lvm_filtered_holder_count').GetValue|0]"
+                    using = Font_Size_Small
+                    default_format = "#high"
+                    align = center
+                }
+                text_single = { raw_text = "/" using = Font_Size_Small }
+                text_single = {
+                    size = { 50 100% }
+                    text = "[GetPlayer.MakeScope.Var('sltm_lvm_holder_count').GetValue|0]"
+                    using = Font_Size_Small
+                    align = center
+                }
+            }
+
+            # V3.6 四槽预设：先选槽，再保存/加载/清空；不再重复显示每槽两颗同名按钮。
+            hbox = {
+                layoutpolicy_horizontal = expanding
+                margin_left = 6
+                margin_right = 6
+                spacing = 4
+                text_single = { text = SLTM_LVM_V36_HOLDER_PRESET_CURRENT using = Font_Size_Small default_format = "#high" align = left|nobaseline autoresize = yes }
+                button_standard_small = {
+                    size = { 46 26 }
+                    text = SLTM_LVM_FILTER_PRESET_SLOT_1
+                    onclick = "[GetScriptedGui('sltm_lvm_v36_pick_slot_1_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+                }
+                button_standard_small = {
+                    size = { 46 26 }
+                    text = SLTM_LVM_FILTER_PRESET_SLOT_2
+                    onclick = "[GetScriptedGui('sltm_lvm_v36_pick_slot_2_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+                }
+                button_standard_small = {
+                    size = { 46 26 }
+                    text = SLTM_LVM_FILTER_PRESET_SLOT_3
+                    onclick = "[GetScriptedGui('sltm_lvm_v36_pick_slot_3_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+                }
+                button_standard_small = {
+                    size = { 46 26 }
+                    text = SLTM_LVM_FILTER_PRESET_SLOT_4
+                    onclick = "[GetScriptedGui('sltm_lvm_v36_pick_slot_4_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+                }
+                expand = {}
+                button_standard_small = {
+                    size = { 54 26 }
+                    text = SLTM_LVM_PRESET_SAVE_BTN
+                    tooltip = SLTM_LVM_FILTER_PRESET_SAVE_TT
+                    onclick = "[GetScriptedGui('sltm_lvm_v36_preset_save_current_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+                }
+                button_standard_small = {
+                    size = { 54 26 }
+                    text = SLTM_LVM_PRESET_LOAD_BTN
+                    tooltip = SLTM_LVM_FILTER_PRESET_LOAD_TT
+                    enabled = "[GetScriptedGui('sltm_lvm_v36_preset_load_current_gui').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+                    onclick = "[GetScriptedGui('sltm_lvm_v36_preset_load_current_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+                }
+                button_standard_small = {
+                    size = { 54 26 }
+                    text = SLTM_LVM_V36_PRESET_CLEAR
+                    tooltip = SLTM_LVM_V36_PRESET_CLEAR_TT
+                    enabled = "[GetScriptedGui('sltm_lvm_v36_preset_clear_current_gui').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+                    onclick = "[GetScriptedGui('sltm_lvm_v36_preset_clear_current_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+                }
+            }
+
+            divider = { layoutpolicy_horizontal = expanding }
+
+            scrollbox = {
+                layoutpolicy_horizontal = expanding
+                layoutpolicy_vertical = expanding
+                scrollbarpolicy_horizontal = always_off
+                maximumsize = { 600 503 }
+
+                blockoverride "scrollbox_content" {
+                    vbox = {
+                        layoutpolicy_horizontal = expanding
+                        layoutpolicy_vertical = expanding
+                        spacing = 5
+                        allow_outside = yes
+                        sltm_lvm_acs_dropdown_block = {}
+                    }
+                }
+            }
+
+            hbox = {
+                layoutpolicy_horizontal = expanding
+                margin_bottom = 10
+                expand = {}
+                button_standard = {
+                    name = "holder_drop_filters"
+                    size = { 150 34 }
+                    text = SLTM_LVM_RESET_FILTERS
+                    focuspolicy = click
+                    enabled = "[GetScriptedGui('sltm_lvm_v36_filters_active_gui').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+                    onclick = "[GetScriptedGui('sltm_lvm_v36_reset_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+                }
+                button_standard = {
+                    size = { 90 34 }
+                    text = SLTM_LVM_FILTER_UNDO
+                    focuspolicy = click
+                    enabled = "[GetScriptedGui('sltm_lvm_v36_undo_gui').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+                    tooltip = SLTM_LVM_FILTER_UNDO_TT
+                    onclick = "[GetScriptedGui('sltm_lvm_v36_undo_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+                }
+                expand = {}
+            }
+        }
+    }
+
+    # ===================== 排序弹层（根层真实弹层）=====================
+    type sltm_lvm_sort_panel = window {
+        name = "sltm_lvm_sort_window"
+        datacontext = "[GetPlayer]"
+        datacontext = "[GetVariableSystem]"
+
+        visible_at_creation = no
+        visible = "[GetVariableSystem.Exists('sltm_lvm_sort_menu_open')]"
+        parentanchor = top|left
+        widgetanchor = top|left
+        position = { 64 92 }
+        size = { 300 560 }
+        focuspolicy = click
+        filter_mouse = all
+        allow_outside = yes
+
+        using = Window_Background_Subwindow
+
+        state = {
+            name = _show
+            using = Animation_FadeIn_Quick
+            on_start = "[PdxGuiWidget.StackTop]"
+        }
+        state = {
+            name = _hide
+            using = Animation_FadeOut_Quick
+        }
+
+        vbox = {
+            margin = { 4 4 }
+            spacing = 6
+            size = { 100% 100% }
+
+            header_pattern = {
+                layoutpolicy_horizontal = expanding
+                blockoverride "header_text" { text = SLTM_LVM_SORT_MENU }
+                blockoverride "button_close" { onclick = "[GetVariableSystem.Clear('sltm_lvm_sort_menu_open')]" }
+            }
+
+            text_multi = {
+                layoutpolicy_horizontal = expanding
+                visible = "[GetVariableSystem.HasValue('sltm_lvm_tabs', 'titles')]"
+                text = SLTM_LVM_SORT_TITLE_MENU_NOTE
+                using = Font_Size_Small
+                default_format = "#low"
+                autoresize = yes
+                max_width = 240
+                align = center
+                margin_left = 10
+                margin_right = 10
+            }
+            text_multi = {
+                layoutpolicy_horizontal = expanding
+                visible = "[Or(GetVariableSystem.HasValue('sltm_lvm_tabs', 'holders'), GetVariableSystem.HasValue('sltm_lvm_tabs', 'treasury'))]"
+                text = SLTM_LVM_SORT_HOLDER_MENU_NOTE
+                using = Font_Size_Small
+                default_format = "#low"
+                autoresize = yes
+                max_width = 240
+                align = center
+                margin_left = 10
+                margin_right = 10
+            }
+
+            scrollbox = {
+                layoutpolicy_horizontal = expanding
+                layoutpolicy_vertical = expanding
+                scrollbarpolicy_horizontal = always_off
+                blockoverride "scrollbox_content" {
+                    vbox = {
+                        layoutpolicy_horizontal = expanding
+                        spacing = 2
+                        margin_left = 12
+                        margin_right = 12
+
+                        vbox = {
+                            layoutpolicy_horizontal = expanding
+                            visible = "[GetVariableSystem.HasValue('sltm_lvm_tabs', 'titles')]"
+                            spacing = 2
+                            # 头衔页只提供纯头衔维度排序（等级/状态/类型/角色）；不读人物属性。2026-07-18（V3.3-F）头衔等级置顶。
+                            button_radio_label = { onclick = "[GetVariableSystem.Clear('sltm_lvm_sort_menu_open')]" onclick = "[GetScriptedGui('sltm_lvm_sort_titles_tier_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" blockoverride "radio" { frame = "[BoolTo1And2(ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_title_sort').GetFlagName, 'tier'))]" } blockoverride "text" { text = SLTM_LVM_SORT_TITLE_TIER max_width = 220 } }
+                            button_radio_label = { onclick = "[GetVariableSystem.Clear('sltm_lvm_sort_menu_open')]" onclick = "[GetScriptedGui('sltm_lvm_sort_titles_status_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" blockoverride "radio" { frame = "[BoolTo1And2(ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_title_sort').GetFlagName, 'status'))]" } blockoverride "text" { text = SLTM_LVM_SORT_TITLE_STATUS max_width = 220 } }
+                            button_radio_label = { onclick = "[GetVariableSystem.Clear('sltm_lvm_sort_menu_open')]" onclick = "[GetScriptedGui('sltm_lvm_sort_titles_type_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" blockoverride "radio" { frame = "[BoolTo1And2(ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_title_sort').GetFlagName, 'type'))]" } blockoverride "text" { text = SLTM_LVM_SORT_TITLE_TYPE max_width = 220 } }
+                            button_radio_label = { onclick = "[GetVariableSystem.Clear('sltm_lvm_sort_menu_open')]" onclick = "[GetScriptedGui('sltm_lvm_sort_titles_role_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" blockoverride "radio" { frame = "[BoolTo1And2(ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_title_sort').GetFlagName, 'role'))]" } blockoverride "text" { text = SLTM_LVM_SORT_TITLE_ROLE max_width = 220 } }
+                        }
+
+                        vbox = {
+                            layoutpolicy_horizontal = expanding
+                            visible = "[Or(GetVariableSystem.HasValue('sltm_lvm_tabs', 'holders'), GetVariableSystem.HasValue('sltm_lvm_tabs', 'treasury'))]"
+                            spacing = 2
+                            text_label_center = { layoutpolicy_horizontal = expanding text = SLTM_LVM_SORT_GROUP_TITLE align = center }
+                            button_radio_label = { layoutpolicy_horizontal = expanding tooltip = SLTM_LVM_SORT_HOLDER_RANK_TT onclick = "[GetVariableSystem.Clear('sltm_lvm_sort_menu_open')]" onclick = "[GetScriptedGui('sltm_lvm_sort_holders_rank_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" blockoverride "radio" { frame = "[BoolTo1And2(ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_holder_sort').GetFlagName, 'rank'))]" } blockoverride "text" { text = SLTM_LVM_SORT_HOLDER_RANK max_width = 220 } }
+                            button_radio_label = { layoutpolicy_horizontal = expanding onclick = "[GetVariableSystem.Clear('sltm_lvm_sort_menu_open')]" onclick = "[GetScriptedGui('sltm_lvm_sort_holders_count_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" blockoverride "radio" { frame = "[BoolTo1And2(ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_holder_sort').GetFlagName, 'managed_count'))]" } blockoverride "text" { text = SLTM_LVM_SORT_HOLDER_COUNT max_width = 220 } }
+                            button_radio_label = { layoutpolicy_horizontal = expanding onclick = "[GetVariableSystem.Clear('sltm_lvm_sort_menu_open')]" onclick = "[GetScriptedGui('sltm_lvm_sort_holders_age_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" blockoverride "radio" { frame = "[BoolTo1And2(ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_holder_sort').GetFlagName, 'age'))]" } blockoverride "text" { text = SLTM_LVM_SORT_HOLDER_AGE max_width = 220 } }
+
+                            divider = { layoutpolicy_horizontal = expanding }
+                            text_label_center = { layoutpolicy_horizontal = expanding text = SLTM_LVM_SORT_GROUP_ABILITY align = center }
+                            button_radio_label = { layoutpolicy_horizontal = expanding onclick = "[GetVariableSystem.Clear('sltm_lvm_sort_menu_open')]" onclick = "[GetScriptedGui('sltm_lvm_sort_holders_diplomacy_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" blockoverride "radio" { frame = "[BoolTo1And2(ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_holder_sort').GetFlagName, 'diplomacy'))]" } blockoverride "text" { text = SLTM_LVM_SORT_HOLDER_DIPLOMACY max_width = 220 } }
+                            button_radio_label = { layoutpolicy_horizontal = expanding onclick = "[GetVariableSystem.Clear('sltm_lvm_sort_menu_open')]" onclick = "[GetScriptedGui('sltm_lvm_sort_holders_martial_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" blockoverride "radio" { frame = "[BoolTo1And2(ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_holder_sort').GetFlagName, 'martial'))]" } blockoverride "text" { text = SLTM_LVM_SORT_HOLDER_MARTIAL max_width = 220 } }
+                            button_radio_label = { layoutpolicy_horizontal = expanding onclick = "[GetVariableSystem.Clear('sltm_lvm_sort_menu_open')]" onclick = "[GetScriptedGui('sltm_lvm_sort_holders_stewardship_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" blockoverride "radio" { frame = "[BoolTo1And2(ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_holder_sort').GetFlagName, 'stewardship'))]" } blockoverride "text" { text = SLTM_LVM_SORT_HOLDER_STEWARDSHIP max_width = 220 } }
+                            button_radio_label = { layoutpolicy_horizontal = expanding onclick = "[GetVariableSystem.Clear('sltm_lvm_sort_menu_open')]" onclick = "[GetScriptedGui('sltm_lvm_sort_holders_intrigue_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" blockoverride "radio" { frame = "[BoolTo1And2(ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_holder_sort').GetFlagName, 'intrigue'))]" } blockoverride "text" { text = SLTM_LVM_SORT_HOLDER_INTRIGUE max_width = 220 } }
+                            button_radio_label = { layoutpolicy_horizontal = expanding onclick = "[GetVariableSystem.Clear('sltm_lvm_sort_menu_open')]" onclick = "[GetScriptedGui('sltm_lvm_sort_holders_learning_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" blockoverride "radio" { frame = "[BoolTo1And2(ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_holder_sort').GetFlagName, 'learning'))]" } blockoverride "text" { text = SLTM_LVM_SORT_HOLDER_LEARNING max_width = 220 } }
+                            button_radio_label = { layoutpolicy_horizontal = expanding onclick = "[GetVariableSystem.Clear('sltm_lvm_sort_menu_open')]" onclick = "[GetScriptedGui('sltm_lvm_sort_holders_prowess_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" blockoverride "radio" { frame = "[BoolTo1And2(ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_holder_sort').GetFlagName, 'prowess'))]" } blockoverride "text" { text = SLTM_LVM_SORT_HOLDER_PROWESS max_width = 220 } }
+
+                            divider = { layoutpolicy_horizontal = expanding }
+                            text_label_center = { layoutpolicy_horizontal = expanding text = SLTM_LVM_SORT_GROUP_RESOURCES align = center }
+                            button_radio_label = { layoutpolicy_horizontal = expanding onclick = "[GetVariableSystem.Clear('sltm_lvm_sort_menu_open')]" onclick = "[GetScriptedGui('sltm_lvm_sort_holders_merit_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" blockoverride "radio" { frame = "[BoolTo1And2(ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_holder_sort').GetFlagName, 'merit'))]" } blockoverride "text" { text = SLTM_LVM_SORT_HOLDER_MERIT max_width = 220 } }
+                            button_radio_label = { layoutpolicy_horizontal = expanding onclick = "[GetVariableSystem.Clear('sltm_lvm_sort_menu_open')]" onclick = "[GetScriptedGui('sltm_lvm_sort_holders_efficiency_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" blockoverride "radio" { frame = "[BoolTo1And2(ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_holder_sort').GetFlagName, 'efficiency'))]" } blockoverride "text" { text = SLTM_LVM_SORT_HOLDER_EFFICIENCY max_width = 220 } }
+                            button_radio_label = { layoutpolicy_horizontal = expanding onclick = "[GetVariableSystem.Clear('sltm_lvm_sort_menu_open')]" onclick = "[GetScriptedGui('sltm_lvm_sort_holders_treasury_balance_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" blockoverride "radio" { frame = "[BoolTo1And2(ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_holder_sort').GetFlagName, 'treasury_balance'))]" } blockoverride "text" { text = SLTM_LVM_SORT_HOLDER_TREASURY_BALANCE max_width = 220 } }
+                            button_radio_label = { layoutpolicy_horizontal = expanding onclick = "[GetVariableSystem.Clear('sltm_lvm_sort_menu_open')]" onclick = "[GetScriptedGui('sltm_lvm_sort_holders_treasury_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" blockoverride "radio" { frame = "[BoolTo1And2(ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_holder_sort').GetFlagName, 'treasury'))]" } blockoverride "text" { text = SLTM_LVM_SORT_HOLDER_TREASURY max_width = 220 } }
+                            button_radio_label = { layoutpolicy_horizontal = expanding onclick = "[GetVariableSystem.Clear('sltm_lvm_sort_menu_open')]" onclick = "[GetScriptedGui('sltm_lvm_sort_holders_strength_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" blockoverride "radio" { frame = "[BoolTo1And2(ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_holder_sort').GetFlagName, 'strength'))]" } blockoverride "text" { text = SLTM_LVM_SORT_HOLDER_STRENGTH max_width = 220 } }
+                            button_radio_label = { layoutpolicy_horizontal = expanding onclick = "[GetVariableSystem.Clear('sltm_lvm_sort_menu_open')]" onclick = "[GetScriptedGui('sltm_lvm_sort_holders_atwar_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" blockoverride "radio" { frame = "[BoolTo1And2(ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_holder_sort').GetFlagName, 'atwar'))]" } blockoverride "text" { text = SLTM_LVM_SORT_HOLDER_ATWAR max_width = 220 } }
+
+                            divider = { layoutpolicy_horizontal = expanding }
+                            text_label_center = { layoutpolicy_horizontal = expanding text = SLTM_LVM_SORT_GROUP_STATUS align = center }
+                            button_radio_label = { layoutpolicy_horizontal = expanding onclick = "[GetVariableSystem.Clear('sltm_lvm_sort_menu_open')]" onclick = "[GetScriptedGui('sltm_lvm_sort_holders_pending_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" blockoverride "radio" { frame = "[BoolTo1And2(ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_holder_sort').GetFlagName, 'pending'))]" } blockoverride "text" { text = SLTM_LVM_SORT_HOLDER_PENDING max_width = 220 } }
+                            button_radio_label = { layoutpolicy_horizontal = expanding onclick = "[GetVariableSystem.Clear('sltm_lvm_sort_menu_open')]" onclick = "[GetScriptedGui('sltm_lvm_sort_holders_blocked_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" blockoverride "radio" { frame = "[BoolTo1And2(ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_holder_sort').GetFlagName, 'blocked'))]" } blockoverride "text" { text = SLTM_LVM_SORT_HOLDER_BLOCKED max_width = 220 } }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    # ===================== 预设槽选择弹层（V3.2 下拉预设）=====================
+    # 由头衔筛选窗“当前槽”下拉按钮切换 sltm_lvm_title_preset_menu_open 打开；
+    # 选中某槽即写入 sltm_lvm_title_preset_slot 并关闭，随后由“保存/加载”按钮对当前槽操作。
+    type sltm_lvm_title_preset_slot_panel = window {
+        name = "sltm_lvm_title_preset_slot_window"
+        datacontext = "[GetPlayer]"
+        datacontext = "[GetVariableSystem]"
+
+        visible_at_creation = no
+        visible = "[GetVariableSystem.Exists('sltm_lvm_title_preset_menu_open')]"
+        parentanchor = center
+        widgetanchor = center
+        position = { 0 -260 }
+        size = { 200 250 }
+        focuspolicy = click
+        filter_mouse = all
+        allow_outside = yes
+
+        using = Window_Background_Subwindow
+
+        state = {
+            name = _show
+            using = Animation_FadeIn_Quick
+            on_start = "[PdxGuiWidget.StackTop]"
+        }
+        state = {
+            name = _hide
+            using = Animation_FadeOut_Quick
+        }
+
+        vbox = {
+            margin = { 4 4 }
+            spacing = 4
+            size = { 100% 100% }
+
+            header_pattern = {
+                layoutpolicy_horizontal = expanding
+                blockoverride "header_text" { text = SLTM_LVM_PRESET_SLOT_MENU }
+                blockoverride "button_close" { onclick = "[GetVariableSystem.Clear('sltm_lvm_title_preset_menu_open')]" }
+            }
+
+            vbox = {
+                layoutpolicy_horizontal = expanding
+                spacing = 2
+                margin_left = 12
+                margin_right = 12
+                button_radio_label = { onclick = "[GetVariableSystem.Clear('sltm_lvm_title_preset_menu_open')]" onclick = "[GetScriptedGui('sltm_lvm_title_pick_preset_slot_1_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" blockoverride "radio" { frame = "[BoolTo1And2(EqualTo_int32(GetPlayer.MakeScope.Var('sltm_lvm_title_preset_slot').GetValue, '(int32)1'))]" } blockoverride "text" { text = SLTM_LVM_FILTER_PRESET_SLOT_1 max_width = 150 } }
+                button_radio_label = { onclick = "[GetVariableSystem.Clear('sltm_lvm_title_preset_menu_open')]" onclick = "[GetScriptedGui('sltm_lvm_title_pick_preset_slot_2_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" blockoverride "radio" { frame = "[BoolTo1And2(EqualTo_int32(GetPlayer.MakeScope.Var('sltm_lvm_title_preset_slot').GetValue, '(int32)2'))]" } blockoverride "text" { text = SLTM_LVM_FILTER_PRESET_SLOT_2 max_width = 150 } }
+                button_radio_label = { onclick = "[GetVariableSystem.Clear('sltm_lvm_title_preset_menu_open')]" onclick = "[GetScriptedGui('sltm_lvm_title_pick_preset_slot_3_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" blockoverride "radio" { frame = "[BoolTo1And2(EqualTo_int32(GetPlayer.MakeScope.Var('sltm_lvm_title_preset_slot').GetValue, '(int32)3'))]" } blockoverride "text" { text = SLTM_LVM_FILTER_PRESET_SLOT_3 max_width = 150 } }
+                button_radio_label = { onclick = "[GetVariableSystem.Clear('sltm_lvm_title_preset_menu_open')]" onclick = "[GetScriptedGui('sltm_lvm_title_pick_preset_slot_4_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" blockoverride "radio" { frame = "[BoolTo1And2(EqualTo_int32(GetPlayer.MakeScope.Var('sltm_lvm_title_preset_slot').GetValue, '(int32)4'))]" } blockoverride "text" { text = SLTM_LVM_FILTER_PRESET_SLOT_4 max_width = 150 } }
+            }
+        }
+    }
+    # ===================== 国库管理筛选窗 =====================
+    type sltm_lvm_treasury_filter_panel = window {
+        name = "sltm_lvm_treasury_filter_window"
+        datacontext = "[GetPlayer]"
+        datacontext = "[GetVariableSystem]"
+        visible_at_creation = no
+        visible = "[GetVariableSystem.Exists('sltm_lvm_treasury_filters_open')]"
+        parentanchor = center
+        widgetanchor = center
+        position = { 0 0 }
+        size = { @sltm_lvm_filter_window_width @sltm_lvm_filter_window_height }
+        focuspolicy = click
+        filter_mouse = all
+        allow_outside = yes
+        using = Window_Movable
+        using = Window_Background_Subwindow
+
+        state = { name = _show using = Animation_FadeIn_Quick using = Sound_WindowShow_Standard on_start = "[PdxGuiWidget.StackTop]" }
+        state = { name = _hide using = Animation_FadeOut_Quick using = Sound_WindowHide_Standard }
+
+        vbox = {
+            margin = { 4 4 }
+            spacing = 8
+            size = { 100% 100% }
+            header_pattern = {
+                layoutpolicy_horizontal = expanding
+                blockoverride "header_text" { text = SLTM_LVM_TREASURY_FILTERS }
+                blockoverride "button_close" { onclick = "[GetVariableSystem.Clear('sltm_lvm_treasury_filters_open')]" }
+            }
+            hbox = {
+                margin_left = 8 margin_right = 8 layoutpolicy_horizontal = expanding
+                text_single = { text = SLTM_LVM_RESULT_COUNT using = Font_Size_Small default_format = "#low" align = left|nobaseline autoresize = yes }
+                text_single = { size = { 50 100% } text = "[GetPlayer.MakeScope.Var('sltm_lvm_treasury_filtered_count').GetValue|0]" using = Font_Size_Small default_format = "#high" align = center }
+                text_single = { raw_text = "/" using = Font_Size_Small }
+                text_single = { size = { 50 100% } text = "[GetPlayer.MakeScope.Var('sltm_lvm_treasury_total_count').GetValue|0]" using = Font_Size_Small align = center }
+                expand = {}
+                button_standard_small = { size = { 76 26 } text = SLTM_LVM_RESET_FILTERS onclick = "[GetScriptedGui('sltm_lvm_treasury_reset_filters_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" }
+            }
+            divider = { layoutpolicy_horizontal = expanding }
+            scrollbox = {
+                layoutpolicy_horizontal = expanding
+                layoutpolicy_vertical = expanding
+                scrollbarpolicy_horizontal = always_off
+                blockoverride "scrollbox_content" {
+                    vbox = {
+                        layoutpolicy_horizontal = expanding margin_left = 12 margin_right = 12 spacing = 6
+                        text_label_center = { text = SLTM_LVM_TREASURY_FILTER_SCOPE_GROUP align = center }
+                        button_radio_label = { layoutpolicy_horizontal = expanding onclick = "[GetScriptedGui('sltm_lvm_treasury_scope_all_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" blockoverride "radio" { frame = "[BoolTo1And2(ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_treasury_filter_scope').GetFlagName, 'all'))]" } blockoverride "text" { text = SLTM_LVM_TREASURY_FILTER_ALL max_width = 360 } }
+                        button_radio_label = { layoutpolicy_horizontal = expanding onclick = "[GetScriptedGui('sltm_lvm_treasury_scope_direct_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" blockoverride "radio" { frame = "[BoolTo1And2(ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_treasury_filter_scope').GetFlagName, 'direct'))]" } blockoverride "text" { text = SLTM_LVM_TREASURY_FILTER_DIRECT max_width = 360 } }
+                        button_radio_label = { layoutpolicy_horizontal = expanding onclick = "[GetScriptedGui('sltm_lvm_treasury_scope_indirect_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" blockoverride "radio" { frame = "[BoolTo1And2(ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_treasury_filter_scope').GetFlagName, 'indirect'))]" } blockoverride "text" { text = SLTM_LVM_TREASURY_FILTER_INDIRECT max_width = 360 } }
+                        divider = { layoutpolicy_horizontal = expanding }
+                        text_label_center = { text = SLTM_LVM_TREASURY_FILTER_TYPE_GROUP align = center }
+                        button_radio_label = { layoutpolicy_horizontal = expanding onclick = "[GetScriptedGui('sltm_lvm_treasury_type_all_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" blockoverride "radio" { frame = "[BoolTo1And2(ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_treasury_filter_type').GetFlagName, 'all'))]" } blockoverride "text" { text = SLTM_LVM_TREASURY_FILTER_ALL max_width = 360 } }
+                        button_radio_label = { layoutpolicy_horizontal = expanding onclick = "[GetScriptedGui('sltm_lvm_treasury_type_junfu_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" blockoverride "radio" { frame = "[BoolTo1And2(ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_treasury_filter_type').GetFlagName, 'junfu'))]" } blockoverride "text" { text = SLTM_LVM_TREASURY_FILTER_JUNFU max_width = 360 } }
+                        button_radio_label = { layoutpolicy_horizontal = expanding onclick = "[GetScriptedGui('sltm_lvm_treasury_type_military_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" blockoverride "radio" { frame = "[BoolTo1And2(ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_treasury_filter_type').GetFlagName, 'military'))]" } blockoverride "text" { text = SLTM_LVM_TREASURY_FILTER_MILITARY max_width = 360 } }
+                        button_radio_label = { layoutpolicy_horizontal = expanding onclick = "[GetScriptedGui('sltm_lvm_treasury_type_other_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" blockoverride "radio" { frame = "[BoolTo1And2(ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_treasury_filter_type').GetFlagName, 'other'))]" } blockoverride "text" { text = SLTM_LVM_TREASURY_FILTER_OTHER max_width = 360 } }
+                        divider = { layoutpolicy_horizontal = expanding }
+                        text_label_center = { text = SLTM_LVM_TREASURY_FILTER_FINANCE_GROUP align = center }
+                        button_radio_label = { layoutpolicy_horizontal = expanding onclick = "[GetScriptedGui('sltm_lvm_treasury_finance_all_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" blockoverride "radio" { frame = "[BoolTo1And2(ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_treasury_filter_finance').GetFlagName, 'all'))]" } blockoverride "text" { text = SLTM_LVM_TREASURY_FILTER_ALL max_width = 360 } }
+                        button_radio_label = { layoutpolicy_horizontal = expanding onclick = "[GetScriptedGui('sltm_lvm_treasury_finance_has_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" blockoverride "radio" { frame = "[BoolTo1And2(ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_treasury_filter_finance').GetFlagName, 'has_treasury'))]" } blockoverride "text" { text = SLTM_LVM_TREASURY_FILTER_HAS_TREASURY max_width = 360 } }
+                        button_radio_label = { layoutpolicy_horizontal = expanding onclick = "[GetScriptedGui('sltm_lvm_treasury_finance_debt_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" blockoverride "radio" { frame = "[BoolTo1And2(ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_treasury_filter_finance').GetFlagName, 'debt'))]" } blockoverride "text" { text = SLTM_LVM_TREASURY_FILTER_DEBT max_width = 360 } }
+                        button_radio_label = { layoutpolicy_horizontal = expanding onclick = "[GetScriptedGui('sltm_lvm_treasury_finance_deficit_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" blockoverride "radio" { frame = "[BoolTo1And2(ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_treasury_filter_finance').GetFlagName, 'deficit'))]" } blockoverride "text" { text = SLTM_LVM_TREASURY_FILTER_DEFICIT max_width = 360 } }
+                        button_radio_label = { layoutpolicy_horizontal = expanding onclick = "[GetScriptedGui('sltm_lvm_treasury_finance_none_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" blockoverride "radio" { frame = "[BoolTo1And2(ObjectsEqual(GetPlayer.MakeScope.Var('sltm_lvm_treasury_filter_finance').GetFlagName, 'no_treasury'))]" } blockoverride "text" { text = SLTM_LVM_TREASURY_FILTER_NO_TREASURY max_width = 360 } }
+                    }
+                }
+            }
+        }
+    }
+
+}

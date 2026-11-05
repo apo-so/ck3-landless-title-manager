@@ -1,0 +1,378 @@
+﻿# 无地头衔筛选 scripted GUI（V2.6 批次 3）
+# 每个单选 gui：保存 undo → 设 tf_* → 更新头衔活动计数 → 只重算头衔页。
+# 头衔页绝不引用任何人物/封臣属性。
+
+sltm_lvm_tf_type_all_gui = {
+    scope = character
+    effect = {
+        sltm_lvm_save_title_filter_undo_effect = yes
+        set_variable = { name = sltm_lvm_tf_type value = flag:all }
+        sltm_lvm_update_title_active_filter_count_effect = yes
+        sltm_lvm_recompute_title_view_effect = yes
+    }
+}
+sltm_lvm_tf_type_junfu_gui = {
+    scope = character
+    effect = {
+        sltm_lvm_save_title_filter_undo_effect = yes
+        set_variable = { name = sltm_lvm_tf_type value = flag:junfu }
+        sltm_lvm_update_title_active_filter_count_effect = yes
+        sltm_lvm_recompute_title_view_effect = yes
+    }
+}
+sltm_lvm_tf_type_noble_gui = {
+    scope = character
+    effect = {
+        sltm_lvm_save_title_filter_undo_effect = yes
+        set_variable = { name = sltm_lvm_tf_type value = flag:noble_family }
+        sltm_lvm_update_title_active_filter_count_effect = yes
+        sltm_lvm_recompute_title_view_effect = yes
+    }
+}
+sltm_lvm_tf_type_holy_order_gui = {
+    scope = character
+    effect = {
+        sltm_lvm_save_title_filter_undo_effect = yes
+        set_variable = { name = sltm_lvm_tf_type value = flag:holy_order }
+        sltm_lvm_update_title_active_filter_count_effect = yes
+        sltm_lvm_recompute_title_view_effect = yes
+    }
+}
+sltm_lvm_tf_type_mercenary_gui = {
+    scope = character
+    effect = {
+        sltm_lvm_save_title_filter_undo_effect = yes
+        set_variable = { name = sltm_lvm_tf_type value = flag:mercenary }
+        sltm_lvm_update_title_active_filter_count_effect = yes
+        sltm_lvm_recompute_title_view_effect = yes
+    }
+}
+sltm_lvm_tf_type_religious_head_gui = {
+    scope = character
+    effect = {
+        sltm_lvm_save_title_filter_undo_effect = yes
+        set_variable = { name = sltm_lvm_tf_type value = flag:religious_head }
+        sltm_lvm_update_title_active_filter_count_effect = yes
+        sltm_lvm_recompute_title_view_effect = yes
+    }
+}
+sltm_lvm_tf_type_other_gui = {
+    scope = character
+    effect = {
+        sltm_lvm_save_title_filter_undo_effect = yes
+        set_variable = { name = sltm_lvm_tf_type value = flag:other }
+        sltm_lvm_update_title_active_filter_count_effect = yes
+        sltm_lvm_recompute_title_view_effect = yes
+    }
+}
+
+sltm_lvm_tf_tier_all_gui = {
+    scope = character
+    effect = {
+        sltm_lvm_save_title_filter_undo_effect = yes
+        set_variable = { name = sltm_lvm_tf_tier value = flag:all }
+        sltm_lvm_update_title_active_filter_count_effect = yes
+        sltm_lvm_recompute_title_view_effect = yes
+    }
+}
+sltm_lvm_tf_tier_barony_gui = {
+    scope = character
+    effect = {
+        sltm_lvm_save_title_filter_undo_effect = yes
+        set_variable = { name = sltm_lvm_tf_tier value = flag:barony }
+        sltm_lvm_update_title_active_filter_count_effect = yes
+        sltm_lvm_recompute_title_view_effect = yes
+    }
+}
+sltm_lvm_tf_tier_county_gui = {
+    scope = character
+    effect = {
+        sltm_lvm_save_title_filter_undo_effect = yes
+        set_variable = { name = sltm_lvm_tf_tier value = flag:county }
+        sltm_lvm_update_title_active_filter_count_effect = yes
+        sltm_lvm_recompute_title_view_effect = yes
+    }
+}
+sltm_lvm_tf_tier_duchy_gui = {
+    scope = character
+    effect = {
+        sltm_lvm_save_title_filter_undo_effect = yes
+        set_variable = { name = sltm_lvm_tf_tier value = flag:duchy }
+        sltm_lvm_update_title_active_filter_count_effect = yes
+        sltm_lvm_recompute_title_view_effect = yes
+    }
+}
+sltm_lvm_tf_tier_kingdom_gui = {
+    scope = character
+    effect = {
+        sltm_lvm_save_title_filter_undo_effect = yes
+        set_variable = { name = sltm_lvm_tf_tier value = flag:kingdom }
+        sltm_lvm_update_title_active_filter_count_effect = yes
+        sltm_lvm_recompute_title_view_effect = yes
+    }
+}
+sltm_lvm_tf_tier_empire_gui = {
+    scope = character
+    effect = {
+        sltm_lvm_save_title_filter_undo_effect = yes
+        set_variable = { name = sltm_lvm_tf_tier value = flag:empire }
+        sltm_lvm_update_title_active_filter_count_effect = yes
+        sltm_lvm_recompute_title_view_effect = yes
+    }
+}
+
+sltm_lvm_tf_status_all_gui = {
+    scope = character
+    effect = {
+        sltm_lvm_save_title_filter_undo_effect = yes
+        set_variable = { name = sltm_lvm_tf_status value = flag:all }
+        sltm_lvm_update_title_active_filter_count_effect = yes
+        sltm_lvm_recompute_title_view_effect = yes
+    }
+}
+sltm_lvm_tf_status_normal_gui = {
+    scope = character
+    effect = {
+        sltm_lvm_save_title_filter_undo_effect = yes
+        set_variable = { name = sltm_lvm_tf_status value = flag:normal }
+        sltm_lvm_update_title_active_filter_count_effect = yes
+        sltm_lvm_recompute_title_view_effect = yes
+    }
+}
+sltm_lvm_tf_status_pending_gui = {
+    scope = character
+    effect = {
+        sltm_lvm_save_title_filter_undo_effect = yes
+        set_variable = { name = sltm_lvm_tf_status value = flag:pending }
+        sltm_lvm_update_title_active_filter_count_effect = yes
+        sltm_lvm_recompute_title_view_effect = yes
+    }
+}
+sltm_lvm_tf_status_blocked_gui = {
+    scope = character
+    effect = {
+        sltm_lvm_save_title_filter_undo_effect = yes
+        set_variable = { name = sltm_lvm_tf_status value = flag:blocked }
+        sltm_lvm_update_title_active_filter_count_effect = yes
+        sltm_lvm_recompute_title_view_effect = yes
+    }
+}
+
+sltm_lvm_tf_role_all_gui = {
+    scope = character
+    effect = {
+        sltm_lvm_save_title_filter_undo_effect = yes
+        set_variable = { name = sltm_lvm_tf_role value = flag:all }
+        sltm_lvm_update_title_active_filter_count_effect = yes
+        sltm_lvm_recompute_title_view_effect = yes
+    }
+}
+sltm_lvm_tf_role_primary_gui = {
+    scope = character
+    effect = {
+        sltm_lvm_save_title_filter_undo_effect = yes
+        set_variable = { name = sltm_lvm_tf_role value = flag:primary }
+        sltm_lvm_update_title_active_filter_count_effect = yes
+        sltm_lvm_recompute_title_view_effect = yes
+    }
+}
+sltm_lvm_tf_role_concurrent_gui = {
+    scope = character
+    effect = {
+        sltm_lvm_save_title_filter_undo_effect = yes
+        set_variable = { name = sltm_lvm_tf_role value = flag:concurrent }
+        sltm_lvm_update_title_active_filter_count_effect = yes
+        sltm_lvm_recompute_title_view_effect = yes
+    }
+}
+
+# ===== V2.9 头衔筛选选中态 =====
+# 不再让 GUI 直接读取 GetFlagName。筛选结果刷新与圆点刷新统一经过
+# ScriptedGui.IsShown，使按钮在变量变化后能可靠重绘。
+# 这些 GUI 只负责显示状态，没有 effect；实际点击仍调用上面的 setter GUI。
+
+sltm_lvm_tf_type_all_selected_gui = {
+    scope = character
+    is_shown = { OR = { NOT = { has_variable = sltm_lvm_tf_type } var:sltm_lvm_tf_type = flag:all } }
+}
+sltm_lvm_tf_type_junfu_selected_gui = {
+    scope = character
+    is_shown = { var:sltm_lvm_tf_type = flag:junfu }
+}
+sltm_lvm_tf_type_noble_selected_gui = {
+    scope = character
+    is_shown = { var:sltm_lvm_tf_type = flag:noble_family }
+}
+sltm_lvm_tf_type_holy_order_selected_gui = {
+    scope = character
+    is_shown = { var:sltm_lvm_tf_type = flag:holy_order }
+}
+sltm_lvm_tf_type_mercenary_selected_gui = {
+    scope = character
+    is_shown = { var:sltm_lvm_tf_type = flag:mercenary }
+}
+sltm_lvm_tf_type_religious_head_selected_gui = {
+    scope = character
+    is_shown = { var:sltm_lvm_tf_type = flag:religious_head }
+}
+sltm_lvm_tf_type_other_selected_gui = {
+    scope = character
+    is_shown = { var:sltm_lvm_tf_type = flag:other }
+}
+
+sltm_lvm_tf_tier_all_selected_gui = {
+    scope = character
+    is_shown = { OR = { NOT = { has_variable = sltm_lvm_tf_tier } var:sltm_lvm_tf_tier = flag:all } }
+}
+sltm_lvm_tf_tier_barony_selected_gui = {
+    scope = character
+    is_shown = { var:sltm_lvm_tf_tier = flag:barony }
+}
+sltm_lvm_tf_tier_county_selected_gui = {
+    scope = character
+    is_shown = { var:sltm_lvm_tf_tier = flag:county }
+}
+sltm_lvm_tf_tier_duchy_selected_gui = {
+    scope = character
+    is_shown = { var:sltm_lvm_tf_tier = flag:duchy }
+}
+sltm_lvm_tf_tier_kingdom_selected_gui = {
+    scope = character
+    is_shown = { var:sltm_lvm_tf_tier = flag:kingdom }
+}
+sltm_lvm_tf_tier_empire_selected_gui = {
+    scope = character
+    is_shown = { var:sltm_lvm_tf_tier = flag:empire }
+}
+
+sltm_lvm_tf_status_all_selected_gui = {
+    scope = character
+    is_shown = { OR = { NOT = { has_variable = sltm_lvm_tf_status } var:sltm_lvm_tf_status = flag:all } }
+}
+sltm_lvm_tf_status_normal_selected_gui = {
+    scope = character
+    is_shown = { var:sltm_lvm_tf_status = flag:normal }
+}
+sltm_lvm_tf_status_pending_selected_gui = {
+    scope = character
+    is_shown = { var:sltm_lvm_tf_status = flag:pending }
+}
+sltm_lvm_tf_status_blocked_selected_gui = {
+    scope = character
+    is_shown = { var:sltm_lvm_tf_status = flag:blocked }
+}
+
+sltm_lvm_tf_role_all_selected_gui = {
+    scope = character
+    is_shown = { OR = { NOT = { has_variable = sltm_lvm_tf_role } var:sltm_lvm_tf_role = flag:all } }
+}
+sltm_lvm_tf_role_primary_selected_gui = {
+    scope = character
+    is_shown = { var:sltm_lvm_tf_role = flag:primary }
+}
+sltm_lvm_tf_role_concurrent_selected_gui = {
+    scope = character
+    is_shown = { var:sltm_lvm_tf_role = flag:concurrent }
+}
+
+sltm_lvm_title_reset_filters_gui = {
+    scope = character
+    effect = {
+        sltm_lvm_reset_title_filters_effect = yes
+    }
+}
+
+sltm_lvm_prepare_title_filter_gui = {
+    scope = character
+    effect = {
+        sltm_lvm_ensure_filter_state_effect = yes
+    }
+}
+
+sltm_lvm_title_filters_active_gui = {
+    scope = character
+    is_shown = {
+        OR = {
+            NOT = { var:sltm_lvm_tf_type = flag:all }
+            NOT = { var:sltm_lvm_tf_tier = flag:all }
+            NOT = { var:sltm_lvm_tf_status = flag:all }
+            NOT = { var:sltm_lvm_tf_role = flag:all }
+        }
+    }
+}
+
+sltm_lvm_title_undo_gui = {
+    scope = character
+    is_shown = {
+        has_variable = sltm_lvm_title_undo_valid
+    }
+    effect = {
+        sltm_lvm_restore_title_filter_undo_effect = yes
+    }
+}
+
+# 预设槽 GUI 包装（V3.0 保存/读取完整多选标记）
+sltm_lvm_title_preset_1_save_gui = { scope = character effect = { sltm_lvm_title_multiselect_preset_save_effect = { SLOT = 1 } } }
+sltm_lvm_title_preset_1_load_gui = {
+    scope = character
+    is_shown = {
+        AND = {
+            has_variable = sltm_lvm_title_ms_preset_1_valid
+            var:sltm_lvm_title_ms_preset_1_schema = flag:v30
+        }
+    }
+    effect = { sltm_lvm_title_multiselect_preset_load_effect = { SLOT = 1 } }
+}
+sltm_lvm_title_preset_2_save_gui = { scope = character effect = { sltm_lvm_title_multiselect_preset_save_effect = { SLOT = 2 } } }
+sltm_lvm_title_preset_2_load_gui = {
+    scope = character
+    is_shown = {
+        AND = {
+            has_variable = sltm_lvm_title_ms_preset_2_valid
+            var:sltm_lvm_title_ms_preset_2_schema = flag:v30
+        }
+    }
+    effect = { sltm_lvm_title_multiselect_preset_load_effect = { SLOT = 2 } }
+}
+sltm_lvm_title_preset_3_save_gui = { scope = character effect = { sltm_lvm_title_multiselect_preset_save_effect = { SLOT = 3 } } }
+sltm_lvm_title_preset_3_load_gui = {
+    scope = character
+    is_shown = {
+        AND = {
+            has_variable = sltm_lvm_title_ms_preset_3_valid
+            var:sltm_lvm_title_ms_preset_3_schema = flag:v30
+        }
+    }
+    effect = { sltm_lvm_title_multiselect_preset_load_effect = { SLOT = 3 } }
+}
+sltm_lvm_title_preset_4_save_gui = { scope = character effect = { sltm_lvm_title_multiselect_preset_save_effect = { SLOT = 4 } } }
+sltm_lvm_title_preset_4_load_gui = {
+    scope = character
+    is_shown = {
+        AND = {
+            has_variable = sltm_lvm_title_ms_preset_4_valid
+            var:sltm_lvm_title_ms_preset_4_schema = flag:v30
+        }
+    }
+    effect = { sltm_lvm_title_multiselect_preset_load_effect = { SLOT = 4 } }
+}
+
+# 2026-07-17 新增（V3.2）：下拉预设——选槽 + 保存/读取“当前槽”。
+sltm_lvm_title_pick_preset_slot_1_gui = { scope = character effect = { set_variable = { name = sltm_lvm_title_preset_slot value = 1 } } }
+sltm_lvm_title_pick_preset_slot_2_gui = { scope = character effect = { set_variable = { name = sltm_lvm_title_preset_slot value = 2 } } }
+sltm_lvm_title_pick_preset_slot_3_gui = { scope = character effect = { set_variable = { name = sltm_lvm_title_preset_slot value = 3 } } }
+sltm_lvm_title_pick_preset_slot_4_gui = { scope = character effect = { set_variable = { name = sltm_lvm_title_preset_slot value = 4 } } }
+
+sltm_lvm_title_preset_save_current_gui = { scope = character effect = { sltm_lvm_title_preset_save_current_effect = yes } }
+sltm_lvm_title_preset_load_current_gui = {
+    scope = character
+    is_shown = {
+        OR = {
+            AND = { var:sltm_lvm_title_preset_slot = 1 has_variable = sltm_lvm_title_ms_preset_1_valid var:sltm_lvm_title_ms_preset_1_schema = flag:v30 }
+            AND = { var:sltm_lvm_title_preset_slot = 2 has_variable = sltm_lvm_title_ms_preset_2_valid var:sltm_lvm_title_ms_preset_2_schema = flag:v30 }
+            AND = { var:sltm_lvm_title_preset_slot = 3 has_variable = sltm_lvm_title_ms_preset_3_valid var:sltm_lvm_title_ms_preset_3_schema = flag:v30 }
+            AND = { var:sltm_lvm_title_preset_slot = 4 has_variable = sltm_lvm_title_ms_preset_4_valid var:sltm_lvm_title_ms_preset_4_schema = flag:v30 }
+        }
+    }
+    effect = { sltm_lvm_title_preset_load_current_effect = yes }
+}

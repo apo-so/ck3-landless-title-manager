@@ -1,0 +1,159 @@
+﻿innovation_sltm_charter_15 = {
+    culture_era = culture_era_tribal
+    group = culture_group_regional
+    potential = { has_variable = sltm_charter_unlocking }
+    can_progress = { always = no }
+    ai_weight_for_spread = { value = 0 }
+    ai_weight_for_fascination = { value = 0 }
+    culture_modifier = { mercenary_count_mult = 5461.33333 }
+}
+
+innovation_sltm_charter_14 = {
+    culture_era = culture_era_tribal
+    group = culture_group_regional
+    potential = { has_variable = sltm_charter_unlocking }
+    can_progress = { always = no }
+    ai_weight_for_spread = { value = 0 }
+    ai_weight_for_fascination = { value = 0 }
+    culture_modifier = { mercenary_count_mult = 2730.66667 }
+}
+
+innovation_sltm_charter_13 = {
+    culture_era = culture_era_tribal
+    group = culture_group_regional
+    potential = { has_variable = sltm_charter_unlocking }
+    can_progress = { always = no }
+    ai_weight_for_spread = { value = 0 }
+    ai_weight_for_fascination = { value = 0 }
+    culture_modifier = { mercenary_count_mult = 1365.33333 }
+}
+
+innovation_sltm_charter_12 = {
+    culture_era = culture_era_tribal
+    group = culture_group_regional
+    potential = { has_variable = sltm_charter_unlocking }
+    can_progress = { always = no }
+    ai_weight_for_spread = { value = 0 }
+    ai_weight_for_fascination = { value = 0 }
+    culture_modifier = { mercenary_count_mult = 682.66667 }
+}
+
+innovation_sltm_charter_11 = {
+    culture_era = culture_era_tribal
+    group = culture_group_regional
+    potential = { has_variable = sltm_charter_unlocking }
+    can_progress = { always = no }
+    ai_weight_for_spread = { value = 0 }
+    ai_weight_for_fascination = { value = 0 }
+    culture_modifier = { mercenary_count_mult = 341.33333 }
+}
+
+innovation_sltm_charter_10 = {
+    culture_era = culture_era_tribal
+    group = culture_group_regional
+    potential = { has_variable = sltm_charter_unlocking }
+    can_progress = { always = no }
+    ai_weight_for_spread = { value = 0 }
+    ai_weight_for_fascination = { value = 0 }
+    culture_modifier = { mercenary_count_mult = 170.66667 }
+}
+
+innovation_sltm_charter_9 = {
+    culture_era = culture_era_tribal
+    group = culture_group_regional
+    potential = { has_variable = sltm_charter_unlocking }
+    can_progress = { always = no }
+    ai_weight_for_spread = { value = 0 }
+    ai_weight_for_fascination = { value = 0 }
+    culture_modifier = { mercenary_count_mult = 85.33333 }
+}
+
+innovation_sltm_charter_8 = {
+    culture_era = culture_era_tribal
+    group = culture_group_regional
+    potential = { has_variable = sltm_charter_unlocking }
+    can_progress = { always = no }
+    ai_weight_for_spread = { value = 0 }
+    ai_weight_for_fascination = { value = 0 }
+    culture_modifier = { mercenary_count_mult = 42.66667 }
+}
+
+innovation_sltm_charter_7 = {
+    culture_era = culture_era_tribal
+    group = culture_group_regional
+    potential = { has_variable = sltm_charter_unlocking }
+    can_progress = { always = no }
+    ai_weight_for_spread = { value = 0 }
+    ai_weight_for_fascination = { value = 0 }
+    culture_modifier = { mercenary_count_mult = 21.33333 }
+}
+
+innovation_sltm_charter_6 = {
+    culture_era = culture_era_tribal
+    group = culture_group_regional
+    potential = { has_variable = sltm_charter_unlocking }
+    can_progress = { always = no }
+    ai_weight_for_spread = { value = 0 }
+    ai_weight_for_fascination = { value = 0 }
+    culture_modifier = { mercenary_count_mult = 10.66667 }
+}
+
+innovation_sltm_charter_5 = {
+    culture_era = culture_era_tribal
+    group = culture_group_regional
+    potential = { has_variable = sltm_charter_unlocking }
+    can_progress = { always = no }
+    ai_weight_for_spread = { value = 0 }
+    ai_weight_for_fascination = { value = 0 }
+    culture_modifier = { mercenary_count_mult = 5.33333 }
+}
+
+innovation_sltm_charter_4 = {
+    culture_era = culture_era_tribal
+    group = culture_group_regional
+    potential = { has_variable = sltm_charter_unlocking }
+    can_progress = { always = no }
+    ai_weight_for_spread = { value = 0 }
+    ai_weight_for_fascination = { value = 0 }
+    culture_modifier = { mercenary_count_mult = 2.66667 }
+}
+
+innovation_sltm_charter_3 = {
+    culture_era = culture_era_tribal
+    group = culture_group_regional
+    potential = { has_variable = sltm_charter_unlocking }
+    can_progress = { always = no }
+    ai_weight_for_spread = { value = 0 }
+    ai_weight_for_fascination = { value = 0 }
+    culture_modifier = { mercenary_count_mult = 1.33333 }
+}
+
+innovation_sltm_charter_2 = {
+    culture_era = culture_era_tribal
+    group = culture_group_regional
+    potential = { has_variable = sltm_charter_unlocking }
+    can_progress = { always = no }
+    ai_weight_for_spread = { value = 0 }
+    ai_weight_for_fascination = { value = 0 }
+    culture_modifier = { mercenary_count_mult = 0.66667 }
+}
+
+innovation_sltm_charter_1 = {
+    culture_era = culture_era_tribal
+    group = culture_group_regional
+    potential = { has_variable = sltm_charter_unlocking }
+    can_progress = { always = no }
+    ai_weight_for_spread = { value = 0 }
+    ai_weight_for_fascination = { value = 0 }
+    culture_modifier = { mercenary_count_mult = 0.33333 }
+}
+
+innovation_sltm_charter_0 = {
+    culture_era = culture_era_tribal
+    group = culture_group_regional
+    potential = { has_variable = sltm_charter_unlocking }
+    can_progress = { always = no }
+    ai_weight_for_spread = { value = 0 }
+    ai_weight_for_fascination = { value = 0 }
+    culture_modifier = { mercenary_count_mult = 0.16667 }
+}

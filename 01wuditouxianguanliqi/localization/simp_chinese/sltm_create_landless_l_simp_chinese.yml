@@ -1,0 +1,497 @@
+﻿l_simp_chinese:
+ SLTM_CLW_TITLE:0 "创立无地头衔"
+ SLTM_CLW_STEP_1:0 "第 1 步 / 共 2 步"
+ SLTM_CLW_STEP_2:0 "第 2 步 / 共 2 步"
+ SLTM_CLW_HEADER_HINT:0 "先选择方案，最后核对时才创建"
+ SLTM_CLW_LIST_CAPTION_CAT:0 "选择头衔类别（单选）"
+ SLTM_CLW_LIST_CAPTION_DOM:0 "选择住所类型（单选）"
+ SLTM_CLW_SIDE_TITLE:0 "本次选择"
+ SLTM_CLW_SIDE_STATE_TITLE:0 "可创建的内容"
+ SLTM_CLW_BACK:0 "返回"
+ SLTM_CLW_CANCEL:0 "取消"
+ SLTM_CLW_PRIMARY_NEXT:0 "下一步：选择住所"
+ SLTM_CLW_PRIMARY_CONFIRM_CAT:0 "继续：选择位阶"
+ SLTM_CLW_PRIMARY_CONFIRM_DOM:0 "继续设置"
+ SLTM_CLW_PRIMARY_NEED_CAT:0 "请先选择类别"
+ SLTM_CLW_NEXT_STEPS_TITLE:0 "下一步"
+ SLTM_CLW_WRITE_TITLE:0 "确认后的去向"
+ SLTM_CLW_WRITE_PLAIN:0 "选择头衔位阶，再设置名称和规则。"
+ SLTM_CLW_WRITE_DOM:0 "按所选住所继续设置头衔。"
+ SLTM_CLW_WRITE_PENDING:0 "请改选已可创建的类别。"
+ SLTM_CLW_REF_TITLE:0 "拟持有人"
+ SLTM_CLW_CAT_REF:0 "[GetPlayer.MakeScope.Var('sltm_create_holder').Char.GetName]"
+ SLTM_CLW_DOM_REF:0 "[GetPlayer.MakeScope.Var('sltm_create_holder').Char.GetName]"
+ SLTM_CLW_PAGE1_NOTE:0 "先选类别。住所头衔还需选住所；选择本身不会创建或改变任何头衔。"
+ SLTM_CLW_DOM_EMPTY:0 "请在左侧选择一种住所"
+ SLTM_CLW_DOM_STATE:0 "带住所的头衔"
+ SLTM_CLW_DOM_NEXT:0 "如果同一住所对应多种政体，下一步可以选择；然后设置位阶、名称，并核对后创建。"
+ SLTM_CLW_FOOTER_HINT:0 "返回保留选择；取消放弃本次创建。"
+ SLTM_CLW_SUM_DOM_NONE:0 "住所头衔 · 待选住所"
+ SLTM_CLW_SIDE_NONE:0 "尚未选择头衔类别"
+
+ SLTM_CLW_CAT_1:0 "教区头衔"
+
+ SLTM_CLW_CAT_DESC_1:0 "划出由头衔管辖的实际伯爵领。"
+
+ SLTM_CLW_CAT_ROUTE_1:0 "教区首府须能组成辖区。新主教区有独立的辖县，可从回执编辑。"
+
+ SLTM_CLW_CAT_STATE_1:0 "可创立"
+
+ SLTM_CLW_CAT_NOTE_1:0 "优先使用标记的伯爵领或男爵领，否则使用拟持有人的首府。没有空余辖区时，尝试依其领地分出教区。"
+ SLTM_CLW_CAT_NEXT_1:0 "若只需教会住所，可改选“住所头衔 → 教会庄园”。"
+ SLTM_CLW_KIND_VAR_1:0 ""
+ SLTM_CLW_CAT_2:0 "普通无地头衔"
+ SLTM_CLW_CAT_DESC_2:0 "创建可以由指定人物持有的无地头衔，不附带住所。"
+ SLTM_CLW_CAT_ROUTE_2:0 "普通无地头衔"
+ SLTM_CLW_CAT_STATE_2:0 "可创建"
+ SLTM_CLW_CAT_NOTE_2:0 "可以指定名称、位阶、外观和继承规则。"
+ SLTM_CLW_CAT_NEXT_2:0 "选择位阶 → 设置名称、规则 → 核对创建。"
+ SLTM_CLW_KIND_VAR_2:0 ""
+ SLTM_CLW_CAT_3:0 "住所头衔"
+ SLTM_CLW_CAT_DESC_3:0 "创建绑定住所的头衔。原生住所和本 Mod 的独立宅邸都可选择。"
+ SLTM_CLW_CAT_ROUTE_3:0 "选择住所类型"
+ SLTM_CLW_CAT_STATE_3:0 "可继续"
+ SLTM_CLW_CAT_NOTE_3:0 "创建额外住所不代表更换默认住所或取得整套原生身份。"
+ SLTM_CLW_CAT_NEXT_3:0 "下一页选择想要的住所。"
+ SLTM_CLW_KIND_VAR_3:0 ""
+ SLTM_CLW_CAT_4:0 "游牧头衔"
+ SLTM_CLW_CAT_DESC_4:0 "创建绑定游牧首都的头衔。"
+ SLTM_CLW_CAT_ROUTE_4:0 "游牧首都"
+ SLTM_CLW_CAT_STATE_4:0 "可创建住所头衔"
+ SLTM_CLW_CAT_NOTE_4:0 "创建头衔与毡帐；不会主动切换持有人的政体。"
+ SLTM_CLW_CAT_NEXT_4:0 "选择位阶 → 设置名称、规则 → 核对创建。"
+ SLTM_CLW_KIND_VAR_4:0 ""
+ SLTM_CLW_CAT_5:0 "冒险者头衔"
+ SLTM_CLW_CAT_DESC_5:0 "创建绑定冒险者营地的头衔。"
+ SLTM_CLW_CAT_ROUTE_5:0 "冒险者营地"
+ SLTM_CLW_CAT_STATE_5:0 "可创建住所头衔"
+ SLTM_CLW_CAT_NOTE_5:0 "创建头衔与营地；不会主动把持有人转成冒险者。"
+ SLTM_CLW_CAT_NEXT_5:0 "选择位阶 → 设置名称、规则 → 核对创建。"
+ SLTM_CLW_KIND_VAR_5:0 ""
+
+ SLTM_CLW_CAT_6:0 "军事修会头衔"
+
+ SLTM_CLW_CAT_DESC_6:0 "建立军事修会，兼任团长。"
+
+ SLTM_CLW_CAT_ROUTE_6:0 "优先使用适格的标记男爵领。保留原政体，核对团长、总部租约和军事修会组织。"
+
+ SLTM_CLW_CAT_STATE_6:0 "可创立"
+
+ SLTM_CLW_CAT_NOTE_6:0 "授予真实团长头衔并租用驻地。若驻地由市长或男爵单独持有，会先归当地伯爵，再交修会租用。"
+ SLTM_CLW_CAT_NEXT_6:0 "若只需要无地头衔，可改选“普通无地头衔”。"
+ SLTM_CLW_KIND_VAR_6:0 ""
+
+ SLTM_CLW_CAT_7:0 "修会头衔"
+
+ SLTM_CLW_CAT_DESC_7:0 "建立有驻地的非军事修会。"
+
+ SLTM_CLW_CAT_ROUTE_7:0 "优先使用适格的标记男爵领。核对修会类型、领袖与租约。"
+
+ SLTM_CLW_CAT_STATE_7:0 "可创立"
+
+ SLTM_CLW_CAT_NOTE_7:0 "为拟持有人建立隐修会并租用驻地。若驻地由市长或男爵单独持有，会先归当地伯爵，再交修会租用。"
+ SLTM_CLW_CAT_NEXT_7:0 "若只需要无地头衔，可改选“普通无地头衔”。"
+ SLTM_CLW_KIND_VAR_7:0 ""
+
+ SLTM_CLW_CAT_8:0 "佣兵团头衔"
+
+ SLTM_CLW_CAT_DESC_8:0 "暂未开放；建议从现有佣兵团取得头衔。"
+
+ SLTM_CLW_CAT_ROUTE_8:0 "当前引擎未开放可用的即时创建接口，普通 Mod 无法直接新建真实佣兵公司及其特殊头衔。"
+
+ SLTM_CLW_CAT_STATE_8:0 "可筹建"
+
+ SLTM_CLW_CAT_NOTE_8:0 "建议从已有佣兵团取得头衔；这是转移现有团号，不会增加佣兵团数量。"
+ SLTM_CLW_CAT_NEXT_8:0 "若只需要无地头衔，可改选“普通无地头衔”。"
+ SLTM_CLW_KIND_VAR_8:0 ""
+ SLTM_CLW_DOM_1:0 "营地"
+ SLTM_CLW_DOM_NAME_1:0 "营地"
+ SLTM_CLW_DOM_DESC_1:0 "冒险者营地；可手动迁移，随队伍移动。"
+ SLTM_CLW_DOM_SOURCE_1:0 ""
+ SLTM_CLW_DOM_NOTE_1:0 "采用冒险者营地方案。"
+ SLTM_CLW_DOM_ID_1:0 ""
+ SLTM_CLW_SUM_DOM_1:0 "住所头衔 · 营地"
+ SLTM_CLW_DOM_2:0 "庄园（家族）"
+ SLTM_CLW_DOM_NAME_2:0 "庄园（家族）"
+ SLTM_CLW_DOM_DESC_2:0 "家族庄园；需要家族头衔，可手动迁移。"
+ SLTM_CLW_DOM_SOURCE_2:0 ""
+ SLTM_CLW_DOM_NOTE_2:0 "采用行政庄园方案。"
+ SLTM_CLW_DOM_ID_2:0 ""
+ SLTM_CLW_SUM_DOM_2:0 "住所头衔 · 庄园（家族）"
+ SLTM_CLW_DOM_3:0 "游牧首都"
+ SLTM_CLW_DOM_NAME_3:0 "游牧首都"
+ SLTM_CLW_DOM_DESC_3:0 "游牧首都；随领地首都移动，不可手动迁移。"
+ SLTM_CLW_DOM_SOURCE_3:0 ""
+ SLTM_CLW_DOM_NOTE_3:0 "采用游牧毡帐方案。"
+ SLTM_CLW_DOM_ID_3:0 ""
+ SLTM_CLW_SUM_DOM_3:0 "住所头衔 · 游牧首都"
+ SLTM_CLW_DOM_4:0 "庄园（东亚）"
+ SLTM_CLW_DOM_NAME_4:0 "庄园（东亚）"
+ SLTM_CLW_DOM_DESC_4:0 "东亚家族庄园；类型名与家族庄园同为「庄园」，靠括注区分。"
+ SLTM_CLW_DOM_SOURCE_4:0 ""
+ SLTM_CLW_DOM_NOTE_4:0 "继续后从三种东亚政体方案中选择。"
+ SLTM_CLW_DOM_ID_4:0 ""
+ SLTM_CLW_SUM_DOM_4:0 "住所头衔 · 庄园（东亚）"
+ SLTM_CLW_DOM_5:0 "教会庄园"
+ SLTM_CLW_DOM_NAME_5:0 "教会庄园"
+ SLTM_CLW_DOM_DESC_5:0 "教会庄园；要求教会政体。"
+ SLTM_CLW_DOM_SOURCE_5:0 ""
+ SLTM_CLW_DOM_NOTE_5:0 "创建教会住所；不会同时创立教区。"
+ SLTM_CLW_DOM_ID_5:0 ""
+ SLTM_CLW_SUM_DOM_5:0 "住所头衔 · 教会庄园"
+ SLTM_CLW_DOM_6:0 "庄园（日本）"
+ SLTM_CLW_DOM_NAME_6:0 "庄园（日本）"
+ SLTM_CLW_DOM_DESC_6:0 "日本庄园；需要家族头衔，可手动迁移。"
+ SLTM_CLW_DOM_SOURCE_6:0 ""
+ SLTM_CLW_DOM_NOTE_6:0 "继续后从两种日本政体方案中选择。"
+ SLTM_CLW_DOM_ID_6:0 ""
+ SLTM_CLW_SUM_DOM_6:0 "住所头衔 · 庄园（日本）"
+ SLTM_CLW_BLANK:0 ""
+ SLTM_CLW_UNAVAILABLE:0 "此类暂未开放"
+ SLTM_CLW_WRITE_SHELL:0 "下一步选择位阶；创建时请求所示的住所头衔。"
+ SLTM_CLW_DOM_7:0 "独立宅邸（本 Mod）"
+ SLTM_CLW_DOM_NAME_7:0 "独立宅邸"
+ SLTM_CLW_DOM_DESC_7:0 "创建本 Mod 的额外住所头衔，使用独立宅邸和主楼。"
+ SLTM_CLW_DOM_SOURCE_7:0 ""
+ SLTM_CLW_DOM_ID_7:0 ""
+ SLTM_CLW_DOM_NOTE_7:0 "不替换持有人原本的家族庄园、营地或游牧首都。"
+ SLTM_CLW_SUM_DOM_7:0 "住所头衔 · 独立宅邸"
+ sltm_menu_create_interaction:0 "创立无地头衔"
+ sltm_menu_create_interaction_desc:0 "为这名人物打开创立窗口。只有在最后核对时才会创建头衔。"
+ sltm_menu_edit_interaction:0 "头衔属性编辑器"
+ sltm_menu_edit_interaction_desc:0 "选择这名人物持有的头衔作为编辑目标 A。来源 B 取自你提前标记的头衔。"
+ sltm_menu_edit_list_interaction:0 "$sltm_landless_title_manager_interactions$"
+ sltm_menu_edit_list_interaction_desc:0 "为这名人物创立无地头衔，或打开头衔属性编辑器。"
+ sltm_menu_nominee_holder:0 "仍由本次互动的人物持有"
+ sltm_menu_back_to_choice:0 "返回创立窗口，重新选择方案"
+ sltm_menu_edit_entered_name:0 "[ROOT.Char.GetLocalizedText('sltm_edit_accepted_name')]"
+ sltm_menu_open_creation:0 "打开创立窗口"
+ sltm_menu_open_editor:0 "打开头衔属性编辑器"
+ sltm_menu_open_list:0 "打开头衔属性编辑器"
+
+ SLTM_AT_KICKER:0 "头 衔 图 鉴"
+ SLTM_AT_HOLDER:0 "拟持有人"
+ SLTM_AT_CLOSE:0 "×"
+ SLTM_AT_MARKS:0 "书签"
+ SLTM_AT_GROUP_0:0 "全卷"
+
+ SLTM_AT_COUNT_0:0 "收录 10 种头衔"
+
+ SLTM_AT_GROUP_1:0 "通用"
+
+ SLTM_AT_COUNT_1:0 "书签内 1 种头衔"
+
+ SLTM_AT_GROUP_2:0 "居所"
+
+ SLTM_AT_COUNT_2:0 "书签内 4 种头衔"
+
+ SLTM_AT_GROUP_3:0 "教会"
+
+ SLTM_AT_COUNT_3:0 "书签内 5 种头衔"
+
+ SLTM_AT_GROUP_4:0 "军务"
+
+ SLTM_AT_COUNT_4:0 "书签内 2 种头衔"
+
+ SLTM_AT_OV_0_0_0_R:0 "图鉴总目   01 — 04"
+
+ SLTM_AT_OV_0_0_0_H:0 "持有与居所"
+
+ SLTM_AT_SUM_PLAIN:0 "单独创立一项可授予人物的头衔。"
+
+ SLTM_AT_NO_PLAIN:0 "01"
+
+ SLTM_AT_SUM_HOME:0 "选一座住所，与新头衔绑定。"
+
+ SLTM_AT_NO_HOME:0 "02"
+
+ SLTM_AT_SUM_NOMAD:0 "让游牧首都随头衔一并创立。"
+
+ SLTM_AT_NO_NOMAD:0 "03"
+
+ SLTM_AT_SUM_ADVENTURER:0 "为持有人备下一座冒险者营地。"
+
+ SLTM_AT_NO_ADVENTURER:0 "04"
+
+ SLTM_AT_FOLIO_1:0 "—   01   —"
+
+ SLTM_AT_OV_0_0_1_R:0 "图鉴总目   05 — 08"
+
+ SLTM_AT_OV_0_0_1_H:0 "教会与军团"
+
+ SLTM_AT_SUM_DIOCESE:0 "划出由头衔管辖的实际伯爵领。"
+
+ SLTM_AT_NO_DIOCESE:0 "05"
+
+ SLTM_AT_SUM_ORDER:0 "建立有驻地的非军事修会。"
+
+ SLTM_AT_NO_ORDER:0 "06"
+
+ SLTM_AT_SUM_MILITARY:0 "建立军事修会，兼任团长。"
+
+ SLTM_AT_NO_MILITARY:0 "07"
+
+ SLTM_AT_SUM_COMPANY:0 "暂未开放 · 可从现有佣兵团取得头衔。"
+
+ SLTM_AT_NO_COMPANY:0 "08"
+
+ SLTM_AT_FOLIO_2:0 "—   02   —"
+
+ SLTM_AT_PAGE_0_1:0 "第 1 / 1 跨页"
+
+ SLTM_AT_OV_1_0_0_R:0 "图鉴总目   01"
+
+ SLTM_AT_OV_1_0_0_H:0 "持有与居所"
+
+ SLTM_AT_END:0 "本目至此"
+
+ SLTM_AT_OV_2_0_0_R:0 "图鉴总目   02 — 05"
+
+ SLTM_AT_OV_2_0_0_H:0 "头衔目录"
+
+ SLTM_AT_OV_3_0_0_R:0 "图鉴总目   05 — 09"
+
+ SLTM_AT_OV_3_0_0_H:0 "教会与军团"
+
+ SLTM_AT_OV_4_0_0_R:0 "图鉴总目   07 — 08"
+
+ SLTM_AT_OV_4_0_0_H:0 "教会与军团"
+
+ SLTM_AT_INDEX:0 "图鉴目录"
+
+ SLTM_AT_INDEX_0:0 "分类索引"
+
+ SLTM_AT_TALLY_0:0 "10 种头衔 · 12 处收录"
+
+ SLTM_AT_INDEX_1:0 "通用条目"
+
+ SLTM_AT_TALLY_1:0 "本书签收录 1 种头衔"
+
+ SLTM_AT_INDEX_2:0 "居所条目"
+
+ SLTM_AT_TALLY_2:0 "本书签收录 4 种头衔"
+
+ SLTM_AT_INDEX_3:0 "教会条目"
+
+ SLTM_AT_TALLY_3:0 "本书签收录 5 种头衔"
+
+ SLTM_AT_INDEX_4:0 "军务条目"
+
+ SLTM_AT_TALLY_4:0 "本书签收录 2 种头衔"
+ SLTM_AT_ART_PLAIN:0 "图鉴词条   № 01"
+
+ SLTM_AT_LISTED:0 "收录于"
+ SLTM_AT_BODY_PLAIN:0 "所选位阶高于当前主头衔时，新头衔将成为主头衔，并可能改变封臣关系。同级可保留原主头衔。"
+ SLTM_AT_DTYPE_PLAIN:0 "创立方案"
+ SLTM_AT_FORM_PLAIN:0 "单独持有头衔"
+ SLTM_AT_FOOT_PLAIN:0 "词条 01"
+
+ SLTM_AT_CREATE:0 "以此类型创立"
+ SLTM_AT_ART_HOME:0 "图鉴词条   № 02"
+ SLTM_AT_BODY_HOME:0 "这项头衔携带一座住所。可以采用原生住所，也可以创立本 Mod 的独立宅邸。"
+ SLTM_AT_BIND:0 "绑定住所"
+ SLTM_AT_PICK:0 "选择一种住所…"
+ SLTM_AT_HOMES:0 "六种原生住所及一座独立宅邸。"
+ SLTM_AT_FOOT_HOME:0 "词条 02"
+ SLTM_AT_NEEDHOME:0 "选择住所后可继续"
+ SLTM_AT_ART_NOMAD:0 "图鉴词条   № 03"
+ SLTM_AT_BODY_NOMAD:0 "按游牧首都方案创立带毡帐的头衔。持有人沿用现行政体。"
+ SLTM_AT_DTYPE_NOMAD:0 "创立方案"
+ SLTM_AT_FORM_NOMAD:0 "游牧首都"
+ SLTM_AT_FOOT_NOMAD:0 "词条 03"
+ SLTM_AT_ART_ADVENTURER:0 "图鉴词条   № 04"
+ SLTM_AT_BODY_ADVENTURER:0 "按冒险者营地方案创立头衔与营地。持有人沿用原有身份。"
+ SLTM_AT_DTYPE_ADVENTURER:0 "创立方案"
+ SLTM_AT_FORM_ADVENTURER:0 "冒险者营地"
+ SLTM_AT_FOOT_ADVENTURER:0 "词条 04"
+
+ SLTM_AT_ART_DIOCESE:0 "图鉴词条   № 05"
+
+ SLTM_AT_BODY_DIOCESE:0 "优先使用标记的伯爵领或男爵领，否则使用拟持有人的首府。没有空余辖区时，尝试依其领地分出教区。"
+
+ SLTM_AT_DTYPE_DIOCESE:0 "创立方案"
+
+ SLTM_AT_FORM_DIOCESE:0 "教区首府须能组成辖区。新主教区有独立的辖县，可从回执编辑。"
+
+ SLTM_AT_FOOT_DIOCESE:0 "词条 05"
+ SLTM_AT_LOCKED:0 "未开放"
+
+ SLTM_AT_ART_ORDER:0 "图鉴词条   № 06"
+
+ SLTM_AT_BODY_ORDER:0 "为拟持有人建立隐修会并租用驻地。若驻地由市长或男爵单独持有，会先归当地伯爵，再交修会租用。"
+
+ SLTM_AT_DTYPE_ORDER:0 "创立方案"
+
+ SLTM_AT_FORM_ORDER:0 "优先使用适格的标记男爵领。核对修会类型、领袖与租约。"
+
+ SLTM_AT_FOOT_ORDER:0 "词条 06"
+
+ SLTM_AT_ART_MILITARY:0 "图鉴词条   № 07"
+
+ SLTM_AT_BODY_MILITARY:0 "授予真实团长头衔并租用驻地。若驻地由市长或男爵单独持有，会先归当地伯爵，再交修会租用。"
+
+ SLTM_AT_DTYPE_MILITARY:0 "创立方案"
+
+ SLTM_AT_FORM_MILITARY:0 "优先使用适格的标记男爵领。保留原政体，核对团长、总部租约和军事修会组织。"
+
+ SLTM_AT_FOOT_MILITARY:0 "词条 07"
+
+ SLTM_AT_ART_COMPANY:0 "图鉴词条   № 08"
+
+ SLTM_AT_BODY_COMPANY:0 "受当前引擎脚本接口限制，普通 Mod 无法直接即时新建真实佣兵公司及其特殊头衔。本项暂未开放。"
+
+ SLTM_AT_DTYPE_COMPANY:0 "获取已有佣兵团头衔"
+
+ SLTM_AT_FORM_COMPANY:0 "建议直接从已有佣兵团取得头衔。\n对团长打开「无地头衔管理」，选中其佣兵团头衔，再用「剥夺所选头衔」取得。\n这是转移已有头衔，不会新建佣兵团。"
+
+ SLTM_AT_FOOT_COMPANY:0 "词条 08"
+ SLTM_AT_BACK:0 "‹ 返回总览"
+ SLTM_AT_TIER:0 "头衔位阶"
+ SLTM_AT_CREATE_EDIT:0 "创立并编辑属性"
+ SLTM_AT_GOV:0 "政体"
+ SLTM_AT_GOV_4:0 "天朝"
+ SLTM_AT_GOV_5:0 "草原行政"
+ SLTM_AT_GOV_6:0 "贤能"
+ SLTM_AT_GOV_7:0 "日本行政"
+ SLTM_AT_GOV_8:0 "日本封建"
+ SLTM_AT_CREATED:0 "头衔已创立"
+ SLTM_AT_CREATED_DETAIL:0 "[sltm_holder.GetName]已获得[sltm_created.GetName]。"
+ SLTM_AT_BACK_TO_ATLAS:0 "返回图鉴，继续创立"
+ SLTM_DD_COUNTY:0 "普通头衔不可用"
+ SLTM_DD_GOV:0 "住所政体"
+ SLTM_DD_THIS:0 "本次创立"
+ SLTM_DD_PLAN:0 "[GetPlayer.Custom('sltm_clw_cat_name')] · [GetPlayer.Custom('sltm_create_tier_text')]"
+ SLTM_DD_TO:0 "授予 [GetPlayer.MakeScope.Var('sltm_create_holder').Char.GetName]"
+ SLTM_DD_RESULT:0 "[GetPlayer.MakeScope.Var('sltm_atlas_receipt_target').Title.GetName]"
+ SLTM_DD_RESULT_HOLDER:0 "已授予 [GetPlayer.MakeScope.Var('sltm_create_holder').Char.GetName]"
+ SLTM_DD_PARTIAL:0 "部分附加属性未通过核对，费用未结算。"
+ SLTM_DD_EDIT:0 "编辑这个头衔"
+ SLTM_DD_HOME_TO:0 "[GetPlayer.Custom('sltm_clw_dom_name')] · 授予 [GetPlayer.MakeScope.Var('sltm_create_holder').Char.GetName]"
+
+ SLTM_CLW_CAT_9:0 "宗教领袖头衔"
+ SLTM_CLW_CAT_DESC_9:0 "设立信仰领袖；可能改变政体与法律。"
+ SLTM_CLW_CAT_ROUTE_9:0 "天主教封建领主实测会转为教会制，并更换领地法律。本版不自动恢复原政体与法律。"
+ SLTM_CLW_CAT_STATE_9:0 "可创立"
+ SLTM_CLW_CAT_NOTE_9:0 "已有领袖时会替换登记，不会并列新增领袖；须再次点击确认，原领袖头衔不主动销毁。"
+ SLTM_CLW_CAT_10:0 "枢机头衔"
+ SLTM_CLW_CAT_DESC_10:0 "建立登记在本信仰选举团中的席位。"
+ SLTM_CLW_CAT_ROUTE_10:0 "信仰须有教会选举人机制。已有席位或正在主持本信仰的领袖不能再占一个投票席位。"
+ SLTM_CLW_CAT_STATE_10:0 "可创立"
+ SLTM_CLW_CAT_NOTE_10:0 "给拟持有人创立枢机席位，核对人物的席位与信仰选举人名册。玩家新建的席位允许世俗持有人兼领。"
+ SLTM_AT_PAGE_0_2:0 "第 1 / 2 跨页"
+ SLTM_AT_NEXT:0 "下一跨页"
+ SLTM_AT_OV_0_1_0_R:0 "图鉴总目   09 — 10"
+ SLTM_AT_OV_0_1_0_H:0 "教会与军团"
+ SLTM_AT_SUM_HEAD:0 "设立信仰领袖；可能改变政体与法律。"
+ SLTM_AT_NO_HEAD:0 "09"
+ SLTM_AT_SUM_CARDINAL:0 "建立登记在本信仰选举团中的席位。"
+ SLTM_AT_NO_CARDINAL:0 "10"
+ SLTM_AT_FOLIO_3:0 "—   03   —"
+ SLTM_AT_FOLIO_4:0 "—   04   —"
+ SLTM_AT_PAGE_1_2:0 "第 2 / 2 跨页"
+ SLTM_AT_PREV:0 "上一跨页"
+ SLTM_AT_OV_3_0_1_R:0 "图鉴总目   10"
+ SLTM_AT_OV_3_0_1_H:0 "教会与军团"
+ SLTM_AT_ART_HEAD:0 "图鉴词条   № 09"
+ SLTM_AT_BODY_HEAD:0 "为拟持有人所属信仰设立领袖。已有领袖时替换登记，不会并列新增；原领袖头衔不主动销毁。"
+ SLTM_AT_DTYPE_HEAD:0 "政体与继承限制"
+ SLTM_AT_FORM_HEAD:0 "已有领袖时须再次点击确认改立。请先确认能接受以上变化。"
+ SLTM_AT_LIMITS_HEAD:0 "天主教封建领主实测会转为教会制，领地继承法等也会更换，读档后仍保留这些变化。\n本版不自动恢复原政体与法律。其他信仰、政体组合尚未验证。"
+ SLTM_AT_FOOT_HEAD:0 "词条 09"
+ SLTM_AT_ART_CARDINAL:0 "图鉴词条   № 10"
+ SLTM_AT_BODY_CARDINAL:0 "给拟持有人创立枢机席位，核对人物的席位与信仰选举人名册。玩家新建的席位允许世俗持有人兼领。"
+ SLTM_AT_DTYPE_CARDINAL:0 "创立方案"
+ SLTM_AT_FORM_CARDINAL:0 "信仰须有教会选举人机制。已有席位或正在主持本信仰的领袖不能再占一个投票席位。"
+ SLTM_AT_FOOT_CARDINAL:0 "词条 10"
+ SLTM_SP_DIOCESE:0 "新教区"
+ SLTM_SP_HEAD:0 "宗教领袖座"
+ SLTM_SP_CARDINAL:0 "枢机席位"
+ SLTM_SP_COMPANY:0 "自由佣兵团"
+ SLTM_SP_HEAD_STATUS:0 "[GetPlayer.Custom('sltm_hof_warning')]"
+ SLTM_SP_HEAD_AGAIN:0 "再次点击，将改立[GetPlayer.MakeScope.Var('sltm_hof_confirm_nominee').Char.GetShortUIName]。原领袖头衔为[GetPlayer.MakeScope.Var('sltm_hof_confirm_title').Title.GetName]。"
+ SLTM_SP_FAILED:0 "尚未建成头衔"
+ SLTM_SP_REASON:0 "[GetPlayer.Custom('sltm_special_failure_reason')]"
+ SLTM_SP_NO_REGION:0 "未生成新辖区。可标记一个仍有空余辖县的伯爵领再试。"
+ SLTM_SP_NO_ORDER:0 "未建立修会。可在头衔详情标记一个已建成、空闲且可出租的男爵领，再从这里创立。"
+ SLTM_SP_NO_CARDINAL:0 "需要有教会选举人的信仰，且该人物没有席位，也不是主持选举的宗教领袖。"
+ SLTM_SP_NO_OBJECT:0 "本次没有返回新的制度头衔，未扣费。"
+
+ innovation_sltm_charter_15:0 "佣兵特许名额"
+ innovation_sltm_charter_15_desc:0 "仅记录本文化主动签发的原版佣兵团特许配额。"
+ innovation_sltm_charter_14:0 "佣兵特许名额"
+ innovation_sltm_charter_14_desc:0 "仅记录本文化主动签发的原版佣兵团特许配额。"
+ innovation_sltm_charter_13:0 "佣兵特许名额"
+ innovation_sltm_charter_13_desc:0 "仅记录本文化主动签发的原版佣兵团特许配额。"
+ innovation_sltm_charter_12:0 "佣兵特许名额"
+ innovation_sltm_charter_12_desc:0 "仅记录本文化主动签发的原版佣兵团特许配额。"
+ innovation_sltm_charter_11:0 "佣兵特许名额"
+ innovation_sltm_charter_11_desc:0 "仅记录本文化主动签发的原版佣兵团特许配额。"
+ innovation_sltm_charter_10:0 "佣兵特许名额"
+ innovation_sltm_charter_10_desc:0 "仅记录本文化主动签发的原版佣兵团特许配额。"
+ innovation_sltm_charter_9:0 "佣兵特许名额"
+ innovation_sltm_charter_9_desc:0 "仅记录本文化主动签发的原版佣兵团特许配额。"
+ innovation_sltm_charter_8:0 "佣兵特许名额"
+ innovation_sltm_charter_8_desc:0 "仅记录本文化主动签发的原版佣兵团特许配额。"
+ innovation_sltm_charter_7:0 "佣兵特许名额"
+ innovation_sltm_charter_7_desc:0 "仅记录本文化主动签发的原版佣兵团特许配额。"
+ innovation_sltm_charter_6:0 "佣兵特许名额"
+ innovation_sltm_charter_6_desc:0 "仅记录本文化主动签发的原版佣兵团特许配额。"
+ innovation_sltm_charter_5:0 "佣兵特许名额"
+ innovation_sltm_charter_5_desc:0 "仅记录本文化主动签发的原版佣兵团特许配额。"
+ innovation_sltm_charter_4:0 "佣兵特许名额"
+ innovation_sltm_charter_4_desc:0 "仅记录本文化主动签发的原版佣兵团特许配额。"
+ innovation_sltm_charter_3:0 "佣兵特许名额"
+ innovation_sltm_charter_3_desc:0 "仅记录本文化主动签发的原版佣兵团特许配额。"
+ innovation_sltm_charter_2:0 "佣兵特许名额"
+ innovation_sltm_charter_2_desc:0 "仅记录本文化主动签发的原版佣兵团特许配额。"
+ innovation_sltm_charter_1:0 "佣兵特许名额"
+ innovation_sltm_charter_1_desc:0 "仅记录本文化主动签发的原版佣兵团特许配额。"
+ innovation_sltm_charter_0:0 "佣兵特许名额"
+ innovation_sltm_charter_0_desc:0 "仅记录本文化主动签发的原版佣兵团特许配额。"
+ SLTM_MC_STATUS:0 "[GetPlayer.Custom('sltm_mc_status')]"
+ SLTM_MC_WAIT:0 "有一笔旧申请待处理。将按现有团长和团号核对归属。"
+ SLTM_MC_QUEUED:0 "佣兵团已获筹建特许"
+ SLTM_MC_QUEUED_DESC:0 "等待原版年度更新。未交付，不收取创立费。"
+ SLTM_MC_FULL:0 "本文化没有可用的新增团号名额"
+ SLTM_MC_FULL_DESC:0 "原版公司数受文化伯爵领数量限制。可标记其他文化的伯爵领再筹建。"
+ SLTM_MC_READY:0 "原生佣兵团已建成"
+ SLTM_MC_READY_DESC:0 "已核对特殊团号和新团长，现已结算。回到佣兵团词条即可编辑新团号。"
+ SLTM_MC_OPEN:0 "编辑已建佣兵团"
+ SLTM_MC_CANCEL:0 "核对并结束旧申请"
+
+ sltm_title_male_preference_law:0 "男性优先（本头衔）"
+ sltm_title_male_preference_law_desc:0 "仅对这项头衔采用男性优先规则。"
+ sltm_title_equal_law:0 "平等继承（本头衔）"
+ sltm_title_equal_law_desc:0 "仅对这项头衔采用平等继承规则。"
+ sltm_title_female_preference_law:0 "女性优先（本头衔）"
+ sltm_title_female_preference_law_desc:0 "仅对这项头衔采用女性优先规则。"
+ sltm_title_male_only_law:0 "男性限定（本头衔）"
+ sltm_title_male_only_law_desc:0 "仅对这项头衔采用男性限定规则。"
+ sltm_title_female_only_law:0 "女性限定（本头衔）"
+ sltm_title_female_only_law_desc:0 "仅对这项头衔采用女性限定规则。"
+ sltm_title_single_heir_succession_law:0 "长子继承（本头衔）"
+ sltm_title_single_heir_succession_law_desc:0 "仅对这项头衔采用长子继承规则。"
+ sltm_title_single_heir_succession_law_youngest:0 "幼子继承（本头衔）"
+ sltm_title_single_heir_succession_law_youngest_desc:0 "仅对这项头衔采用幼子继承规则。"
+ sltm_title_single_heir_dynasty_house:0 "家族年长者继承（本头衔）"
+ sltm_title_single_heir_dynasty_house_desc:0 "仅对这项头衔采用家族年长者继承规则。"
+
+ SLTM_MC_UNAVAILABLE:0 "佣兵团头衔暂未开放"
+ SLTM_MC_RESTART:0 "当前引擎未开放可用的即时创建接口。建议从已有佣兵团取得头衔。"
+
+ SLTM_MC_OTHER:0 "此人已有一份佣兵特许"
+ SLTM_MC_OTHER_DESC:0 "此人的旧版筹建已暂停；原申请人可以撤销。"
+ SLTM_MC_CLOSED:0 "暂未开放"
+ SLTM_MC_CLOSED_STATUS:0 "暂不接受创立申请；已有佣兵团头衔仍可管理。"
+
+ SLTM_MC_ARCHIVE:0 "保留团号及名额并结案"
+ SLTM_MC_RES_1:0 "旧申请已结束，未使用的预留名额已退还。"
+ SLTM_MC_RES_2:0 "旧申请已结束，现有团号、团长与文化名额均已保留。"
+ SLTM_MC_RES_3:0 "已核实旧申请交付成功，团号和名额已保留。"
+ SLTM_MC_RES_4:0 "旧记录的归属或名额需要复核。可再次核对，或保留现状结案。"
+
+ SLTM_RANK_WARNING:0 "所选位阶高于[ROOT.Char.MakeScope.Var('sltm_create_holder').Char.GetPrimaryTitle.GetNameNoTooltip]。新头衔将成为主头衔，原头衔仍保留。请再次确认创立。"
+ SLTM_RANK_APPROVE_DIRECT:0 "确认升为主衔并创立"
+ SLTM_RANK_APPROVE_EDIT:0 "确认升为主衔并编辑"
+
+ SLTM_RANK_EMPTY:0 ""

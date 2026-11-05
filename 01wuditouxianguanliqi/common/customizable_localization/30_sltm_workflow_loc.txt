@@ -1,0 +1,409 @@
+﻿sltm_workflow_name_text = {
+type = character
+text = { trigger = { OR = { NOT = { has_variable = sltm_workflow_name } var:sltm_workflow_name = flag:sltm_workflow_default_name } } localization_key = sltm_workflow_default_name }
+text = { localization_key = sltm_workflow_entered_name }
+}
+
+sltm_create_kind_text = {
+type = character
+text = { trigger = { var:sltm_create_kind = 1 } localization_key = sltm_create_kind_1 }
+text = { trigger = { var:sltm_create_kind = 2 } localization_key = sltm_create_kind_2 }
+text = { trigger = { var:sltm_create_kind = 3 } localization_key = sltm_create_kind_3 }
+
+}
+
+sltm_create_tier_text = {
+type = character
+text = { trigger = { var:sltm_create_tier = 1 } localization_key = sltm_create_tier_1 }
+text = { trigger = { var:sltm_create_tier = 2 } localization_key = sltm_create_tier_2 }
+text = { trigger = { var:sltm_create_tier = 3 } localization_key = sltm_create_tier_3 }
+text = { trigger = { var:sltm_create_tier = 4 } localization_key = sltm_create_tier_4 }
+text = { trigger = { var:sltm_create_tier = 5 } localization_key = sltm_create_tier_5 }
+
+}
+
+sltm_create_preset_text = {
+type = character
+text = { trigger = { var:sltm_create_preset = 1 } localization_key = sltm_create_preset_1 }
+text = { trigger = { var:sltm_create_preset = 2 } localization_key = sltm_create_preset_2 }
+text = { trigger = { var:sltm_create_preset = 3 } localization_key = sltm_create_preset_3 }
+
+}
+
+sltm_edit_definitive_text = {
+type = character
+text = { trigger = { NOT = { has_variable = sltm_edit_definitive } } localization_key = sltm_state_0 }
+text = { trigger = { var:sltm_edit_definitive = 1 } localization_key = sltm_state_1 }
+text = { trigger = { var:sltm_edit_definitive = 2 } localization_key = sltm_state_2 }
+
+}
+
+sltm_edit_dynasty_text = {
+type = character
+text = { trigger = { NOT = { has_variable = sltm_edit_dynasty } } localization_key = sltm_state_0 }
+text = { trigger = { var:sltm_edit_dynasty = 1 } localization_key = sltm_state_1 }
+text = { trigger = { var:sltm_edit_dynasty = 2 } localization_key = sltm_state_2 }
+
+}
+
+sltm_edit_nomadic_text = {
+type = character
+text = { trigger = { NOT = { has_variable = sltm_edit_nomadic } } localization_key = sltm_state_0 }
+text = { trigger = { var:sltm_edit_nomadic = 1 } localization_key = sltm_state_1 }
+text = { trigger = { var:sltm_edit_nomadic = 2 } localization_key = sltm_state_2 }
+
+}
+
+sltm_edit_heir_text = {
+type = character
+text = { trigger = { NOT = { has_variable = sltm_edit_heir } } localization_key = sltm_state_0 }
+text = { trigger = { var:sltm_edit_heir = 1 } localization_key = sltm_state_1 }
+text = { trigger = { var:sltm_edit_heir = 2 } localization_key = sltm_state_2 }
+
+}
+
+sltm_edit_claims_text = {
+type = character
+text = { trigger = { NOT = { has_variable = sltm_edit_claims } } localization_key = sltm_state_0 }
+text = { trigger = { var:sltm_edit_claims = 1 } localization_key = sltm_state_1 }
+text = { trigger = { var:sltm_edit_claims = 2 } localization_key = sltm_state_2 }
+
+}
+
+sltm_edit_landless_text = {
+type = character
+text = { trigger = { NOT = { has_variable = sltm_edit_landless } } localization_key = sltm_state_0 }
+text = { trigger = { var:sltm_edit_landless = 1 } localization_key = sltm_state_1 }
+text = { trigger = { var:sltm_edit_landless = 2 } localization_key = sltm_state_2 }
+
+}
+
+sltm_edit_succession_text = {
+type = character
+text = { trigger = { NOT = { has_variable = sltm_edit_succession } } localization_key = sltm_state_0 }
+text = { trigger = { var:sltm_edit_succession = 1 } localization_key = sltm_state_1 }
+text = { trigger = { var:sltm_edit_succession = 2 } localization_key = sltm_state_2 }
+
+}
+
+sltm_edit_invalid_heir_text = {
+type = character
+text = { trigger = { NOT = { has_variable = sltm_edit_invalid_heir } } localization_key = sltm_state_0 }
+text = { trigger = { var:sltm_edit_invalid_heir = 1 } localization_key = sltm_state_1 }
+text = { trigger = { var:sltm_edit_invalid_heir = 2 } localization_key = sltm_state_2 }
+
+}
+
+sltm_edit_same_tier_text = {
+type = character
+text = { trigger = { NOT = { has_variable = sltm_edit_same_tier } } localization_key = sltm_state_0 }
+text = { trigger = { var:sltm_edit_same_tier = 1 } localization_key = sltm_state_1 }
+text = { trigger = { var:sltm_edit_same_tier = 2 } localization_key = sltm_state_2 }
+
+}
+
+
+sltm_review_name = {
+ type = character
+ text = { trigger = { var:sltm_edit_name = 1 } localization_key = sltm_review_name_yes }
+ text = { trigger = { var:sltm_edit_name = 2 } localization_key = sltm_review_name_reset }
+ text = { localization_key = sltm_review_name_no }
+}
+
+sltm_review_capital = { type = character text = { trigger = { exists = var:sltm_edit_capital } localization_key = sltm_review_capital_yes } text = { localization_key = sltm_review_capital_no } }
+
+sltm_review_dejure = { type = character text = { trigger = { exists = var:sltm_edit_dejure } localization_key = sltm_review_dejure_yes } text = { localization_key = sltm_review_dejure_no } }
+
+sltm_review_coa_source = {
+ type = character
+ text = { trigger = { var:sltm_edit_coa = 2 exists = var:sltm_edit_coa_source } localization_key = sltm_review_coa_source_yes }
+ text = { localization_key = sltm_review_coa_source_no }
+}
+
+sltm_review_color_source = {
+ type = character
+ text = { trigger = { var:sltm_edit_color = 1 exists = var:sltm_edit_color_source } localization_key = sltm_review_color_source_yes }
+ text = { localization_key = sltm_review_color_source_no }
+}
+
+sltm_review_random_coa = { type = character text = { trigger = { var:sltm_edit_coa = 1 } localization_key = sltm_review_random_coa_yes } text = { localization_key = sltm_review_random_coa_no } }
+
+sltm_review_province = { type = character text = { trigger = { exists = var:sltm_edit_province } localization_key = sltm_review_province_yes } text = { localization_key = sltm_review_province_no } }
+
+sltm_review_building = { type = character text = { trigger = { has_variable = sltm_edit_building } localization_key = sltm_review_building_yes } text = { localization_key = sltm_review_building_no } }
+
+sltm_review_laws = { type = character text = { trigger = { OR = { has_variable = sltm_edit_law_add has_variable = sltm_edit_law_remove } } localization_key = sltm_review_laws_yes } text = { localization_key = sltm_review_laws_no } }
+
+sltm_review_create_geo = {
+type = character
+text = { localization_key = sltm_review_create_geo_independent }
+}
+
+sltm_review_create_look = { type = character text = { trigger = { has_variable = sltm_create_appearance } localization_key = sltm_review_create_look_yes } text = { localization_key = sltm_review_create_look_no } }
+
+sltm_create_cost_text = { type = character
+text = { trigger = { has_game_rule = sltm_cmm_compat_rit_rules_realm_manager_cost_off } localization_key = sltm_cost_off }
+text = { trigger = { var:sltm_create_tier = 1 } localization_key = sltm_create_cost_county }
+text = { trigger = { var:sltm_create_tier = 2 } localization_key = sltm_create_cost_duchy }
+text = { trigger = { var:sltm_create_tier = 3 } localization_key = sltm_create_cost_kingdom }
+text = { trigger = { var:sltm_create_tier = 4 } localization_key = sltm_create_cost_empire }
+text = { trigger = { var:sltm_create_tier = 5 } localization_key = sltm_create_cost_hegemony }
+}
+
+sltm_review_create_capital = { type = character text = { trigger = { exists = var:sltm_create_capital } localization_key = sltm_review_create_capital_yes } text = { localization_key = sltm_review_create_field_default } }
+
+sltm_review_create_dejure = { type = character text = { trigger = { exists = var:sltm_create_dejure } localization_key = sltm_review_create_dejure_yes } text = { localization_key = sltm_review_create_field_default } }
+
+sltm_review_create_province = { type = character text = { trigger = { exists = var:sltm_create_province } localization_key = sltm_review_create_province_yes } text = { localization_key = sltm_review_create_field_default } }
+
+sltm_create_profile_text = {
+ type = character
+ text = { trigger = { var:sltm_create_kind = 1 } localization_key = sltm_profile_plain }
+ text = { trigger = { var:sltm_create_kind = 2 } localization_key = sltm_profile_custom }
+ text = { trigger = { var:sltm_create_native_profile = 1 } localization_key = sltm_native_1 }
+ text = { trigger = { var:sltm_create_native_profile = 2 } localization_key = sltm_native_2 }
+ text = { trigger = { var:sltm_create_native_profile = 3 } localization_key = sltm_native_3 }
+ text = { trigger = { var:sltm_create_native_profile = 4 } localization_key = sltm_native_4 }
+ text = { trigger = { var:sltm_create_native_profile = 5 } localization_key = sltm_native_5 }
+ text = { trigger = { var:sltm_create_native_profile = 6 } localization_key = sltm_native_6 }
+ text = { trigger = { var:sltm_create_native_profile = 7 } localization_key = sltm_native_7 }
+ text = { trigger = { var:sltm_create_native_profile = 8 } localization_key = sltm_native_8 }
+ text = { trigger = { var:sltm_create_native_profile = 9 } localization_key = sltm_native_9 }
+ text = { localization_key = sltm_profile_missing }
+}
+
+sltm_transfer_recipient_text = {
+ type = character
+ text = { trigger = { exists = var:sltm_edit_transfer } localization_key = sltm_transfer_recipient_frozen }
+ text = { localization_key = sltm_transfer_recipient_missing }
+}
+sltm_current_holder = {
+ type = character
+ text = { trigger = { exists = var:sltm_current_holder } localization_key = sltm_current_holder_value }
+ text = { localization_key = sltm_current_absent }
+}
+sltm_current_domicile = {
+ type = character
+ text = { trigger = { exists = var:sltm_current_domicile } localization_key = sltm_current_domicile_value }
+ text = { localization_key = sltm_current_absent }
+}
+sltm_current_capital = {
+ type = character
+ text = { trigger = { exists = var:sltm_current_capital } localization_key = sltm_current_capital_value }
+ text = { localization_key = sltm_current_absent }
+}
+sltm_current_dejure = {
+ type = character
+ text = { trigger = { exists = var:sltm_current_dejure } localization_key = sltm_current_dejure_value }
+ text = { localization_key = sltm_current_absent }
+}
+sltm_current_province = {
+ type = character
+ text = { trigger = { exists = var:sltm_current_province } localization_key = sltm_current_province_value }
+ text = { localization_key = sltm_current_absent }
+}
+sltm_current_building = {
+ type = character
+ text = { trigger = { var:sltm_current_building = 1 } localization_key = sltm_current_yes }
+ text = { localization_key = sltm_current_no }
+}
+sltm_current_landless = {
+ type = character
+ text = { trigger = { var:sltm_current_landless = 1 } localization_key = sltm_current_yes }
+ text = { localization_key = sltm_current_no }
+}
+sltm_current_gender = {
+ type = character
+ text = { trigger = { var:sltm_edit_target = { sltm_has_title_rule_trigger = { LAW = male_only_law } } } localization_key = male_only_law }
+ text = { trigger = { var:sltm_edit_target = { sltm_has_title_rule_trigger = { LAW = male_preference_law } } } localization_key = male_preference_law }
+ text = { trigger = { var:sltm_edit_target = { sltm_has_title_rule_trigger = { LAW = equal_law } } } localization_key = equal_law }
+ text = { trigger = { var:sltm_edit_target = { sltm_has_title_rule_trigger = { LAW = female_preference_law } } } localization_key = female_preference_law }
+ text = { trigger = { var:sltm_edit_target = { sltm_has_title_rule_trigger = { LAW = female_only_law } } } localization_key = female_only_law }
+ text = { localization_key = sltm_current_law_unknown }
+}
+sltm_current_order = {
+ type = character
+ text = { trigger = { var:sltm_edit_target = { has_title_law = confederate_partition_succession_law } } localization_key = confederate_partition_succession_law }
+ text = { trigger = { var:sltm_edit_target = { has_title_law = partition_succession_law } } localization_key = partition_succession_law }
+ text = { trigger = { var:sltm_edit_target = { has_title_law = high_partition_succession_law } } localization_key = high_partition_succession_law }
+ text = { trigger = { var:sltm_edit_target = { sltm_has_title_rule_trigger = { LAW = single_heir_succession_law } } } localization_key = single_heir_succession_law }
+ text = { trigger = { var:sltm_edit_target = { has_title_law = single_heir_succession_kurultai_law } } localization_key = single_heir_succession_kurultai_law }
+ text = { trigger = { var:sltm_edit_target = { sltm_has_title_rule_trigger = { LAW = single_heir_succession_law_youngest } } } localization_key = single_heir_succession_law_youngest }
+ text = { trigger = { var:sltm_edit_target = { sltm_has_title_rule_trigger = { LAW = single_heir_dynasty_house } } } localization_key = single_heir_dynasty_house }
+ text = { trigger = { var:sltm_edit_target = { has_title_law = acclamation_succession_law } } localization_key = acclamation_succession_law }
+ text = { trigger = { var:sltm_edit_target = { has_title_law = appointment_succession_law } } localization_key = appointment_succession_law }
+ text = { trigger = { var:sltm_edit_target = { has_title_law = landless_adventurer_succession_law } } localization_key = landless_adventurer_succession_law }
+ text = { trigger = { var:sltm_edit_target = { has_title_law = theocratic_elective_succession_law } } localization_key = theocratic_elective_succession_law }
+ text = { trigger = { var:sltm_edit_target = { has_title_law = clerical_appointment_law } } localization_key = clerical_appointment_law }
+ text = { trigger = { var:sltm_edit_target = { has_title_law = bishop_theocratic_succession_law } } localization_key = bishop_theocratic_succession_law }
+ text = { trigger = { var:sltm_edit_target = { has_title_law = holy_order_succession_law } } localization_key = holy_order_succession_law }
+ text = { trigger = { var:sltm_edit_target = { has_title_law = cultural_holy_order_succession_law } } localization_key = cultural_holy_order_succession_law }
+ text = { trigger = { var:sltm_edit_target = { has_title_law = monastic_holy_order_succession_law } } localization_key = monastic_holy_order_succession_law }
+ text = { trigger = { var:sltm_edit_target = { has_title_law = female_monastic_holy_order_succession_law } } localization_key = female_monastic_holy_order_succession_law }
+ text = { trigger = { var:sltm_edit_target = { has_title_law = male_monastic_holy_order_succession_law } } localization_key = male_monastic_holy_order_succession_law }
+ text = { trigger = { var:sltm_edit_target = { has_title_law = mercenary_company_succession_law } } localization_key = mercenary_company_succession_law }
+ text = { trigger = { var:sltm_edit_target = { has_title_law = city_succession_law } } localization_key = city_succession_law }
+ text = { trigger = { var:sltm_edit_target = { has_title_law = clan_antagonistic_partition_succession_law } } localization_key = clan_antagonistic_partition_succession_law }
+ text = { trigger = { var:sltm_edit_target = { has_title_law = clan_competitive_partition_succession_law } } localization_key = clan_competitive_partition_succession_law }
+ text = { trigger = { var:sltm_edit_target = { has_title_law = clan_impassive_partition_succession_law } } localization_key = clan_impassive_partition_succession_law }
+ text = { trigger = { var:sltm_edit_target = { has_title_law = clan_friendly_partition_succession_law } } localization_key = clan_friendly_partition_succession_law }
+ text = { trigger = { var:sltm_edit_target = { has_title_law = clan_harmonious_partition_succession_law } } localization_key = clan_harmonious_partition_succession_law }
+ text = { trigger = { var:sltm_edit_target = { has_title_law = herder_succession_law } } localization_key = herder_succession_law }
+ text = { trigger = { var:sltm_edit_target = { has_title_law = celestial_appointment_succession_law } } localization_key = celestial_appointment_succession_law }
+ text = { trigger = { var:sltm_edit_target = { has_title_law = celestial_military_appointment_succession_law } } localization_key = celestial_military_appointment_succession_law }
+ text = { trigger = { var:sltm_edit_target = { has_title_law = japanese_regency_succession_law } } localization_key = japanese_regency_succession_law }
+ text = { trigger = { var:sltm_edit_target = { has_title_law = japanese_appointment_succession_law } } localization_key = japanese_appointment_succession_law }
+ text = { trigger = { var:sltm_edit_target = { has_title_law = japanese_military_appointment_succession_law } } localization_key = japanese_military_appointment_succession_law }
+ text = { trigger = { var:sltm_edit_target = { has_title_law = mandala_succession_law } } localization_key = mandala_succession_law }
+ text = { trigger = { var:sltm_edit_target = { has_title_law = meritocratic_appointment_succession_law } } localization_key = meritocratic_appointment_succession_law }
+ text = { trigger = { var:sltm_edit_target = { has_title_law = meritocratic_military_appointment_succession_law } } localization_key = meritocratic_military_appointment_succession_law }
+ text = { trigger = { var:sltm_edit_target = { has_title_law = meritocratic_regency_succession_law } } localization_key = meritocratic_regency_succession_law }
+ text = { localization_key = sltm_current_law_unknown }
+}
+sltm_conflict_holder = {
+ type = character
+ text = { trigger = { has_variable = sltm_edit_conflict_holder } localization_key = sltm_conflict_holder_yes }
+ text = { localization_key = sltm_conflict_none }
+}
+sltm_conflict_domicile = {
+ type = character
+ text = { trigger = { has_variable = sltm_edit_conflict_domicile } localization_key = sltm_conflict_domicile_yes }
+ text = { localization_key = sltm_conflict_none }
+}
+sltm_conflict_capital = {
+ type = character
+ text = { trigger = { has_variable = sltm_edit_conflict_capital } localization_key = sltm_conflict_capital_yes }
+ text = { localization_key = sltm_conflict_none }
+}
+sltm_conflict_dejure = {
+ type = character
+ text = { trigger = { has_variable = sltm_edit_conflict_dejure } localization_key = sltm_conflict_dejure_yes }
+ text = { localization_key = sltm_conflict_none }
+}
+sltm_conflict_province = {
+ type = character
+ text = { trigger = { has_variable = sltm_edit_conflict_province } localization_key = sltm_conflict_province_yes }
+ text = { localization_key = sltm_conflict_none }
+}
+sltm_conflict_building = {
+ type = character
+ text = { trigger = { has_variable = sltm_edit_conflict_building } localization_key = sltm_conflict_building_yes }
+ text = { localization_key = sltm_conflict_none }
+}
+sltm_conflict_landless = {
+ type = character
+ text = { trigger = { has_variable = sltm_edit_conflict_landless } localization_key = sltm_conflict_landless_yes }
+ text = { localization_key = sltm_conflict_none }
+}
+sltm_conflict_gender = {
+ type = character
+ text = { trigger = { has_variable = sltm_edit_conflict_gender } localization_key = sltm_conflict_gender_yes }
+ text = { localization_key = sltm_conflict_none }
+}
+sltm_conflict_order = {
+ type = character
+ text = { trigger = { has_variable = sltm_edit_conflict_order } localization_key = sltm_conflict_order_yes }
+ text = { localization_key = sltm_conflict_none }
+}
+sltm_before_government_text = {
+ type = character
+ text = { trigger = { var:sltm_before_government = 1 } localization_key = feudal_government }
+ text = { trigger = { var:sltm_before_government = 2 } localization_key = republic_government }
+ text = { trigger = { var:sltm_before_government = 3 } localization_key = clan_government }
+ text = { trigger = { var:sltm_before_government = 4 } localization_key = tribal_government }
+ text = { trigger = { var:sltm_before_government = 5 } localization_key = wanua_government }
+ text = { trigger = { var:sltm_before_government = 6 } localization_key = mercenary_government }
+ text = { trigger = { var:sltm_before_government = 7 } localization_key = holy_order_government }
+ text = { trigger = { var:sltm_before_government = 8 } localization_key = monastic_holy_order_government }
+ text = { trigger = { var:sltm_before_government = 9 } localization_key = administrative_government }
+ text = { trigger = { var:sltm_before_government = 10 } localization_key = landless_adventurer_government }
+ text = { trigger = { var:sltm_before_government = 11 } localization_key = nomad_government }
+ text = { trigger = { var:sltm_before_government = 12 } localization_key = herder_government }
+ text = { trigger = { var:sltm_before_government = 13 } localization_key = celestial_government }
+ text = { trigger = { var:sltm_before_government = 14 } localization_key = mandala_government }
+ text = { trigger = { var:sltm_before_government = 15 } localization_key = steppe_admin_government }
+ text = { trigger = { var:sltm_before_government = 16 } localization_key = meritocratic_government }
+ text = { trigger = { var:sltm_before_government = 17 } localization_key = japan_administrative_government }
+ text = { trigger = { var:sltm_before_government = 18 } localization_key = japan_feudal_government }
+ text = { trigger = { var:sltm_before_government = 19 } localization_key = theocracy_government }
+ text = { trigger = { var:sltm_before_government = 20 } localization_key = ecclesiastical_government }
+ text = { trigger = { var:sltm_before_government = 21 } localization_key = sltm_residence_government }
+ text = { localization_key = sltm_government_unknown }
+}
+sltm_before_liege_text = {
+ type = character
+ text = { trigger = { exists = var:sltm_before_liege } localization_key = sltm_before_liege_value }
+ text = { localization_key = sltm_current_absent }
+}
+sltm_before_primary_text = {
+ type = character
+ text = { trigger = { exists = var:sltm_before_primary } localization_key = sltm_before_primary_value }
+ text = { localization_key = sltm_current_absent }
+}
+sltm_before_default_text = {
+ type = character
+ text = { trigger = { exists = var:sltm_before_default } localization_key = sltm_before_default_value }
+ text = { localization_key = sltm_current_absent }
+}
+sltm_after_government_text = {
+ type = character
+ text = { trigger = { var:sltm_after_government = 1 } localization_key = feudal_government }
+ text = { trigger = { var:sltm_after_government = 2 } localization_key = republic_government }
+ text = { trigger = { var:sltm_after_government = 3 } localization_key = clan_government }
+ text = { trigger = { var:sltm_after_government = 4 } localization_key = tribal_government }
+ text = { trigger = { var:sltm_after_government = 5 } localization_key = wanua_government }
+ text = { trigger = { var:sltm_after_government = 6 } localization_key = mercenary_government }
+ text = { trigger = { var:sltm_after_government = 7 } localization_key = holy_order_government }
+ text = { trigger = { var:sltm_after_government = 8 } localization_key = monastic_holy_order_government }
+ text = { trigger = { var:sltm_after_government = 9 } localization_key = administrative_government }
+ text = { trigger = { var:sltm_after_government = 10 } localization_key = landless_adventurer_government }
+ text = { trigger = { var:sltm_after_government = 11 } localization_key = nomad_government }
+ text = { trigger = { var:sltm_after_government = 12 } localization_key = herder_government }
+ text = { trigger = { var:sltm_after_government = 13 } localization_key = celestial_government }
+ text = { trigger = { var:sltm_after_government = 14 } localization_key = mandala_government }
+ text = { trigger = { var:sltm_after_government = 15 } localization_key = steppe_admin_government }
+ text = { trigger = { var:sltm_after_government = 16 } localization_key = meritocratic_government }
+ text = { trigger = { var:sltm_after_government = 17 } localization_key = japan_administrative_government }
+ text = { trigger = { var:sltm_after_government = 18 } localization_key = japan_feudal_government }
+ text = { trigger = { var:sltm_after_government = 19 } localization_key = theocracy_government }
+ text = { trigger = { var:sltm_after_government = 20 } localization_key = ecclesiastical_government }
+ text = { trigger = { var:sltm_after_government = 21 } localization_key = sltm_residence_government }
+ text = { localization_key = sltm_government_unknown }
+}
+sltm_after_liege_text = {
+ type = character
+ text = { trigger = { exists = var:sltm_after_liege } localization_key = sltm_after_liege_value }
+ text = { localization_key = sltm_current_absent }
+}
+sltm_after_primary_text = {
+ type = character
+ text = { trigger = { exists = var:sltm_after_primary } localization_key = sltm_after_primary_value }
+ text = { localization_key = sltm_current_absent }
+}
+sltm_after_default_text = {
+ type = character
+ text = { trigger = { exists = var:sltm_after_default } localization_key = sltm_after_default_value }
+ text = { localization_key = sltm_current_absent }
+}
+sltm_create_claims_text = {
+ type = character
+ text = { trigger = { var:sltm_create_claims = 1 } localization_key = sltm_current_yes }
+ text = { localization_key = sltm_current_no }
+}
+sltm_create_rules_text = {
+ type = character
+ text = { trigger = { NOT = { var:sltm_create_kind = 1 } } localization_key = sltm_create_rules_domicile }
+ text = { trigger = { var:sltm_create_preset = 2 } localization_key = sltm_create_rules_follow }
+ text = { trigger = { var:sltm_create_preset = 3 } localization_key = sltm_create_rules_temporary }
+ text = { localization_key = sltm_create_rules_ordinary }
+}
+sltm_created_title_text = {
+ type = character
+ text = { trigger = { exists = var:sltm_last_created_title } localization_key = sltm_created_title_value }
+ text = { localization_key = sltm_output_absent }
+}
+sltm_created_domicile_text = {
+ type = character
+ text = { trigger = { exists = var:sltm_last_created_domicile } localization_key = sltm_created_domicile_value }
+ text = { localization_key = sltm_output_absent }
+}

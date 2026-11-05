@@ -1,0 +1,77 @@
+﻿# CHARACTER scope. Baselines are actual reads, including explicit absent state.
+sltm_edit_holder_unchanged_trigger = {
+ OR = {
+  AND = { var:sltm_edit_baseline_holder_present = 0 NOT = { exists = var:sltm_edit_target.holder } }
+  AND = { var:sltm_edit_baseline_holder_present = 1 exists = var:sltm_edit_baseline_holder exists = var:sltm_edit_target.holder var:sltm_edit_target.holder = var:sltm_edit_baseline_holder }
+ }
+}
+sltm_edit_domicile_unchanged_trigger = {
+ OR = {
+  AND = { var:sltm_edit_baseline_domicile_present = 0 NOT = { exists = var:sltm_edit_target.title_domicile } }
+  AND = { var:sltm_edit_baseline_domicile_present = 1 exists = var:sltm_edit_baseline_domicile exists = var:sltm_edit_target.title_domicile var:sltm_edit_target.title_domicile = var:sltm_edit_baseline_domicile }
+ }
+}
+sltm_edit_capital_unchanged_trigger = {
+ OR = {
+  AND = { var:sltm_edit_baseline_capital_present = 0 NOT = { exists = var:sltm_edit_target.title_capital_county } }
+  AND = { var:sltm_edit_baseline_capital_present = 1 exists = var:sltm_edit_baseline_capital exists = var:sltm_edit_target.title_capital_county var:sltm_edit_target.title_capital_county = var:sltm_edit_baseline_capital }
+ }
+}
+sltm_edit_dejure_unchanged_trigger = {
+ OR = {
+  AND = { var:sltm_edit_baseline_dejure_present = 0 NOT = { exists = var:sltm_edit_target.de_jure_liege } }
+  AND = { var:sltm_edit_baseline_dejure_present = 1 exists = var:sltm_edit_baseline_dejure exists = var:sltm_edit_target.de_jure_liege var:sltm_edit_target.de_jure_liege = var:sltm_edit_baseline_dejure }
+ }
+}
+sltm_edit_province_unchanged_trigger = {
+ OR = {
+  AND = { var:sltm_edit_baseline_province_present = 0 NOT = { exists = var:sltm_edit_target.title_domicile.domicile_location } }
+  AND = { var:sltm_edit_baseline_province_present = 1 exists = var:sltm_edit_baseline_province exists = var:sltm_edit_target.title_domicile.domicile_location var:sltm_edit_target.title_domicile.domicile_location = var:sltm_edit_baseline_province }
+ }
+}
+sltm_edit_building_unchanged_trigger = { OR = { AND = { var:sltm_edit_baseline_building = 1 exists = var:sltm_edit_target.title_domicile var:sltm_edit_target.title_domicile = { has_domicile_building = sltm_residence_main_01 } } AND = { var:sltm_edit_baseline_building = 0 NOT = { exists = var:sltm_edit_target.title_domicile var:sltm_edit_target.title_domicile = { has_domicile_building = sltm_residence_main_01 } } } } }
+sltm_edit_landless_unchanged_trigger = { OR = { AND = { var:sltm_edit_baseline_landless = 1 var:sltm_edit_target = { is_landless_type_title = yes } } AND = { var:sltm_edit_baseline_landless = 0 NOT = { var:sltm_edit_target = { is_landless_type_title = yes } } } } }
+sltm_edit_gender_unchanged_trigger = {
+ OR = { AND = { var:sltm_baseline_gender_0 = 1 var:sltm_edit_target = { sltm_has_title_rule_trigger = { LAW = male_only_law } } } AND = { var:sltm_baseline_gender_0 = 0 var:sltm_edit_target = { NOT = { sltm_has_title_rule_trigger = { LAW = male_only_law } } } } }
+ OR = { AND = { var:sltm_baseline_gender_1 = 1 var:sltm_edit_target = { sltm_has_title_rule_trigger = { LAW = male_preference_law } } } AND = { var:sltm_baseline_gender_1 = 0 var:sltm_edit_target = { NOT = { sltm_has_title_rule_trigger = { LAW = male_preference_law } } } } }
+ OR = { AND = { var:sltm_baseline_gender_2 = 1 var:sltm_edit_target = { sltm_has_title_rule_trigger = { LAW = equal_law } } } AND = { var:sltm_baseline_gender_2 = 0 var:sltm_edit_target = { NOT = { sltm_has_title_rule_trigger = { LAW = equal_law } } } } }
+ OR = { AND = { var:sltm_baseline_gender_3 = 1 var:sltm_edit_target = { sltm_has_title_rule_trigger = { LAW = female_preference_law } } } AND = { var:sltm_baseline_gender_3 = 0 var:sltm_edit_target = { NOT = { sltm_has_title_rule_trigger = { LAW = female_preference_law } } } } }
+ OR = { AND = { var:sltm_baseline_gender_4 = 1 var:sltm_edit_target = { sltm_has_title_rule_trigger = { LAW = female_only_law } } } AND = { var:sltm_baseline_gender_4 = 0 var:sltm_edit_target = { NOT = { sltm_has_title_rule_trigger = { LAW = female_only_law } } } } }
+}
+sltm_edit_order_unchanged_trigger = {
+ OR = { AND = { var:sltm_baseline_order_0 = 1 var:sltm_edit_target = { has_title_law = confederate_partition_succession_law } } AND = { var:sltm_baseline_order_0 = 0 var:sltm_edit_target = { NOT = { has_title_law = confederate_partition_succession_law } } } }
+ OR = { AND = { var:sltm_baseline_order_1 = 1 var:sltm_edit_target = { has_title_law = partition_succession_law } } AND = { var:sltm_baseline_order_1 = 0 var:sltm_edit_target = { NOT = { has_title_law = partition_succession_law } } } }
+ OR = { AND = { var:sltm_baseline_order_2 = 1 var:sltm_edit_target = { has_title_law = high_partition_succession_law } } AND = { var:sltm_baseline_order_2 = 0 var:sltm_edit_target = { NOT = { has_title_law = high_partition_succession_law } } } }
+ OR = { AND = { var:sltm_baseline_order_3 = 1 var:sltm_edit_target = { sltm_has_title_rule_trigger = { LAW = single_heir_succession_law } } } AND = { var:sltm_baseline_order_3 = 0 var:sltm_edit_target = { NOT = { sltm_has_title_rule_trigger = { LAW = single_heir_succession_law } } } } }
+ OR = { AND = { var:sltm_baseline_order_4 = 1 var:sltm_edit_target = { has_title_law = single_heir_succession_kurultai_law } } AND = { var:sltm_baseline_order_4 = 0 var:sltm_edit_target = { NOT = { has_title_law = single_heir_succession_kurultai_law } } } }
+ OR = { AND = { var:sltm_baseline_order_5 = 1 var:sltm_edit_target = { sltm_has_title_rule_trigger = { LAW = single_heir_succession_law_youngest } } } AND = { var:sltm_baseline_order_5 = 0 var:sltm_edit_target = { NOT = { sltm_has_title_rule_trigger = { LAW = single_heir_succession_law_youngest } } } } }
+ OR = { AND = { var:sltm_baseline_order_6 = 1 var:sltm_edit_target = { sltm_has_title_rule_trigger = { LAW = single_heir_dynasty_house } } } AND = { var:sltm_baseline_order_6 = 0 var:sltm_edit_target = { NOT = { sltm_has_title_rule_trigger = { LAW = single_heir_dynasty_house } } } } }
+ OR = { AND = { var:sltm_baseline_order_7 = 1 var:sltm_edit_target = { has_title_law = acclamation_succession_law } } AND = { var:sltm_baseline_order_7 = 0 var:sltm_edit_target = { NOT = { has_title_law = acclamation_succession_law } } } }
+ OR = { AND = { var:sltm_baseline_order_8 = 1 var:sltm_edit_target = { has_title_law = appointment_succession_law } } AND = { var:sltm_baseline_order_8 = 0 var:sltm_edit_target = { NOT = { has_title_law = appointment_succession_law } } } }
+ OR = { AND = { var:sltm_baseline_order_9 = 1 var:sltm_edit_target = { has_title_law = landless_adventurer_succession_law } } AND = { var:sltm_baseline_order_9 = 0 var:sltm_edit_target = { NOT = { has_title_law = landless_adventurer_succession_law } } } }
+ OR = { AND = { var:sltm_baseline_order_10 = 1 var:sltm_edit_target = { has_title_law = theocratic_elective_succession_law } } AND = { var:sltm_baseline_order_10 = 0 var:sltm_edit_target = { NOT = { has_title_law = theocratic_elective_succession_law } } } }
+ OR = { AND = { var:sltm_baseline_order_11 = 1 var:sltm_edit_target = { has_title_law = clerical_appointment_law } } AND = { var:sltm_baseline_order_11 = 0 var:sltm_edit_target = { NOT = { has_title_law = clerical_appointment_law } } } }
+ OR = { AND = { var:sltm_baseline_order_12 = 1 var:sltm_edit_target = { has_title_law = bishop_theocratic_succession_law } } AND = { var:sltm_baseline_order_12 = 0 var:sltm_edit_target = { NOT = { has_title_law = bishop_theocratic_succession_law } } } }
+ OR = { AND = { var:sltm_baseline_order_13 = 1 var:sltm_edit_target = { has_title_law = holy_order_succession_law } } AND = { var:sltm_baseline_order_13 = 0 var:sltm_edit_target = { NOT = { has_title_law = holy_order_succession_law } } } }
+ OR = { AND = { var:sltm_baseline_order_14 = 1 var:sltm_edit_target = { has_title_law = cultural_holy_order_succession_law } } AND = { var:sltm_baseline_order_14 = 0 var:sltm_edit_target = { NOT = { has_title_law = cultural_holy_order_succession_law } } } }
+ OR = { AND = { var:sltm_baseline_order_15 = 1 var:sltm_edit_target = { has_title_law = monastic_holy_order_succession_law } } AND = { var:sltm_baseline_order_15 = 0 var:sltm_edit_target = { NOT = { has_title_law = monastic_holy_order_succession_law } } } }
+ OR = { AND = { var:sltm_baseline_order_16 = 1 var:sltm_edit_target = { has_title_law = female_monastic_holy_order_succession_law } } AND = { var:sltm_baseline_order_16 = 0 var:sltm_edit_target = { NOT = { has_title_law = female_monastic_holy_order_succession_law } } } }
+ OR = { AND = { var:sltm_baseline_order_17 = 1 var:sltm_edit_target = { has_title_law = male_monastic_holy_order_succession_law } } AND = { var:sltm_baseline_order_17 = 0 var:sltm_edit_target = { NOT = { has_title_law = male_monastic_holy_order_succession_law } } } }
+ OR = { AND = { var:sltm_baseline_order_18 = 1 var:sltm_edit_target = { has_title_law = mercenary_company_succession_law } } AND = { var:sltm_baseline_order_18 = 0 var:sltm_edit_target = { NOT = { has_title_law = mercenary_company_succession_law } } } }
+ OR = { AND = { var:sltm_baseline_order_19 = 1 var:sltm_edit_target = { has_title_law = city_succession_law } } AND = { var:sltm_baseline_order_19 = 0 var:sltm_edit_target = { NOT = { has_title_law = city_succession_law } } } }
+ OR = { AND = { var:sltm_baseline_order_20 = 1 var:sltm_edit_target = { has_title_law = clan_antagonistic_partition_succession_law } } AND = { var:sltm_baseline_order_20 = 0 var:sltm_edit_target = { NOT = { has_title_law = clan_antagonistic_partition_succession_law } } } }
+ OR = { AND = { var:sltm_baseline_order_21 = 1 var:sltm_edit_target = { has_title_law = clan_competitive_partition_succession_law } } AND = { var:sltm_baseline_order_21 = 0 var:sltm_edit_target = { NOT = { has_title_law = clan_competitive_partition_succession_law } } } }
+ OR = { AND = { var:sltm_baseline_order_22 = 1 var:sltm_edit_target = { has_title_law = clan_impassive_partition_succession_law } } AND = { var:sltm_baseline_order_22 = 0 var:sltm_edit_target = { NOT = { has_title_law = clan_impassive_partition_succession_law } } } }
+ OR = { AND = { var:sltm_baseline_order_23 = 1 var:sltm_edit_target = { has_title_law = clan_friendly_partition_succession_law } } AND = { var:sltm_baseline_order_23 = 0 var:sltm_edit_target = { NOT = { has_title_law = clan_friendly_partition_succession_law } } } }
+ OR = { AND = { var:sltm_baseline_order_24 = 1 var:sltm_edit_target = { has_title_law = clan_harmonious_partition_succession_law } } AND = { var:sltm_baseline_order_24 = 0 var:sltm_edit_target = { NOT = { has_title_law = clan_harmonious_partition_succession_law } } } }
+ OR = { AND = { var:sltm_baseline_order_25 = 1 var:sltm_edit_target = { has_title_law = herder_succession_law } } AND = { var:sltm_baseline_order_25 = 0 var:sltm_edit_target = { NOT = { has_title_law = herder_succession_law } } } }
+ OR = { AND = { var:sltm_baseline_order_26 = 1 var:sltm_edit_target = { has_title_law = celestial_appointment_succession_law } } AND = { var:sltm_baseline_order_26 = 0 var:sltm_edit_target = { NOT = { has_title_law = celestial_appointment_succession_law } } } }
+ OR = { AND = { var:sltm_baseline_order_27 = 1 var:sltm_edit_target = { has_title_law = celestial_military_appointment_succession_law } } AND = { var:sltm_baseline_order_27 = 0 var:sltm_edit_target = { NOT = { has_title_law = celestial_military_appointment_succession_law } } } }
+ OR = { AND = { var:sltm_baseline_order_28 = 1 var:sltm_edit_target = { has_title_law = japanese_regency_succession_law } } AND = { var:sltm_baseline_order_28 = 0 var:sltm_edit_target = { NOT = { has_title_law = japanese_regency_succession_law } } } }
+ OR = { AND = { var:sltm_baseline_order_29 = 1 var:sltm_edit_target = { has_title_law = japanese_appointment_succession_law } } AND = { var:sltm_baseline_order_29 = 0 var:sltm_edit_target = { NOT = { has_title_law = japanese_appointment_succession_law } } } }
+ OR = { AND = { var:sltm_baseline_order_30 = 1 var:sltm_edit_target = { has_title_law = japanese_military_appointment_succession_law } } AND = { var:sltm_baseline_order_30 = 0 var:sltm_edit_target = { NOT = { has_title_law = japanese_military_appointment_succession_law } } } }
+ OR = { AND = { var:sltm_baseline_order_31 = 1 var:sltm_edit_target = { has_title_law = mandala_succession_law } } AND = { var:sltm_baseline_order_31 = 0 var:sltm_edit_target = { NOT = { has_title_law = mandala_succession_law } } } }
+ OR = { AND = { var:sltm_baseline_order_32 = 1 var:sltm_edit_target = { has_title_law = meritocratic_appointment_succession_law } } AND = { var:sltm_baseline_order_32 = 0 var:sltm_edit_target = { NOT = { has_title_law = meritocratic_appointment_succession_law } } } }
+ OR = { AND = { var:sltm_baseline_order_33 = 1 var:sltm_edit_target = { has_title_law = meritocratic_military_appointment_succession_law } } AND = { var:sltm_baseline_order_33 = 0 var:sltm_edit_target = { NOT = { has_title_law = meritocratic_military_appointment_succession_law } } } }
+ OR = { AND = { var:sltm_baseline_order_34 = 1 var:sltm_edit_target = { has_title_law = meritocratic_regency_succession_law } } AND = { var:sltm_baseline_order_34 = 0 var:sltm_edit_target = { NOT = { has_title_law = meritocratic_regency_succession_law } } } }
+}

@@ -1,0 +1,124 @@
+﻿# V3.0 头衔复选框 scripted GUI。旧单选 GUI 保留作迁移兼容，不再由新窗口调用。
+
+sltm_lvm_tf_ms_type_all_gui = { scope = character effect = { sltm_lvm_title_multiselect_clear_type_effect = yes } }
+sltm_lvm_tf_ms_type_junfu_gui = { scope = character effect = { sltm_lvm_title_multiselect_toggle_effect = { MARKER = sltm_lvm_tf_type_junfu_selected } } }
+sltm_lvm_tf_ms_type_chaochen_gui = { scope = character effect = { sltm_lvm_title_multiselect_toggle_effect = { MARKER = sltm_lvm_tf_type_chaochen_selected } } }
+sltm_lvm_tf_ms_type_noble_gui = { scope = character effect = { sltm_lvm_title_multiselect_toggle_effect = { MARKER = sltm_lvm_tf_type_noble_selected } } }
+sltm_lvm_tf_ms_type_holy_order_gui = { scope = character effect = { sltm_lvm_title_multiselect_toggle_effect = { MARKER = sltm_lvm_tf_type_holy_order_selected } } }
+sltm_lvm_tf_ms_type_mercenary_gui = { scope = character effect = { sltm_lvm_title_multiselect_toggle_effect = { MARKER = sltm_lvm_tf_type_mercenary_selected } } }
+sltm_lvm_tf_ms_type_religious_head_gui = { scope = character effect = { sltm_lvm_title_multiselect_toggle_effect = { MARKER = sltm_lvm_tf_type_religious_head_selected } } }
+sltm_lvm_tf_ms_type_other_gui = { scope = character effect = { sltm_lvm_title_multiselect_toggle_effect = { MARKER = sltm_lvm_tf_type_other_selected } } }
+
+sltm_lvm_tf_ms_creation_all_gui = { scope = character effect = { sltm_lvm_title_multiselect_clear_creation_effect = yes } }
+sltm_lvm_tf_ms_creation_created_gui = { scope = character effect = { sltm_lvm_title_multiselect_toggle_effect = { MARKER = sltm_lvm_tf_creation_created_selected } } }
+sltm_lvm_tf_ms_creation_uncreated_gui = { scope = character effect = { sltm_lvm_title_multiselect_toggle_effect = { MARKER = sltm_lvm_tf_creation_uncreated_selected } } }
+
+sltm_lvm_tf_ms_tier_all_gui = { scope = character effect = { sltm_lvm_title_multiselect_clear_tier_effect = yes } }
+sltm_lvm_tf_ms_tier_barony_gui = { scope = character effect = { sltm_lvm_title_multiselect_toggle_effect = { MARKER = sltm_lvm_tf_tier_barony_selected } } }
+sltm_lvm_tf_ms_tier_county_gui = { scope = character effect = { sltm_lvm_title_multiselect_toggle_effect = { MARKER = sltm_lvm_tf_tier_county_selected } } }
+sltm_lvm_tf_ms_tier_duchy_gui = { scope = character effect = { sltm_lvm_title_multiselect_toggle_effect = { MARKER = sltm_lvm_tf_tier_duchy_selected } } }
+sltm_lvm_tf_ms_tier_kingdom_gui = { scope = character effect = { sltm_lvm_title_multiselect_toggle_effect = { MARKER = sltm_lvm_tf_tier_kingdom_selected } } }
+sltm_lvm_tf_ms_tier_empire_gui = { scope = character effect = { sltm_lvm_title_multiselect_toggle_effect = { MARKER = sltm_lvm_tf_tier_empire_selected } } }
+sltm_lvm_tf_ms_tier_hegemony_gui = { scope = character effect = { sltm_lvm_title_multiselect_toggle_effect = { MARKER = sltm_lvm_tf_tier_hegemony_selected } } }
+
+sltm_lvm_tf_ms_status_all_gui = { scope = character effect = { sltm_lvm_title_multiselect_clear_status_effect = yes } }
+sltm_lvm_tf_ms_status_normal_gui = { scope = character effect = { sltm_lvm_title_multiselect_toggle_effect = { MARKER = sltm_lvm_tf_status_normal_selected } } }
+sltm_lvm_tf_ms_status_pending_gui = { scope = character effect = { sltm_lvm_title_multiselect_toggle_effect = { MARKER = sltm_lvm_tf_status_pending_selected } } }
+sltm_lvm_tf_ms_status_blocked_gui = { scope = character effect = { sltm_lvm_title_multiselect_toggle_effect = { MARKER = sltm_lvm_tf_status_blocked_selected } } }
+
+sltm_lvm_tf_ms_role_all_gui = { scope = character effect = { sltm_lvm_title_multiselect_clear_role_effect = yes } }
+sltm_lvm_tf_ms_role_primary_gui = { scope = character effect = { sltm_lvm_title_multiselect_toggle_effect = { MARKER = sltm_lvm_tf_role_primary_selected } } }
+sltm_lvm_tf_ms_role_concurrent_gui = { scope = character effect = { sltm_lvm_title_multiselect_toggle_effect = { MARKER = sltm_lvm_tf_role_concurrent_selected } } }
+
+sltm_lvm_tf_ms_holder_all_gui = { scope = character effect = { sltm_lvm_title_multiselect_clear_holder_effect = yes } }
+sltm_lvm_tf_ms_holder_courtier_gui = { scope = character effect = { sltm_lvm_title_multiselect_toggle_effect = { MARKER = sltm_lvm_tf_holder_courtier_selected } } }
+
+# 2026-07-18（V3.4-C）头衔兵士组（单选项）
+sltm_lvm_tf_ms_has_maa_gui = { scope = character effect = { sltm_lvm_title_multiselect_toggle_effect = { MARKER = sltm_lvm_tf_has_maa_selected } } }
+
+sltm_lvm_tf_ms_type_all_checked_gui = { scope = character is_shown = { NOR = { has_variable = sltm_lvm_tf_type_junfu_selected has_variable = sltm_lvm_tf_type_chaochen_selected has_variable = sltm_lvm_tf_type_noble_selected has_variable = sltm_lvm_tf_type_holy_order_selected has_variable = sltm_lvm_tf_type_mercenary_selected has_variable = sltm_lvm_tf_type_religious_head_selected has_variable = sltm_lvm_tf_type_other_selected } } }
+sltm_lvm_tf_ms_type_junfu_checked_gui = { scope = character is_shown = { has_variable = sltm_lvm_tf_type_junfu_selected } }
+sltm_lvm_tf_ms_type_chaochen_checked_gui = { scope = character is_shown = { has_variable = sltm_lvm_tf_type_chaochen_selected } }
+sltm_lvm_tf_ms_type_noble_checked_gui = { scope = character is_shown = { has_variable = sltm_lvm_tf_type_noble_selected } }
+sltm_lvm_tf_ms_type_holy_order_checked_gui = { scope = character is_shown = { has_variable = sltm_lvm_tf_type_holy_order_selected } }
+sltm_lvm_tf_ms_type_mercenary_checked_gui = { scope = character is_shown = { has_variable = sltm_lvm_tf_type_mercenary_selected } }
+sltm_lvm_tf_ms_type_religious_head_checked_gui = { scope = character is_shown = { has_variable = sltm_lvm_tf_type_religious_head_selected } }
+sltm_lvm_tf_ms_type_other_checked_gui = { scope = character is_shown = { has_variable = sltm_lvm_tf_type_other_selected } }
+
+sltm_lvm_tf_ms_creation_all_checked_gui = { scope = character is_shown = { NOR = { has_variable = sltm_lvm_tf_creation_created_selected has_variable = sltm_lvm_tf_creation_uncreated_selected } } }
+sltm_lvm_tf_ms_creation_created_checked_gui = { scope = character is_shown = { has_variable = sltm_lvm_tf_creation_created_selected } }
+sltm_lvm_tf_ms_creation_uncreated_checked_gui = { scope = character is_shown = { has_variable = sltm_lvm_tf_creation_uncreated_selected } }
+
+sltm_lvm_tf_ms_tier_all_checked_gui = { scope = character is_shown = { NOR = { has_variable = sltm_lvm_tf_tier_barony_selected has_variable = sltm_lvm_tf_tier_county_selected has_variable = sltm_lvm_tf_tier_duchy_selected has_variable = sltm_lvm_tf_tier_kingdom_selected has_variable = sltm_lvm_tf_tier_empire_selected has_variable = sltm_lvm_tf_tier_hegemony_selected } } }
+sltm_lvm_tf_ms_tier_barony_checked_gui = { scope = character is_shown = { has_variable = sltm_lvm_tf_tier_barony_selected } }
+sltm_lvm_tf_ms_tier_county_checked_gui = { scope = character is_shown = { has_variable = sltm_lvm_tf_tier_county_selected } }
+sltm_lvm_tf_ms_tier_duchy_checked_gui = { scope = character is_shown = { has_variable = sltm_lvm_tf_tier_duchy_selected } }
+sltm_lvm_tf_ms_tier_kingdom_checked_gui = { scope = character is_shown = { has_variable = sltm_lvm_tf_tier_kingdom_selected } }
+sltm_lvm_tf_ms_tier_empire_checked_gui = { scope = character is_shown = { has_variable = sltm_lvm_tf_tier_empire_selected } }
+sltm_lvm_tf_ms_tier_hegemony_checked_gui = { scope = character is_shown = { has_variable = sltm_lvm_tf_tier_hegemony_selected } }
+
+sltm_lvm_tf_ms_status_all_checked_gui = { scope = character is_shown = { NOR = { has_variable = sltm_lvm_tf_status_normal_selected has_variable = sltm_lvm_tf_status_pending_selected has_variable = sltm_lvm_tf_status_blocked_selected } } }
+sltm_lvm_tf_ms_status_normal_checked_gui = { scope = character is_shown = { has_variable = sltm_lvm_tf_status_normal_selected } }
+sltm_lvm_tf_ms_status_pending_checked_gui = { scope = character is_shown = { has_variable = sltm_lvm_tf_status_pending_selected } }
+sltm_lvm_tf_ms_status_blocked_checked_gui = { scope = character is_shown = { has_variable = sltm_lvm_tf_status_blocked_selected } }
+
+sltm_lvm_tf_ms_role_all_checked_gui = { scope = character is_shown = { NOR = { has_variable = sltm_lvm_tf_role_primary_selected has_variable = sltm_lvm_tf_role_concurrent_selected } } }
+sltm_lvm_tf_ms_role_primary_checked_gui = { scope = character is_shown = { has_variable = sltm_lvm_tf_role_primary_selected } }
+sltm_lvm_tf_ms_role_concurrent_checked_gui = { scope = character is_shown = { has_variable = sltm_lvm_tf_role_concurrent_selected } }
+
+sltm_lvm_tf_ms_holder_all_checked_gui = { scope = character is_shown = { NOT = { has_variable = sltm_lvm_tf_holder_courtier_selected } } }
+sltm_lvm_tf_ms_holder_courtier_checked_gui = { scope = character is_shown = { has_variable = sltm_lvm_tf_holder_courtier_selected } }
+
+# 2026-07-18（V3.4-C）
+sltm_lvm_tf_ms_has_maa_checked_gui = { scope = character is_shown = { has_variable = sltm_lvm_tf_has_maa_selected } }
+
+sltm_lvm_title_multiselect_active_gui = {
+    scope = character
+    is_shown = {
+        OR = {
+            has_variable = sltm_lvm_tf_type_junfu_selected
+            has_variable = sltm_lvm_tf_type_chaochen_selected
+            has_variable = sltm_lvm_tf_type_noble_selected
+            has_variable = sltm_lvm_tf_type_holy_order_selected
+            has_variable = sltm_lvm_tf_type_mercenary_selected
+            has_variable = sltm_lvm_tf_type_religious_head_selected
+            has_variable = sltm_lvm_tf_type_other_selected
+            has_variable = sltm_lvm_tf_creation_created_selected
+            has_variable = sltm_lvm_tf_creation_uncreated_selected
+            has_variable = sltm_lvm_tf_tier_barony_selected
+            has_variable = sltm_lvm_tf_tier_county_selected
+            has_variable = sltm_lvm_tf_tier_duchy_selected
+            has_variable = sltm_lvm_tf_tier_kingdom_selected
+            has_variable = sltm_lvm_tf_tier_empire_selected
+            has_variable = sltm_lvm_tf_tier_hegemony_selected
+            has_variable = sltm_lvm_tf_status_normal_selected
+            has_variable = sltm_lvm_tf_status_pending_selected
+            has_variable = sltm_lvm_tf_status_blocked_selected
+            has_variable = sltm_lvm_tf_role_primary_selected
+            has_variable = sltm_lvm_tf_role_concurrent_selected
+            has_variable = sltm_lvm_tf_holder_courtier_selected
+            has_variable = sltm_lvm_tf_has_maa_selected
+        }
+    }
+}
+
+sltm_lvm_title_multiselect_undo_gui = {
+    scope = character
+    is_shown = {
+        AND = {
+            has_variable = sltm_lvm_title_multiselect_undo_valid
+            var:sltm_lvm_title_multiselect_undo_schema = flag:v30
+        }
+    }
+    effect = { sltm_lvm_restore_title_multiselect_undo_effect = yes }
+}
+
+sltm_lvm_prepare_title_multiselect_gui = {
+    scope = character
+    effect = { sltm_lvm_ensure_title_multiselect_state_effect = yes }
+}
+
+sltm_lvm_title_multiselect_reset_gui = {
+    scope = character
+    effect = { sltm_lvm_reset_title_multiselect_filters_effect = yes }
+}

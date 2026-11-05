@@ -1,0 +1,7 @@
+﻿namespace = sltm_charter
+sltm_charter.0001 = {
+    type = character_event
+    hidden = yes
+    trigger = { OR = { is_target_in_global_variable_list = { name = sltm_pending_charters target = this } AND = { is_alive = yes has_variable = sltm_merc_sponsor } } }
+    immediate = { sltm_merc_cancel_effect = yes }
+}

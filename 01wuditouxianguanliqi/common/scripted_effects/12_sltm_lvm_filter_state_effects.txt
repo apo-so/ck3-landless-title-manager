@@ -1,0 +1,1047 @@
+﻿# 无地头衔管理器：筛选状态管理（批次 9）
+# 负责：旧变量迁移、默认值 ensure、双页重置、活动计数、一步撤销、预设槽。
+
+# ===== 旧变量迁移（仅一次）=====
+sltm_lvm_migrate_v26_effect = {
+    if = {
+        limit = { NOT = { has_variable = sltm_lvm_filter_state_migrated_v26 } }
+        # 头衔类型 / 等级
+        if = { limit = { has_variable = sltm_lvm_filter_title_type } set_variable = { name = sltm_lvm_tf_type value = var:sltm_lvm_filter_title_type } }
+        if = { limit = { has_variable = sltm_lvm_filter_title_tier } set_variable = { name = sltm_lvm_tf_tier value = var:sltm_lvm_filter_title_tier } }
+        # 旧 status 同时表示待处理/受阻与 主/兼任：分流到 tf_status / tf_role
+        if = {
+            limit = { has_variable = sltm_lvm_filter_status }
+            if = { limit = { var:sltm_lvm_filter_status = flag:pending } set_variable = { name = sltm_lvm_tf_status value = flag:pending } }
+            else_if = { limit = { var:sltm_lvm_filter_status = flag:blocked } set_variable = { name = sltm_lvm_tf_status value = flag:blocked } }
+            else_if = { limit = { var:sltm_lvm_filter_status = flag:primary } set_variable = { name = sltm_lvm_tf_role value = flag:primary } }
+            else_if = { limit = { var:sltm_lvm_filter_status = flag:concurrent } set_variable = { name = sltm_lvm_tf_role value = flag:concurrent } }
+        }
+        # 旧 scope（人物关系）迁移到 hf_relation
+        if = { limit = { has_variable = sltm_lvm_filter_scope } set_variable = { name = sltm_lvm_hf_relation value = var:sltm_lvm_filter_scope } }
+        # 旧头衔排序若用了人物字段则退回 status
+        if = {
+            limit = { has_variable = sltm_lvm_title_sort }
+            if = {
+                limit = { OR = { var:sltm_lvm_title_sort = flag:holder_rank var:sltm_lvm_title_sort = flag:holder_age } }
+                set_variable = { name = sltm_lvm_title_sort value = flag:status }
+            }
+        }
+        set_variable = { name = sltm_lvm_filter_state_migrated_v26 value = flag:yes }
+    }
+}
+
+# ===== V2.7 一次性迁移：删除 artifact/inspiration/hostage 的 token 版，迁到普通下拉 =====
+sltm_lvm_migrate_v27_effect = {
+    if = {
+        limit = { NOT = { has_variable = sltm_lvm_filter_state_migrated_v27 } }
+        if = {
+            limit = { has_variable = sltm_lvm_hf_tok_artifact }
+            if = { limit = { var:sltm_lvm_hf_tok_artifact = flag:pos } set_variable = { name = sltm_lvm_hf_artifact value = flag:yes } }
+            if = { limit = { var:sltm_lvm_hf_tok_artifact = flag:neg } set_variable = { name = sltm_lvm_hf_artifact value = flag:no } }
+            remove_variable = sltm_lvm_hf_tok_artifact
+        }
+        if = {
+            limit = { has_variable = sltm_lvm_hf_tok_inspiration }
+            if = { limit = { var:sltm_lvm_hf_tok_inspiration = flag:pos } set_variable = { name = sltm_lvm_hf_inspiration value = flag:yes } }
+            if = { limit = { var:sltm_lvm_hf_tok_inspiration = flag:neg } set_variable = { name = sltm_lvm_hf_inspiration value = flag:no } }
+            remove_variable = sltm_lvm_hf_tok_inspiration
+        }
+        if = {
+            limit = { has_variable = sltm_lvm_hf_tok_hostage }
+            if = { limit = { var:sltm_lvm_hf_tok_hostage = flag:pos } set_variable = { name = sltm_lvm_hf_hostage value = flag:yes } }
+            if = { limit = { var:sltm_lvm_hf_tok_hostage = flag:neg } set_variable = { name = sltm_lvm_hf_hostage value = flag:no } }
+            remove_variable = sltm_lvm_hf_tok_hostage
+        }
+        set_variable = { name = sltm_lvm_filter_state_migrated_v27 value = flag:yes }
+    }
+}
+
+# ===== V2.8 一次性迁移：修复撤销复活、验证旧预设、清理退役 token =====
+sltm_lvm_migrate_filter_state_v28_effect = {
+    if = {
+        limit = { NOT = { has_variable = sltm_lvm_filter_state_migrated_v28 } }
+
+        # 撤销属于临时会话状态，不从旧版本继承；旧 payload 保留但没有 valid 时永远不可执行。
+        remove_variable = sltm_lvm_title_undo_valid
+        remove_variable = sltm_lvm_holder_undo_valid
+
+        # 先清除上一版过于宽松地建立的预设有效标记，再按完整字段重新认证。
+        remove_variable = sltm_lvm_title_preset_1_valid
+        remove_variable = sltm_lvm_title_preset_2_valid
+        remove_variable = sltm_lvm_title_preset_3_valid
+        remove_variable = sltm_lvm_holder_preset_1_valid
+        remove_variable = sltm_lvm_holder_preset_2_valid
+        remove_variable = sltm_lvm_holder_preset_3_valid
+
+        if = {
+            limit = {
+                AND = {
+                    has_variable = sltm_lvm_title_preset_1_type
+                    has_variable = sltm_lvm_title_preset_1_tier
+                    has_variable = sltm_lvm_title_preset_1_status
+                    has_variable = sltm_lvm_title_preset_1_role
+                }
+            }
+            set_variable = { name = sltm_lvm_title_preset_1_schema value = flag:v28 }
+            set_variable = { name = sltm_lvm_title_preset_1_valid value = flag:yes }
+        }
+        if = {
+            limit = {
+                AND = {
+                    has_variable = sltm_lvm_title_preset_2_type
+                    has_variable = sltm_lvm_title_preset_2_tier
+                    has_variable = sltm_lvm_title_preset_2_status
+                    has_variable = sltm_lvm_title_preset_2_role
+                }
+            }
+            set_variable = { name = sltm_lvm_title_preset_2_schema value = flag:v28 }
+            set_variable = { name = sltm_lvm_title_preset_2_valid value = flag:yes }
+        }
+        if = {
+            limit = {
+                AND = {
+                    has_variable = sltm_lvm_title_preset_3_type
+                    has_variable = sltm_lvm_title_preset_3_tier
+                    has_variable = sltm_lvm_title_preset_3_status
+                    has_variable = sltm_lvm_title_preset_3_role
+                }
+            }
+            set_variable = { name = sltm_lvm_title_preset_3_schema value = flag:v28 }
+            set_variable = { name = sltm_lvm_title_preset_3_valid value = flag:yes }
+        }
+
+        # 人物预设的六个特征 token 允许缺失（缺失读取为 none）；其余核心字段必须齐全。
+        if = {
+            limit = {
+                AND = {
+                    has_variable = sltm_lvm_holder_preset_1_relation
+                    has_variable = sltm_lvm_holder_preset_1_gender
+                    has_variable = sltm_lvm_holder_preset_1_adult
+                    has_variable = sltm_lvm_holder_preset_1_age_band
+                    has_variable = sltm_lvm_holder_preset_1_imprisoned
+                    has_variable = sltm_lvm_holder_preset_1_government
+                    has_variable = sltm_lvm_holder_preset_1_managed_count
+                    has_variable = sltm_lvm_holder_preset_1_pending_count
+                    has_variable = sltm_lvm_holder_preset_1_blocked_count
+                    has_variable = sltm_lvm_holder_preset_1_junfu_count
+                    has_variable = sltm_lvm_holder_preset_1_noble_count
+                    has_variable = sltm_lvm_holder_preset_1_holy_order_count
+                    has_variable = sltm_lvm_holder_preset_1_mercenary_count
+                    has_variable = sltm_lvm_holder_preset_1_other_count
+                    has_variable = sltm_lvm_holder_preset_1_diplomacy_band
+                    has_variable = sltm_lvm_holder_preset_1_martial_band
+                    has_variable = sltm_lvm_holder_preset_1_stewardship_band
+                    has_variable = sltm_lvm_holder_preset_1_intrigue_band
+                    has_variable = sltm_lvm_holder_preset_1_learning_band
+                    has_variable = sltm_lvm_holder_preset_1_prowess_band
+                    has_variable = sltm_lvm_holder_preset_1_ruler
+                    has_variable = sltm_lvm_holder_preset_1_marriage
+                    has_variable = sltm_lvm_holder_preset_1_sexuality
+                    has_variable = sltm_lvm_holder_preset_1_hook
+                    has_variable = sltm_lvm_holder_preset_1_faith_relation
+                    has_variable = sltm_lvm_holder_preset_1_culture_relation
+                    has_variable = sltm_lvm_holder_preset_1_dynasty_relation
+                    has_variable = sltm_lvm_holder_preset_1_vassal_stance
+                    has_variable = sltm_lvm_holder_preset_1_inspiration
+                    has_variable = sltm_lvm_holder_preset_1_artifact
+                    has_variable = sltm_lvm_holder_preset_1_hostage
+                    has_variable = sltm_lvm_holder_preset_1_pin
+                }
+            }
+            set_variable = { name = sltm_lvm_holder_preset_1_schema value = flag:v28 }
+            set_variable = { name = sltm_lvm_holder_preset_1_valid value = flag:yes }
+        }
+        if = {
+            limit = {
+                AND = {
+                    has_variable = sltm_lvm_holder_preset_2_relation
+                    has_variable = sltm_lvm_holder_preset_2_gender
+                    has_variable = sltm_lvm_holder_preset_2_adult
+                    has_variable = sltm_lvm_holder_preset_2_age_band
+                    has_variable = sltm_lvm_holder_preset_2_imprisoned
+                    has_variable = sltm_lvm_holder_preset_2_government
+                    has_variable = sltm_lvm_holder_preset_2_managed_count
+                    has_variable = sltm_lvm_holder_preset_2_pending_count
+                    has_variable = sltm_lvm_holder_preset_2_blocked_count
+                    has_variable = sltm_lvm_holder_preset_2_junfu_count
+                    has_variable = sltm_lvm_holder_preset_2_noble_count
+                    has_variable = sltm_lvm_holder_preset_2_holy_order_count
+                    has_variable = sltm_lvm_holder_preset_2_mercenary_count
+                    has_variable = sltm_lvm_holder_preset_2_other_count
+                    has_variable = sltm_lvm_holder_preset_2_diplomacy_band
+                    has_variable = sltm_lvm_holder_preset_2_martial_band
+                    has_variable = sltm_lvm_holder_preset_2_stewardship_band
+                    has_variable = sltm_lvm_holder_preset_2_intrigue_band
+                    has_variable = sltm_lvm_holder_preset_2_learning_band
+                    has_variable = sltm_lvm_holder_preset_2_prowess_band
+                    has_variable = sltm_lvm_holder_preset_2_ruler
+                    has_variable = sltm_lvm_holder_preset_2_marriage
+                    has_variable = sltm_lvm_holder_preset_2_sexuality
+                    has_variable = sltm_lvm_holder_preset_2_hook
+                    has_variable = sltm_lvm_holder_preset_2_faith_relation
+                    has_variable = sltm_lvm_holder_preset_2_culture_relation
+                    has_variable = sltm_lvm_holder_preset_2_dynasty_relation
+                    has_variable = sltm_lvm_holder_preset_2_vassal_stance
+                    has_variable = sltm_lvm_holder_preset_2_inspiration
+                    has_variable = sltm_lvm_holder_preset_2_artifact
+                    has_variable = sltm_lvm_holder_preset_2_hostage
+                    has_variable = sltm_lvm_holder_preset_2_pin
+                }
+            }
+            set_variable = { name = sltm_lvm_holder_preset_2_schema value = flag:v28 }
+            set_variable = { name = sltm_lvm_holder_preset_2_valid value = flag:yes }
+        }
+        if = {
+            limit = {
+                AND = {
+                    has_variable = sltm_lvm_holder_preset_3_relation
+                    has_variable = sltm_lvm_holder_preset_3_gender
+                    has_variable = sltm_lvm_holder_preset_3_adult
+                    has_variable = sltm_lvm_holder_preset_3_age_band
+                    has_variable = sltm_lvm_holder_preset_3_imprisoned
+                    has_variable = sltm_lvm_holder_preset_3_government
+                    has_variable = sltm_lvm_holder_preset_3_managed_count
+                    has_variable = sltm_lvm_holder_preset_3_pending_count
+                    has_variable = sltm_lvm_holder_preset_3_blocked_count
+                    has_variable = sltm_lvm_holder_preset_3_junfu_count
+                    has_variable = sltm_lvm_holder_preset_3_noble_count
+                    has_variable = sltm_lvm_holder_preset_3_holy_order_count
+                    has_variable = sltm_lvm_holder_preset_3_mercenary_count
+                    has_variable = sltm_lvm_holder_preset_3_other_count
+                    has_variable = sltm_lvm_holder_preset_3_diplomacy_band
+                    has_variable = sltm_lvm_holder_preset_3_martial_band
+                    has_variable = sltm_lvm_holder_preset_3_stewardship_band
+                    has_variable = sltm_lvm_holder_preset_3_intrigue_band
+                    has_variable = sltm_lvm_holder_preset_3_learning_band
+                    has_variable = sltm_lvm_holder_preset_3_prowess_band
+                    has_variable = sltm_lvm_holder_preset_3_ruler
+                    has_variable = sltm_lvm_holder_preset_3_marriage
+                    has_variable = sltm_lvm_holder_preset_3_sexuality
+                    has_variable = sltm_lvm_holder_preset_3_hook
+                    has_variable = sltm_lvm_holder_preset_3_faith_relation
+                    has_variable = sltm_lvm_holder_preset_3_culture_relation
+                    has_variable = sltm_lvm_holder_preset_3_dynasty_relation
+                    has_variable = sltm_lvm_holder_preset_3_vassal_stance
+                    has_variable = sltm_lvm_holder_preset_3_inspiration
+                    has_variable = sltm_lvm_holder_preset_3_artifact
+                    has_variable = sltm_lvm_holder_preset_3_hostage
+                    has_variable = sltm_lvm_holder_preset_3_pin
+                }
+            }
+            set_variable = { name = sltm_lvm_holder_preset_3_schema value = flag:v28 }
+            set_variable = { name = sltm_lvm_holder_preset_3_valid value = flag:yes }
+        }
+
+        # artifact/inspiration/hostage 已改为普通 all/yes/no 字段，删除其退役 token 副本。
+        remove_variable = sltm_lvm_hf_tok_artifact
+        remove_variable = sltm_lvm_hf_tok_inspiration
+        remove_variable = sltm_lvm_hf_tok_hostage
+        remove_variable = sltm_lvm_holder_undo_tok_artifact
+        remove_variable = sltm_lvm_holder_undo_tok_inspiration
+        remove_variable = sltm_lvm_holder_undo_tok_hostage
+        remove_variable = sltm_lvm_holder_preset_1_tok_artifact
+        remove_variable = sltm_lvm_holder_preset_1_tok_inspiration
+        remove_variable = sltm_lvm_holder_preset_1_tok_hostage
+        remove_variable = sltm_lvm_holder_preset_2_tok_artifact
+        remove_variable = sltm_lvm_holder_preset_2_tok_inspiration
+        remove_variable = sltm_lvm_holder_preset_2_tok_hostage
+        remove_variable = sltm_lvm_holder_preset_3_tok_artifact
+        remove_variable = sltm_lvm_holder_preset_3_tok_inspiration
+        remove_variable = sltm_lvm_holder_preset_3_tok_hostage
+
+        set_variable = { name = sltm_lvm_filter_state_migrated_v28 value = flag:yes }
+    }
+}
+
+# ===== 默认值 ensure（缺失才赋，绝不覆盖已保存条件）=====
+sltm_lvm_ensure_filter_state_effect = {
+    sltm_lvm_migrate_v27_effect = yes
+    sltm_lvm_migrate_filter_state_v28_effect = yes
+    # V2.7.1：旧存档中缺失的 token 统一补成 none；已有 pos/neg 不覆盖。
+    if = { limit = { NOT = { has_variable = sltm_lvm_hf_tok_brave } } set_variable = { name = sltm_lvm_hf_tok_brave value = flag:none } }
+    if = { limit = { NOT = { has_variable = sltm_lvm_hf_tok_cowardly } } set_variable = { name = sltm_lvm_hf_tok_cowardly value = flag:none } }
+    if = { limit = { NOT = { has_variable = sltm_lvm_hf_tok_martial_edu } } set_variable = { name = sltm_lvm_hf_tok_martial_edu value = flag:none } }
+    if = { limit = { NOT = { has_variable = sltm_lvm_hf_tok_steward_edu } } set_variable = { name = sltm_lvm_hf_tok_steward_edu value = flag:none } }
+    if = { limit = { NOT = { has_variable = sltm_lvm_hf_tok_good_genetic } } set_variable = { name = sltm_lvm_hf_tok_good_genetic value = flag:none } }
+    if = { limit = { NOT = { has_variable = sltm_lvm_hf_tok_bad_genetic } } set_variable = { name = sltm_lvm_hf_tok_bad_genetic value = flag:none } }
+    if = { limit = { NOT = { has_variable = sltm_lvm_tf_type } } set_variable = { name = sltm_lvm_tf_type value = flag:all } }
+    if = { limit = { NOT = { has_variable = sltm_lvm_tf_tier } } set_variable = { name = sltm_lvm_tf_tier value = flag:all } }
+    if = { limit = { NOT = { has_variable = sltm_lvm_tf_status } } set_variable = { name = sltm_lvm_tf_status value = flag:all } }
+    if = { limit = { NOT = { has_variable = sltm_lvm_tf_role } } set_variable = { name = sltm_lvm_tf_role value = flag:all } }
+    if = { limit = { NOT = { has_variable = sltm_lvm_hf_relation } } set_variable = { name = sltm_lvm_hf_relation value = flag:all } }
+    if = { limit = { NOT = { has_variable = sltm_lvm_hf_gender } } set_variable = { name = sltm_lvm_hf_gender value = flag:all } }
+    if = { limit = { NOT = { has_variable = sltm_lvm_hf_adult } } set_variable = { name = sltm_lvm_hf_adult value = flag:all } }
+    if = { limit = { NOT = { has_variable = sltm_lvm_hf_age_band } } set_variable = { name = sltm_lvm_hf_age_band value = flag:all } }
+    if = { limit = { NOT = { has_variable = sltm_lvm_hf_imprisoned } } set_variable = { name = sltm_lvm_hf_imprisoned value = flag:all } }
+    if = { limit = { NOT = { has_variable = sltm_lvm_hf_government } } set_variable = { name = sltm_lvm_hf_government value = flag:all } }
+    if = { limit = { NOT = { has_variable = sltm_lvm_hf_managed_count } } set_variable = { name = sltm_lvm_hf_managed_count value = flag:all } }
+    if = { limit = { NOT = { has_variable = sltm_lvm_hf_pending_count } } set_variable = { name = sltm_lvm_hf_pending_count value = flag:all } }
+    if = { limit = { NOT = { has_variable = sltm_lvm_hf_blocked_count } } set_variable = { name = sltm_lvm_hf_blocked_count value = flag:all } }
+    if = { limit = { NOT = { has_variable = sltm_lvm_hf_junfu_count } } set_variable = { name = sltm_lvm_hf_junfu_count value = flag:all } }
+    if = { limit = { NOT = { has_variable = sltm_lvm_hf_noble_count } } set_variable = { name = sltm_lvm_hf_noble_count value = flag:all } }
+    if = { limit = { NOT = { has_variable = sltm_lvm_hf_holy_order_count } } set_variable = { name = sltm_lvm_hf_holy_order_count value = flag:all } }
+    if = { limit = { NOT = { has_variable = sltm_lvm_hf_mercenary_count } } set_variable = { name = sltm_lvm_hf_mercenary_count value = flag:all } }
+    if = { limit = { NOT = { has_variable = sltm_lvm_hf_other_count } } set_variable = { name = sltm_lvm_hf_other_count value = flag:all } }
+    if = { limit = { NOT = { has_variable = sltm_lvm_hf_diplomacy_band } } set_variable = { name = sltm_lvm_hf_diplomacy_band value = flag:all } }
+    if = { limit = { NOT = { has_variable = sltm_lvm_hf_martial_band } } set_variable = { name = sltm_lvm_hf_martial_band value = flag:all } }
+    if = { limit = { NOT = { has_variable = sltm_lvm_hf_stewardship_band } } set_variable = { name = sltm_lvm_hf_stewardship_band value = flag:all } }
+    if = { limit = { NOT = { has_variable = sltm_lvm_hf_intrigue_band } } set_variable = { name = sltm_lvm_hf_intrigue_band value = flag:all } }
+    if = { limit = { NOT = { has_variable = sltm_lvm_hf_learning_band } } set_variable = { name = sltm_lvm_hf_learning_band value = flag:all } }
+    if = { limit = { NOT = { has_variable = sltm_lvm_hf_prowess_band } } set_variable = { name = sltm_lvm_hf_prowess_band value = flag:all } }
+    if = { limit = { NOT = { has_variable = sltm_lvm_hf_ruler } } set_variable = { name = sltm_lvm_hf_ruler value = flag:all } }
+    if = { limit = { NOT = { has_variable = sltm_lvm_hf_marriage } } set_variable = { name = sltm_lvm_hf_marriage value = flag:all } }
+    if = { limit = { NOT = { has_variable = sltm_lvm_hf_sexuality } } set_variable = { name = sltm_lvm_hf_sexuality value = flag:all } }
+    if = { limit = { NOT = { has_variable = sltm_lvm_hf_hook } } set_variable = { name = sltm_lvm_hf_hook value = flag:all } }
+    if = { limit = { NOT = { has_variable = sltm_lvm_hf_faith_relation } } set_variable = { name = sltm_lvm_hf_faith_relation value = flag:all } }
+    if = { limit = { NOT = { has_variable = sltm_lvm_hf_culture_relation } } set_variable = { name = sltm_lvm_hf_culture_relation value = flag:all } }
+    if = { limit = { NOT = { has_variable = sltm_lvm_hf_dynasty_relation } } set_variable = { name = sltm_lvm_hf_dynasty_relation value = flag:all } }
+    if = { limit = { NOT = { has_variable = sltm_lvm_hf_vassal_stance } } set_variable = { name = sltm_lvm_hf_vassal_stance value = flag:all } }
+    if = { limit = { NOT = { has_variable = sltm_lvm_hf_inspiration } } set_variable = { name = sltm_lvm_hf_inspiration value = flag:all } }
+    if = { limit = { NOT = { has_variable = sltm_lvm_hf_artifact } } set_variable = { name = sltm_lvm_hf_artifact value = flag:all } }
+    if = { limit = { NOT = { has_variable = sltm_lvm_hf_hostage } } set_variable = { name = sltm_lvm_hf_hostage value = flag:all } }
+    if = { limit = { NOT = { has_variable = sltm_lvm_hf_pin } } set_variable = { name = sltm_lvm_hf_pin value = flag:all } }
+    if = { limit = { NOT = { has_variable = sltm_lvm_title_sort } } set_variable = { name = sltm_lvm_title_sort value = flag:tier } }
+    if = { limit = { NOT = { has_variable = sltm_lvm_title_sort_desc } } set_variable = { name = sltm_lvm_title_sort_desc value = flag:yes } }
+    # V3.6.5：封臣页默认按主头衔等级降序。旧版默认为 managed_count，执行一次迁移；
+    # 已主动选择年龄、能力或管理状态等其他字段的存档保持原选择。
+    if = { limit = { NOT = { has_variable = sltm_lvm_holder_sort } } set_variable = { name = sltm_lvm_holder_sort value = flag:rank } }
+    if = {
+        limit = { NOT = { has_variable = sltm_lvm_holder_sort_default_rank_v365 } }
+        if = {
+            limit = { var:sltm_lvm_holder_sort = flag:managed_count }
+            set_variable = { name = sltm_lvm_holder_sort value = flag:rank }
+        }
+        set_variable = { name = sltm_lvm_holder_sort_default_rank_v365 value = flag:yes }
+    }
+    if = { limit = { NOT = { has_variable = sltm_lvm_holder_sort_desc } } set_variable = { name = sltm_lvm_holder_sort_desc value = flag:yes } }
+    if = { limit = { NOT = { has_variable = sltm_lvm_title_active_filter_count } } set_variable = { name = sltm_lvm_title_active_filter_count value = 0 } }
+    if = { limit = { NOT = { has_variable = sltm_lvm_holder_active_filter_count } } set_variable = { name = sltm_lvm_holder_active_filter_count value = 0 } }
+
+    # 圆点回显保护：旧存档、空预设或中断的撤销操作可能留下非法旗标。
+    # 缺失值由上面补成 all；已存在但不在允许集合内的值由校验效果归一化。
+    sltm_lvm_sanitize_title_filter_state_effect = yes
+    sltm_lvm_sanitize_holder_filter_state_effect = yes
+    sltm_lvm_hf_rebuild_token_list_effect = yes
+    sltm_lvm_update_title_active_filter_count_effect = yes
+    sltm_lvm_update_holder_active_filter_count_effect = yes
+
+}
+
+# ===== 头衔筛选状态校验 =====
+# 圆点、筛选条件和活动计数都依赖这四个变量。任何非法值统一恢复为 all，
+# 防止列表已经刷新但 radio 的 ObjectsEqual 永远匹配不到。
+sltm_lvm_sanitize_title_filter_state_effect = {
+    if = {
+        limit = {
+            NOT = { has_variable = sltm_lvm_tf_type }
+        }
+        set_variable = { name = sltm_lvm_tf_type value = flag:all }
+    }
+    else_if = {
+        limit = {
+            NOT = {
+                OR = {
+                    var:sltm_lvm_tf_type = flag:all
+                    var:sltm_lvm_tf_type = flag:junfu
+                    var:sltm_lvm_tf_type = flag:noble_family
+                    var:sltm_lvm_tf_type = flag:holy_order
+                    var:sltm_lvm_tf_type = flag:mercenary
+                    var:sltm_lvm_tf_type = flag:religious_head
+                    var:sltm_lvm_tf_type = flag:other
+                }
+            }
+        }
+        set_variable = { name = sltm_lvm_tf_type value = flag:all }
+    }
+
+    if = {
+        limit = { NOT = { has_variable = sltm_lvm_tf_tier } }
+        set_variable = { name = sltm_lvm_tf_tier value = flag:all }
+    }
+    else_if = {
+        limit = {
+            NOT = {
+                OR = {
+                    var:sltm_lvm_tf_tier = flag:all
+                    var:sltm_lvm_tf_tier = flag:barony
+                    var:sltm_lvm_tf_tier = flag:county
+                    var:sltm_lvm_tf_tier = flag:duchy
+                    var:sltm_lvm_tf_tier = flag:kingdom
+                    var:sltm_lvm_tf_tier = flag:empire
+                }
+            }
+        }
+        set_variable = { name = sltm_lvm_tf_tier value = flag:all }
+    }
+
+    if = {
+        limit = { NOT = { has_variable = sltm_lvm_tf_status } }
+        set_variable = { name = sltm_lvm_tf_status value = flag:all }
+    }
+    else_if = {
+        limit = {
+            NOT = {
+                OR = {
+                    var:sltm_lvm_tf_status = flag:all
+                    var:sltm_lvm_tf_status = flag:normal
+                    var:sltm_lvm_tf_status = flag:pending
+                    var:sltm_lvm_tf_status = flag:blocked
+                }
+            }
+        }
+        set_variable = { name = sltm_lvm_tf_status value = flag:all }
+    }
+
+    if = {
+        limit = { NOT = { has_variable = sltm_lvm_tf_role } }
+        set_variable = { name = sltm_lvm_tf_role value = flag:all }
+    }
+    else_if = {
+        limit = {
+            NOT = {
+                OR = {
+                    var:sltm_lvm_tf_role = flag:all
+                    var:sltm_lvm_tf_role = flag:primary
+                    var:sltm_lvm_tf_role = flag:concurrent
+                }
+            }
+        }
+        set_variable = { name = sltm_lvm_tf_role value = flag:all }
+    }
+}
+
+# ===== 双页重置 =====
+sltm_lvm_reset_title_filters_effect = {
+    sltm_lvm_save_title_filter_undo_effect = yes
+    set_variable = { name = sltm_lvm_tf_type value = flag:all }
+    set_variable = { name = sltm_lvm_tf_tier value = flag:all }
+    set_variable = { name = sltm_lvm_tf_status value = flag:all }
+    set_variable = { name = sltm_lvm_tf_role value = flag:all }
+    sltm_lvm_update_title_active_filter_count_effect = yes
+    sltm_lvm_recompute_title_view_effect = yes
+}
+
+sltm_lvm_reset_holder_filters_effect = {
+    sltm_lvm_save_holder_filter_undo_effect = yes
+    set_variable = { name = sltm_lvm_hf_relation value = flag:all }
+    set_variable = { name = sltm_lvm_hf_gender value = flag:all }
+    set_variable = { name = sltm_lvm_hf_adult value = flag:all }
+    set_variable = { name = sltm_lvm_hf_age_band value = flag:all }
+    set_variable = { name = sltm_lvm_hf_imprisoned value = flag:all }
+    set_variable = { name = sltm_lvm_hf_government value = flag:all }
+    set_variable = { name = sltm_lvm_hf_managed_count value = flag:all }
+    set_variable = { name = sltm_lvm_hf_pending_count value = flag:all }
+    set_variable = { name = sltm_lvm_hf_blocked_count value = flag:all }
+    set_variable = { name = sltm_lvm_hf_junfu_count value = flag:all }
+    set_variable = { name = sltm_lvm_hf_noble_count value = flag:all }
+    set_variable = { name = sltm_lvm_hf_holy_order_count value = flag:all }
+    set_variable = { name = sltm_lvm_hf_mercenary_count value = flag:all }
+    set_variable = { name = sltm_lvm_hf_other_count value = flag:all }
+    set_variable = { name = sltm_lvm_hf_diplomacy_band value = flag:all }
+    set_variable = { name = sltm_lvm_hf_martial_band value = flag:all }
+    set_variable = { name = sltm_lvm_hf_stewardship_band value = flag:all }
+    set_variable = { name = sltm_lvm_hf_intrigue_band value = flag:all }
+    set_variable = { name = sltm_lvm_hf_learning_band value = flag:all }
+    set_variable = { name = sltm_lvm_hf_prowess_band value = flag:all }
+    set_variable = { name = sltm_lvm_hf_ruler value = flag:all }
+    set_variable = { name = sltm_lvm_hf_marriage value = flag:all }
+    set_variable = { name = sltm_lvm_hf_sexuality value = flag:all }
+    set_variable = { name = sltm_lvm_hf_hook value = flag:all }
+    set_variable = { name = sltm_lvm_hf_faith_relation value = flag:all }
+    set_variable = { name = sltm_lvm_hf_culture_relation value = flag:all }
+    set_variable = { name = sltm_lvm_hf_dynasty_relation value = flag:all }
+    set_variable = { name = sltm_lvm_hf_vassal_stance value = flag:all }
+    set_variable = { name = sltm_lvm_hf_inspiration value = flag:all }
+    set_variable = { name = sltm_lvm_hf_artifact value = flag:all }
+    set_variable = { name = sltm_lvm_hf_hostage value = flag:all }
+    set_variable = { name = sltm_lvm_hf_pin value = flag:all }
+    sltm_lvm_hf_clear_all_tokens_effect = yes
+    sltm_lvm_update_holder_active_filter_count_effect = yes
+    sltm_lvm_recompute_holder_view_effect = yes
+}
+
+# ===== 活动计数 =====
+sltm_lvm_update_title_active_filter_count_effect = {
+    set_variable = { name = sltm_lvm_title_active_filter_count value = 0 }
+    if = { limit = { NOT = { var:sltm_lvm_tf_type = flag:all } } change_variable = { name = sltm_lvm_title_active_filter_count add = 1 } }
+    if = { limit = { NOT = { var:sltm_lvm_tf_tier = flag:all } } change_variable = { name = sltm_lvm_title_active_filter_count add = 1 } }
+    if = { limit = { NOT = { var:sltm_lvm_tf_status = flag:all } } change_variable = { name = sltm_lvm_title_active_filter_count add = 1 } }
+    if = { limit = { NOT = { var:sltm_lvm_tf_role = flag:all } } change_variable = { name = sltm_lvm_title_active_filter_count add = 1 } }
+}
+
+sltm_lvm_update_holder_active_filter_count_effect = {
+    set_variable = { name = sltm_lvm_holder_active_filter_count value = 0 }
+    if = { limit = { NOT = { var:sltm_lvm_hf_relation = flag:all } } change_variable = { name = sltm_lvm_holder_active_filter_count add = 1 } }
+    if = { limit = { NOT = { var:sltm_lvm_hf_gender = flag:all } } change_variable = { name = sltm_lvm_holder_active_filter_count add = 1 } }
+    if = { limit = { NOT = { var:sltm_lvm_hf_adult = flag:all } } change_variable = { name = sltm_lvm_holder_active_filter_count add = 1 } }
+    if = { limit = { NOT = { var:sltm_lvm_hf_age_band = flag:all } } change_variable = { name = sltm_lvm_holder_active_filter_count add = 1 } }
+    if = { limit = { NOT = { var:sltm_lvm_hf_imprisoned = flag:all } } change_variable = { name = sltm_lvm_holder_active_filter_count add = 1 } }
+    if = { limit = { NOT = { var:sltm_lvm_hf_government = flag:all } } change_variable = { name = sltm_lvm_holder_active_filter_count add = 1 } }
+    if = { limit = { NOT = { var:sltm_lvm_hf_managed_count = flag:all } } change_variable = { name = sltm_lvm_holder_active_filter_count add = 1 } }
+    if = { limit = { NOT = { var:sltm_lvm_hf_pending_count = flag:all } } change_variable = { name = sltm_lvm_holder_active_filter_count add = 1 } }
+    if = { limit = { NOT = { var:sltm_lvm_hf_blocked_count = flag:all } } change_variable = { name = sltm_lvm_holder_active_filter_count add = 1 } }
+    if = { limit = { NOT = { var:sltm_lvm_hf_junfu_count = flag:all } } change_variable = { name = sltm_lvm_holder_active_filter_count add = 1 } }
+    if = { limit = { NOT = { var:sltm_lvm_hf_noble_count = flag:all } } change_variable = { name = sltm_lvm_holder_active_filter_count add = 1 } }
+    if = { limit = { NOT = { var:sltm_lvm_hf_holy_order_count = flag:all } } change_variable = { name = sltm_lvm_holder_active_filter_count add = 1 } }
+    if = { limit = { NOT = { var:sltm_lvm_hf_mercenary_count = flag:all } } change_variable = { name = sltm_lvm_holder_active_filter_count add = 1 } }
+    if = { limit = { NOT = { var:sltm_lvm_hf_other_count = flag:all } } change_variable = { name = sltm_lvm_holder_active_filter_count add = 1 } }
+    if = { limit = { NOT = { var:sltm_lvm_hf_diplomacy_band = flag:all } } change_variable = { name = sltm_lvm_holder_active_filter_count add = 1 } }
+    if = { limit = { NOT = { var:sltm_lvm_hf_martial_band = flag:all } } change_variable = { name = sltm_lvm_holder_active_filter_count add = 1 } }
+    if = { limit = { NOT = { var:sltm_lvm_hf_stewardship_band = flag:all } } change_variable = { name = sltm_lvm_holder_active_filter_count add = 1 } }
+    if = { limit = { NOT = { var:sltm_lvm_hf_intrigue_band = flag:all } } change_variable = { name = sltm_lvm_holder_active_filter_count add = 1 } }
+    if = { limit = { NOT = { var:sltm_lvm_hf_learning_band = flag:all } } change_variable = { name = sltm_lvm_holder_active_filter_count add = 1 } }
+    if = { limit = { NOT = { var:sltm_lvm_hf_prowess_band = flag:all } } change_variable = { name = sltm_lvm_holder_active_filter_count add = 1 } }
+    if = { limit = { NOT = { var:sltm_lvm_hf_ruler = flag:all } } change_variable = { name = sltm_lvm_holder_active_filter_count add = 1 } }
+    if = { limit = { NOT = { var:sltm_lvm_hf_marriage = flag:all } } change_variable = { name = sltm_lvm_holder_active_filter_count add = 1 } }
+    if = { limit = { NOT = { var:sltm_lvm_hf_sexuality = flag:all } } change_variable = { name = sltm_lvm_holder_active_filter_count add = 1 } }
+    if = { limit = { NOT = { var:sltm_lvm_hf_hook = flag:all } } change_variable = { name = sltm_lvm_holder_active_filter_count add = 1 } }
+    if = { limit = { NOT = { var:sltm_lvm_hf_faith_relation = flag:all } } change_variable = { name = sltm_lvm_holder_active_filter_count add = 1 } }
+    if = { limit = { NOT = { var:sltm_lvm_hf_culture_relation = flag:all } } change_variable = { name = sltm_lvm_holder_active_filter_count add = 1 } }
+    if = { limit = { NOT = { var:sltm_lvm_hf_dynasty_relation = flag:all } } change_variable = { name = sltm_lvm_holder_active_filter_count add = 1 } }
+    if = { limit = { NOT = { var:sltm_lvm_hf_vassal_stance = flag:all } } change_variable = { name = sltm_lvm_holder_active_filter_count add = 1 } }
+    if = { limit = { NOT = { var:sltm_lvm_hf_inspiration = flag:all } } change_variable = { name = sltm_lvm_holder_active_filter_count add = 1 } }
+    if = { limit = { NOT = { var:sltm_lvm_hf_artifact = flag:all } } change_variable = { name = sltm_lvm_holder_active_filter_count add = 1 } }
+    if = { limit = { NOT = { var:sltm_lvm_hf_hostage = flag:all } } change_variable = { name = sltm_lvm_holder_active_filter_count add = 1 } }
+    if = { limit = { NOT = { var:sltm_lvm_hf_pin = flag:all } } change_variable = { name = sltm_lvm_holder_active_filter_count add = 1 } }
+    # 活动 token 数 = 列表长度
+    every_in_list = { variable = sltm_lvm_hf_tokens change_variable = { name = sltm_lvm_holder_active_filter_count add = 1 } }
+    # UI009: migrated holder markers require the V3.6 counter after legacy ensure.
+    if = {
+        limit = { has_variable = sltm_lvm_holder_filter_schema_v36 }
+        sltm_lvm_v36_update_active_count_effect = yes
+    }
+}
+
+# ===== 一步撤销（每页独立，只恢复上一状态）=====
+sltm_lvm_save_title_filter_undo_effect = {
+    sltm_lvm_sanitize_title_filter_state_effect = yes
+    set_variable = { name = sltm_lvm_title_undo_type value = var:sltm_lvm_tf_type }
+    set_variable = { name = sltm_lvm_title_undo_tier value = var:sltm_lvm_tf_tier }
+    set_variable = { name = sltm_lvm_title_undo_status value = var:sltm_lvm_tf_status }
+    set_variable = { name = sltm_lvm_title_undo_role value = var:sltm_lvm_tf_role }
+    set_variable = { name = sltm_lvm_title_undo_valid value = flag:yes }
+}
+sltm_lvm_restore_title_filter_undo_effect = {
+    if = {
+        limit = { has_variable = sltm_lvm_title_undo_valid }
+        set_variable = { name = sltm_lvm_tf_type value = var:sltm_lvm_title_undo_type }
+        set_variable = { name = sltm_lvm_tf_tier value = var:sltm_lvm_title_undo_tier }
+        set_variable = { name = sltm_lvm_tf_status value = var:sltm_lvm_title_undo_status }
+        set_variable = { name = sltm_lvm_tf_role value = var:sltm_lvm_title_undo_role }
+        sltm_lvm_sanitize_title_filter_state_effect = yes
+        sltm_lvm_update_title_active_filter_count_effect = yes
+        sltm_lvm_recompute_title_view_effect = yes
+        remove_variable = sltm_lvm_title_undo_valid
+    }
+}
+
+sltm_lvm_save_holder_filter_undo_effect = {
+    sltm_lvm_sanitize_holder_filter_state_effect = yes
+    set_variable = { name = sltm_lvm_holder_undo_relation value = var:sltm_lvm_hf_relation }
+    set_variable = { name = sltm_lvm_holder_undo_gender value = var:sltm_lvm_hf_gender }
+    set_variable = { name = sltm_lvm_holder_undo_adult value = var:sltm_lvm_hf_adult }
+    set_variable = { name = sltm_lvm_holder_undo_age_band value = var:sltm_lvm_hf_age_band }
+    set_variable = { name = sltm_lvm_holder_undo_imprisoned value = var:sltm_lvm_hf_imprisoned }
+    set_variable = { name = sltm_lvm_holder_undo_government value = var:sltm_lvm_hf_government }
+    set_variable = { name = sltm_lvm_holder_undo_managed_count value = var:sltm_lvm_hf_managed_count }
+    set_variable = { name = sltm_lvm_holder_undo_pending_count value = var:sltm_lvm_hf_pending_count }
+    set_variable = { name = sltm_lvm_holder_undo_blocked_count value = var:sltm_lvm_hf_blocked_count }
+    set_variable = { name = sltm_lvm_holder_undo_junfu_count value = var:sltm_lvm_hf_junfu_count }
+    set_variable = { name = sltm_lvm_holder_undo_noble_count value = var:sltm_lvm_hf_noble_count }
+    set_variable = { name = sltm_lvm_holder_undo_holy_order_count value = var:sltm_lvm_hf_holy_order_count }
+    set_variable = { name = sltm_lvm_holder_undo_mercenary_count value = var:sltm_lvm_hf_mercenary_count }
+    set_variable = { name = sltm_lvm_holder_undo_other_count value = var:sltm_lvm_hf_other_count }
+    set_variable = { name = sltm_lvm_holder_undo_diplomacy_band value = var:sltm_lvm_hf_diplomacy_band }
+    set_variable = { name = sltm_lvm_holder_undo_martial_band value = var:sltm_lvm_hf_martial_band }
+    set_variable = { name = sltm_lvm_holder_undo_stewardship_band value = var:sltm_lvm_hf_stewardship_band }
+    set_variable = { name = sltm_lvm_holder_undo_intrigue_band value = var:sltm_lvm_hf_intrigue_band }
+    set_variable = { name = sltm_lvm_holder_undo_learning_band value = var:sltm_lvm_hf_learning_band }
+    set_variable = { name = sltm_lvm_holder_undo_prowess_band value = var:sltm_lvm_hf_prowess_band }
+    set_variable = { name = sltm_lvm_holder_undo_ruler value = var:sltm_lvm_hf_ruler }
+    set_variable = { name = sltm_lvm_holder_undo_marriage value = var:sltm_lvm_hf_marriage }
+    set_variable = { name = sltm_lvm_holder_undo_sexuality value = var:sltm_lvm_hf_sexuality }
+    set_variable = { name = sltm_lvm_holder_undo_hook value = var:sltm_lvm_hf_hook }
+    set_variable = { name = sltm_lvm_holder_undo_faith_relation value = var:sltm_lvm_hf_faith_relation }
+    set_variable = { name = sltm_lvm_holder_undo_culture_relation value = var:sltm_lvm_hf_culture_relation }
+    set_variable = { name = sltm_lvm_holder_undo_dynasty_relation value = var:sltm_lvm_hf_dynasty_relation }
+    set_variable = { name = sltm_lvm_holder_undo_vassal_stance value = var:sltm_lvm_hf_vassal_stance }
+    set_variable = { name = sltm_lvm_holder_undo_inspiration value = var:sltm_lvm_hf_inspiration }
+    set_variable = { name = sltm_lvm_holder_undo_artifact value = var:sltm_lvm_hf_artifact }
+    set_variable = { name = sltm_lvm_holder_undo_hostage value = var:sltm_lvm_hf_hostage }
+    set_variable = { name = sltm_lvm_holder_undo_pin value = var:sltm_lvm_hf_pin }
+    if = { limit = { has_variable = sltm_lvm_hf_tok_brave } set_variable = { name = sltm_lvm_holder_undo_tok_brave value = var:sltm_lvm_hf_tok_brave } }
+    else = { remove_variable = sltm_lvm_holder_undo_tok_brave }
+    if = { limit = { has_variable = sltm_lvm_hf_tok_cowardly } set_variable = { name = sltm_lvm_holder_undo_tok_cowardly value = var:sltm_lvm_hf_tok_cowardly } }
+    else = { remove_variable = sltm_lvm_holder_undo_tok_cowardly }
+    if = { limit = { has_variable = sltm_lvm_hf_tok_martial_edu } set_variable = { name = sltm_lvm_holder_undo_tok_martial_edu value = var:sltm_lvm_hf_tok_martial_edu } }
+    else = { remove_variable = sltm_lvm_holder_undo_tok_martial_edu }
+    if = { limit = { has_variable = sltm_lvm_hf_tok_steward_edu } set_variable = { name = sltm_lvm_holder_undo_tok_steward_edu value = var:sltm_lvm_hf_tok_steward_edu } }
+    else = { remove_variable = sltm_lvm_holder_undo_tok_steward_edu }
+    if = { limit = { has_variable = sltm_lvm_hf_tok_good_genetic } set_variable = { name = sltm_lvm_holder_undo_tok_good_genetic value = var:sltm_lvm_hf_tok_good_genetic } }
+    else = { remove_variable = sltm_lvm_holder_undo_tok_good_genetic }
+    if = { limit = { has_variable = sltm_lvm_hf_tok_bad_genetic } set_variable = { name = sltm_lvm_holder_undo_tok_bad_genetic value = var:sltm_lvm_hf_tok_bad_genetic } }
+    else = { remove_variable = sltm_lvm_holder_undo_tok_bad_genetic }
+    set_variable = { name = sltm_lvm_holder_undo_valid value = flag:yes }
+}
+sltm_lvm_restore_holder_filter_undo_effect = {
+    if = {
+        limit = { has_variable = sltm_lvm_holder_undo_valid }
+        set_variable = { name = sltm_lvm_hf_relation value = var:sltm_lvm_holder_undo_relation }
+    set_variable = { name = sltm_lvm_hf_gender value = var:sltm_lvm_holder_undo_gender }
+    set_variable = { name = sltm_lvm_hf_adult value = var:sltm_lvm_holder_undo_adult }
+    set_variable = { name = sltm_lvm_hf_age_band value = var:sltm_lvm_holder_undo_age_band }
+    set_variable = { name = sltm_lvm_hf_imprisoned value = var:sltm_lvm_holder_undo_imprisoned }
+    set_variable = { name = sltm_lvm_hf_government value = var:sltm_lvm_holder_undo_government }
+    set_variable = { name = sltm_lvm_hf_managed_count value = var:sltm_lvm_holder_undo_managed_count }
+    set_variable = { name = sltm_lvm_hf_pending_count value = var:sltm_lvm_holder_undo_pending_count }
+    set_variable = { name = sltm_lvm_hf_blocked_count value = var:sltm_lvm_holder_undo_blocked_count }
+    set_variable = { name = sltm_lvm_hf_junfu_count value = var:sltm_lvm_holder_undo_junfu_count }
+    set_variable = { name = sltm_lvm_hf_noble_count value = var:sltm_lvm_holder_undo_noble_count }
+    set_variable = { name = sltm_lvm_hf_holy_order_count value = var:sltm_lvm_holder_undo_holy_order_count }
+    set_variable = { name = sltm_lvm_hf_mercenary_count value = var:sltm_lvm_holder_undo_mercenary_count }
+    set_variable = { name = sltm_lvm_hf_other_count value = var:sltm_lvm_holder_undo_other_count }
+    set_variable = { name = sltm_lvm_hf_diplomacy_band value = var:sltm_lvm_holder_undo_diplomacy_band }
+    set_variable = { name = sltm_lvm_hf_martial_band value = var:sltm_lvm_holder_undo_martial_band }
+    set_variable = { name = sltm_lvm_hf_stewardship_band value = var:sltm_lvm_holder_undo_stewardship_band }
+    set_variable = { name = sltm_lvm_hf_intrigue_band value = var:sltm_lvm_holder_undo_intrigue_band }
+    set_variable = { name = sltm_lvm_hf_learning_band value = var:sltm_lvm_holder_undo_learning_band }
+    set_variable = { name = sltm_lvm_hf_prowess_band value = var:sltm_lvm_holder_undo_prowess_band }
+    set_variable = { name = sltm_lvm_hf_ruler value = var:sltm_lvm_holder_undo_ruler }
+    set_variable = { name = sltm_lvm_hf_marriage value = var:sltm_lvm_holder_undo_marriage }
+    set_variable = { name = sltm_lvm_hf_sexuality value = var:sltm_lvm_holder_undo_sexuality }
+    set_variable = { name = sltm_lvm_hf_hook value = var:sltm_lvm_holder_undo_hook }
+    set_variable = { name = sltm_lvm_hf_faith_relation value = var:sltm_lvm_holder_undo_faith_relation }
+    set_variable = { name = sltm_lvm_hf_culture_relation value = var:sltm_lvm_holder_undo_culture_relation }
+    set_variable = { name = sltm_lvm_hf_dynasty_relation value = var:sltm_lvm_holder_undo_dynasty_relation }
+    set_variable = { name = sltm_lvm_hf_vassal_stance value = var:sltm_lvm_holder_undo_vassal_stance }
+    set_variable = { name = sltm_lvm_hf_inspiration value = var:sltm_lvm_holder_undo_inspiration }
+    set_variable = { name = sltm_lvm_hf_artifact value = var:sltm_lvm_holder_undo_artifact }
+    set_variable = { name = sltm_lvm_hf_hostage value = var:sltm_lvm_holder_undo_hostage }
+    set_variable = { name = sltm_lvm_hf_pin value = var:sltm_lvm_holder_undo_pin }
+    if = { limit = { has_variable = sltm_lvm_holder_undo_tok_brave } set_variable = { name = sltm_lvm_hf_tok_brave value = var:sltm_lvm_holder_undo_tok_brave } }
+    else = { set_variable = { name = sltm_lvm_hf_tok_brave value = flag:none } }
+    if = { limit = { has_variable = sltm_lvm_holder_undo_tok_cowardly } set_variable = { name = sltm_lvm_hf_tok_cowardly value = var:sltm_lvm_holder_undo_tok_cowardly } }
+    else = { set_variable = { name = sltm_lvm_hf_tok_cowardly value = flag:none } }
+    if = { limit = { has_variable = sltm_lvm_holder_undo_tok_martial_edu } set_variable = { name = sltm_lvm_hf_tok_martial_edu value = var:sltm_lvm_holder_undo_tok_martial_edu } }
+    else = { set_variable = { name = sltm_lvm_hf_tok_martial_edu value = flag:none } }
+    if = { limit = { has_variable = sltm_lvm_holder_undo_tok_steward_edu } set_variable = { name = sltm_lvm_hf_tok_steward_edu value = var:sltm_lvm_holder_undo_tok_steward_edu } }
+    else = { set_variable = { name = sltm_lvm_hf_tok_steward_edu value = flag:none } }
+    if = { limit = { has_variable = sltm_lvm_holder_undo_tok_good_genetic } set_variable = { name = sltm_lvm_hf_tok_good_genetic value = var:sltm_lvm_holder_undo_tok_good_genetic } }
+    else = { set_variable = { name = sltm_lvm_hf_tok_good_genetic value = flag:none } }
+    if = { limit = { has_variable = sltm_lvm_holder_undo_tok_bad_genetic } set_variable = { name = sltm_lvm_hf_tok_bad_genetic value = var:sltm_lvm_holder_undo_tok_bad_genetic } }
+    else = { set_variable = { name = sltm_lvm_hf_tok_bad_genetic value = flag:none } }
+    sltm_lvm_sanitize_holder_filter_state_effect = yes
+    sltm_lvm_hf_rebuild_token_list_effect = yes
+    sltm_lvm_update_holder_active_filter_count_effect = yes
+        sltm_lvm_recompute_holder_view_effect = yes
+        remove_variable = sltm_lvm_holder_undo_valid
+    }
+}
+
+# ===== 预设槽（三个槽同样结构；保存/读档含 token 状态）=====
+sltm_lvm_title_preset_1_save_effect = {
+    sltm_lvm_sanitize_title_filter_state_effect = yes
+    set_variable = { name = sltm_lvm_title_preset_1_type value = var:sltm_lvm_tf_type }
+    set_variable = { name = sltm_lvm_title_preset_1_tier value = var:sltm_lvm_tf_tier }
+    set_variable = { name = sltm_lvm_title_preset_1_status value = var:sltm_lvm_tf_status }
+    set_variable = { name = sltm_lvm_title_preset_1_role value = var:sltm_lvm_tf_role }
+    set_variable = { name = sltm_lvm_title_preset_1_schema value = flag:v28 }
+    set_variable = { name = sltm_lvm_title_preset_1_valid value = flag:yes }
+}
+sltm_lvm_title_preset_1_load_effect = {
+    if = {
+        limit = {
+            AND = {
+                has_variable = sltm_lvm_title_preset_1_valid
+                var:sltm_lvm_title_preset_1_schema = flag:v28
+            }
+        }
+        sltm_lvm_save_title_filter_undo_effect = yes
+        set_variable = { name = sltm_lvm_tf_type value = var:sltm_lvm_title_preset_1_type }
+        set_variable = { name = sltm_lvm_tf_tier value = var:sltm_lvm_title_preset_1_tier }
+        set_variable = { name = sltm_lvm_tf_status value = var:sltm_lvm_title_preset_1_status }
+        set_variable = { name = sltm_lvm_tf_role value = var:sltm_lvm_title_preset_1_role }
+        sltm_lvm_sanitize_title_filter_state_effect = yes
+        sltm_lvm_update_title_active_filter_count_effect = yes
+        sltm_lvm_recompute_title_view_effect = yes
+    }
+}
+sltm_lvm_title_preset_2_save_effect = {
+    sltm_lvm_sanitize_title_filter_state_effect = yes
+    set_variable = { name = sltm_lvm_title_preset_2_type value = var:sltm_lvm_tf_type }
+    set_variable = { name = sltm_lvm_title_preset_2_tier value = var:sltm_lvm_tf_tier }
+    set_variable = { name = sltm_lvm_title_preset_2_status value = var:sltm_lvm_tf_status }
+    set_variable = { name = sltm_lvm_title_preset_2_role value = var:sltm_lvm_tf_role }
+    set_variable = { name = sltm_lvm_title_preset_2_schema value = flag:v28 }
+    set_variable = { name = sltm_lvm_title_preset_2_valid value = flag:yes }
+}
+sltm_lvm_title_preset_2_load_effect = {
+    if = {
+        limit = {
+            AND = {
+                has_variable = sltm_lvm_title_preset_2_valid
+                var:sltm_lvm_title_preset_2_schema = flag:v28
+            }
+        }
+        sltm_lvm_save_title_filter_undo_effect = yes
+        set_variable = { name = sltm_lvm_tf_type value = var:sltm_lvm_title_preset_2_type }
+        set_variable = { name = sltm_lvm_tf_tier value = var:sltm_lvm_title_preset_2_tier }
+        set_variable = { name = sltm_lvm_tf_status value = var:sltm_lvm_title_preset_2_status }
+        set_variable = { name = sltm_lvm_tf_role value = var:sltm_lvm_title_preset_2_role }
+        sltm_lvm_sanitize_title_filter_state_effect = yes
+        sltm_lvm_update_title_active_filter_count_effect = yes
+        sltm_lvm_recompute_title_view_effect = yes
+    }
+}
+sltm_lvm_title_preset_3_save_effect = {
+    sltm_lvm_sanitize_title_filter_state_effect = yes
+    set_variable = { name = sltm_lvm_title_preset_3_type value = var:sltm_lvm_tf_type }
+    set_variable = { name = sltm_lvm_title_preset_3_tier value = var:sltm_lvm_tf_tier }
+    set_variable = { name = sltm_lvm_title_preset_3_status value = var:sltm_lvm_tf_status }
+    set_variable = { name = sltm_lvm_title_preset_3_role value = var:sltm_lvm_tf_role }
+    set_variable = { name = sltm_lvm_title_preset_3_schema value = flag:v28 }
+    set_variable = { name = sltm_lvm_title_preset_3_valid value = flag:yes }
+}
+sltm_lvm_title_preset_3_load_effect = {
+    if = {
+        limit = {
+            AND = {
+                has_variable = sltm_lvm_title_preset_3_valid
+                var:sltm_lvm_title_preset_3_schema = flag:v28
+            }
+        }
+        sltm_lvm_save_title_filter_undo_effect = yes
+        set_variable = { name = sltm_lvm_tf_type value = var:sltm_lvm_title_preset_3_type }
+        set_variable = { name = sltm_lvm_tf_tier value = var:sltm_lvm_title_preset_3_tier }
+        set_variable = { name = sltm_lvm_tf_status value = var:sltm_lvm_title_preset_3_status }
+        set_variable = { name = sltm_lvm_tf_role value = var:sltm_lvm_title_preset_3_role }
+        sltm_lvm_sanitize_title_filter_state_effect = yes
+        sltm_lvm_update_title_active_filter_count_effect = yes
+        sltm_lvm_recompute_title_view_effect = yes
+    }
+}
+
+sltm_lvm_holder_preset_1_save_effect = {
+    sltm_lvm_sanitize_holder_filter_state_effect = yes
+    set_variable = { name = sltm_lvm_holder_preset_1_relation value = var:sltm_lvm_hf_relation }
+    set_variable = { name = sltm_lvm_holder_preset_1_gender value = var:sltm_lvm_hf_gender }
+    set_variable = { name = sltm_lvm_holder_preset_1_adult value = var:sltm_lvm_hf_adult }
+    set_variable = { name = sltm_lvm_holder_preset_1_age_band value = var:sltm_lvm_hf_age_band }
+    set_variable = { name = sltm_lvm_holder_preset_1_imprisoned value = var:sltm_lvm_hf_imprisoned }
+    set_variable = { name = sltm_lvm_holder_preset_1_government value = var:sltm_lvm_hf_government }
+    set_variable = { name = sltm_lvm_holder_preset_1_managed_count value = var:sltm_lvm_hf_managed_count }
+    set_variable = { name = sltm_lvm_holder_preset_1_pending_count value = var:sltm_lvm_hf_pending_count }
+    set_variable = { name = sltm_lvm_holder_preset_1_blocked_count value = var:sltm_lvm_hf_blocked_count }
+    set_variable = { name = sltm_lvm_holder_preset_1_junfu_count value = var:sltm_lvm_hf_junfu_count }
+    set_variable = { name = sltm_lvm_holder_preset_1_noble_count value = var:sltm_lvm_hf_noble_count }
+    set_variable = { name = sltm_lvm_holder_preset_1_holy_order_count value = var:sltm_lvm_hf_holy_order_count }
+    set_variable = { name = sltm_lvm_holder_preset_1_mercenary_count value = var:sltm_lvm_hf_mercenary_count }
+    set_variable = { name = sltm_lvm_holder_preset_1_other_count value = var:sltm_lvm_hf_other_count }
+    set_variable = { name = sltm_lvm_holder_preset_1_diplomacy_band value = var:sltm_lvm_hf_diplomacy_band }
+    set_variable = { name = sltm_lvm_holder_preset_1_martial_band value = var:sltm_lvm_hf_martial_band }
+    set_variable = { name = sltm_lvm_holder_preset_1_stewardship_band value = var:sltm_lvm_hf_stewardship_band }
+    set_variable = { name = sltm_lvm_holder_preset_1_intrigue_band value = var:sltm_lvm_hf_intrigue_band }
+    set_variable = { name = sltm_lvm_holder_preset_1_learning_band value = var:sltm_lvm_hf_learning_band }
+    set_variable = { name = sltm_lvm_holder_preset_1_prowess_band value = var:sltm_lvm_hf_prowess_band }
+    set_variable = { name = sltm_lvm_holder_preset_1_ruler value = var:sltm_lvm_hf_ruler }
+    set_variable = { name = sltm_lvm_holder_preset_1_marriage value = var:sltm_lvm_hf_marriage }
+    set_variable = { name = sltm_lvm_holder_preset_1_sexuality value = var:sltm_lvm_hf_sexuality }
+    set_variable = { name = sltm_lvm_holder_preset_1_hook value = var:sltm_lvm_hf_hook }
+    set_variable = { name = sltm_lvm_holder_preset_1_faith_relation value = var:sltm_lvm_hf_faith_relation }
+    set_variable = { name = sltm_lvm_holder_preset_1_culture_relation value = var:sltm_lvm_hf_culture_relation }
+    set_variable = { name = sltm_lvm_holder_preset_1_dynasty_relation value = var:sltm_lvm_hf_dynasty_relation }
+    set_variable = { name = sltm_lvm_holder_preset_1_vassal_stance value = var:sltm_lvm_hf_vassal_stance }
+    set_variable = { name = sltm_lvm_holder_preset_1_inspiration value = var:sltm_lvm_hf_inspiration }
+    set_variable = { name = sltm_lvm_holder_preset_1_artifact value = var:sltm_lvm_hf_artifact }
+    set_variable = { name = sltm_lvm_holder_preset_1_hostage value = var:sltm_lvm_hf_hostage }
+    set_variable = { name = sltm_lvm_holder_preset_1_pin value = var:sltm_lvm_hf_pin }
+    if = { limit = { has_variable = sltm_lvm_hf_tok_brave } set_variable = { name = sltm_lvm_holder_preset_1_tok_brave value = var:sltm_lvm_hf_tok_brave } }
+    else = { remove_variable = sltm_lvm_holder_preset_1_tok_brave }
+    if = { limit = { has_variable = sltm_lvm_hf_tok_cowardly } set_variable = { name = sltm_lvm_holder_preset_1_tok_cowardly value = var:sltm_lvm_hf_tok_cowardly } }
+    else = { remove_variable = sltm_lvm_holder_preset_1_tok_cowardly }
+    if = { limit = { has_variable = sltm_lvm_hf_tok_martial_edu } set_variable = { name = sltm_lvm_holder_preset_1_tok_martial_edu value = var:sltm_lvm_hf_tok_martial_edu } }
+    else = { remove_variable = sltm_lvm_holder_preset_1_tok_martial_edu }
+    if = { limit = { has_variable = sltm_lvm_hf_tok_steward_edu } set_variable = { name = sltm_lvm_holder_preset_1_tok_steward_edu value = var:sltm_lvm_hf_tok_steward_edu } }
+    else = { remove_variable = sltm_lvm_holder_preset_1_tok_steward_edu }
+    if = { limit = { has_variable = sltm_lvm_hf_tok_good_genetic } set_variable = { name = sltm_lvm_holder_preset_1_tok_good_genetic value = var:sltm_lvm_hf_tok_good_genetic } }
+    else = { remove_variable = sltm_lvm_holder_preset_1_tok_good_genetic }
+    if = { limit = { has_variable = sltm_lvm_hf_tok_bad_genetic } set_variable = { name = sltm_lvm_holder_preset_1_tok_bad_genetic value = var:sltm_lvm_hf_tok_bad_genetic } }
+    else = { remove_variable = sltm_lvm_holder_preset_1_tok_bad_genetic }
+    set_variable = { name = sltm_lvm_holder_preset_1_schema value = flag:v28 }
+    set_variable = { name = sltm_lvm_holder_preset_1_valid value = flag:yes }
+}
+sltm_lvm_holder_preset_1_load_effect = {
+    if = {
+        limit = {
+            AND = {
+                has_variable = sltm_lvm_holder_preset_1_valid
+                var:sltm_lvm_holder_preset_1_schema = flag:v28
+            }
+        }
+        sltm_lvm_save_holder_filter_undo_effect = yes
+        set_variable = { name = sltm_lvm_hf_relation value = var:sltm_lvm_holder_preset_1_relation }
+    set_variable = { name = sltm_lvm_hf_gender value = var:sltm_lvm_holder_preset_1_gender }
+    set_variable = { name = sltm_lvm_hf_adult value = var:sltm_lvm_holder_preset_1_adult }
+    set_variable = { name = sltm_lvm_hf_age_band value = var:sltm_lvm_holder_preset_1_age_band }
+    set_variable = { name = sltm_lvm_hf_imprisoned value = var:sltm_lvm_holder_preset_1_imprisoned }
+    set_variable = { name = sltm_lvm_hf_government value = var:sltm_lvm_holder_preset_1_government }
+    set_variable = { name = sltm_lvm_hf_managed_count value = var:sltm_lvm_holder_preset_1_managed_count }
+    set_variable = { name = sltm_lvm_hf_pending_count value = var:sltm_lvm_holder_preset_1_pending_count }
+    set_variable = { name = sltm_lvm_hf_blocked_count value = var:sltm_lvm_holder_preset_1_blocked_count }
+    set_variable = { name = sltm_lvm_hf_junfu_count value = var:sltm_lvm_holder_preset_1_junfu_count }
+    set_variable = { name = sltm_lvm_hf_noble_count value = var:sltm_lvm_holder_preset_1_noble_count }
+    set_variable = { name = sltm_lvm_hf_holy_order_count value = var:sltm_lvm_holder_preset_1_holy_order_count }
+    set_variable = { name = sltm_lvm_hf_mercenary_count value = var:sltm_lvm_holder_preset_1_mercenary_count }
+    set_variable = { name = sltm_lvm_hf_other_count value = var:sltm_lvm_holder_preset_1_other_count }
+    set_variable = { name = sltm_lvm_hf_diplomacy_band value = var:sltm_lvm_holder_preset_1_diplomacy_band }
+    set_variable = { name = sltm_lvm_hf_martial_band value = var:sltm_lvm_holder_preset_1_martial_band }
+    set_variable = { name = sltm_lvm_hf_stewardship_band value = var:sltm_lvm_holder_preset_1_stewardship_band }
+    set_variable = { name = sltm_lvm_hf_intrigue_band value = var:sltm_lvm_holder_preset_1_intrigue_band }
+    set_variable = { name = sltm_lvm_hf_learning_band value = var:sltm_lvm_holder_preset_1_learning_band }
+    set_variable = { name = sltm_lvm_hf_prowess_band value = var:sltm_lvm_holder_preset_1_prowess_band }
+    set_variable = { name = sltm_lvm_hf_ruler value = var:sltm_lvm_holder_preset_1_ruler }
+    set_variable = { name = sltm_lvm_hf_marriage value = var:sltm_lvm_holder_preset_1_marriage }
+    set_variable = { name = sltm_lvm_hf_sexuality value = var:sltm_lvm_holder_preset_1_sexuality }
+    set_variable = { name = sltm_lvm_hf_hook value = var:sltm_lvm_holder_preset_1_hook }
+    set_variable = { name = sltm_lvm_hf_faith_relation value = var:sltm_lvm_holder_preset_1_faith_relation }
+    set_variable = { name = sltm_lvm_hf_culture_relation value = var:sltm_lvm_holder_preset_1_culture_relation }
+    set_variable = { name = sltm_lvm_hf_dynasty_relation value = var:sltm_lvm_holder_preset_1_dynasty_relation }
+    set_variable = { name = sltm_lvm_hf_vassal_stance value = var:sltm_lvm_holder_preset_1_vassal_stance }
+    set_variable = { name = sltm_lvm_hf_inspiration value = var:sltm_lvm_holder_preset_1_inspiration }
+    set_variable = { name = sltm_lvm_hf_artifact value = var:sltm_lvm_holder_preset_1_artifact }
+    set_variable = { name = sltm_lvm_hf_hostage value = var:sltm_lvm_holder_preset_1_hostage }
+    set_variable = { name = sltm_lvm_hf_pin value = var:sltm_lvm_holder_preset_1_pin }
+    if = { limit = { has_variable = sltm_lvm_holder_preset_1_tok_brave } set_variable = { name = sltm_lvm_hf_tok_brave value = var:sltm_lvm_holder_preset_1_tok_brave } }
+    else = { set_variable = { name = sltm_lvm_hf_tok_brave value = flag:none } }
+    if = { limit = { has_variable = sltm_lvm_holder_preset_1_tok_cowardly } set_variable = { name = sltm_lvm_hf_tok_cowardly value = var:sltm_lvm_holder_preset_1_tok_cowardly } }
+    else = { set_variable = { name = sltm_lvm_hf_tok_cowardly value = flag:none } }
+    if = { limit = { has_variable = sltm_lvm_holder_preset_1_tok_martial_edu } set_variable = { name = sltm_lvm_hf_tok_martial_edu value = var:sltm_lvm_holder_preset_1_tok_martial_edu } }
+    else = { set_variable = { name = sltm_lvm_hf_tok_martial_edu value = flag:none } }
+    if = { limit = { has_variable = sltm_lvm_holder_preset_1_tok_steward_edu } set_variable = { name = sltm_lvm_hf_tok_steward_edu value = var:sltm_lvm_holder_preset_1_tok_steward_edu } }
+    else = { set_variable = { name = sltm_lvm_hf_tok_steward_edu value = flag:none } }
+    if = { limit = { has_variable = sltm_lvm_holder_preset_1_tok_good_genetic } set_variable = { name = sltm_lvm_hf_tok_good_genetic value = var:sltm_lvm_holder_preset_1_tok_good_genetic } }
+    else = { set_variable = { name = sltm_lvm_hf_tok_good_genetic value = flag:none } }
+    if = { limit = { has_variable = sltm_lvm_holder_preset_1_tok_bad_genetic } set_variable = { name = sltm_lvm_hf_tok_bad_genetic value = var:sltm_lvm_holder_preset_1_tok_bad_genetic } }
+    else = { set_variable = { name = sltm_lvm_hf_tok_bad_genetic value = flag:none } }
+    sltm_lvm_sanitize_holder_filter_state_effect = yes
+    sltm_lvm_hf_rebuild_token_list_effect = yes
+    sltm_lvm_update_holder_active_filter_count_effect = yes
+        sltm_lvm_recompute_holder_view_effect = yes
+    }
+}
+sltm_lvm_holder_preset_2_save_effect = {
+    sltm_lvm_sanitize_holder_filter_state_effect = yes
+    set_variable = { name = sltm_lvm_holder_preset_2_relation value = var:sltm_lvm_hf_relation }
+    set_variable = { name = sltm_lvm_holder_preset_2_gender value = var:sltm_lvm_hf_gender }
+    set_variable = { name = sltm_lvm_holder_preset_2_adult value = var:sltm_lvm_hf_adult }
+    set_variable = { name = sltm_lvm_holder_preset_2_age_band value = var:sltm_lvm_hf_age_band }
+    set_variable = { name = sltm_lvm_holder_preset_2_imprisoned value = var:sltm_lvm_hf_imprisoned }
+    set_variable = { name = sltm_lvm_holder_preset_2_government value = var:sltm_lvm_hf_government }
+    set_variable = { name = sltm_lvm_holder_preset_2_managed_count value = var:sltm_lvm_hf_managed_count }
+    set_variable = { name = sltm_lvm_holder_preset_2_pending_count value = var:sltm_lvm_hf_pending_count }
+    set_variable = { name = sltm_lvm_holder_preset_2_blocked_count value = var:sltm_lvm_hf_blocked_count }
+    set_variable = { name = sltm_lvm_holder_preset_2_junfu_count value = var:sltm_lvm_hf_junfu_count }
+    set_variable = { name = sltm_lvm_holder_preset_2_noble_count value = var:sltm_lvm_hf_noble_count }
+    set_variable = { name = sltm_lvm_holder_preset_2_holy_order_count value = var:sltm_lvm_hf_holy_order_count }
+    set_variable = { name = sltm_lvm_holder_preset_2_mercenary_count value = var:sltm_lvm_hf_mercenary_count }
+    set_variable = { name = sltm_lvm_holder_preset_2_other_count value = var:sltm_lvm_hf_other_count }
+    set_variable = { name = sltm_lvm_holder_preset_2_diplomacy_band value = var:sltm_lvm_hf_diplomacy_band }
+    set_variable = { name = sltm_lvm_holder_preset_2_martial_band value = var:sltm_lvm_hf_martial_band }
+    set_variable = { name = sltm_lvm_holder_preset_2_stewardship_band value = var:sltm_lvm_hf_stewardship_band }
+    set_variable = { name = sltm_lvm_holder_preset_2_intrigue_band value = var:sltm_lvm_hf_intrigue_band }
+    set_variable = { name = sltm_lvm_holder_preset_2_learning_band value = var:sltm_lvm_hf_learning_band }
+    set_variable = { name = sltm_lvm_holder_preset_2_prowess_band value = var:sltm_lvm_hf_prowess_band }
+    set_variable = { name = sltm_lvm_holder_preset_2_ruler value = var:sltm_lvm_hf_ruler }
+    set_variable = { name = sltm_lvm_holder_preset_2_marriage value = var:sltm_lvm_hf_marriage }
+    set_variable = { name = sltm_lvm_holder_preset_2_sexuality value = var:sltm_lvm_hf_sexuality }
+    set_variable = { name = sltm_lvm_holder_preset_2_hook value = var:sltm_lvm_hf_hook }
+    set_variable = { name = sltm_lvm_holder_preset_2_faith_relation value = var:sltm_lvm_hf_faith_relation }
+    set_variable = { name = sltm_lvm_holder_preset_2_culture_relation value = var:sltm_lvm_hf_culture_relation }
+    set_variable = { name = sltm_lvm_holder_preset_2_dynasty_relation value = var:sltm_lvm_hf_dynasty_relation }
+    set_variable = { name = sltm_lvm_holder_preset_2_vassal_stance value = var:sltm_lvm_hf_vassal_stance }
+    set_variable = { name = sltm_lvm_holder_preset_2_inspiration value = var:sltm_lvm_hf_inspiration }
+    set_variable = { name = sltm_lvm_holder_preset_2_artifact value = var:sltm_lvm_hf_artifact }
+    set_variable = { name = sltm_lvm_holder_preset_2_hostage value = var:sltm_lvm_hf_hostage }
+    set_variable = { name = sltm_lvm_holder_preset_2_pin value = var:sltm_lvm_hf_pin }
+    if = { limit = { has_variable = sltm_lvm_hf_tok_brave } set_variable = { name = sltm_lvm_holder_preset_2_tok_brave value = var:sltm_lvm_hf_tok_brave } }
+    else = { remove_variable = sltm_lvm_holder_preset_2_tok_brave }
+    if = { limit = { has_variable = sltm_lvm_hf_tok_cowardly } set_variable = { name = sltm_lvm_holder_preset_2_tok_cowardly value = var:sltm_lvm_hf_tok_cowardly } }
+    else = { remove_variable = sltm_lvm_holder_preset_2_tok_cowardly }
+    if = { limit = { has_variable = sltm_lvm_hf_tok_martial_edu } set_variable = { name = sltm_lvm_holder_preset_2_tok_martial_edu value = var:sltm_lvm_hf_tok_martial_edu } }
+    else = { remove_variable = sltm_lvm_holder_preset_2_tok_martial_edu }
+    if = { limit = { has_variable = sltm_lvm_hf_tok_steward_edu } set_variable = { name = sltm_lvm_holder_preset_2_tok_steward_edu value = var:sltm_lvm_hf_tok_steward_edu } }
+    else = { remove_variable = sltm_lvm_holder_preset_2_tok_steward_edu }
+    if = { limit = { has_variable = sltm_lvm_hf_tok_good_genetic } set_variable = { name = sltm_lvm_holder_preset_2_tok_good_genetic value = var:sltm_lvm_hf_tok_good_genetic } }
+    else = { remove_variable = sltm_lvm_holder_preset_2_tok_good_genetic }
+    if = { limit = { has_variable = sltm_lvm_hf_tok_bad_genetic } set_variable = { name = sltm_lvm_holder_preset_2_tok_bad_genetic value = var:sltm_lvm_hf_tok_bad_genetic } }
+    else = { remove_variable = sltm_lvm_holder_preset_2_tok_bad_genetic }
+    set_variable = { name = sltm_lvm_holder_preset_2_schema value = flag:v28 }
+    set_variable = { name = sltm_lvm_holder_preset_2_valid value = flag:yes }
+}
+sltm_lvm_holder_preset_2_load_effect = {
+    if = {
+        limit = {
+            AND = {
+                has_variable = sltm_lvm_holder_preset_2_valid
+                var:sltm_lvm_holder_preset_2_schema = flag:v28
+            }
+        }
+        sltm_lvm_save_holder_filter_undo_effect = yes
+        set_variable = { name = sltm_lvm_hf_relation value = var:sltm_lvm_holder_preset_2_relation }
+    set_variable = { name = sltm_lvm_hf_gender value = var:sltm_lvm_holder_preset_2_gender }
+    set_variable = { name = sltm_lvm_hf_adult value = var:sltm_lvm_holder_preset_2_adult }
+    set_variable = { name = sltm_lvm_hf_age_band value = var:sltm_lvm_holder_preset_2_age_band }
+    set_variable = { name = sltm_lvm_hf_imprisoned value = var:sltm_lvm_holder_preset_2_imprisoned }
+    set_variable = { name = sltm_lvm_hf_government value = var:sltm_lvm_holder_preset_2_government }
+    set_variable = { name = sltm_lvm_hf_managed_count value = var:sltm_lvm_holder_preset_2_managed_count }
+    set_variable = { name = sltm_lvm_hf_pending_count value = var:sltm_lvm_holder_preset_2_pending_count }
+    set_variable = { name = sltm_lvm_hf_blocked_count value = var:sltm_lvm_holder_preset_2_blocked_count }
+    set_variable = { name = sltm_lvm_hf_junfu_count value = var:sltm_lvm_holder_preset_2_junfu_count }
+    set_variable = { name = sltm_lvm_hf_noble_count value = var:sltm_lvm_holder_preset_2_noble_count }
+    set_variable = { name = sltm_lvm_hf_holy_order_count value = var:sltm_lvm_holder_preset_2_holy_order_count }
+    set_variable = { name = sltm_lvm_hf_mercenary_count value = var:sltm_lvm_holder_preset_2_mercenary_count }
+    set_variable = { name = sltm_lvm_hf_other_count value = var:sltm_lvm_holder_preset_2_other_count }
+    set_variable = { name = sltm_lvm_hf_diplomacy_band value = var:sltm_lvm_holder_preset_2_diplomacy_band }
+    set_variable = { name = sltm_lvm_hf_martial_band value = var:sltm_lvm_holder_preset_2_martial_band }
+    set_variable = { name = sltm_lvm_hf_stewardship_band value = var:sltm_lvm_holder_preset_2_stewardship_band }
+    set_variable = { name = sltm_lvm_hf_intrigue_band value = var:sltm_lvm_holder_preset_2_intrigue_band }
+    set_variable = { name = sltm_lvm_hf_learning_band value = var:sltm_lvm_holder_preset_2_learning_band }
+    set_variable = { name = sltm_lvm_hf_prowess_band value = var:sltm_lvm_holder_preset_2_prowess_band }
+    set_variable = { name = sltm_lvm_hf_ruler value = var:sltm_lvm_holder_preset_2_ruler }
+    set_variable = { name = sltm_lvm_hf_marriage value = var:sltm_lvm_holder_preset_2_marriage }
+    set_variable = { name = sltm_lvm_hf_sexuality value = var:sltm_lvm_holder_preset_2_sexuality }
+    set_variable = { name = sltm_lvm_hf_hook value = var:sltm_lvm_holder_preset_2_hook }
+    set_variable = { name = sltm_lvm_hf_faith_relation value = var:sltm_lvm_holder_preset_2_faith_relation }
+    set_variable = { name = sltm_lvm_hf_culture_relation value = var:sltm_lvm_holder_preset_2_culture_relation }
+    set_variable = { name = sltm_lvm_hf_dynasty_relation value = var:sltm_lvm_holder_preset_2_dynasty_relation }
+    set_variable = { name = sltm_lvm_hf_vassal_stance value = var:sltm_lvm_holder_preset_2_vassal_stance }
+    set_variable = { name = sltm_lvm_hf_inspiration value = var:sltm_lvm_holder_preset_2_inspiration }
+    set_variable = { name = sltm_lvm_hf_artifact value = var:sltm_lvm_holder_preset_2_artifact }
+    set_variable = { name = sltm_lvm_hf_hostage value = var:sltm_lvm_holder_preset_2_hostage }
+    set_variable = { name = sltm_lvm_hf_pin value = var:sltm_lvm_holder_preset_2_pin }
+    if = { limit = { has_variable = sltm_lvm_holder_preset_2_tok_brave } set_variable = { name = sltm_lvm_hf_tok_brave value = var:sltm_lvm_holder_preset_2_tok_brave } }
+    else = { set_variable = { name = sltm_lvm_hf_tok_brave value = flag:none } }
+    if = { limit = { has_variable = sltm_lvm_holder_preset_2_tok_cowardly } set_variable = { name = sltm_lvm_hf_tok_cowardly value = var:sltm_lvm_holder_preset_2_tok_cowardly } }
+    else = { set_variable = { name = sltm_lvm_hf_tok_cowardly value = flag:none } }
+    if = { limit = { has_variable = sltm_lvm_holder_preset_2_tok_martial_edu } set_variable = { name = sltm_lvm_hf_tok_martial_edu value = var:sltm_lvm_holder_preset_2_tok_martial_edu } }
+    else = { set_variable = { name = sltm_lvm_hf_tok_martial_edu value = flag:none } }
+    if = { limit = { has_variable = sltm_lvm_holder_preset_2_tok_steward_edu } set_variable = { name = sltm_lvm_hf_tok_steward_edu value = var:sltm_lvm_holder_preset_2_tok_steward_edu } }
+    else = { set_variable = { name = sltm_lvm_hf_tok_steward_edu value = flag:none } }
+    if = { limit = { has_variable = sltm_lvm_holder_preset_2_tok_good_genetic } set_variable = { name = sltm_lvm_hf_tok_good_genetic value = var:sltm_lvm_holder_preset_2_tok_good_genetic } }
+    else = { set_variable = { name = sltm_lvm_hf_tok_good_genetic value = flag:none } }
+    if = { limit = { has_variable = sltm_lvm_holder_preset_2_tok_bad_genetic } set_variable = { name = sltm_lvm_hf_tok_bad_genetic value = var:sltm_lvm_holder_preset_2_tok_bad_genetic } }
+    else = { set_variable = { name = sltm_lvm_hf_tok_bad_genetic value = flag:none } }
+    sltm_lvm_sanitize_holder_filter_state_effect = yes
+    sltm_lvm_hf_rebuild_token_list_effect = yes
+    sltm_lvm_update_holder_active_filter_count_effect = yes
+        sltm_lvm_recompute_holder_view_effect = yes
+    }
+}
+sltm_lvm_holder_preset_3_save_effect = {
+    sltm_lvm_sanitize_holder_filter_state_effect = yes
+    set_variable = { name = sltm_lvm_holder_preset_3_relation value = var:sltm_lvm_hf_relation }
+    set_variable = { name = sltm_lvm_holder_preset_3_gender value = var:sltm_lvm_hf_gender }
+    set_variable = { name = sltm_lvm_holder_preset_3_adult value = var:sltm_lvm_hf_adult }
+    set_variable = { name = sltm_lvm_holder_preset_3_age_band value = var:sltm_lvm_hf_age_band }
+    set_variable = { name = sltm_lvm_holder_preset_3_imprisoned value = var:sltm_lvm_hf_imprisoned }
+    set_variable = { name = sltm_lvm_holder_preset_3_government value = var:sltm_lvm_hf_government }
+    set_variable = { name = sltm_lvm_holder_preset_3_managed_count value = var:sltm_lvm_hf_managed_count }
+    set_variable = { name = sltm_lvm_holder_preset_3_pending_count value = var:sltm_lvm_hf_pending_count }
+    set_variable = { name = sltm_lvm_holder_preset_3_blocked_count value = var:sltm_lvm_hf_blocked_count }
+    set_variable = { name = sltm_lvm_holder_preset_3_junfu_count value = var:sltm_lvm_hf_junfu_count }
+    set_variable = { name = sltm_lvm_holder_preset_3_noble_count value = var:sltm_lvm_hf_noble_count }
+    set_variable = { name = sltm_lvm_holder_preset_3_holy_order_count value = var:sltm_lvm_hf_holy_order_count }
+    set_variable = { name = sltm_lvm_holder_preset_3_mercenary_count value = var:sltm_lvm_hf_mercenary_count }
+    set_variable = { name = sltm_lvm_holder_preset_3_other_count value = var:sltm_lvm_hf_other_count }
+    set_variable = { name = sltm_lvm_holder_preset_3_diplomacy_band value = var:sltm_lvm_hf_diplomacy_band }
+    set_variable = { name = sltm_lvm_holder_preset_3_martial_band value = var:sltm_lvm_hf_martial_band }
+    set_variable = { name = sltm_lvm_holder_preset_3_stewardship_band value = var:sltm_lvm_hf_stewardship_band }
+    set_variable = { name = sltm_lvm_holder_preset_3_intrigue_band value = var:sltm_lvm_hf_intrigue_band }
+    set_variable = { name = sltm_lvm_holder_preset_3_learning_band value = var:sltm_lvm_hf_learning_band }
+    set_variable = { name = sltm_lvm_holder_preset_3_prowess_band value = var:sltm_lvm_hf_prowess_band }
+    set_variable = { name = sltm_lvm_holder_preset_3_ruler value = var:sltm_lvm_hf_ruler }
+    set_variable = { name = sltm_lvm_holder_preset_3_marriage value = var:sltm_lvm_hf_marriage }
+    set_variable = { name = sltm_lvm_holder_preset_3_sexuality value = var:sltm_lvm_hf_sexuality }
+    set_variable = { name = sltm_lvm_holder_preset_3_hook value = var:sltm_lvm_hf_hook }
+    set_variable = { name = sltm_lvm_holder_preset_3_faith_relation value = var:sltm_lvm_hf_faith_relation }
+    set_variable = { name = sltm_lvm_holder_preset_3_culture_relation value = var:sltm_lvm_hf_culture_relation }
+    set_variable = { name = sltm_lvm_holder_preset_3_dynasty_relation value = var:sltm_lvm_hf_dynasty_relation }
+    set_variable = { name = sltm_lvm_holder_preset_3_vassal_stance value = var:sltm_lvm_hf_vassal_stance }
+    set_variable = { name = sltm_lvm_holder_preset_3_inspiration value = var:sltm_lvm_hf_inspiration }
+    set_variable = { name = sltm_lvm_holder_preset_3_artifact value = var:sltm_lvm_hf_artifact }
+    set_variable = { name = sltm_lvm_holder_preset_3_hostage value = var:sltm_lvm_hf_hostage }
+    set_variable = { name = sltm_lvm_holder_preset_3_pin value = var:sltm_lvm_hf_pin }
+    if = { limit = { has_variable = sltm_lvm_hf_tok_brave } set_variable = { name = sltm_lvm_holder_preset_3_tok_brave value = var:sltm_lvm_hf_tok_brave } }
+    else = { remove_variable = sltm_lvm_holder_preset_3_tok_brave }
+    if = { limit = { has_variable = sltm_lvm_hf_tok_cowardly } set_variable = { name = sltm_lvm_holder_preset_3_tok_cowardly value = var:sltm_lvm_hf_tok_cowardly } }
+    else = { remove_variable = sltm_lvm_holder_preset_3_tok_cowardly }
+    if = { limit = { has_variable = sltm_lvm_hf_tok_martial_edu } set_variable = { name = sltm_lvm_holder_preset_3_tok_martial_edu value = var:sltm_lvm_hf_tok_martial_edu } }
+    else = { remove_variable = sltm_lvm_holder_preset_3_tok_martial_edu }
+    if = { limit = { has_variable = sltm_lvm_hf_tok_steward_edu } set_variable = { name = sltm_lvm_holder_preset_3_tok_steward_edu value = var:sltm_lvm_hf_tok_steward_edu } }
+    else = { remove_variable = sltm_lvm_holder_preset_3_tok_steward_edu }
+    if = { limit = { has_variable = sltm_lvm_hf_tok_good_genetic } set_variable = { name = sltm_lvm_holder_preset_3_tok_good_genetic value = var:sltm_lvm_hf_tok_good_genetic } }
+    else = { remove_variable = sltm_lvm_holder_preset_3_tok_good_genetic }
+    if = { limit = { has_variable = sltm_lvm_hf_tok_bad_genetic } set_variable = { name = sltm_lvm_holder_preset_3_tok_bad_genetic value = var:sltm_lvm_hf_tok_bad_genetic } }
+    else = { remove_variable = sltm_lvm_holder_preset_3_tok_bad_genetic }
+    set_variable = { name = sltm_lvm_holder_preset_3_schema value = flag:v28 }
+    set_variable = { name = sltm_lvm_holder_preset_3_valid value = flag:yes }
+}
+sltm_lvm_holder_preset_3_load_effect = {
+    if = {
+        limit = {
+            AND = {
+                has_variable = sltm_lvm_holder_preset_3_valid
+                var:sltm_lvm_holder_preset_3_schema = flag:v28
+            }
+        }
+        sltm_lvm_save_holder_filter_undo_effect = yes
+        set_variable = { name = sltm_lvm_hf_relation value = var:sltm_lvm_holder_preset_3_relation }
+    set_variable = { name = sltm_lvm_hf_gender value = var:sltm_lvm_holder_preset_3_gender }
+    set_variable = { name = sltm_lvm_hf_adult value = var:sltm_lvm_holder_preset_3_adult }
+    set_variable = { name = sltm_lvm_hf_age_band value = var:sltm_lvm_holder_preset_3_age_band }
+    set_variable = { name = sltm_lvm_hf_imprisoned value = var:sltm_lvm_holder_preset_3_imprisoned }
+    set_variable = { name = sltm_lvm_hf_government value = var:sltm_lvm_holder_preset_3_government }
+    set_variable = { name = sltm_lvm_hf_managed_count value = var:sltm_lvm_holder_preset_3_managed_count }
+    set_variable = { name = sltm_lvm_hf_pending_count value = var:sltm_lvm_holder_preset_3_pending_count }
+    set_variable = { name = sltm_lvm_hf_blocked_count value = var:sltm_lvm_holder_preset_3_blocked_count }
+    set_variable = { name = sltm_lvm_hf_junfu_count value = var:sltm_lvm_holder_preset_3_junfu_count }
+    set_variable = { name = sltm_lvm_hf_noble_count value = var:sltm_lvm_holder_preset_3_noble_count }
+    set_variable = { name = sltm_lvm_hf_holy_order_count value = var:sltm_lvm_holder_preset_3_holy_order_count }
+    set_variable = { name = sltm_lvm_hf_mercenary_count value = var:sltm_lvm_holder_preset_3_mercenary_count }
+    set_variable = { name = sltm_lvm_hf_other_count value = var:sltm_lvm_holder_preset_3_other_count }
+    set_variable = { name = sltm_lvm_hf_diplomacy_band value = var:sltm_lvm_holder_preset_3_diplomacy_band }
+    set_variable = { name = sltm_lvm_hf_martial_band value = var:sltm_lvm_holder_preset_3_martial_band }
+    set_variable = { name = sltm_lvm_hf_stewardship_band value = var:sltm_lvm_holder_preset_3_stewardship_band }
+    set_variable = { name = sltm_lvm_hf_intrigue_band value = var:sltm_lvm_holder_preset_3_intrigue_band }
+    set_variable = { name = sltm_lvm_hf_learning_band value = var:sltm_lvm_holder_preset_3_learning_band }
+    set_variable = { name = sltm_lvm_hf_prowess_band value = var:sltm_lvm_holder_preset_3_prowess_band }
+    set_variable = { name = sltm_lvm_hf_ruler value = var:sltm_lvm_holder_preset_3_ruler }
+    set_variable = { name = sltm_lvm_hf_marriage value = var:sltm_lvm_holder_preset_3_marriage }
+    set_variable = { name = sltm_lvm_hf_sexuality value = var:sltm_lvm_holder_preset_3_sexuality }
+    set_variable = { name = sltm_lvm_hf_hook value = var:sltm_lvm_holder_preset_3_hook }
+    set_variable = { name = sltm_lvm_hf_faith_relation value = var:sltm_lvm_holder_preset_3_faith_relation }
+    set_variable = { name = sltm_lvm_hf_culture_relation value = var:sltm_lvm_holder_preset_3_culture_relation }
+    set_variable = { name = sltm_lvm_hf_dynasty_relation value = var:sltm_lvm_holder_preset_3_dynasty_relation }
+    set_variable = { name = sltm_lvm_hf_vassal_stance value = var:sltm_lvm_holder_preset_3_vassal_stance }
+    set_variable = { name = sltm_lvm_hf_inspiration value = var:sltm_lvm_holder_preset_3_inspiration }
+    set_variable = { name = sltm_lvm_hf_artifact value = var:sltm_lvm_holder_preset_3_artifact }
+    set_variable = { name = sltm_lvm_hf_hostage value = var:sltm_lvm_holder_preset_3_hostage }
+    set_variable = { name = sltm_lvm_hf_pin value = var:sltm_lvm_holder_preset_3_pin }
+    if = { limit = { has_variable = sltm_lvm_holder_preset_3_tok_brave } set_variable = { name = sltm_lvm_hf_tok_brave value = var:sltm_lvm_holder_preset_3_tok_brave } }
+    else = { set_variable = { name = sltm_lvm_hf_tok_brave value = flag:none } }
+    if = { limit = { has_variable = sltm_lvm_holder_preset_3_tok_cowardly } set_variable = { name = sltm_lvm_hf_tok_cowardly value = var:sltm_lvm_holder_preset_3_tok_cowardly } }
+    else = { set_variable = { name = sltm_lvm_hf_tok_cowardly value = flag:none } }
+    if = { limit = { has_variable = sltm_lvm_holder_preset_3_tok_martial_edu } set_variable = { name = sltm_lvm_hf_tok_martial_edu value = var:sltm_lvm_holder_preset_3_tok_martial_edu } }
+    else = { set_variable = { name = sltm_lvm_hf_tok_martial_edu value = flag:none } }
+    if = { limit = { has_variable = sltm_lvm_holder_preset_3_tok_steward_edu } set_variable = { name = sltm_lvm_hf_tok_steward_edu value = var:sltm_lvm_holder_preset_3_tok_steward_edu } }
+    else = { set_variable = { name = sltm_lvm_hf_tok_steward_edu value = flag:none } }
+    if = { limit = { has_variable = sltm_lvm_holder_preset_3_tok_good_genetic } set_variable = { name = sltm_lvm_hf_tok_good_genetic value = var:sltm_lvm_holder_preset_3_tok_good_genetic } }
+    else = { set_variable = { name = sltm_lvm_hf_tok_good_genetic value = flag:none } }
+    if = { limit = { has_variable = sltm_lvm_holder_preset_3_tok_bad_genetic } set_variable = { name = sltm_lvm_hf_tok_bad_genetic value = var:sltm_lvm_holder_preset_3_tok_bad_genetic } }
+    else = { set_variable = { name = sltm_lvm_hf_tok_bad_genetic value = flag:none } }
+    sltm_lvm_sanitize_holder_filter_state_effect = yes
+    sltm_lvm_hf_rebuild_token_list_effect = yes
+    sltm_lvm_update_holder_active_filter_count_effect = yes
+        sltm_lvm_recompute_holder_view_effect = yes
+    }
+}

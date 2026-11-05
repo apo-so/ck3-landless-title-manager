@@ -1,0 +1,143 @@
+﻿############################################################
+# 无地头衔管理器 V2.8：ACS 风格下拉控件核心
+#
+# 这里只复刻控件结构，不依赖创意工坊 Mod 的 scripted GUI 或变量。
+# 业务状态仍由 sltm_lvm_hf_* 脚本维护，避免与其他 Mod 的命名空间冲突。
+############################################################
+
+types MytmLvmAcsDropdownTypes {
+
+    type sltm_lvm_acs_dropdown_selected_value = widget {
+        alwaystransparent = no
+        block "sltm_lvm_acs_dropdown_selected_value_size" { size = { 100% 100% } }
+        block "sltm_lvm_acs_selected_visible" { }
+
+        button_normal = {
+            size = { 100% 33 }
+            button_trigger = none
+            gfxtype = framedbuttongfx
+            effectname = "NoHighlight"
+            upframe = 1
+            overframe = 2
+            downframe = 3
+            disableframe = 4
+            texture = "gfx/interface/buttons/button_drop_down.dds"
+            framesize = { 225 33 }
+            spriteType = Corneredtiled
+            spriteborder = { 75 11 }
+            clicksound = "event:/SFX/UI/Generic/sfx_ui_generic_checkbox"
+            onclick = "[PdxGuiWidget.AccessParent.AccessParent.TriggerAnimation('sltm_lvm_acs_show_drop')]"
+
+            buttonText = {
+                text_single = {
+                    size = { 100% 100% }
+                    autoresize = no
+                    margin = { 15 0 }
+                    margin_right = 25
+                    align = left|nobaseline
+                    default_format = "#clickable"
+                    block "sltm_lvm_acs_selected_text" { text = SLTM_LVM_FILTER_ALL_STATUS }
+                }
+            }
+        }
+    }
+
+    type sltm_lvm_acs_dropdown_other_value = widget {
+        alwaystransparent = no
+        block "sltm_lvm_acs_dropdown_other_value_size" { size = { 300 30 } }
+        block "sltm_lvm_acs_option_visible" { }
+
+        button_normal = {
+            size = { 100% 30 }
+            button_trigger = none
+            gfxtype = framedbuttongfx
+            effectname = "NoHighlight"
+            shaderfile = "gfx/FX/pdxgui_pushbutton.shader"
+            upframe = 1
+            overframe = 2
+            downframe = 3
+            disableframe = 1
+            texture = "gfx/interface/buttons/button_interaction_menu.dds"
+            framesize = { 317 30 }
+            clicksound = "event:/SFX/UI/Generic/sfx_ui_generic_checkbox"
+            onclick = "[PdxGuiWidget.AccessParent.AccessParent.AccessParent.AccessParent.TriggerAnimation('sltm_lvm_acs_hide_drop')]"
+            block "sltm_lvm_acs_option_execute" { }
+
+            buttonText = {
+                text_single = {
+                    size = { 100% 100% }
+                    autoresize = no
+                    margin_left = 10
+                    margin_right = 8
+                    align = left|nobaseline
+                    default_format = "#clickable"
+                    block "sltm_lvm_acs_option_text" { text = SLTM_LVM_FILTER_ALL_STATUS }
+                }
+            }
+        }
+    }
+
+    type sltm_lvm_acs_dropdown_base = widget {
+        block "sltm_lvm_acs_dropdown_size" { size = { 300 33 } }
+        allow_outside = yes
+
+        state = { name = idle alpha = 1 }
+        state = {
+            name = _mouse_hierarchy_leave
+            duration = 0
+            alpha = 1
+            next = sltm_lvm_acs_hide_drop
+        }
+        state = {
+            name = sltm_lvm_acs_hide_drop
+            trigger_on_create = yes
+            duration = 0.1
+            on_finish = "[PdxGuiWidget.FindChild('sltm_lvm_acs_dropdown_part').Hide]"
+            alpha = 1
+            next = idle
+        }
+
+        block "sltm_lvm_acs_dropdown_selected_values" { }
+
+        scrollarea = {
+            name = "sltm_lvm_acs_dropdown_part"
+            position = { 5 33 }
+            state = { name = _show using = Animation_FadeIn_Quick }
+            state = { name = _hide using = Animation_FadeOut_Quick }
+            block "sltm_lvm_acs_dropdown_scroll_maximumsize" { maximumsize = { 300 250 } }
+            autoresizescrollarea = yes
+            scrollbarpolicy_horizontal = always_off
+            using = Background_DropDown
+
+            scrollwidget = {
+                vbox = {
+                    using = Background_DropDown
+                    layoutpolicy_vertical = expanding
+                    layoutpolicy_horizontal = expanding
+                    ignoreinvisible = yes
+                    block "sltm_lvm_acs_dropdown_other_values" { }
+                }
+            }
+            scrollbar_vertical = { using = Scrollbar_Vertical }
+        }
+    }
+
+    type sltm_lvm_acs_dropdown = sltm_lvm_acs_dropdown_base {
+        state = {
+            name = sltm_lvm_acs_show_drop
+            # ACS 先把下拉宿主层级提升，再显示浮层，避免被滚动容器裁剪。
+            on_finish = "[PdxGuiWidget.AccessParent.AccessParent.AccessParent.AccessParent.AccessParent.StackTop]"
+            on_finish = "[PdxGuiWidget.AccessParent.AccessParent.AccessParent.AccessParent.StackTop]"
+            on_finish = "[PdxGuiWidget.AccessParent.AccessParent.AccessParent.StackTop]"
+            on_finish = "[PdxGuiWidget.AccessParent.AccessParent.StackTop]"
+            on_finish = "[PdxGuiWidget.FindChild('sltm_lvm_acs_dropdown_part').Show]"
+            alpha = 1
+            duration = 0.1
+            next = idle
+        }
+    }
+
+    type sltm_lvm_acs_filter_dropdown_other_value = sltm_lvm_acs_dropdown_other_value {
+        blockoverride "sltm_lvm_acs_dropdown_other_value_size" { size = { 300 33 } }
+    }
+}

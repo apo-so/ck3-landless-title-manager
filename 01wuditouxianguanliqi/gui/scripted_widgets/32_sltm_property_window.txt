@@ -1,0 +1,1 @@
+﻿gui/32_sltm_property_window.gui = sltm_title_property_window

@@ -1,0 +1,260 @@
+﻿# Character scope. Only the current native realm-law keys are addressed; other mods' laws are never cleared.
+sltm_remember_realm_law_effect = {
+    if = {
+        limit = { has_realm_law = $LAW$ }
+        add_to_variable_list = { name = sltm_identity_laws target = flag:$LAW$ }
+    }
+}
+sltm_reinstate_realm_law_effect = {
+    if = {
+        limit = {
+            is_target_in_variable_list = { name = sltm_identity_laws target = flag:$LAW$ }
+            NOT = { has_realm_law = $LAW$ }
+        }
+        add_realm_law_skip_effects = $LAW$
+    }
+}
+sltm_discard_transient_law_effect = {
+    if = {
+        limit = {
+            has_realm_law = $LAW$
+            NOT = { is_target_in_variable_list = { name = sltm_identity_laws target = flag:$LAW$ } }
+        }
+        remove_realm_law = $LAW$
+    }
+}
+sltm_verify_realm_law_effect = {
+    if = {
+        limit = {
+            is_target_in_variable_list = { name = sltm_identity_laws target = flag:$LAW$ }
+            NOT = { has_realm_law = $LAW$ }
+        }
+        scope:sltm_actor = { set_variable = sltm_travel_identity_failed }
+    }
+}
+
+sltm_visit_realm_laws_effect = {
+    $VISITOR$ = { LAW = crown_authority_0 }
+    $VISITOR$ = { LAW = crown_authority_1 }
+    $VISITOR$ = { LAW = crown_authority_2 }
+    $VISITOR$ = { LAW = crown_authority_3 }
+    $VISITOR$ = { LAW = tribal_authority_0 }
+    $VISITOR$ = { LAW = tribal_authority_1 }
+    $VISITOR$ = { LAW = tribal_authority_2 }
+    $VISITOR$ = { LAW = tribal_authority_3 }
+    $VISITOR$ = { LAW = church_authority_0 }
+    $VISITOR$ = { LAW = church_authority_1 }
+    $VISITOR$ = { LAW = church_authority_2 }
+    $VISITOR$ = { LAW = church_authority_3 }
+    $VISITOR$ = { LAW = imperial_bureaucracy_0 }
+    $VISITOR$ = { LAW = imperial_bureaucracy_1 }
+    $VISITOR$ = { LAW = imperial_bureaucracy_2 }
+    $VISITOR$ = { LAW = imperial_bureaucracy_3 }
+    $VISITOR$ = { LAW = nomadic_authority_1 }
+    $VISITOR$ = { LAW = nomadic_authority_2 }
+    $VISITOR$ = { LAW = nomadic_authority_3 }
+    $VISITOR$ = { LAW = nomadic_authority_4 }
+    $VISITOR$ = { LAW = nomadic_authority_5 }
+    $VISITOR$ = { LAW = celestial_bureaucracy_0 }
+    $VISITOR$ = { LAW = celestial_bureaucracy_1 }
+    $VISITOR$ = { LAW = celestial_bureaucracy_2 }
+    $VISITOR$ = { LAW = celestial_bureaucracy_3 }
+    $VISITOR$ = { LAW = mandala_decree_none }
+    $VISITOR$ = { LAW = mandala_decree_prosperity }
+    $VISITOR$ = { LAW = mandala_decree_expansion }
+    $VISITOR$ = { LAW = mandala_decree_reverence }
+    $VISITOR$ = { LAW = meritocratic_bureaucracy_0 }
+    $VISITOR$ = { LAW = meritocratic_bureaucracy_1 }
+    $VISITOR$ = { LAW = meritocratic_bureaucracy_2 }
+    $VISITOR$ = { LAW = meritocratic_bureaucracy_3 }
+    $VISITOR$ = { LAW = japanese_bureaucracy_0 }
+    $VISITOR$ = { LAW = japanese_bureaucracy_1 }
+    $VISITOR$ = { LAW = japanese_bureaucracy_2 }
+    $VISITOR$ = { LAW = japanese_bureaucracy_3 }
+    $VISITOR$ = { LAW = uncrowned }
+    $VISITOR$ = { LAW = crowned_king }
+    $VISITOR$ = { LAW = crowned_emperor }
+    $VISITOR$ = { LAW = confederate_partition_succession_law }
+    $VISITOR$ = { LAW = partition_succession_law }
+    $VISITOR$ = { LAW = high_partition_succession_law }
+    $VISITOR$ = { LAW = single_heir_succession_law }
+    $VISITOR$ = { LAW = single_heir_succession_kurultai_law }
+    $VISITOR$ = { LAW = single_heir_succession_law_youngest }
+    $VISITOR$ = { LAW = single_heir_dynasty_house }
+    $VISITOR$ = { LAW = acclamation_succession_law }
+    $VISITOR$ = { LAW = appointment_succession_law }
+    $VISITOR$ = { LAW = landless_adventurer_succession_law }
+    $VISITOR$ = { LAW = theocratic_elective_succession_law }
+    $VISITOR$ = { LAW = clerical_appointment_law }
+    $VISITOR$ = { LAW = bishop_theocratic_succession_law }
+    $VISITOR$ = { LAW = holy_order_succession_law }
+    $VISITOR$ = { LAW = cultural_holy_order_succession_law }
+    $VISITOR$ = { LAW = monastic_holy_order_succession_law }
+    $VISITOR$ = { LAW = female_monastic_holy_order_succession_law }
+    $VISITOR$ = { LAW = male_monastic_holy_order_succession_law }
+    $VISITOR$ = { LAW = mercenary_company_succession_law }
+    $VISITOR$ = { LAW = city_succession_law }
+    $VISITOR$ = { LAW = clan_antagonistic_partition_succession_law }
+    $VISITOR$ = { LAW = clan_competitive_partition_succession_law }
+    $VISITOR$ = { LAW = clan_impassive_partition_succession_law }
+    $VISITOR$ = { LAW = clan_friendly_partition_succession_law }
+    $VISITOR$ = { LAW = clan_harmonious_partition_succession_law }
+    $VISITOR$ = { LAW = herder_succession_law }
+    $VISITOR$ = { LAW = celestial_appointment_succession_law }
+    $VISITOR$ = { LAW = celestial_military_appointment_succession_law }
+    $VISITOR$ = { LAW = japanese_regency_succession_law }
+    $VISITOR$ = { LAW = japanese_appointment_succession_law }
+    $VISITOR$ = { LAW = japanese_military_appointment_succession_law }
+    $VISITOR$ = { LAW = mandala_succession_law }
+    $VISITOR$ = { LAW = meritocratic_appointment_succession_law }
+    $VISITOR$ = { LAW = meritocratic_military_appointment_succession_law }
+    $VISITOR$ = { LAW = meritocratic_regency_succession_law }
+    $VISITOR$ = { LAW = male_only_law }
+    $VISITOR$ = { LAW = male_preference_law }
+    $VISITOR$ = { LAW = equal_law }
+    $VISITOR$ = { LAW = female_preference_law }
+    $VISITOR$ = { LAW = female_only_law }
+    $VISITOR$ = { LAW = same_faith_only_law }
+    $VISITOR$ = { LAW = same_faith_theocratic_succession_law }
+    $VISITOR$ = { LAW = same_faith_succession_law }
+    $VISITOR$ = { LAW = feudal_elective_succession_law }
+    $VISITOR$ = { LAW = princely_elective_succession_law }
+    $VISITOR$ = { LAW = saxon_elective_succession_law }
+    $VISITOR$ = { LAW = scandinavian_elective_succession_law }
+    $VISITOR$ = { LAW = gaelic_elective_succession_law }
+    $VISITOR$ = { LAW = tribal_elective_succession_law }
+    $VISITOR$ = { LAW = temporal_head_of_faith_succession_law }
+    $VISITOR$ = { LAW = noble_family_succession_law }
+    $VISITOR$ = { LAW = law_of_the_land_succession_law }
+    $VISITOR$ = { LAW = confederation_elective_succession_law }
+    $VISITOR$ = { LAW = celestial_ministry_appointment_succession_law }
+    $VISITOR$ = { LAW = celestial_grand_marshal_appointment_succession_law }
+    $VISITOR$ = { LAW = province_war_law_0 }
+    $VISITOR$ = { LAW = province_war_law_1 }
+    $VISITOR$ = { LAW = province_war_law_2 }
+    $VISITOR$ = { LAW = province_war_law_3 }
+    $VISITOR$ = { LAW = province_border_law_0 }
+    $VISITOR$ = { LAW = province_border_law_1 }
+    $VISITOR$ = { LAW = province_border_law_2 }
+    $VISITOR$ = { LAW = celestial_army_liege_law_0 }
+    $VISITOR$ = { LAW = celestial_army_liege_law_1 }
+    $VISITOR$ = { LAW = celestial_army_liege_law_2 }
+    $VISITOR$ = { LAW = celestial_army_liege_law_3 }
+    $VISITOR$ = { LAW = celestial_army_vassal_law_0 }
+    $VISITOR$ = { LAW = celestial_army_vassal_law_1 }
+    $VISITOR$ = { LAW = celestial_army_vassal_law_2 }
+    $VISITOR$ = { LAW = celestial_army_vassal_law_3 }
+    $VISITOR$ = { LAW = celestial_retirement_law_0 }
+    $VISITOR$ = { LAW = celestial_retirement_law_1 }
+    $VISITOR$ = { LAW = celestial_retirement_law_2 }
+    $VISITOR$ = { LAW = celestial_retirement_law_3 }
+    $VISITOR$ = { LAW = celestial_retirement_law_4 }
+    $VISITOR$ = { LAW = celestial_retirement_law_5 }
+    $VISITOR$ = { LAW = top_liege_redirected_to_border_wars_law }
+    $VISITOR$ = { LAW = top_liege_not_redirected_to_border_wars_law }
+    $VISITOR$ = { LAW = grand_chancellor_law }
+    $VISITOR$ = { LAW = grand_marshal_law }
+    $VISITOR$ = { LAW = grand_censor_law }
+    $VISITOR$ = { LAW = candidate_score_merit_law }
+    $VISITOR$ = { LAW = candidate_score_prestige_law }
+    $VISITOR$ = { LAW = budget_allocation_salary_0 }
+    $VISITOR$ = { LAW = budget_allocation_salary_5 }
+    $VISITOR$ = { LAW = budget_allocation_salary_10 }
+    $VISITOR$ = { LAW = budget_allocation_salary_15 }
+    $VISITOR$ = { LAW = budget_allocation_salary_20 }
+    $VISITOR$ = { LAW = budget_allocation_salary_25 }
+    $VISITOR$ = { LAW = budget_allocation_salary_30 }
+    $VISITOR$ = { LAW = budget_allocation_salary_35 }
+    $VISITOR$ = { LAW = budget_allocation_salary_40 }
+    $VISITOR$ = { LAW = budget_allocation_salary_45 }
+    $VISITOR$ = { LAW = budget_allocation_salary_50 }
+    $VISITOR$ = { LAW = budget_allocation_salary_55 }
+    $VISITOR$ = { LAW = budget_allocation_salary_60 }
+    $VISITOR$ = { LAW = budget_allocation_salary_65 }
+    $VISITOR$ = { LAW = budget_allocation_salary_70 }
+    $VISITOR$ = { LAW = budget_allocation_salary_75 }
+    $VISITOR$ = { LAW = budget_allocation_salary_80 }
+    $VISITOR$ = { LAW = budget_allocation_salary_85 }
+    $VISITOR$ = { LAW = budget_allocation_salary_90 }
+    $VISITOR$ = { LAW = budget_allocation_salary_95 }
+    $VISITOR$ = { LAW = budget_allocation_salary_100 }
+    $VISITOR$ = { LAW = budget_allocation_ministry_0 }
+    $VISITOR$ = { LAW = budget_allocation_ministry_5 }
+    $VISITOR$ = { LAW = budget_allocation_ministry_10 }
+    $VISITOR$ = { LAW = budget_allocation_ministry_15 }
+    $VISITOR$ = { LAW = budget_allocation_ministry_20 }
+    $VISITOR$ = { LAW = budget_allocation_ministry_25 }
+    $VISITOR$ = { LAW = budget_allocation_ministry_30 }
+    $VISITOR$ = { LAW = budget_allocation_ministry_35 }
+    $VISITOR$ = { LAW = budget_allocation_ministry_40 }
+    $VISITOR$ = { LAW = budget_allocation_ministry_45 }
+    $VISITOR$ = { LAW = budget_allocation_ministry_50 }
+    $VISITOR$ = { LAW = budget_allocation_ministry_55 }
+    $VISITOR$ = { LAW = budget_allocation_ministry_60 }
+    $VISITOR$ = { LAW = budget_allocation_ministry_65 }
+    $VISITOR$ = { LAW = budget_allocation_ministry_70 }
+    $VISITOR$ = { LAW = budget_allocation_ministry_75 }
+    $VISITOR$ = { LAW = budget_allocation_ministry_80 }
+    $VISITOR$ = { LAW = budget_allocation_ministry_85 }
+    $VISITOR$ = { LAW = budget_allocation_ministry_90 }
+    $VISITOR$ = { LAW = budget_allocation_ministry_95 }
+    $VISITOR$ = { LAW = budget_allocation_ministry_100 }
+    $VISITOR$ = { LAW = budget_allocation_military_0 }
+    $VISITOR$ = { LAW = budget_allocation_military_5 }
+    $VISITOR$ = { LAW = budget_allocation_military_10 }
+    $VISITOR$ = { LAW = budget_allocation_military_15 }
+    $VISITOR$ = { LAW = budget_allocation_military_20 }
+    $VISITOR$ = { LAW = budget_allocation_military_25 }
+    $VISITOR$ = { LAW = budget_allocation_military_30 }
+    $VISITOR$ = { LAW = budget_allocation_military_35 }
+    $VISITOR$ = { LAW = budget_allocation_military_40 }
+    $VISITOR$ = { LAW = budget_allocation_military_45 }
+    $VISITOR$ = { LAW = budget_allocation_military_50 }
+    $VISITOR$ = { LAW = budget_allocation_military_55 }
+    $VISITOR$ = { LAW = budget_allocation_military_60 }
+    $VISITOR$ = { LAW = budget_allocation_military_65 }
+    $VISITOR$ = { LAW = budget_allocation_military_70 }
+    $VISITOR$ = { LAW = budget_allocation_military_75 }
+    $VISITOR$ = { LAW = budget_allocation_military_80 }
+    $VISITOR$ = { LAW = budget_allocation_military_85 }
+    $VISITOR$ = { LAW = budget_allocation_military_90 }
+    $VISITOR$ = { LAW = budget_allocation_military_95 }
+    $VISITOR$ = { LAW = budget_allocation_military_100 }
+    $VISITOR$ = { LAW = defense_mobilization_law }
+    $VISITOR$ = { LAW = disarmament_law }
+    $VISITOR$ = { LAW = isolation_law }
+    $VISITOR$ = { LAW = imperial_expansion_law }
+    $VISITOR$ = { LAW = manor_reform_law }
+    $VISITOR$ = { LAW = bandit_crackdown_law }
+    $VISITOR$ = { LAW = budget_allocation_cardinal_50 }
+    $VISITOR$ = { LAW = no_benefices }
+    $VISITOR$ = { LAW = cardinal_standard_benefices }
+}
+
+sltm_visit_camp_laws_effect = {
+    $VISITOR$ = { LAW = camp_purpose_wanderers }
+    $VISITOR$ = { LAW = camp_purpose_mercenaries }
+    $VISITOR$ = { LAW = camp_purpose_scholars }
+    $VISITOR$ = { LAW = camp_purpose_explorers }
+    $VISITOR$ = { LAW = camp_purpose_brigands }
+    $VISITOR$ = { LAW = camp_purpose_legitimists }
+}
+
+sltm_identity_capture_laws_effect = {
+    sltm_visit_realm_laws_effect = { VISITOR = sltm_remember_realm_law_effect }
+    sltm_visit_camp_laws_effect = { VISITOR = sltm_remember_realm_law_effect }
+}
+
+sltm_identity_purge_laws_effect = {
+    sltm_visit_realm_laws_effect = { VISITOR = sltm_discard_transient_law_effect }
+}
+
+sltm_identity_restore_laws_effect = {
+    sltm_visit_realm_laws_effect = { VISITOR = sltm_reinstate_realm_law_effect }
+    sltm_visit_camp_laws_effect = { VISITOR = sltm_reinstate_realm_law_effect }
+}
+
+sltm_identity_verify_laws_effect = {
+    sltm_visit_realm_laws_effect = { VISITOR = sltm_verify_realm_law_effect }
+    sltm_visit_camp_laws_effect = { VISITOR = sltm_verify_realm_law_effect }
+}

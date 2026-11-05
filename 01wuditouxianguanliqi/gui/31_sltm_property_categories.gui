@@ -1,0 +1,949 @@
+template sltm_geo_panel
+{
+    widget = {
+        name = "geo_panel" position = { 182 190 } size = { 690 526 }
+        visible = "[GetScriptedGui('sltm_tab_geo_visible').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+        textbox = {
+            name = "geo_heading"
+            position = { 0 0 } size = { 673 27 }
+            text = "SLTM_TAB_GEO_TITLE" fontsize = 17 font = StandardGameFont
+            fontcolor = { 0.88 0.84 0.75 1 } align = left|top
+            autoresize = no multiline = yes alwaystransparent = yes
+        }
+        textbox = {
+            name = "geo_intro"
+            position = { 0 25 } size = { 675 32 }
+            text = "SLTM_TAB_GEO_INTRO" fontsize = 13 font = StandardGameFont
+            fontcolor = { 0.68 0.65 0.59 1 } align = left|top
+            autoresize = no multiline = yes alwaystransparent = yes
+        }
+        scrollarea = {
+            name = "geo_scroll" position = { 0 60 } size = { 690 464 }
+            scrollbarpolicy_horizontal = always_off scrollbarpolicy_vertical = as_needed
+            scrollwidget = {
+                widget = { name = "geo_body" size = { 667 337 }
+                    textbox = {
+                        name = "capital_title"
+                        position = { 0 0 } size = { 165 26 }
+                        text = "SLTM_TAB_CAPITAL_TITLE" fontsize = 16 font = StandardGameFont
+                        fontcolor = { 0.88 0.84 0.75 1 } align = left|top
+                        autoresize = no multiline = yes alwaystransparent = yes
+                    }
+                    textbox = {
+                        name = "capital_current"
+                        position = { 170 0 } size = { 480 27 }
+                        text = "SLTM_TAB_CAPITAL_CURRENT" fontsize = 14 font = StandardGameFont
+                        fontcolor = { 0.68 0.65 0.59 1 } align = left|top
+                        autoresize = no multiline = yes alwaystransparent = yes
+                    }
+                    textbox = {
+                        name = "capital_hint"
+                        position = { 0 32 } size = { 650 28 }
+                        text = "SLTM_TAB_CAPITAL_NOTE" fontsize = 13 font = StandardGameFont
+                        fontcolor = { 0.68 0.65 0.59 1 } align = left|top
+                        autoresize = no multiline = yes alwaystransparent = yes
+                    }
+                    button_standard = {
+                        name = "sltm_tab_capital_mark"
+                        position = { 0 64 } size = { 202 30 }
+                        text = "SLTM_TAB_CAPITAL_MARK"
+                        enabled = "[GetScriptedGui('sltm_tab_capital_mark').IsValid(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+                        onclick = "[GetScriptedGui('sltm_tab_capital_mark').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+                    }
+                    button_standard = {
+                        name = "sltm_tab_capital_keep"
+                        position = { 212 64 } size = { 124 30 }
+                        text = "SLTM_TAB_KEEP"
+                        enabled = "[GetScriptedGui('sltm_tab_capital_keep').IsValid(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+                        onclick = "[GetScriptedGui('sltm_tab_capital_keep').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+                    }
+                    textbox = {
+                        name = "capital_draft"
+                        position = { 0 104 } size = { 648 43 }
+                        text = "[GetPlayer.Custom('sltm_tab_capital_value')]" fontsize = 14 font = StandardGameFont
+                        fontcolor = { 0.88 0.84 0.75 1 } align = left|top
+                        autoresize = no multiline = yes alwaystransparent = yes
+                    }
+                    textbox = {
+                        name = "dejure_title"
+                        position = { 0 159 } size = { 165 26 }
+                        text = "SLTM_TAB_DEJURE_TITLE" fontsize = 16 font = StandardGameFont
+                        fontcolor = { 0.88 0.84 0.75 1 } align = left|top
+                        autoresize = no multiline = yes alwaystransparent = yes
+                    }
+                    textbox = {
+                        name = "dejure_current"
+                        position = { 170 159 } size = { 480 27 }
+                        text = "SLTM_TAB_DEJURE_CURRENT" fontsize = 14 font = StandardGameFont
+                        fontcolor = { 0.68 0.65 0.59 1 } align = left|top
+                        autoresize = no multiline = yes alwaystransparent = yes
+                    }
+                    textbox = {
+                        name = "dejure_hint"
+                        position = { 0 191 } size = { 650 28 }
+                        text = "SLTM_TAB_DEJURE_NOTE" fontsize = 13 font = StandardGameFont
+                        fontcolor = { 0.68 0.65 0.59 1 } align = left|top
+                        autoresize = no multiline = yes alwaystransparent = yes
+                    }
+                    button_standard = {
+                        name = "sltm_tab_dejure_mark"
+                        position = { 0 223 } size = { 202 30 }
+                        text = "SLTM_TAB_DEJURE_MARK"
+                        enabled = "[GetScriptedGui('sltm_tab_dejure_mark').IsValid(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+                        onclick = "[GetScriptedGui('sltm_tab_dejure_mark').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+                    }
+                    button_standard = {
+                        name = "sltm_tab_dejure_keep"
+                        position = { 212 223 } size = { 124 30 }
+                        text = "SLTM_TAB_KEEP"
+                        enabled = "[GetScriptedGui('sltm_tab_dejure_keep').IsValid(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+                        onclick = "[GetScriptedGui('sltm_tab_dejure_keep').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+                    }
+                    textbox = {
+                        name = "dejure_draft"
+                        position = { 0 263 } size = { 648 43 }
+                        text = "[GetPlayer.Custom('sltm_tab_dejure_value')]" fontsize = 14 font = StandardGameFont
+                        fontcolor = { 0.88 0.84 0.75 1 } align = left|top
+                        autoresize = no multiline = yes alwaystransparent = yes
+                    }
+                }
+            }
+            scrollbar_vertical = { using = Scrollbar_Vertical }
+        }
+    }
+}
+
+template sltm_succ_panel
+{
+    widget = {
+        name = "succ_panel" position = { 182 190 } size = { 690 526 }
+        visible = "[GetScriptedGui('sltm_tab_succ_visible').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+        textbox = {
+            name = "succ_heading"
+            position = { 0 0 } size = { 673 27 }
+            text = "SLTM_TAB_SUCC_TITLE" fontsize = 17 font = StandardGameFont
+            fontcolor = { 0.88 0.84 0.75 1 } align = left|top
+            autoresize = no multiline = yes alwaystransparent = yes
+        }
+        textbox = {
+            name = "succ_intro"
+            position = { 0 25 } size = { 675 32 }
+            text = "SLTM_TAB_SUCC_INTRO" fontsize = 13 font = StandardGameFont
+            fontcolor = { 0.68 0.65 0.59 1 } align = left|top
+            autoresize = no multiline = yes alwaystransparent = yes
+        }
+        scrollarea = {
+            name = "succ_scroll" position = { 0 60 } size = { 690 464 }
+            scrollbarpolicy_horizontal = always_off scrollbarpolicy_vertical = as_needed
+            scrollwidget = {
+                widget = { name = "succ_body" size = { 667 604 }
+                    textbox = {
+                        name = "heir_field"
+                        position = { 0 4 } size = { 224 34 }
+                        text = "SLTM_TAB_HEIR_LABEL" fontsize = 15 font = StandardGameFont
+                        fontcolor = { 0.88 0.84 0.75 1 } align = left|top
+                        autoresize = no multiline = yes alwaystransparent = yes
+                    }
+                    textbox = {
+                        name = "heir_state"
+                        position = { 218 4 } size = { 95 34 }
+                        text = "[GetPlayer.Custom('sltm_edit_heir_text')]" fontsize = 13 font = StandardGameFont
+                        fontcolor = { 0.68 0.65 0.59 1 } align = left|top
+                        autoresize = no multiline = yes alwaystransparent = yes
+                    }
+                    button_standard = {
+                        name = "sltm_tab_heir_keep"
+                        position = { 321 0 } size = { 89 30 }
+                        text = "SLTM_TAB_KEEP"
+                        enabled = "[GetScriptedGui('sltm_tab_heir_keep').IsValid(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+                        onclick = "[GetScriptedGui('sltm_tab_heir_keep').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+                    }
+                    button_standard = {
+                        name = "sltm_tab_heir_on"
+                        position = { 418 0 } size = { 89 30 }
+                        text = "SLTM_TAB_ON"
+                        enabled = "[GetScriptedGui('sltm_tab_heir_on').IsValid(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+                        onclick = "[GetScriptedGui('sltm_tab_heir_on').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+                    }
+                    button_standard = {
+                        name = "sltm_tab_heir_off"
+                        position = { 515 0 } size = { 89 30 }
+                        text = "SLTM_TAB_OFF"
+                        enabled = "[GetScriptedGui('sltm_tab_heir_off').IsValid(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+                        onclick = "[GetScriptedGui('sltm_tab_heir_off').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+                    }
+                    textbox = {
+                        name = "claims_field"
+                        position = { 0 60 } size = { 224 34 }
+                        text = "SLTM_TAB_CLAIMS_LABEL" fontsize = 15 font = StandardGameFont
+                        fontcolor = { 0.88 0.84 0.75 1 } align = left|top
+                        autoresize = no multiline = yes alwaystransparent = yes
+                    }
+                    textbox = {
+                        name = "claims_state"
+                        position = { 218 60 } size = { 95 34 }
+                        text = "[GetPlayer.Custom('sltm_edit_claims_text')]" fontsize = 13 font = StandardGameFont
+                        fontcolor = { 0.68 0.65 0.59 1 } align = left|top
+                        autoresize = no multiline = yes alwaystransparent = yes
+                    }
+                    button_standard = {
+                        name = "sltm_tab_claims_keep"
+                        position = { 321 56 } size = { 89 30 }
+                        text = "SLTM_TAB_KEEP"
+                        enabled = "[GetScriptedGui('sltm_tab_claims_keep').IsValid(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+                        onclick = "[GetScriptedGui('sltm_tab_claims_keep').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+                    }
+                    button_standard = {
+                        name = "sltm_tab_claims_on"
+                        position = { 418 56 } size = { 89 30 }
+                        text = "SLTM_TAB_ON"
+                        enabled = "[GetScriptedGui('sltm_tab_claims_on').IsValid(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+                        onclick = "[GetScriptedGui('sltm_tab_claims_on').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+                    }
+                    button_standard = {
+                        name = "sltm_tab_claims_off"
+                        position = { 515 56 } size = { 89 30 }
+                        text = "SLTM_TAB_OFF"
+                        enabled = "[GetScriptedGui('sltm_tab_claims_off').IsValid(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+                        onclick = "[GetScriptedGui('sltm_tab_claims_off').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+                    }
+                    textbox = {
+                        name = "law_title"
+                        position = { 0 122 } size = { 274 28 }
+                        text = "SLTM_TAB_LAWS" fontsize = 16 font = StandardGameFont
+                        fontcolor = { 0.88 0.84 0.75 1 } align = left|top
+                        autoresize = no multiline = yes alwaystransparent = yes
+                    }
+                    textbox = {
+                        name = "law_hint"
+                        position = { 0 154 } size = { 655 46 }
+                        text = "SLTM_TAB_LAWS_HINT" fontsize = 13 font = StandardGameFont
+                        fontcolor = { 0.68 0.65 0.59 1 } align = left|top
+                        autoresize = no multiline = yes alwaystransparent = yes
+                    }
+                    textbox = {
+                        name = "law_name_1"
+                        position = { 0 216 } size = { 172 30 }
+                        text = "sltm_w_213_o0" fontsize = 14 font = StandardGameFont
+                        fontcolor = { 0.88 0.84 0.75 1 } align = left|top
+                        autoresize = no multiline = yes alwaystransparent = yes
+                    }
+                    textbox = {
+                        name = "law_state_1"
+                        position = { 173 216 } size = { 113 30 }
+                        text = "[GetPlayer.Custom('sltm_tab_law_1_state')]" fontsize = 13 font = StandardGameFont
+                        fontcolor = { 0.68 0.65 0.59 1 } align = left|top
+                        autoresize = no multiline = yes alwaystransparent = yes
+                    }
+                    button_standard = {
+                        name = "sltm_tab_law_1_keep"
+                        position = { 295 211 } size = { 94 30 }
+                        text = "SLTM_TAB_KEEP"
+                        enabled = "[GetScriptedGui('sltm_tab_law_1_keep').IsValid(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+                        onclick = "[GetScriptedGui('sltm_tab_law_1_keep').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+                    }
+                    button_standard = {
+                        name = "sltm_tab_law_1_add"
+                        position = { 398 211 } size = { 94 30 }
+                        text = "SLTM_TAB_ADD"
+                        enabled = "[GetScriptedGui('sltm_tab_law_1_add').IsValid(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+                        onclick = "[GetScriptedGui('sltm_tab_law_1_add').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+                    }
+                    button_standard = {
+                        name = "sltm_tab_law_1_remove"
+                        position = { 501 211 } size = { 94 30 }
+                        text = "SLTM_TAB_REMOVE"
+                        enabled = "[GetScriptedGui('sltm_tab_law_1_remove').IsValid(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+                        onclick = "[GetScriptedGui('sltm_tab_law_1_remove').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+                    }
+                    textbox = {
+                        name = "law_name_2"
+                        position = { 0 258 } size = { 172 30 }
+                        text = "sltm_w_213_o1" fontsize = 14 font = StandardGameFont
+                        fontcolor = { 0.88 0.84 0.75 1 } align = left|top
+                        autoresize = no multiline = yes alwaystransparent = yes
+                    }
+                    textbox = {
+                        name = "law_state_2"
+                        position = { 173 258 } size = { 113 30 }
+                        text = "[GetPlayer.Custom('sltm_tab_law_2_state')]" fontsize = 13 font = StandardGameFont
+                        fontcolor = { 0.68 0.65 0.59 1 } align = left|top
+                        autoresize = no multiline = yes alwaystransparent = yes
+                    }
+                    button_standard = {
+                        name = "sltm_tab_law_2_keep"
+                        position = { 295 253 } size = { 94 30 }
+                        text = "SLTM_TAB_KEEP"
+                        enabled = "[GetScriptedGui('sltm_tab_law_2_keep').IsValid(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+                        onclick = "[GetScriptedGui('sltm_tab_law_2_keep').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+                    }
+                    button_standard = {
+                        name = "sltm_tab_law_2_add"
+                        position = { 398 253 } size = { 94 30 }
+                        text = "SLTM_TAB_ADD"
+                        enabled = "[GetScriptedGui('sltm_tab_law_2_add').IsValid(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+                        onclick = "[GetScriptedGui('sltm_tab_law_2_add').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+                    }
+                    button_standard = {
+                        name = "sltm_tab_law_2_remove"
+                        position = { 501 253 } size = { 94 30 }
+                        text = "SLTM_TAB_REMOVE"
+                        enabled = "[GetScriptedGui('sltm_tab_law_2_remove').IsValid(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+                        onclick = "[GetScriptedGui('sltm_tab_law_2_remove').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+                    }
+                    textbox = {
+                        name = "law_name_3"
+                        position = { 0 300 } size = { 172 30 }
+                        text = "sltm_w_213_o2" fontsize = 14 font = StandardGameFont
+                        fontcolor = { 0.88 0.84 0.75 1 } align = left|top
+                        autoresize = no multiline = yes alwaystransparent = yes
+                    }
+                    textbox = {
+                        name = "law_state_3"
+                        position = { 173 300 } size = { 113 30 }
+                        text = "[GetPlayer.Custom('sltm_tab_law_3_state')]" fontsize = 13 font = StandardGameFont
+                        fontcolor = { 0.68 0.65 0.59 1 } align = left|top
+                        autoresize = no multiline = yes alwaystransparent = yes
+                    }
+                    button_standard = {
+                        name = "sltm_tab_law_3_keep"
+                        position = { 295 295 } size = { 94 30 }
+                        text = "SLTM_TAB_KEEP"
+                        enabled = "[GetScriptedGui('sltm_tab_law_3_keep').IsValid(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+                        onclick = "[GetScriptedGui('sltm_tab_law_3_keep').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+                    }
+                    button_standard = {
+                        name = "sltm_tab_law_3_add"
+                        position = { 398 295 } size = { 94 30 }
+                        text = "SLTM_TAB_ADD"
+                        enabled = "[GetScriptedGui('sltm_tab_law_3_add').IsValid(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+                        onclick = "[GetScriptedGui('sltm_tab_law_3_add').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+                    }
+                    button_standard = {
+                        name = "sltm_tab_law_3_remove"
+                        position = { 501 295 } size = { 94 30 }
+                        text = "SLTM_TAB_REMOVE"
+                        enabled = "[GetScriptedGui('sltm_tab_law_3_remove').IsValid(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+                        onclick = "[GetScriptedGui('sltm_tab_law_3_remove').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+                    }
+                    textbox = {
+                        name = "law_name_4"
+                        position = { 0 342 } size = { 172 30 }
+                        text = "sltm_w_213_o3" fontsize = 14 font = StandardGameFont
+                        fontcolor = { 0.88 0.84 0.75 1 } align = left|top
+                        autoresize = no multiline = yes alwaystransparent = yes
+                    }
+                    textbox = {
+                        name = "law_state_4"
+                        position = { 173 342 } size = { 113 30 }
+                        text = "[GetPlayer.Custom('sltm_tab_law_4_state')]" fontsize = 13 font = StandardGameFont
+                        fontcolor = { 0.68 0.65 0.59 1 } align = left|top
+                        autoresize = no multiline = yes alwaystransparent = yes
+                    }
+                    button_standard = {
+                        name = "sltm_tab_law_4_keep"
+                        position = { 295 337 } size = { 94 30 }
+                        text = "SLTM_TAB_KEEP"
+                        enabled = "[GetScriptedGui('sltm_tab_law_4_keep').IsValid(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+                        onclick = "[GetScriptedGui('sltm_tab_law_4_keep').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+                    }
+                    button_standard = {
+                        name = "sltm_tab_law_4_add"
+                        position = { 398 337 } size = { 94 30 }
+                        text = "SLTM_TAB_ADD"
+                        enabled = "[GetScriptedGui('sltm_tab_law_4_add').IsValid(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+                        onclick = "[GetScriptedGui('sltm_tab_law_4_add').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+                    }
+                    button_standard = {
+                        name = "sltm_tab_law_4_remove"
+                        position = { 501 337 } size = { 94 30 }
+                        text = "SLTM_TAB_REMOVE"
+                        enabled = "[GetScriptedGui('sltm_tab_law_4_remove').IsValid(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+                        onclick = "[GetScriptedGui('sltm_tab_law_4_remove').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+                    }
+                    textbox = {
+                        name = "law_name_5"
+                        position = { 0 384 } size = { 172 30 }
+                        text = "sltm_w_213_o4" fontsize = 14 font = StandardGameFont
+                        fontcolor = { 0.88 0.84 0.75 1 } align = left|top
+                        autoresize = no multiline = yes alwaystransparent = yes
+                    }
+                    textbox = {
+                        name = "law_state_5"
+                        position = { 173 384 } size = { 113 30 }
+                        text = "[GetPlayer.Custom('sltm_tab_law_5_state')]" fontsize = 13 font = StandardGameFont
+                        fontcolor = { 0.68 0.65 0.59 1 } align = left|top
+                        autoresize = no multiline = yes alwaystransparent = yes
+                    }
+                    button_standard = {
+                        name = "sltm_tab_law_5_keep"
+                        position = { 295 379 } size = { 94 30 }
+                        text = "SLTM_TAB_KEEP"
+                        enabled = "[GetScriptedGui('sltm_tab_law_5_keep').IsValid(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+                        onclick = "[GetScriptedGui('sltm_tab_law_5_keep').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+                    }
+                    button_standard = {
+                        name = "sltm_tab_law_5_add"
+                        position = { 398 379 } size = { 94 30 }
+                        text = "SLTM_TAB_ADD"
+                        enabled = "[GetScriptedGui('sltm_tab_law_5_add').IsValid(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+                        onclick = "[GetScriptedGui('sltm_tab_law_5_add').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+                    }
+                    button_standard = {
+                        name = "sltm_tab_law_5_remove"
+                        position = { 501 379 } size = { 94 30 }
+                        text = "SLTM_TAB_REMOVE"
+                        enabled = "[GetScriptedGui('sltm_tab_law_5_remove').IsValid(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+                        onclick = "[GetScriptedGui('sltm_tab_law_5_remove').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+                    }
+                    textbox = {
+                        name = "law_name_6"
+                        position = { 0 426 } size = { 172 30 }
+                        text = "sltm_w_213_o5" fontsize = 14 font = StandardGameFont
+                        fontcolor = { 0.88 0.84 0.75 1 } align = left|top
+                        autoresize = no multiline = yes alwaystransparent = yes
+                    }
+                    textbox = {
+                        name = "law_state_6"
+                        position = { 173 426 } size = { 113 30 }
+                        text = "[GetPlayer.Custom('sltm_tab_law_6_state')]" fontsize = 13 font = StandardGameFont
+                        fontcolor = { 0.68 0.65 0.59 1 } align = left|top
+                        autoresize = no multiline = yes alwaystransparent = yes
+                    }
+                    button_standard = {
+                        name = "sltm_tab_law_6_keep"
+                        position = { 295 421 } size = { 94 30 }
+                        text = "SLTM_TAB_KEEP"
+                        enabled = "[GetScriptedGui('sltm_tab_law_6_keep').IsValid(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+                        onclick = "[GetScriptedGui('sltm_tab_law_6_keep').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+                    }
+                    button_standard = {
+                        name = "sltm_tab_law_6_add"
+                        position = { 398 421 } size = { 94 30 }
+                        text = "SLTM_TAB_ADD"
+                        enabled = "[GetScriptedGui('sltm_tab_law_6_add').IsValid(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+                        onclick = "[GetScriptedGui('sltm_tab_law_6_add').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+                    }
+                    button_standard = {
+                        name = "sltm_tab_law_6_remove"
+                        position = { 501 421 } size = { 94 30 }
+                        text = "SLTM_TAB_REMOVE"
+                        enabled = "[GetScriptedGui('sltm_tab_law_6_remove').IsValid(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+                        onclick = "[GetScriptedGui('sltm_tab_law_6_remove').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+                    }
+                    textbox = {
+                        name = "law_name_7"
+                        position = { 0 468 } size = { 172 30 }
+                        text = "sltm_w_213_o6" fontsize = 14 font = StandardGameFont
+                        fontcolor = { 0.88 0.84 0.75 1 } align = left|top
+                        autoresize = no multiline = yes alwaystransparent = yes
+                    }
+                    textbox = {
+                        name = "law_state_7"
+                        position = { 173 468 } size = { 113 30 }
+                        text = "[GetPlayer.Custom('sltm_tab_law_7_state')]" fontsize = 13 font = StandardGameFont
+                        fontcolor = { 0.68 0.65 0.59 1 } align = left|top
+                        autoresize = no multiline = yes alwaystransparent = yes
+                    }
+                    button_standard = {
+                        name = "sltm_tab_law_7_keep"
+                        position = { 295 463 } size = { 94 30 }
+                        text = "SLTM_TAB_KEEP"
+                        enabled = "[GetScriptedGui('sltm_tab_law_7_keep').IsValid(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+                        onclick = "[GetScriptedGui('sltm_tab_law_7_keep').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+                    }
+                    button_standard = {
+                        name = "sltm_tab_law_7_add"
+                        position = { 398 463 } size = { 94 30 }
+                        text = "SLTM_TAB_ADD"
+                        enabled = "[GetScriptedGui('sltm_tab_law_7_add').IsValid(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+                        onclick = "[GetScriptedGui('sltm_tab_law_7_add').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+                    }
+                    button_standard = {
+                        name = "sltm_tab_law_7_remove"
+                        position = { 501 463 } size = { 94 30 }
+                        text = "SLTM_TAB_REMOVE"
+                        enabled = "[GetScriptedGui('sltm_tab_law_7_remove').IsValid(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+                        onclick = "[GetScriptedGui('sltm_tab_law_7_remove').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+                    }
+                    textbox = {
+                        name = "law_name_8"
+                        position = { 0 510 } size = { 172 30 }
+                        text = "sltm_w_213_o7" fontsize = 14 font = StandardGameFont
+                        fontcolor = { 0.88 0.84 0.75 1 } align = left|top
+                        autoresize = no multiline = yes alwaystransparent = yes
+                    }
+                    textbox = {
+                        name = "law_state_8"
+                        position = { 173 510 } size = { 113 30 }
+                        text = "[GetPlayer.Custom('sltm_tab_law_8_state')]" fontsize = 13 font = StandardGameFont
+                        fontcolor = { 0.68 0.65 0.59 1 } align = left|top
+                        autoresize = no multiline = yes alwaystransparent = yes
+                    }
+                    button_standard = {
+                        name = "sltm_tab_law_8_keep"
+                        position = { 295 505 } size = { 94 30 }
+                        text = "SLTM_TAB_KEEP"
+                        enabled = "[GetScriptedGui('sltm_tab_law_8_keep').IsValid(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+                        onclick = "[GetScriptedGui('sltm_tab_law_8_keep').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+                    }
+                    button_standard = {
+                        name = "sltm_tab_law_8_add"
+                        position = { 398 505 } size = { 94 30 }
+                        text = "SLTM_TAB_ADD"
+                        enabled = "[GetScriptedGui('sltm_tab_law_8_add').IsValid(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+                        onclick = "[GetScriptedGui('sltm_tab_law_8_add').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+                    }
+                    button_standard = {
+                        name = "sltm_tab_law_8_remove"
+                        position = { 501 505 } size = { 94 30 }
+                        text = "SLTM_TAB_REMOVE"
+                        enabled = "[GetScriptedGui('sltm_tab_law_8_remove').IsValid(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+                        onclick = "[GetScriptedGui('sltm_tab_law_8_remove').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+                    }
+                    textbox = {
+                        name = "law_name_9"
+                        position = { 0 552 } size = { 172 30 }
+                        text = "sltm_w_213_o8" fontsize = 14 font = StandardGameFont
+                        fontcolor = { 0.88 0.84 0.75 1 } align = left|top
+                        autoresize = no multiline = yes alwaystransparent = yes
+                    }
+                    textbox = {
+                        name = "law_state_9"
+                        position = { 173 552 } size = { 113 30 }
+                        text = "[GetPlayer.Custom('sltm_tab_law_9_state')]" fontsize = 13 font = StandardGameFont
+                        fontcolor = { 0.68 0.65 0.59 1 } align = left|top
+                        autoresize = no multiline = yes alwaystransparent = yes
+                    }
+                    button_standard = {
+                        name = "sltm_tab_law_9_keep"
+                        position = { 295 547 } size = { 94 30 }
+                        text = "SLTM_TAB_KEEP"
+                        enabled = "[GetScriptedGui('sltm_tab_law_9_keep').IsValid(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+                        onclick = "[GetScriptedGui('sltm_tab_law_9_keep').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+                    }
+                    button_standard = {
+                        name = "sltm_tab_law_9_add"
+                        position = { 398 547 } size = { 94 30 }
+                        text = "SLTM_TAB_ADD"
+                        enabled = "[GetScriptedGui('sltm_tab_law_9_add').IsValid(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+                        onclick = "[GetScriptedGui('sltm_tab_law_9_add').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+                    }
+                    button_standard = {
+                        name = "sltm_tab_law_9_remove"
+                        position = { 501 547 } size = { 94 30 }
+                        text = "SLTM_TAB_REMOVE"
+                        enabled = "[GetScriptedGui('sltm_tab_law_9_remove').IsValid(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+                        onclick = "[GetScriptedGui('sltm_tab_law_9_remove').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+                    }
+                }
+            }
+            scrollbar_vertical = { using = Scrollbar_Vertical }
+        }
+    }
+}
+
+template sltm_life_panel
+{
+    widget = {
+        name = "life_panel" position = { 182 190 } size = { 690 526 }
+        visible = "[GetScriptedGui('sltm_tab_life_visible').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+        textbox = {
+            name = "life_heading"
+            position = { 0 0 } size = { 673 27 }
+            text = "SLTM_TAB_LIFE_TITLE" fontsize = 17 font = StandardGameFont
+            fontcolor = { 0.88 0.84 0.75 1 } align = left|top
+            autoresize = no multiline = yes alwaystransparent = yes
+        }
+        textbox = {
+            name = "life_intro"
+            position = { 0 25 } size = { 675 32 }
+            text = "SLTM_TAB_LIFE_INTRO" fontsize = 13 font = StandardGameFont
+            fontcolor = { 0.68 0.65 0.59 1 } align = left|top
+            autoresize = no multiline = yes alwaystransparent = yes
+        }
+        scrollarea = {
+            name = "life_scroll" position = { 0 60 } size = { 690 464 }
+            scrollbarpolicy_horizontal = always_off scrollbarpolicy_vertical = as_needed
+            scrollwidget = {
+                widget = { name = "life_body" size = { 667 363 }
+                    textbox = {
+                        name = "life_protection"
+                        position = { 0 0 } size = { 656 43 }
+                        text = "[GetPlayer.Custom('sltm_tab_life_status')]" fontsize = 14 font = StandardGameFont
+                        fontcolor = { 0.88 0.84 0.75 1 } align = left|top
+                        autoresize = no multiline = yes alwaystransparent = yes
+                    }
+                    textbox = {
+                        name = "landless_field"
+                        position = { 0 61 } size = { 224 34 }
+                        text = "SLTM_TAB_LANDLESS_LABEL" fontsize = 15 font = StandardGameFont
+                        fontcolor = { 0.88 0.84 0.75 1 } align = left|top
+                        autoresize = no multiline = yes alwaystransparent = yes
+                    }
+                    textbox = {
+                        name = "landless_state"
+                        position = { 218 61 } size = { 95 34 }
+                        text = "[GetPlayer.Custom('sltm_edit_landless_text')]" fontsize = 13 font = StandardGameFont
+                        fontcolor = { 0.68 0.65 0.59 1 } align = left|top
+                        autoresize = no multiline = yes alwaystransparent = yes
+                    }
+                    button_standard = {
+                        name = "sltm_tab_landless_keep"
+                        position = { 321 57 } size = { 89 30 }
+                        text = "SLTM_TAB_KEEP"
+                        enabled = "[GetScriptedGui('sltm_tab_landless_keep').IsValid(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+                        onclick = "[GetScriptedGui('sltm_tab_landless_keep').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+                    }
+                    button_standard = {
+                        name = "sltm_tab_landless_on"
+                        position = { 418 57 } size = { 89 30 }
+                        text = "SLTM_TAB_ON"
+                        enabled = "[GetScriptedGui('sltm_tab_landless_on').IsValid(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+                        onclick = "[GetScriptedGui('sltm_tab_landless_on').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+                    }
+                    button_standard = {
+                        name = "sltm_tab_landless_off"
+                        position = { 515 57 } size = { 89 30 }
+                        text = "SLTM_TAB_OFF"
+                        enabled = "[GetScriptedGui('sltm_tab_landless_off').IsValid(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+                        onclick = "[GetScriptedGui('sltm_tab_landless_off').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+                    }
+                    textbox = {
+                        name = "succession_field"
+                        position = { 0 117 } size = { 224 34 }
+                        text = "SLTM_TAB_SUCCESSION_LABEL" fontsize = 15 font = StandardGameFont
+                        fontcolor = { 0.88 0.84 0.75 1 } align = left|top
+                        autoresize = no multiline = yes alwaystransparent = yes
+                    }
+                    textbox = {
+                        name = "succession_state"
+                        position = { 218 117 } size = { 95 34 }
+                        text = "[GetPlayer.Custom('sltm_edit_succession_text')]" fontsize = 13 font = StandardGameFont
+                        fontcolor = { 0.68 0.65 0.59 1 } align = left|top
+                        autoresize = no multiline = yes alwaystransparent = yes
+                    }
+                    button_standard = {
+                        name = "sltm_tab_succession_keep"
+                        position = { 321 113 } size = { 89 30 }
+                        text = "SLTM_TAB_KEEP"
+                        enabled = "[GetScriptedGui('sltm_tab_succession_keep').IsValid(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+                        onclick = "[GetScriptedGui('sltm_tab_succession_keep').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+                    }
+                    button_standard = {
+                        name = "sltm_tab_succession_on"
+                        position = { 418 113 } size = { 89 30 }
+                        text = "SLTM_TAB_ON"
+                        enabled = "[GetScriptedGui('sltm_tab_succession_on').IsValid(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+                        onclick = "[GetScriptedGui('sltm_tab_succession_on').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+                    }
+                    button_standard = {
+                        name = "sltm_tab_succession_off"
+                        position = { 515 113 } size = { 89 30 }
+                        text = "SLTM_TAB_OFF"
+                        enabled = "[GetScriptedGui('sltm_tab_succession_off').IsValid(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+                        onclick = "[GetScriptedGui('sltm_tab_succession_off').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+                    }
+                    textbox = {
+                        name = "invalid_heir_field"
+                        position = { 0 173 } size = { 224 34 }
+                        text = "SLTM_TAB_INVALID_HEIR_LABEL" fontsize = 15 font = StandardGameFont
+                        fontcolor = { 0.88 0.84 0.75 1 } align = left|top
+                        autoresize = no multiline = yes alwaystransparent = yes
+                    }
+                    textbox = {
+                        name = "invalid_heir_state"
+                        position = { 218 173 } size = { 95 34 }
+                        text = "[GetPlayer.Custom('sltm_edit_invalid_heir_text')]" fontsize = 13 font = StandardGameFont
+                        fontcolor = { 0.68 0.65 0.59 1 } align = left|top
+                        autoresize = no multiline = yes alwaystransparent = yes
+                    }
+                    button_standard = {
+                        name = "sltm_tab_invalid_heir_keep"
+                        position = { 321 169 } size = { 89 30 }
+                        text = "SLTM_TAB_KEEP"
+                        enabled = "[GetScriptedGui('sltm_tab_invalid_heir_keep').IsValid(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+                        onclick = "[GetScriptedGui('sltm_tab_invalid_heir_keep').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+                    }
+                    button_standard = {
+                        name = "sltm_tab_invalid_heir_on"
+                        position = { 418 169 } size = { 89 30 }
+                        text = "SLTM_TAB_ON"
+                        enabled = "[GetScriptedGui('sltm_tab_invalid_heir_on').IsValid(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+                        onclick = "[GetScriptedGui('sltm_tab_invalid_heir_on').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+                    }
+                    button_standard = {
+                        name = "sltm_tab_invalid_heir_off"
+                        position = { 515 169 } size = { 89 30 }
+                        text = "SLTM_TAB_OFF"
+                        enabled = "[GetScriptedGui('sltm_tab_invalid_heir_off').IsValid(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+                        onclick = "[GetScriptedGui('sltm_tab_invalid_heir_off').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+                    }
+                    textbox = {
+                        name = "same_tier_field"
+                        position = { 0 229 } size = { 224 34 }
+                        text = "SLTM_TAB_SAME_TIER_LABEL" fontsize = 15 font = StandardGameFont
+                        fontcolor = { 0.88 0.84 0.75 1 } align = left|top
+                        autoresize = no multiline = yes alwaystransparent = yes
+                    }
+                    textbox = {
+                        name = "same_tier_state"
+                        position = { 218 229 } size = { 95 34 }
+                        text = "[GetPlayer.Custom('sltm_edit_same_tier_text')]" fontsize = 13 font = StandardGameFont
+                        fontcolor = { 0.68 0.65 0.59 1 } align = left|top
+                        autoresize = no multiline = yes alwaystransparent = yes
+                    }
+                    button_standard = {
+                        name = "sltm_tab_same_tier_keep"
+                        position = { 321 225 } size = { 89 30 }
+                        text = "SLTM_TAB_KEEP"
+                        enabled = "[GetScriptedGui('sltm_tab_same_tier_keep').IsValid(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+                        onclick = "[GetScriptedGui('sltm_tab_same_tier_keep').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+                    }
+                    button_standard = {
+                        name = "sltm_tab_same_tier_on"
+                        position = { 418 225 } size = { 89 30 }
+                        text = "SLTM_TAB_ON"
+                        enabled = "[GetScriptedGui('sltm_tab_same_tier_on').IsValid(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+                        onclick = "[GetScriptedGui('sltm_tab_same_tier_on').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+                    }
+                    button_standard = {
+                        name = "sltm_tab_same_tier_off"
+                        position = { 515 225 } size = { 89 30 }
+                        text = "SLTM_TAB_OFF"
+                        enabled = "[GetScriptedGui('sltm_tab_same_tier_off').IsValid(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+                        onclick = "[GetScriptedGui('sltm_tab_same_tier_off').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+                    }
+                    textbox = {
+                        name = "delete_reserved"
+                        position = { 0 297 } size = { 655 50 }
+                        text = "SLTM_TAB_DELETE_RESERVED" fontsize = 13 font = StandardGameFont
+                        fontcolor = { 0.68 0.65 0.59 1 } align = left|top
+                        autoresize = no multiline = yes alwaystransparent = yes
+                    }
+                }
+            }
+            scrollbar_vertical = { using = Scrollbar_Vertical }
+        }
+    }
+}
+
+template sltm_dom_panel
+{
+    widget = {
+        name = "dom_panel" position = { 182 190 } size = { 690 526 }
+        visible = "[GetScriptedGui('sltm_tab_dom_visible').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+        textbox = {
+            name = "dom_heading"
+            position = { 0 0 } size = { 673 27 }
+            text = "SLTM_TAB_DOM_TITLE" fontsize = 17 font = StandardGameFont
+            fontcolor = { 0.88 0.84 0.75 1 } align = left|top
+            autoresize = no multiline = yes alwaystransparent = yes
+        }
+        textbox = {
+            name = "dom_intro"
+            position = { 0 25 } size = { 675 32 }
+            text = "SLTM_TAB_DOM_INTRO" fontsize = 13 font = StandardGameFont
+            fontcolor = { 0.68 0.65 0.59 1 } align = left|top
+            autoresize = no multiline = yes alwaystransparent = yes
+        }
+        scrollarea = {
+            name = "dom_scroll" position = { 0 60 } size = { 690 464 }
+            scrollbarpolicy_horizontal = always_off scrollbarpolicy_vertical = as_needed
+            scrollwidget = {
+                widget = { name = "dom_body" size = { 667 445 }
+                    textbox = {
+                        name = "home_status"
+                        position = { 0 0 } size = { 654 39 }
+                        text = "[GetPlayer.Custom('sltm_tab_home_status')]" fontsize = 15 font = StandardGameFont
+                        fontcolor = { 0.88 0.84 0.75 1 } align = left|top
+                        autoresize = no multiline = yes alwaystransparent = yes
+                    }
+                    button_standard = {
+                        name = "sltm_tab_domicile_open"
+                        position = { 0 42 } size = { 170 30 }
+                        text = "SLTM_TAB_HOME_OPEN"
+                        enabled = "[GetScriptedGui('sltm_tab_domicile_open').IsValid(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+                        onclick = "[GetScriptedGui('sltm_tab_domicile_open').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+                    }
+                    textbox = {
+                        name = "home_prov_title"
+                        position = { 0 105 } size = { 190 25 }
+                        text = "SLTM_TAB_PROV" fontsize = 16 font = StandardGameFont
+                        fontcolor = { 0.88 0.84 0.75 1 } align = left|top
+                        autoresize = no multiline = yes alwaystransparent = yes
+                    }
+                    textbox = {
+                        name = "home_prov_current"
+                        position = { 173 107 } size = { 470 27 }
+                        text = "[GetPlayer.Custom('sltm_current_province')]" fontsize = 14 font = StandardGameFont
+                        fontcolor = { 0.68 0.65 0.59 1 } align = left|top
+                        autoresize = no multiline = yes alwaystransparent = yes
+                    }
+                    button_standard = {
+                        name = "sltm_tab_province_mark"
+                        position = { 0 146 } size = { 190 30 }
+                        text = "SLTM_TAB_PROV_MARK"
+                        enabled = "[GetScriptedGui('sltm_tab_province_mark').IsValid(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+                        onclick = "[GetScriptedGui('sltm_tab_province_mark').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+                    }
+                    button_standard = {
+                        name = "sltm_tab_province_keep"
+                        position = { 200 146 } size = { 112 30 }
+                        text = "SLTM_TAB_KEEP"
+                        enabled = "[GetScriptedGui('sltm_tab_province_keep').IsValid(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+                        onclick = "[GetScriptedGui('sltm_tab_province_keep').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+                    }
+                    textbox = {
+                        name = "home_prov_draft"
+                        position = { 0 184 } size = { 646 43 }
+                        text = "[GetPlayer.Custom('sltm_tab_province_value')]" fontsize = 14 font = StandardGameFont
+                        fontcolor = { 0.88 0.84 0.75 1 } align = left|top
+                        autoresize = no multiline = yes alwaystransparent = yes
+                    }
+                    textbox = {
+                        name = "home_build_title"
+                        position = { 0 246 } size = { 190 28 }
+                        text = "SLTM_TAB_HOME_BUILD" fontsize = 16 font = StandardGameFont
+                        fontcolor = { 0.88 0.84 0.75 1 } align = left|top
+                        autoresize = no multiline = yes alwaystransparent = yes
+                    }
+                    textbox = {
+                        name = "home_build_cur"
+                        position = { 174 246 } size = { 475 28 }
+                        text = "[GetPlayer.Custom('sltm_current_building')]" fontsize = 13 font = StandardGameFont
+                        fontcolor = { 0.68 0.65 0.59 1 } align = left|top
+                        autoresize = no multiline = yes alwaystransparent = yes
+                    }
+                    button_standard = {
+                        name = "sltm_tab_building_fill"
+                        position = { 0 281 } size = { 192 30 }
+                        text = "SLTM_TAB_BUILD_FILL"
+                        enabled = "[GetScriptedGui('sltm_tab_building_fill').IsValid(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+                        onclick = "[GetScriptedGui('sltm_tab_building_fill').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+                    }
+                    button_standard = {
+                        name = "sltm_tab_building_keep"
+                        position = { 203 281 } size = { 110 30 }
+                        text = "SLTM_TAB_KEEP"
+                        enabled = "[GetScriptedGui('sltm_tab_building_keep').IsValid(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+                        onclick = "[GetScriptedGui('sltm_tab_building_keep').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+                    }
+                    textbox = {
+                        name = "home_build_draft"
+                        position = { 0 319 } size = { 642 44 }
+                        text = "[GetPlayer.Custom('sltm_tab_building_draft')]" fontsize = 14 font = StandardGameFont
+                        fontcolor = { 0.88 0.84 0.75 1 } align = left|top
+                        autoresize = no multiline = yes alwaystransparent = yes
+                    }
+                    textbox = {
+                        name = "home_build_note"
+                        position = { 0 379 } size = { 645 58 }
+                        text = "SLTM_TAB_HOME_NOTE" fontsize = 13 font = StandardGameFont
+                        fontcolor = { 0.68 0.65 0.59 1 } align = left|top
+                        autoresize = no multiline = yes alwaystransparent = yes
+                    }
+                }
+            }
+            scrollbar_vertical = { using = Scrollbar_Vertical }
+        }
+    }
+}
+
+template sltm_transfer_panel
+{
+    widget = {
+        name = "transfer_panel" position = { 182 190 } size = { 690 526 }
+        visible = "[GetScriptedGui('sltm_tab_transfer_visible').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+        textbox = {
+            name = "transfer_heading"
+            position = { 0 0 } size = { 673 27 }
+            text = "SLTM_TAB_TRANSFER_TITLE" fontsize = 17 font = StandardGameFont
+            fontcolor = { 0.88 0.84 0.75 1 } align = left|top
+            autoresize = no multiline = yes alwaystransparent = yes
+        }
+        textbox = {
+            name = "transfer_intro"
+            position = { 0 25 } size = { 675 32 }
+            text = "SLTM_TAB_TRANSFER_INTRO" fontsize = 13 font = StandardGameFont
+            fontcolor = { 0.68 0.65 0.59 1 } align = left|top
+            autoresize = no multiline = yes alwaystransparent = yes
+        }
+        scrollarea = {
+            name = "transfer_scroll" position = { 0 60 } size = { 690 464 }
+            scrollbarpolicy_horizontal = always_off scrollbarpolicy_vertical = as_needed
+            scrollwidget = {
+                widget = { name = "transfer_body" size = { 667 393 }
+                    textbox = {
+                        name = "transfer_status"
+                        position = { 0 0 } size = { 656 40 }
+                        text = "[GetPlayer.Custom('sltm_tab_transfer_status')]" fontsize = 14 font = StandardGameFont
+                        fontcolor = { 0.88 0.84 0.75 1 } align = left|top
+                        autoresize = no multiline = yes alwaystransparent = yes
+                    }
+                    textbox = {
+                        name = "transfer_owner"
+                        position = { 0 45 } size = { 654 43 }
+                        text = "SLTM_TAB_TRANSFER_OWNER" fontsize = 14 font = StandardGameFont
+                        fontcolor = { 0.88 0.84 0.75 1 } align = left|top
+                        autoresize = no multiline = yes alwaystransparent = yes
+                    }
+                    button_standard = {
+                        name = "sltm_tab_transfer_pick"
+                        position = { 0 100 } size = { 234 30 }
+                        text = "SLTM_TAB_TRANSFER_PICK"
+                        enabled = "[GetScriptedGui('sltm_tab_transfer_pick').IsValid(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+                        onclick = "[GetScriptedGui('sltm_tab_transfer_pick').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+                    }
+                    textbox = {
+                        name = "transfer_selected"
+                        position = { 0 141 } size = { 656 51 }
+                        text = "[GetPlayer.Custom('sltm_tab_transfer_frozen')]" fontsize = 14 font = StandardGameFont
+                        fontcolor = { 0.88 0.84 0.75 1 } align = left|top
+                        autoresize = no multiline = yes alwaystransparent = yes
+                    }
+                    textbox = {
+                        name = "transfer_note"
+                        position = { 0 204 } size = { 654 58 }
+                        text = "SLTM_TAB_TRANSFER_NOTE" fontsize = 14 font = StandardGameFont
+                        fontcolor = { 0.68 0.65 0.59 1 } align = left|top
+                        autoresize = no multiline = yes alwaystransparent = yes
+                    }
+                    button_standard = {
+                        name = "sltm_tab_transfer_review"
+                        position = { 0 271 } size = { 194 30 }
+                        text = "SLTM_TAB_TRANSFER_REVIEW"
+                        enabled = "[GetScriptedGui('sltm_tab_transfer_review').IsValid(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+                        onclick = "[GetScriptedGui('sltm_tab_transfer_review').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+                        visible = "[Not(GetPlayer.MakeScope.Var('sltm_tab_transfer_confirm').IsSet)]"
+                    }
+                    textbox = {
+                        name = "transfer_confirm_note"
+                        position = { 0 270 } size = { 657 44 }
+                        text = "SLTM_TAB_TRANSFER_CONFIRM" fontsize = 14 font = StandardGameFont
+                        fontcolor = { 0.88 0.84 0.75 1 } align = left|top
+                        autoresize = no multiline = yes alwaystransparent = yes
+                        visible = "[GetPlayer.MakeScope.Var('sltm_tab_transfer_confirm').IsSet]"
+                    }
+                    button_standard = {
+                        name = "sltm_tab_transfer_commit"
+                        position = { 0 321 } size = { 222 30 }
+                        text = "SLTM_TAB_TRANSFER_COMMIT"
+                        enabled = "[GetScriptedGui('sltm_tab_transfer_commit').IsValid(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+                        onclick = "[GetScriptedGui('sltm_tab_transfer_commit').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+                        visible = "[GetPlayer.MakeScope.Var('sltm_tab_transfer_confirm').IsSet]"
+                    }
+                    button_standard = {
+                        name = "sltm_tab_transfer_back"
+                        position = { 234 321 } size = { 134 30 }
+                        text = "SLTM_TAB_TRANSFER_BACK"
+                        enabled = "[GetScriptedGui('sltm_tab_transfer_back').IsValid(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+                        onclick = "[GetScriptedGui('sltm_tab_transfer_back').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+                        visible = "[GetPlayer.MakeScope.Var('sltm_tab_transfer_confirm').IsSet]"
+                    }
+                }
+            }
+            scrollbar_vertical = { using = Scrollbar_Vertical }
+        }
+    }
+}

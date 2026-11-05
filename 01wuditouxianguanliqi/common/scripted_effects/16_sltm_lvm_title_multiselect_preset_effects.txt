@@ -1,0 +1,105 @@
+﻿# V3.0 头衔预设：保存/读取完整多选标记。
+
+sltm_lvm_title_multiselect_preset_save_effect = {
+    sltm_lvm_ensure_title_multiselect_state_effect = yes
+    remove_variable = sltm_lvm_title_ms_preset_$SLOT$_valid
+    remove_variable = sltm_lvm_title_ms_preset_$SLOT$_schema
+    remove_variable = sltm_lvm_title_ms_preset_$SLOT$_type_junfu_selected
+    remove_variable = sltm_lvm_title_ms_preset_$SLOT$_type_chaochen_selected
+    remove_variable = sltm_lvm_title_ms_preset_$SLOT$_type_noble_selected
+    remove_variable = sltm_lvm_title_ms_preset_$SLOT$_type_holy_order_selected
+    remove_variable = sltm_lvm_title_ms_preset_$SLOT$_type_mercenary_selected
+    remove_variable = sltm_lvm_title_ms_preset_$SLOT$_type_religious_head_selected
+    remove_variable = sltm_lvm_title_ms_preset_$SLOT$_type_other_selected
+    remove_variable = sltm_lvm_title_ms_preset_$SLOT$_creation_created_selected
+    remove_variable = sltm_lvm_title_ms_preset_$SLOT$_creation_uncreated_selected
+    remove_variable = sltm_lvm_title_ms_preset_$SLOT$_tier_barony_selected
+    remove_variable = sltm_lvm_title_ms_preset_$SLOT$_tier_county_selected
+    remove_variable = sltm_lvm_title_ms_preset_$SLOT$_tier_duchy_selected
+    remove_variable = sltm_lvm_title_ms_preset_$SLOT$_tier_kingdom_selected
+    remove_variable = sltm_lvm_title_ms_preset_$SLOT$_tier_empire_selected
+    remove_variable = sltm_lvm_title_ms_preset_$SLOT$_tier_hegemony_selected
+    remove_variable = sltm_lvm_title_ms_preset_$SLOT$_status_normal_selected
+    remove_variable = sltm_lvm_title_ms_preset_$SLOT$_status_pending_selected
+    remove_variable = sltm_lvm_title_ms_preset_$SLOT$_status_blocked_selected
+    remove_variable = sltm_lvm_title_ms_preset_$SLOT$_role_primary_selected
+    remove_variable = sltm_lvm_title_ms_preset_$SLOT$_role_concurrent_selected
+    remove_variable = sltm_lvm_title_ms_preset_$SLOT$_holder_courtier_selected
+    remove_variable = sltm_lvm_title_ms_preset_$SLOT$_has_maa_selected
+    if = { limit = { has_variable = sltm_lvm_tf_type_junfu_selected } set_variable = sltm_lvm_title_ms_preset_$SLOT$_type_junfu_selected }
+    if = { limit = { has_variable = sltm_lvm_tf_type_chaochen_selected } set_variable = sltm_lvm_title_ms_preset_$SLOT$_type_chaochen_selected }
+    if = { limit = { has_variable = sltm_lvm_tf_type_noble_selected } set_variable = sltm_lvm_title_ms_preset_$SLOT$_type_noble_selected }
+    if = { limit = { has_variable = sltm_lvm_tf_type_holy_order_selected } set_variable = sltm_lvm_title_ms_preset_$SLOT$_type_holy_order_selected }
+    if = { limit = { has_variable = sltm_lvm_tf_type_mercenary_selected } set_variable = sltm_lvm_title_ms_preset_$SLOT$_type_mercenary_selected }
+    if = { limit = { has_variable = sltm_lvm_tf_type_religious_head_selected } set_variable = sltm_lvm_title_ms_preset_$SLOT$_type_religious_head_selected }
+    if = { limit = { has_variable = sltm_lvm_tf_type_other_selected } set_variable = sltm_lvm_title_ms_preset_$SLOT$_type_other_selected }
+    if = { limit = { has_variable = sltm_lvm_tf_creation_created_selected } set_variable = sltm_lvm_title_ms_preset_$SLOT$_creation_created_selected }
+    if = { limit = { has_variable = sltm_lvm_tf_creation_uncreated_selected } set_variable = sltm_lvm_title_ms_preset_$SLOT$_creation_uncreated_selected }
+    if = { limit = { has_variable = sltm_lvm_tf_tier_barony_selected } set_variable = sltm_lvm_title_ms_preset_$SLOT$_tier_barony_selected }
+    if = { limit = { has_variable = sltm_lvm_tf_tier_county_selected } set_variable = sltm_lvm_title_ms_preset_$SLOT$_tier_county_selected }
+    if = { limit = { has_variable = sltm_lvm_tf_tier_duchy_selected } set_variable = sltm_lvm_title_ms_preset_$SLOT$_tier_duchy_selected }
+    if = { limit = { has_variable = sltm_lvm_tf_tier_kingdom_selected } set_variable = sltm_lvm_title_ms_preset_$SLOT$_tier_kingdom_selected }
+    if = { limit = { has_variable = sltm_lvm_tf_tier_empire_selected } set_variable = sltm_lvm_title_ms_preset_$SLOT$_tier_empire_selected }
+    if = { limit = { has_variable = sltm_lvm_tf_tier_hegemony_selected } set_variable = sltm_lvm_title_ms_preset_$SLOT$_tier_hegemony_selected }
+    if = { limit = { has_variable = sltm_lvm_tf_status_normal_selected } set_variable = sltm_lvm_title_ms_preset_$SLOT$_status_normal_selected }
+    if = { limit = { has_variable = sltm_lvm_tf_status_pending_selected } set_variable = sltm_lvm_title_ms_preset_$SLOT$_status_pending_selected }
+    if = { limit = { has_variable = sltm_lvm_tf_status_blocked_selected } set_variable = sltm_lvm_title_ms_preset_$SLOT$_status_blocked_selected }
+    if = { limit = { has_variable = sltm_lvm_tf_role_primary_selected } set_variable = sltm_lvm_title_ms_preset_$SLOT$_role_primary_selected }
+    if = { limit = { has_variable = sltm_lvm_tf_role_concurrent_selected } set_variable = sltm_lvm_title_ms_preset_$SLOT$_role_concurrent_selected }
+    if = { limit = { has_variable = sltm_lvm_tf_holder_courtier_selected } set_variable = sltm_lvm_title_ms_preset_$SLOT$_holder_courtier_selected }
+    if = { limit = { has_variable = sltm_lvm_tf_has_maa_selected } set_variable = sltm_lvm_title_ms_preset_$SLOT$_has_maa_selected }
+    set_variable = { name = sltm_lvm_title_ms_preset_$SLOT$_schema value = flag:v30 }
+    set_variable = { name = sltm_lvm_title_ms_preset_$SLOT$_valid value = flag:yes }
+}
+
+sltm_lvm_title_multiselect_preset_load_effect = {
+    if = {
+        limit = {
+            AND = {
+                has_variable = sltm_lvm_title_ms_preset_$SLOT$_valid
+                var:sltm_lvm_title_ms_preset_$SLOT$_schema = flag:v30
+            }
+        }
+        sltm_lvm_save_title_multiselect_undo_effect = yes
+        sltm_lvm_clear_title_multiselect_markers_effect = yes
+        if = { limit = { has_variable = sltm_lvm_title_ms_preset_$SLOT$_type_junfu_selected } set_variable = sltm_lvm_tf_type_junfu_selected }
+        if = { limit = { has_variable = sltm_lvm_title_ms_preset_$SLOT$_type_chaochen_selected } set_variable = sltm_lvm_tf_type_chaochen_selected }
+        if = { limit = { has_variable = sltm_lvm_title_ms_preset_$SLOT$_type_noble_selected } set_variable = sltm_lvm_tf_type_noble_selected }
+        if = { limit = { has_variable = sltm_lvm_title_ms_preset_$SLOT$_type_holy_order_selected } set_variable = sltm_lvm_tf_type_holy_order_selected }
+        if = { limit = { has_variable = sltm_lvm_title_ms_preset_$SLOT$_type_mercenary_selected } set_variable = sltm_lvm_tf_type_mercenary_selected }
+        if = { limit = { has_variable = sltm_lvm_title_ms_preset_$SLOT$_type_religious_head_selected } set_variable = sltm_lvm_tf_type_religious_head_selected }
+        if = { limit = { has_variable = sltm_lvm_title_ms_preset_$SLOT$_type_other_selected } set_variable = sltm_lvm_tf_type_other_selected }
+        if = { limit = { has_variable = sltm_lvm_title_ms_preset_$SLOT$_creation_created_selected } set_variable = sltm_lvm_tf_creation_created_selected }
+        if = { limit = { has_variable = sltm_lvm_title_ms_preset_$SLOT$_creation_uncreated_selected } set_variable = sltm_lvm_tf_creation_uncreated_selected }
+        if = { limit = { has_variable = sltm_lvm_title_ms_preset_$SLOT$_tier_barony_selected } set_variable = sltm_lvm_tf_tier_barony_selected }
+        if = { limit = { has_variable = sltm_lvm_title_ms_preset_$SLOT$_tier_county_selected } set_variable = sltm_lvm_tf_tier_county_selected }
+        if = { limit = { has_variable = sltm_lvm_title_ms_preset_$SLOT$_tier_duchy_selected } set_variable = sltm_lvm_tf_tier_duchy_selected }
+        if = { limit = { has_variable = sltm_lvm_title_ms_preset_$SLOT$_tier_kingdom_selected } set_variable = sltm_lvm_tf_tier_kingdom_selected }
+        if = { limit = { has_variable = sltm_lvm_title_ms_preset_$SLOT$_tier_empire_selected } set_variable = sltm_lvm_tf_tier_empire_selected }
+        if = { limit = { has_variable = sltm_lvm_title_ms_preset_$SLOT$_tier_hegemony_selected } set_variable = sltm_lvm_tf_tier_hegemony_selected }
+        if = { limit = { has_variable = sltm_lvm_title_ms_preset_$SLOT$_status_normal_selected } set_variable = sltm_lvm_tf_status_normal_selected }
+        if = { limit = { has_variable = sltm_lvm_title_ms_preset_$SLOT$_status_pending_selected } set_variable = sltm_lvm_tf_status_pending_selected }
+        if = { limit = { has_variable = sltm_lvm_title_ms_preset_$SLOT$_status_blocked_selected } set_variable = sltm_lvm_tf_status_blocked_selected }
+        if = { limit = { has_variable = sltm_lvm_title_ms_preset_$SLOT$_role_primary_selected } set_variable = sltm_lvm_tf_role_primary_selected }
+        if = { limit = { has_variable = sltm_lvm_title_ms_preset_$SLOT$_role_concurrent_selected } set_variable = sltm_lvm_tf_role_concurrent_selected }
+        if = { limit = { has_variable = sltm_lvm_title_ms_preset_$SLOT$_holder_courtier_selected } set_variable = sltm_lvm_tf_holder_courtier_selected }
+        if = { limit = { has_variable = sltm_lvm_title_ms_preset_$SLOT$_has_maa_selected } set_variable = sltm_lvm_tf_has_maa_selected }
+        sltm_lvm_update_title_multiselect_counts_effect = yes
+        sltm_lvm_recompute_title_view_effect = yes
+    }
+}
+
+# 2026-07-17 新增（V3.2）：按“当前槽”变量分派到具体槽的保存/读取（下拉预设）。
+sltm_lvm_title_preset_save_current_effect = {
+    if = { limit = { var:sltm_lvm_title_preset_slot = 1 } sltm_lvm_title_multiselect_preset_save_effect = { SLOT = 1 } }
+    else_if = { limit = { var:sltm_lvm_title_preset_slot = 2 } sltm_lvm_title_multiselect_preset_save_effect = { SLOT = 2 } }
+    else_if = { limit = { var:sltm_lvm_title_preset_slot = 3 } sltm_lvm_title_multiselect_preset_save_effect = { SLOT = 3 } }
+    else_if = { limit = { var:sltm_lvm_title_preset_slot = 4 } sltm_lvm_title_multiselect_preset_save_effect = { SLOT = 4 } }
+}
+
+sltm_lvm_title_preset_load_current_effect = {
+    if = { limit = { var:sltm_lvm_title_preset_slot = 1 } sltm_lvm_title_multiselect_preset_load_effect = { SLOT = 1 } }
+    else_if = { limit = { var:sltm_lvm_title_preset_slot = 2 } sltm_lvm_title_multiselect_preset_load_effect = { SLOT = 2 } }
+    else_if = { limit = { var:sltm_lvm_title_preset_slot = 3 } sltm_lvm_title_multiselect_preset_load_effect = { SLOT = 3 } }
+    else_if = { limit = { var:sltm_lvm_title_preset_slot = 4 } sltm_lvm_title_multiselect_preset_load_effect = { SLOT = 4 } }
+}

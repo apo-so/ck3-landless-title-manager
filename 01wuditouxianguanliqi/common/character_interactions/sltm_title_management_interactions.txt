@@ -1,0 +1,565 @@
+﻿# 无地头衔管理器
+sltm_landless_title_manager_interactions = {
+    category = interaction_category_diarch
+    common_interaction = yes
+    interface_priority = 1000
+    icon = icon_title
+    desc = sltm_landless_title_manager_interactions_desc
+
+    target_type = title
+
+    # 只显示对方直辖头衔
+    target_filter = recipient_domain_titles
+
+    ignores_pending_interaction_block = yes
+    use_diplomatic_range = no
+
+    is_available = {
+        is_ai = no
+    }
+
+    is_shown = {
+        scope:actor = {
+            is_ai = no
+        }
+        exists = scope:recipient.primary_title
+        sltm_cmm_compat_rit_rules_valid_recipient_realm_interactions_trigger = yes
+    }
+
+    has_valid_target = {
+        exists = scope:target
+    }
+
+    # 只允许选择 recipient 直接持有的男爵级及以上头衔
+    has_valid_target_showing_failures_only = {
+        scope:target = {
+            exists = this
+            exists = holder
+            holder = scope:recipient
+            tier >= tier_barony
+        }
+    }
+
+    # 只显示 recipient 直接持有的男爵级及以上头衔
+    can_be_picked_title = {
+        scope:target = {
+            exists = this
+            exists = holder
+            holder = scope:recipient
+            tier >= tier_barony
+        }
+    }
+
+    can_send = {
+    }
+
+    send_options_exclusive = yes
+
+    # 功能1：标记头衔
+    send_option = {
+        flag = sltm_landless_title_option_flag_mark_title
+        starts_enabled = {
+            always = yes
+        }
+    }
+
+    # 功能2：创立无地头衔
+    # 男爵领不能作为创建无地头衔模板，所以限制到伯爵及以上。
+    send_option = {
+        flag = sltm_landless_title_option_flag_create_landless_title
+        starts_enabled = { always = no }
+    }
+
+    # 编辑顶部选中的头衔，来源标记与编辑目标分别保存。
+    send_option = {
+        flag = sltm_landless_title_option_flag_edit_selected_title
+        current_description = sltm_edit_selected_title_open_tt
+        starts_enabled = { always = no }
+    }
+
+    # 功能3：剥夺当前选择头衔
+    send_option = {
+        flag = sltm_landless_title_option_flag_revoke_selected_title
+        starts_enabled = { always = no }
+    }
+
+    # 功能4：授予已标记头衔给 recipient
+    send_option = {
+        flag = sltm_landless_title_option_flag_grant_marked_title
+        starts_enabled = { always = no }
+    }
+
+    # 功能5：迁移已标记头衔法理首府到当前指定头衔首府
+    send_option = {
+        flag = sltm_landless_title_option_flag_move_marked_capital
+        is_valid = {
+            scope:actor = {
+                exists = var:sltm_designee_title
+            }
+
+            scope:target = {
+                exists = this
+                exists = holder
+                holder = scope:recipient
+                tier >= tier_barony
+
+                custom_tooltip = {
+                    text = sltm_marked_title_capital_target_valid_tt
+                    OR = {
+                        tier = tier_barony
+                        tier = tier_county
+                        exists = title_capital_county
+                    }
+                }
+            }
+        }
+        starts_enabled = { always = no }
+    }
+
+    # 功能6：搬迁已标记头衔持有者的庄园到当前指定头衔首府
+    send_option = {
+        flag = sltm_landless_title_option_flag_move_marked_holder_domicile
+        is_valid = {
+            scope:actor = {
+                # 显式必需条件不能被 trigger_if 跳过；未标记时只显示已有提示。
+                custom_tooltip = {
+                    text = sltm_cmm_landless_has_designee_title_tt
+                    exists = var:sltm_designee_title
+                }
+                trigger_if = {
+                    limit = { exists = var:sltm_designee_title }
+                    var:sltm_designee_title = {
+                        exists = holder
+                        exists = title_domicile
+                    }
+                }
+            }
+
+            scope:target = {
+                exists = this
+                exists = holder
+                holder = scope:recipient
+                tier >= tier_barony
+
+                custom_tooltip = {
+                    text = sltm_move_domicile_target_valid_tt
+                    OR = {
+                        tier = tier_barony
+                        tier = tier_county
+                        exists = title_capital_county
+                    }
+                }
+            }
+        }
+        starts_enabled = { always = no }
+    }
+
+    # 功能7：调整当前选择头衔的法理归属到已标记头衔下
+    send_option = {
+        flag = sltm_landless_title_option_flag_transfer_title_de_jure
+
+        is_valid = {
+            scope:actor = {
+                sltm_cmm_compat_mytm_has_designee_title_trigger = yes
+
+                trigger_if = {
+                    limit = {
+                        sltm_cmm_compat_mytm_has_designee_title_trigger = yes
+                        exists = scope:target
+                    }
+
+                    scope:target = {
+                        exists = holder
+                        holder = scope:recipient
+
+                        custom_tooltip = {
+                            text = sltm_cmm_landless_target_title_is_same_designee_title_tt
+                            NOT = {
+                                this = scope:actor.var:sltm_designee_title
+                            }
+                        }
+
+                        custom_tooltip = {
+                            text = sltm_cmm_landless_transfer_title_de_jure_valid_tt
+                            tier < scope:actor.var:sltm_designee_title.tier
+                        }
+
+                        custom_tooltip = {
+                            text = sltm_cmm_landless_transfer_titles_is_de_jure_tt
+                            NOT = {
+                                target_is_de_jure_liege_or_above = scope:actor.var:sltm_designee_title
+                            }
+                        }
+
+                        custom_tooltip = {
+                            text = sltm_transfer_title_de_jure_not_landless_tt
+                            #is_landless_type_title = no
+                        }
+                    }
+                }
+            }
+        }
+
+        starts_enabled = { always = no }
+    }
+
+    # 功能8：销毁当前选择头衔
+    send_option = {
+        flag = sltm_landless_title_option_flag_destroy_selected_title
+
+        is_valid = {
+            scope:target = {
+                exists = this
+                exists = holder
+                sltm_plain_title_action_trigger = yes
+                holder = scope:recipient
+
+                custom_tooltip = { text = sltm_w_protected_title_tt sltm_plain_title_action_trigger = yes }
+
+            }
+        }
+
+        starts_enabled = { always = no }
+    }
+
+    on_accept = {
+        # 当前互动菜单选中的头衔
+        scope:target = {
+            save_scope_as = sltm_target_title
+        }
+
+        # 当前选择头衔的持有者
+        if = {
+            limit = {
+                scope:target = {
+                    exists = holder
+                }
+            }
+            scope:target.holder = {
+                save_scope_as = sltm_target_title_holder
+            }
+        }
+
+        # 已标记头衔
+        if = {
+            limit = {
+                scope:actor = {
+                    exists = var:sltm_designee_title
+                }
+            }
+
+            scope:actor.var:sltm_designee_title = {
+                save_scope_as = sltm_designee_title
+            }
+
+            custom_tooltip = sltm_cmm_landless_designee_title_tooltip_has
+        }
+
+        # 提取当前 target 对应的目标伯爵领
+        if = {
+            limit = {
+                scope:target = {
+                    tier = tier_barony
+                }
+            }
+
+            scope:target.de_jure_liege = {
+                save_scope_as = sltm_target_capital_county
+            }
+        }
+        else_if = {
+            limit = {
+                scope:target = {
+                    tier = tier_county
+                }
+            }
+
+            scope:target = {
+                save_scope_as = sltm_target_capital_county
+            }
+        }
+        else = {
+            scope:target.title_capital_county ?= {
+                save_scope_as = sltm_target_capital_county
+            }
+        }
+
+        # 提取当前 target 对应的目标省份，用于搬迁庄园
+        if = {
+            limit = {
+                scope:target = {
+                    tier = tier_barony
+                }
+            }
+
+            scope:target.title_province = {
+                save_scope_as = sltm_target_relocation_province
+            }
+        }
+        else_if = {
+            limit = {
+                scope:target = {
+                    tier = tier_county
+                }
+            }
+
+            scope:target.title_province = {
+                save_scope_as = sltm_target_relocation_province
+            }
+        }
+        else = {
+            scope:target.title_capital_county.title_province ?= {
+                save_scope_as = sltm_target_relocation_province
+            }
+        }
+
+        switch = {
+            trigger = yes
+
+            # 功能1：标记头衔
+            scope:sltm_landless_title_option_flag_mark_title = {
+                if = {
+                    limit = {
+                        exists = scope:sltm_designee_title
+                    }
+
+                    scope:actor = {
+                        remove_variable = sltm_designee_title
+                    }
+                }
+
+                scope:actor = {
+                    set_variable = {
+                        name = sltm_designee_title
+                        value = scope:target
+                    }
+                }
+
+                custom_tooltip = sltm_landless_title_option_flag_mark_title
+            }
+
+            # 功能2：创立无地头衔
+            scope:sltm_landless_title_option_flag_create_landless_title = {
+                scope:actor = {
+                    custom_tooltip = sltm_menu_create_interaction_desc
+                    hidden_effect = { sltm_menu_open_recipient_atlas_effect = yes }
+                }
+            }
+
+            scope:sltm_landless_title_option_flag_edit_selected_title = {
+                if = {
+                    limit = { exists = scope:target scope:target = { holder = scope:recipient } }
+                    custom_tooltip = sltm_edit_selected_title_open_tt
+                    hidden_effect = {
+                        scope:actor = {
+                            remove_variable = sltm_window_from_manager
+                            set_variable = { name = sltm_lvm_selected_title value = scope:target }
+                            sltm_ui_open_fixed_effect = yes
+                        }
+                    }
+                }
+            }
+
+            # 功能3：剥夺当前选择头衔
+            scope:sltm_landless_title_option_flag_revoke_selected_title = {
+                if = {
+                    limit = {
+                        exists = scope:sltm_target_title_holder
+                        scope:sltm_target_title = { sltm_plain_title_action_trigger = yes }
+                        scope:sltm_target_title_holder != scope:actor
+                    }
+
+                    create_title_and_vassal_change = {
+                        type = revoked
+                        save_scope_as = sltm_revoke_selected_title_change
+                        add_claim_on_loss = no
+                    }
+
+                    scope:sltm_target_title = {
+                        change_title_holder = {
+                            holder = scope:actor
+                            change = scope:sltm_revoke_selected_title_change
+                            take_baronies = no
+                            government_base = scope:actor
+                        }
+                    }
+
+                    resolve_title_and_vassal_change = scope:sltm_revoke_selected_title_change
+
+                    custom_tooltip = sltm_landless_title_option_flag_revoke_selected_title
+                }
+            }
+
+            # 功能4：授予已标记头衔给 recipient
+            scope:sltm_landless_title_option_flag_grant_marked_title = {
+                if = {
+                    limit = {
+                        scope:actor = {
+                            exists = var:sltm_designee_title
+                            var:sltm_designee_title = { sltm_plain_title_action_trigger = yes }
+                        }
+                        exists = scope:recipient
+                        scope:actor != scope:recipient
+                    }
+
+                    scope:actor.var:sltm_designee_title = {
+                        add_to_temporary_list = target_titles
+                    }
+
+                    scope:recipient = {
+                        create_title_and_vassal_change = {
+                            type = granted
+                            save_scope_as = sltm_grant_marked_title_change
+                            add_claim_on_loss = no
+                        }
+
+                        every_in_list = {
+                            list = target_titles
+
+                            change_title_holder = {
+                                holder = scope:recipient
+                                change = scope:sltm_grant_marked_title_change
+                                take_baronies = no
+                            }
+                        }
+
+                        resolve_title_and_vassal_change = scope:sltm_grant_marked_title_change
+                    }
+
+                    custom_tooltip = sltm_landless_title_option_flag_grant_marked_title
+                }
+                else = {
+                    custom_tooltip = sltm_cmm_landless_has_designee_title_tt
+                }
+            }
+
+            # 功能5：迁移已标记头衔法理首府到当前指定头衔首府
+scope:sltm_landless_title_option_flag_move_marked_capital = {
+    if = {
+        limit = {
+            exists = scope:sltm_designee_title
+            exists = scope:target
+            scope:target = {
+                exists = holder
+                holder = scope:recipient
+                tier >= tier_county
+            }
+        }
+
+        # 设置已标记头衔作用域
+        scope:sltm_designee_title = {
+            save_scope_as = current_de_jure_scope
+        }
+
+        # 处理目标头衔首都
+        if = {
+            limit = { scope:target.tier = tier_county }
+            scope:target = {
+                save_scope_as = current_capital_scope
+            }
+        }
+        else = {
+            scope:target.title_capital_county = {
+                save_scope_as = current_capital_scope
+            }
+        }
+
+        # 调用原有宏执行法理首都迁移
+        sltm_set_capital_county_effect = yes
+
+        custom_tooltip = sltm_landless_title_option_flag_move_marked_capital
+    }
+    else = {
+        custom_tooltip = sltm_cmm_landless_has_designee_title_tt
+    }
+}
+            # 功能6：搬迁已标记头衔持有者的庄园到当前指定头衔首府
+            scope:sltm_landless_title_option_flag_move_marked_holder_domicile = {
+                if = {
+                    limit = {
+                        # 提交时复查标记头衔、持有人和目标；只在存在分支读取内容。
+                        exists = scope:sltm_designee_title
+                        trigger_if = {
+                            limit = { exists = scope:sltm_designee_title }
+                            scope:sltm_designee_title = {
+                                exists = holder
+                                exists = title_domicile
+                            }
+                        }
+                        exists = scope:sltm_target_relocation_province
+                    }
+
+                    scope:sltm_target_relocation_province = {
+                        save_scope_as = relocation_destination
+                    }
+
+                    scope:sltm_designee_title.title_domicile = { move_domicile = scope:relocation_destination }
+
+                    custom_tooltip = sltm_landless_title_option_flag_move_marked_holder_domicile
+                }
+                else = {
+                    custom_tooltip = sltm_move_domicile_invalid_tt
+                }
+            }
+
+            # 功能7：调整当前选择头衔的法理归属到已标记头衔下
+            scope:sltm_landless_title_option_flag_transfer_title_de_jure = {
+                if = {
+                    limit = {
+                        scope:actor = {
+                            exists = var:sltm_designee_title
+                        }
+
+                        exists = scope:target
+
+                        scope:target = {
+                            exists = holder
+                            holder = scope:recipient
+                            NOT = {
+                                this = scope:actor.var:sltm_designee_title
+                            }
+                            tier < scope:actor.var:sltm_designee_title.tier
+                            #is_landless_type_title = no
+                            NOT = {
+                                target_is_de_jure_liege_or_above = scope:actor.var:sltm_designee_title
+                            }
+                        }
+                    }
+
+                    scope:target = {
+                        set_de_jure_liege_title = scope:actor.var:sltm_designee_title
+                    }
+
+                    custom_tooltip = sltm_landless_title_option_flag_transfer_title_de_jure
+                }
+                else = {
+                    custom_tooltip = sltm_transfer_title_de_jure_invalid_tt
+                }
+            }
+
+            # 功能8：销毁当前选择头衔
+            scope:sltm_landless_title_option_flag_destroy_selected_title = {
+                if = {
+                    limit = {
+                        exists = scope:target
+                        scope:target = {
+                            exists = holder
+                            holder = scope:recipient
+                        }
+                    }
+
+                    # 作者设计：此手动销毁分支有意不排除主头衔；默认关闭由选项配置控制。
+                    scope:actor = { sltm_guarded_destroy_effect = yes }
+
+                    custom_tooltip = sltm_landless_title_option_flag_destroy_selected_title
+                }
+            }
+        }
+    }
+
+    auto_accept = yes
+
+    ai_will_do = {
+        base = 0
+    }
+}

@@ -1,0 +1,16 @@
+﻿# Standalone extraction: selected dependency definitions only.
+sltm_cmm_compat_mytm_value_create_title_cost_prestige_tier_duchy = 300
+
+sltm_cmm_compat_mytm_value_create_title_cost_prestige_tier_kingdom = 400
+
+sltm_cmm_compat_mytm_value_create_title_cost_prestige_tier_empire = 500
+
+sltm_cmm_compat_mytm_value_create_title_cost_prestige_tier_hegemony = 600
+
+sltm_cmm_compat_mytm_value_create_title_cost_gold_tier_duchy = { value = create_duchy_title_value }
+
+sltm_cmm_compat_mytm_value_create_title_cost_gold_tier_kingdom = { value = create_kingdom_title_value }
+
+sltm_cmm_compat_mytm_value_create_title_cost_gold_tier_empire = { value = create_empire_title_value }
+
+sltm_cmm_compat_mytm_value_create_title_cost_gold_tier_hegemony = { value = create_hegemony_title_value }

@@ -1,0 +1,11 @@
+window = {
+    name = "apo_title_page_landless"
+    layer = middle
+    size = { 0 0 }
+    alwaystransparent = yes
+    state = {
+        name = register_title_page_component
+        trigger_when = "[Not( GetVariableSystem.Exists( 'apo_title_page_landless' ) )]"
+        on_start = "[GetVariableSystem.Set( 'apo_title_page_landless', 'yes' )]"
+    }
+}

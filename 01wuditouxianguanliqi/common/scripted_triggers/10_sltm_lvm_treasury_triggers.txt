@@ -1,0 +1,67 @@
+﻿# R10-35A Fix1 — 国库管理全封臣筛选触发器
+# 候选 scope = character；筛选状态读取 scope:sltm_lvm_treasury_filter_player。
+
+sltm_lvm_treasury_is_junfu_character_trigger = {
+    vassal_contract_has_flag = celestial_province_special_military
+}
+
+sltm_lvm_treasury_is_military_character_trigger = {
+    vassal_contract_has_flag = celestial_province_military
+    NOT = { vassal_contract_has_flag = celestial_province_special_military }
+}
+
+sltm_lvm_treasury_matches_filters_trigger = {
+    # 层级：全部 / 直属 / 下级。
+    OR = {
+        scope:sltm_lvm_treasury_filter_player.var:sltm_lvm_treasury_filter_scope = flag:all
+        AND = {
+            scope:sltm_lvm_treasury_filter_player.var:sltm_lvm_treasury_filter_scope = flag:direct
+            liege = scope:sltm_lvm_treasury_filter_player
+        }
+        AND = {
+            scope:sltm_lvm_treasury_filter_player.var:sltm_lvm_treasury_filter_scope = flag:indirect
+            NOT = { liege = scope:sltm_lvm_treasury_filter_player }
+        }
+    }
+
+    # 类型：全部 / 行营 / 其他军事封臣 / 其他封臣。
+    OR = {
+        scope:sltm_lvm_treasury_filter_player.var:sltm_lvm_treasury_filter_type = flag:all
+        AND = {
+            scope:sltm_lvm_treasury_filter_player.var:sltm_lvm_treasury_filter_type = flag:junfu
+            sltm_lvm_treasury_is_junfu_character_trigger = yes
+        }
+        AND = {
+            scope:sltm_lvm_treasury_filter_player.var:sltm_lvm_treasury_filter_type = flag:military
+            sltm_lvm_treasury_is_military_character_trigger = yes
+        }
+        AND = {
+            scope:sltm_lvm_treasury_filter_player.var:sltm_lvm_treasury_filter_type = flag:other
+            NOT = { sltm_lvm_treasury_is_junfu_character_trigger = yes }
+            NOT = { sltm_lvm_treasury_is_military_character_trigger = yes }
+        }
+    }
+
+    # 财政：全部 / 有国库 / 国库负债 / 月度赤字 / 无独立国库。
+    OR = {
+        scope:sltm_lvm_treasury_filter_player.var:sltm_lvm_treasury_filter_finance = flag:all
+        AND = {
+            scope:sltm_lvm_treasury_filter_player.var:sltm_lvm_treasury_filter_finance = flag:has_treasury
+            has_treasury = yes
+        }
+        AND = {
+            scope:sltm_lvm_treasury_filter_player.var:sltm_lvm_treasury_filter_finance = flag:debt
+            has_treasury = yes
+            treasury < 0
+        }
+        AND = {
+            scope:sltm_lvm_treasury_filter_player.var:sltm_lvm_treasury_filter_finance = flag:deficit
+            has_treasury = yes
+            monthly_character_treasury_income < 0
+        }
+        AND = {
+            scope:sltm_lvm_treasury_filter_player.var:sltm_lvm_treasury_filter_finance = flag:no_treasury
+            NOT = { has_treasury = yes }
+        }
+    }
+}

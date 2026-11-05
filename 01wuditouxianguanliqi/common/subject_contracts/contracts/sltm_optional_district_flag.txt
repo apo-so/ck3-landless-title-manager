@@ -1,0 +1,6 @@
+﻿sltm_optional_district_flag = {
+    is_shown = { always = no }
+    obligation_levels = {
+        default = { flag = celestial_province_special_military }
+    }
+}

@@ -1,0 +1,56 @@
+﻿# Standalone extraction: selected dependency definitions only.
+sltm_cmm_compat_rit_rules_valid_recipient_realm_interactions_trigger = {
+    switch = {
+        trigger = has_game_rule
+        sltm_cmm_compat_rit_rules_valid_recipient_realm_only_debug = {
+            debug_only = yes
+            scope:recipient = {
+                OR = {
+                    this = scope:actor
+                    is_ai = yes
+                }
+            }
+        }
+        sltm_cmm_compat_rit_rules_valid_recipient_realm_all = {
+            scope:recipient = {
+                OR = {
+                    this = scope:actor
+                    is_ai = yes
+                }
+            }
+        }
+        sltm_cmm_compat_rit_rules_valid_recipient_realm_only_realm = {
+            scope:recipient = {
+                OR = {
+                    this = scope:actor
+                    AND = {
+                        is_ai = yes
+                        target_is_liege_or_above = scope:actor
+                    }
+                }
+            }
+        }
+        sltm_cmm_compat_rit_rules_valid_recipient_realm_only_family = {
+            scope:recipient = {
+                OR = {
+                    this = scope:actor
+                    AND = {
+                        is_ai = yes
+                        is_close_or_extended_family_of = scope:actor
+                    }
+                }
+            }
+        }
+        sltm_cmm_compat_rit_rules_valid_recipient_realm_only_self = {
+            scope:recipient = scope:actor
+        }
+    }
+}
+
+sltm_cmm_compat_mytm_has_designee_title_trigger = {
+    custom_tooltip = {
+        text = sltm_cmm_compat_has_designee_title_tt
+        exists = var:sltm_designee_title
+        var:sltm_designee_title = { exists = this }
+    }
+}

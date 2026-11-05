@@ -1,0 +1,237 @@
+﻿sltm_ui_window_live = {
+ scope = character
+ is_shown = { sltm_ui_live_trigger = yes }
+}
+
+sltm_ui_has_mark = {
+ scope = character
+ is_shown = { sltm_ui_live_trigger = yes exists = var:sltm_designee_title }
+}
+
+sltm_ui_has_no_mark = {
+ scope = character
+ is_shown = { sltm_ui_live_trigger = yes NOT = { exists = var:sltm_designee_title } }
+}
+
+sltm_ui_has_changes = {
+ scope = character
+ is_shown = { sltm_ui_live_trigger = yes sltm_edit_has_changes_trigger = yes }
+}
+
+sltm_ui_has_no_changes = {
+ scope = character
+ is_shown = { sltm_ui_live_trigger = yes NOT = { sltm_edit_has_changes_trigger = yes } }
+}
+
+sltm_ui_close_gui = {
+ scope = character
+ is_shown = { sltm_ui_live_trigger = yes }
+ is_valid = { sltm_ui_live_trigger = yes }
+ effect = { sltm_ui_close_effect = yes }
+}
+
+sltm_ui_restore_gui = {
+ scope = character
+ is_shown = { sltm_ui_live_trigger = yes sltm_edit_has_changes_trigger = yes }
+ is_valid = { sltm_ui_live_trigger = yes sltm_edit_has_changes_trigger = yes }
+ effect = { sltm_ui_restore_effect = yes }
+}
+
+sltm_ui_clear_mark_gui = {
+ scope = character
+ is_shown = { sltm_ui_live_trigger = yes exists = var:sltm_designee_title }
+ is_valid = { sltm_ui_live_trigger = yes exists = var:sltm_designee_title }
+ effect = { remove_variable = sltm_designee_title sltm_ui_sync_effect = yes }
+}
+
+sltm_ui_review_gui = {
+ scope = character
+ is_shown = { sltm_ui_live_trigger = yes sltm_edit_has_changes_trigger = yes }
+ is_valid = { sltm_ui_live_trigger = yes sltm_edit_has_changes_trigger = yes }
+ effect = { sltm_ui_prepare_event_effect = yes sltm_edit_review_effect = yes }
+}
+
+sltm_ui_name_gui = {
+ scope = character
+ is_shown = { sltm_ui_live_trigger = yes }
+ is_valid = { sltm_ui_live_trigger = yes }
+ effect = { sltm_ui_prepare_event_effect = yes sltm_ui_prepare_name_effect = yes trigger_event = sltm_property.0100 }
+}
+
+sltm_ui_prefix_gui = {
+ scope = character
+ is_shown = { sltm_ui_live_trigger = yes }
+ is_valid = { sltm_ui_live_trigger = yes }
+ effect = { sltm_ui_prepare_event_effect = yes trigger_event = sltm_property.0101 }
+}
+
+sltm_ui_name_reset_gui = {
+ scope = character
+ is_shown = { sltm_ui_live_trigger = yes }
+ is_valid = { sltm_ui_live_trigger = yes }
+ effect = { set_variable = { name = sltm_edit_name value = 2 } remove_variable = sltm_edit_review_ready sltm_ui_sync_effect = yes }
+}
+
+sltm_ui_prefix_reset_gui = {
+ scope = character
+ is_shown = { sltm_ui_live_trigger = yes }
+ is_valid = { sltm_ui_live_trigger = yes }
+ effect = { set_variable = { name = sltm_edit_prefix value = 1 } remove_variable = sltm_edit_review_ready sltm_ui_sync_effect = yes }
+}
+
+sltm_ui_definitive_keep_gui = {
+ scope = character
+ is_shown = { sltm_ui_live_trigger = yes }
+ is_valid = { sltm_ui_live_trigger = yes }
+ effect = { remove_variable = sltm_edit_definitive remove_variable = sltm_edit_review_ready sltm_ui_sync_effect = yes }
+}
+
+sltm_ui_definitive_keep_state = {
+ scope = character
+ is_shown = { sltm_ui_live_trigger = yes NOT = { has_variable = sltm_edit_definitive } }
+}
+
+sltm_ui_definitive_true_gui = {
+ scope = character
+ is_shown = { sltm_ui_live_trigger = yes }
+ is_valid = { sltm_ui_live_trigger = yes }
+ effect = { set_variable = { name = sltm_edit_definitive value = 1 } remove_variable = sltm_edit_review_ready sltm_ui_sync_effect = yes }
+}
+
+sltm_ui_definitive_true_state = {
+ scope = character
+ is_shown = { sltm_ui_live_trigger = yes var:sltm_edit_definitive = 1 }
+}
+
+sltm_ui_definitive_false_gui = {
+ scope = character
+ is_shown = { sltm_ui_live_trigger = yes }
+ is_valid = { sltm_ui_live_trigger = yes }
+ effect = { set_variable = { name = sltm_edit_definitive value = 2 } remove_variable = sltm_edit_review_ready sltm_ui_sync_effect = yes }
+}
+
+sltm_ui_definitive_false_state = {
+ scope = character
+ is_shown = { sltm_ui_live_trigger = yes var:sltm_edit_definitive = 2 }
+}
+
+sltm_ui_dynasty_keep_gui = {
+ scope = character
+ is_shown = { sltm_ui_live_trigger = yes }
+ is_valid = { sltm_ui_live_trigger = yes }
+ effect = { remove_variable = sltm_edit_dynasty remove_variable = sltm_edit_review_ready sltm_ui_sync_effect = yes }
+}
+
+sltm_ui_dynasty_keep_state = {
+ scope = character
+ is_shown = { sltm_ui_live_trigger = yes NOT = { has_variable = sltm_edit_dynasty } }
+}
+
+sltm_ui_dynasty_true_gui = {
+ scope = character
+ is_shown = { sltm_ui_live_trigger = yes }
+ is_valid = { sltm_ui_live_trigger = yes }
+ effect = { set_variable = { name = sltm_edit_dynasty value = 1 } remove_variable = sltm_edit_review_ready sltm_ui_sync_effect = yes }
+}
+
+sltm_ui_dynasty_true_state = {
+ scope = character
+ is_shown = { sltm_ui_live_trigger = yes var:sltm_edit_dynasty = 1 }
+}
+
+sltm_ui_dynasty_false_gui = {
+ scope = character
+ is_shown = { sltm_ui_live_trigger = yes }
+ is_valid = { sltm_ui_live_trigger = yes }
+ effect = { set_variable = { name = sltm_edit_dynasty value = 2 } remove_variable = sltm_edit_review_ready sltm_ui_sync_effect = yes }
+}
+
+sltm_ui_dynasty_false_state = {
+ scope = character
+ is_shown = { sltm_ui_live_trigger = yes var:sltm_edit_dynasty = 2 }
+}
+
+sltm_ui_nomadic_keep_gui = {
+ scope = character
+ is_shown = { sltm_ui_live_trigger = yes }
+ is_valid = { sltm_ui_live_trigger = yes }
+ effect = { remove_variable = sltm_edit_nomadic remove_variable = sltm_edit_review_ready sltm_ui_sync_effect = yes }
+}
+
+sltm_ui_nomadic_keep_state = {
+ scope = character
+ is_shown = { sltm_ui_live_trigger = yes NOT = { has_variable = sltm_edit_nomadic } }
+}
+
+sltm_ui_nomadic_true_gui = {
+ scope = character
+ is_shown = { sltm_ui_live_trigger = yes }
+ is_valid = { sltm_ui_live_trigger = yes }
+ effect = { set_variable = { name = sltm_edit_nomadic value = 1 } remove_variable = sltm_edit_review_ready sltm_ui_sync_effect = yes }
+}
+
+sltm_ui_nomadic_true_state = {
+ scope = character
+ is_shown = { sltm_ui_live_trigger = yes var:sltm_edit_nomadic = 1 }
+}
+
+sltm_ui_nomadic_false_gui = {
+ scope = character
+ is_shown = { sltm_ui_live_trigger = yes }
+ is_valid = { sltm_ui_live_trigger = yes }
+ effect = { set_variable = { name = sltm_edit_nomadic value = 2 } remove_variable = sltm_edit_review_ready sltm_ui_sync_effect = yes }
+}
+
+sltm_ui_nomadic_false_state = {
+ scope = character
+ is_shown = { sltm_ui_live_trigger = yes var:sltm_edit_nomadic = 2 }
+}
+
+sltm_ui_appearance_gui = {
+ scope = character
+ is_shown = { sltm_ui_live_trigger = yes }
+ is_valid = { sltm_ui_live_trigger = yes }
+ effect = { sltm_select_editor_tab_effect = { TAB = 2 } }
+}
+
+sltm_ui_geo_gui = {
+ scope = character
+ is_shown = { sltm_ui_live_trigger = yes }
+ is_valid = { sltm_ui_live_trigger = yes }
+ effect = { sltm_select_editor_tab_effect = { TAB = 3 } }
+}
+
+sltm_ui_life_gui = {
+ scope = character
+ is_shown = { sltm_ui_live_trigger = yes }
+ is_valid = { sltm_ui_live_trigger = yes }
+ effect = { sltm_select_editor_tab_effect = { TAB = 5 } }
+}
+
+sltm_ui_dom_gui = {
+ scope = character
+ is_shown = { sltm_ui_live_trigger = yes }
+ is_valid = { sltm_ui_live_trigger = yes }
+ effect = { sltm_select_editor_tab_effect = { TAB = 6 } }
+}
+
+sltm_ui_succ_gui = {
+ scope = character
+ is_shown = { sltm_ui_live_trigger = yes }
+ is_valid = { sltm_ui_live_trigger = yes }
+ effect = { sltm_select_editor_tab_effect = { TAB = 4 } }
+}
+
+sltm_ui_transfer_gui = {
+ scope = character
+ is_shown = { sltm_ui_live_trigger = yes }
+ is_valid = { sltm_ui_live_trigger = yes }
+ effect = { sltm_select_editor_tab_effect = { TAB = 7 } }
+}
+
+sltm_ui_detail_gui = {
+ scope = character
+ is_shown = { sltm_ui_live_trigger = yes }
+ is_valid = { sltm_ui_live_trigger = yes }
+ effect = { sltm_ui_prepare_event_effect = yes trigger_event = sltm_property.0102 }
+}

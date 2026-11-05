@@ -1,0 +1,8 @@
+﻿# Standalone extraction: selected dependency definitions only.
+sltm_cmm34_junfu_stipend_10_probe_modifier = {
+	monthly_treasury_from_liege_add = 10
+}
+
+sltm_cmm34_junfu_stipend_20_probe_modifier = {
+	monthly_treasury_from_liege_add = 20
+}

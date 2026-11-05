@@ -1,0 +1,128 @@
+﻿# 无地头衔管理器：核心 scripted GUI（打开/关闭/刷新/选择/只读检查）。
+# 头衔/封臣筛选单选、重置、预设、撤销、活动计数已拆分到：
+#   zz_mytm_lvm_title_filter_guis.txt
+#   zz_mytm_lvm_holder_filter_guis.txt
+#   zz_mytm_lvm_sort_guis.txt
+
+sltm_lvm_refresh_gui = {
+    scope = character
+
+    is_shown = {
+        is_ai = no
+    }
+
+    effect = {
+        sltm_lvm_refresh_manager_effect = yes
+    }
+}
+
+# 2026-07-18（V3.3-C）清除“已标记头衔”（互动“标记头衔”设置的 sltm_designee_title）。
+sltm_lvm_clear_designee_title_gui = {
+    scope = character
+    is_shown = {
+        exists = var:sltm_designee_title
+    }
+    effect = {
+        remove_variable = sltm_designee_title
+    }
+}
+
+sltm_lvm_close_gui = {
+    scope = character
+
+    effect = {
+        # 批次 2/9：关闭仅隐藏窗口，保留全部筛选/排序/预设/token/选中条件与缓存。
+        remove_variable = sltm_lvm_open
+    }
+}
+
+# 只读检查器：让 GUI 在纯 Title 上显示与过滤器完全相同的分类名称。
+sltm_lvm_title_is_junfu_gui = {
+    scope = landed_title
+    is_shown = { sltm_lvm_is_junfu_title_trigger = yes }
+}
+sltm_lvm_title_is_noble_gui = {
+    scope = landed_title
+    is_shown = { sltm_lvm_is_noble_family_title_trigger = yes }
+}
+sltm_lvm_title_is_holy_order_gui = {
+    scope = landed_title
+    is_shown = { sltm_lvm_is_holy_order_title_trigger = yes }
+}
+sltm_lvm_title_is_mercenary_gui = {
+    scope = landed_title
+    is_shown = { sltm_lvm_is_mercenary_title_trigger = yes }
+}
+sltm_lvm_title_is_religious_head_gui = {
+    scope = landed_title
+    is_shown = { sltm_lvm_is_religious_head_title_trigger = yes }
+}
+sltm_lvm_title_is_other_gui = {
+    scope = landed_title
+    is_shown = { sltm_lvm_is_other_title_trigger = yes }
+}
+
+sltm_lvm_select_title_gui = {
+    scope = landed_title
+    saved_scopes = {
+        player
+    }
+
+    effect = {
+        save_scope_as = sltm_lvm_clicked_title
+        scope:player = {
+            set_variable = {
+                name = sltm_lvm_selected_title
+                value = scope:sltm_lvm_clicked_title
+            }
+            # 2026-07-18（V3.3-D）切换选中头衔即解除剥夺/销毁的“确认”待触发状态
+            remove_variable = sltm_lvm_arm_revoke
+            remove_variable = sltm_lvm_arm_destroy
+            remove_variable = sltm_lvm_selected_character
+            clear_variable_list = sltm_lvm_selected_holder_titles
+            set_variable = { name = sltm_lvm_selected_holder_title_count value = 0 }
+            # 2026-07-18（V3.3-F）重建选中头衔持有者的“全部头衔”列表
+            sltm_lvm_rebuild_selected_title_holder_all_titles_effect = yes
+        }
+    }
+}
+
+# Probe 状态只读检查。GUI 不直接假定 Character.HasModifier 数据绑定存在，
+# 统一通过 scripted GUI -> script trigger 读取已验证的 has_character_modifier。
+sltm_lvm_treasury_probe_10_gui = {
+    scope = character
+    is_shown = { has_character_modifier = sltm_cmm34_junfu_stipend_10_probe_modifier }
+}
+
+sltm_lvm_treasury_probe_20_gui = {
+    scope = character
+    is_shown = { has_character_modifier = sltm_cmm34_junfu_stipend_20_probe_modifier }
+}
+
+sltm_lvm_select_character_gui = {
+    scope = character
+    saved_scopes = {
+        player
+    }
+
+    effect = {
+        save_scope_as = sltm_lvm_clicked_character
+        scope:player = {
+            set_variable = {
+                name = sltm_lvm_selected_character
+                value = scope:sltm_lvm_clicked_character
+            }
+            remove_variable = sltm_lvm_selected_title
+            sltm_lvm_rebuild_selected_holder_titles_effect = yes
+        }
+    }
+}
+
+# 兼容旧名：全部重置（新工具栏改用按页重置 gui）。
+sltm_lvm_reset_filters_gui = {
+    scope = character
+    effect = {
+        sltm_lvm_reset_title_multiselect_filters_effect = yes
+        sltm_lvm_reset_holder_filters_effect = yes
+    }
+}

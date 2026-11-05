@@ -1,0 +1,277 @@
+﻿# 无地封臣（人物）筛选触发器：P0 + P1 单字段触发器 + 总 AND 触发器。
+# 约定：遍历 sltm_lvm_all_holders 时，候选人物为 this；筛选变量读 scope:sltm_lvm_filter_player。
+# 每个单字段触发器默认 flag:all 时恒为真；任一非默认条件不满足即排除该候选人。
+# 带“需实跑核对”的写法使用最可能的原版 trigger/scope 名称，待游戏内复核参数方向。
+
+# ===================== P0 单字段触发器 =====================
+
+sltm_lvm_holder_matches_gender_filter_trigger = {
+    OR = {
+        scope:sltm_lvm_filter_player.var:sltm_lvm_hf_gender = flag:all
+        AND = { scope:sltm_lvm_filter_player.var:sltm_lvm_hf_gender = flag:female is_female = yes }
+        AND = { scope:sltm_lvm_filter_player.var:sltm_lvm_hf_gender = flag:male is_female = no }
+    }
+}
+
+sltm_lvm_holder_matches_adult_filter_trigger = {
+    OR = {
+        scope:sltm_lvm_filter_player.var:sltm_lvm_hf_adult = flag:all
+        AND = { scope:sltm_lvm_filter_player.var:sltm_lvm_hf_adult = flag:adult is_adult = yes }
+        AND = { scope:sltm_lvm_filter_player.var:sltm_lvm_hf_adult = flag:child NOT = { is_adult = yes } }
+    }
+}
+
+sltm_lvm_holder_matches_age_filter_trigger = {
+    OR = {
+        scope:sltm_lvm_filter_player.var:sltm_lvm_hf_age_band = flag:all
+        AND = { scope:sltm_lvm_filter_player.var:sltm_lvm_hf_age_band = flag:age_0_15 age < 16 }
+        AND = { scope:sltm_lvm_filter_player.var:sltm_lvm_hf_age_band = flag:age_16_29 age >= 16 age < 30 }
+        AND = { scope:sltm_lvm_filter_player.var:sltm_lvm_hf_age_band = flag:age_30_49 age >= 30 age < 50 }
+        AND = { scope:sltm_lvm_filter_player.var:sltm_lvm_hf_age_band = flag:age_50_64 age >= 50 age < 65 }
+        AND = { scope:sltm_lvm_filter_player.var:sltm_lvm_hf_age_band = flag:age_65_plus age >= 65 }
+    }
+}
+
+sltm_lvm_holder_matches_imprisoned_filter_trigger = {
+    OR = {
+        scope:sltm_lvm_filter_player.var:sltm_lvm_hf_imprisoned = flag:all
+        AND = { scope:sltm_lvm_filter_player.var:sltm_lvm_hf_imprisoned = flag:free NOT = { is_imprisoned = yes } }
+        AND = { scope:sltm_lvm_filter_player.var:sltm_lvm_hf_imprisoned = flag:imprisoned is_imprisoned = yes }
+    }
+}
+
+sltm_lvm_holder_matches_government_filter_trigger = {
+    # V3.6 当前筛选链未调用；保留兼容名并禁用旧版未验证语法。
+    always = yes
+}
+
+# 管理数量：只读人物缓存变量（rebuild_cache 已按人物初始化为 0）。
+sltm_lvm_holder_matches_managed_count_filter_trigger = {
+    OR = {
+        scope:sltm_lvm_filter_player.var:sltm_lvm_hf_managed_count = flag:all
+        AND = { scope:sltm_lvm_filter_player.var:sltm_lvm_hf_managed_count = flag:one var:sltm_lvm_total_managed_title_count = 1 }
+        AND = { scope:sltm_lvm_filter_player.var:sltm_lvm_hf_managed_count = flag:two_three var:sltm_lvm_total_managed_title_count >= 2 var:sltm_lvm_total_managed_title_count <= 3 }
+        AND = { scope:sltm_lvm_filter_player.var:sltm_lvm_hf_managed_count = flag:four_plus var:sltm_lvm_total_managed_title_count >= 4 }
+    }
+}
+
+sltm_lvm_holder_matches_pending_count_filter_trigger = {
+    OR = {
+        scope:sltm_lvm_filter_player.var:sltm_lvm_hf_pending_count = flag:all
+        AND = { scope:sltm_lvm_filter_player.var:sltm_lvm_hf_pending_count = flag:zero var:sltm_lvm_pending_title_count = 0 }
+        AND = { scope:sltm_lvm_filter_player.var:sltm_lvm_hf_pending_count = flag:one_plus var:sltm_lvm_pending_title_count >= 1 }
+        AND = { scope:sltm_lvm_filter_player.var:sltm_lvm_hf_pending_count = flag:two_plus var:sltm_lvm_pending_title_count >= 2 }
+    }
+}
+
+sltm_lvm_holder_matches_blocked_count_filter_trigger = {
+    OR = {
+        scope:sltm_lvm_filter_player.var:sltm_lvm_hf_blocked_count = flag:all
+        AND = { scope:sltm_lvm_filter_player.var:sltm_lvm_hf_blocked_count = flag:zero var:sltm_lvm_blocked_title_count = 0 }
+        AND = { scope:sltm_lvm_filter_player.var:sltm_lvm_hf_blocked_count = flag:one_plus var:sltm_lvm_blocked_title_count >= 1 }
+        AND = { scope:sltm_lvm_filter_player.var:sltm_lvm_hf_blocked_count = flag:two_plus var:sltm_lvm_blocked_title_count >= 2 }
+    }
+}
+
+sltm_lvm_holder_matches_junfu_count_filter_trigger = {
+    OR = {
+        scope:sltm_lvm_filter_player.var:sltm_lvm_hf_junfu_count = flag:all
+        AND = { scope:sltm_lvm_filter_player.var:sltm_lvm_hf_junfu_count = flag:zero var:sltm_lvm_junfu_title_count = 0 }
+        AND = { scope:sltm_lvm_filter_player.var:sltm_lvm_hf_junfu_count = flag:one var:sltm_lvm_junfu_title_count = 1 }
+        AND = { scope:sltm_lvm_filter_player.var:sltm_lvm_hf_junfu_count = flag:two_plus var:sltm_lvm_junfu_title_count >= 2 }
+    }
+}
+
+sltm_lvm_holder_matches_noble_count_filter_trigger = {
+    OR = {
+        scope:sltm_lvm_filter_player.var:sltm_lvm_hf_noble_count = flag:all
+        AND = { scope:sltm_lvm_filter_player.var:sltm_lvm_hf_noble_count = flag:zero var:sltm_lvm_noble_title_count = 0 }
+        AND = { scope:sltm_lvm_filter_player.var:sltm_lvm_hf_noble_count = flag:one var:sltm_lvm_noble_title_count = 1 }
+        AND = { scope:sltm_lvm_filter_player.var:sltm_lvm_hf_noble_count = flag:two_plus var:sltm_lvm_noble_title_count >= 2 }
+    }
+}
+
+sltm_lvm_holder_matches_holy_order_count_filter_trigger = {
+    OR = {
+        scope:sltm_lvm_filter_player.var:sltm_lvm_hf_holy_order_count = flag:all
+        AND = { scope:sltm_lvm_filter_player.var:sltm_lvm_hf_holy_order_count = flag:zero var:sltm_lvm_holy_order_title_count = 0 }
+        AND = { scope:sltm_lvm_filter_player.var:sltm_lvm_hf_holy_order_count = flag:one var:sltm_lvm_holy_order_title_count = 1 }
+        AND = { scope:sltm_lvm_filter_player.var:sltm_lvm_hf_holy_order_count = flag:two_plus var:sltm_lvm_holy_order_title_count >= 2 }
+    }
+}
+
+sltm_lvm_holder_matches_mercenary_count_filter_trigger = {
+    OR = {
+        scope:sltm_lvm_filter_player.var:sltm_lvm_hf_mercenary_count = flag:all
+        AND = { scope:sltm_lvm_filter_player.var:sltm_lvm_hf_mercenary_count = flag:zero var:sltm_lvm_mercenary_title_count = 0 }
+        AND = { scope:sltm_lvm_filter_player.var:sltm_lvm_hf_mercenary_count = flag:one var:sltm_lvm_mercenary_title_count = 1 }
+        AND = { scope:sltm_lvm_filter_player.var:sltm_lvm_hf_mercenary_count = flag:two_plus var:sltm_lvm_mercenary_title_count >= 2 }
+    }
+}
+
+sltm_lvm_holder_matches_other_count_filter_trigger = {
+    OR = {
+        scope:sltm_lvm_filter_player.var:sltm_lvm_hf_other_count = flag:all
+        AND = { scope:sltm_lvm_filter_player.var:sltm_lvm_hf_other_count = flag:zero var:sltm_lvm_other_managed_title_count = 0 }
+        AND = { scope:sltm_lvm_filter_player.var:sltm_lvm_hf_other_count = flag:one var:sltm_lvm_other_managed_title_count = 1 }
+        AND = { scope:sltm_lvm_filter_player.var:sltm_lvm_hf_other_count = flag:two_plus var:sltm_lvm_other_managed_title_count >= 2 }
+    }
+}
+
+# ===================== P1 单字段触发器 =====================
+
+# 能力门槛：全部 / ≥8 / ≥12 / ≥16 / ≥20
+sltm_lvm_holder_matches_diplomacy_band_filter_trigger = {
+    OR = {
+        scope:sltm_lvm_filter_player.var:sltm_lvm_hf_diplomacy_band = flag:all
+        AND = { scope:sltm_lvm_filter_player.var:sltm_lvm_hf_diplomacy_band = flag:8 diplomacy >= 8 }
+        AND = { scope:sltm_lvm_filter_player.var:sltm_lvm_hf_diplomacy_band = flag:12 diplomacy >= 12 }
+        AND = { scope:sltm_lvm_filter_player.var:sltm_lvm_hf_diplomacy_band = flag:16 diplomacy >= 16 }
+        AND = { scope:sltm_lvm_filter_player.var:sltm_lvm_hf_diplomacy_band = flag:20 diplomacy >= 20 }
+    }
+}
+
+sltm_lvm_holder_matches_martial_band_filter_trigger = {
+    OR = {
+        scope:sltm_lvm_filter_player.var:sltm_lvm_hf_martial_band = flag:all
+        AND = { scope:sltm_lvm_filter_player.var:sltm_lvm_hf_martial_band = flag:8 martial >= 8 }
+        AND = { scope:sltm_lvm_filter_player.var:sltm_lvm_hf_martial_band = flag:12 martial >= 12 }
+        AND = { scope:sltm_lvm_filter_player.var:sltm_lvm_hf_martial_band = flag:16 martial >= 16 }
+        AND = { scope:sltm_lvm_filter_player.var:sltm_lvm_hf_martial_band = flag:20 martial >= 20 }
+    }
+}
+
+sltm_lvm_holder_matches_stewardship_band_filter_trigger = {
+    OR = {
+        scope:sltm_lvm_filter_player.var:sltm_lvm_hf_stewardship_band = flag:all
+        AND = { scope:sltm_lvm_filter_player.var:sltm_lvm_hf_stewardship_band = flag:8 stewardship >= 8 }
+        AND = { scope:sltm_lvm_filter_player.var:sltm_lvm_hf_stewardship_band = flag:12 stewardship >= 12 }
+        AND = { scope:sltm_lvm_filter_player.var:sltm_lvm_hf_stewardship_band = flag:16 stewardship >= 16 }
+        AND = { scope:sltm_lvm_filter_player.var:sltm_lvm_hf_stewardship_band = flag:20 stewardship >= 20 }
+    }
+}
+
+sltm_lvm_holder_matches_intrigue_band_filter_trigger = {
+    OR = {
+        scope:sltm_lvm_filter_player.var:sltm_lvm_hf_intrigue_band = flag:all
+        AND = { scope:sltm_lvm_filter_player.var:sltm_lvm_hf_intrigue_band = flag:8 intrigue >= 8 }
+        AND = { scope:sltm_lvm_filter_player.var:sltm_lvm_hf_intrigue_band = flag:12 intrigue >= 12 }
+        AND = { scope:sltm_lvm_filter_player.var:sltm_lvm_hf_intrigue_band = flag:16 intrigue >= 16 }
+        AND = { scope:sltm_lvm_filter_player.var:sltm_lvm_hf_intrigue_band = flag:20 intrigue >= 20 }
+    }
+}
+
+sltm_lvm_holder_matches_learning_band_filter_trigger = {
+    OR = {
+        scope:sltm_lvm_filter_player.var:sltm_lvm_hf_learning_band = flag:all
+        AND = { scope:sltm_lvm_filter_player.var:sltm_lvm_hf_learning_band = flag:8 learning >= 8 }
+        AND = { scope:sltm_lvm_filter_player.var:sltm_lvm_hf_learning_band = flag:12 learning >= 12 }
+        AND = { scope:sltm_lvm_filter_player.var:sltm_lvm_hf_learning_band = flag:16 learning >= 16 }
+        AND = { scope:sltm_lvm_filter_player.var:sltm_lvm_hf_learning_band = flag:20 learning >= 20 }
+    }
+}
+
+sltm_lvm_holder_matches_prowess_band_filter_trigger = {
+    OR = {
+        scope:sltm_lvm_filter_player.var:sltm_lvm_hf_prowess_band = flag:all
+        AND = { scope:sltm_lvm_filter_player.var:sltm_lvm_hf_prowess_band = flag:8 prowess >= 8 }
+        AND = { scope:sltm_lvm_filter_player.var:sltm_lvm_hf_prowess_band = flag:12 prowess >= 12 }
+        AND = { scope:sltm_lvm_filter_player.var:sltm_lvm_hf_prowess_band = flag:16 prowess >= 16 }
+        AND = { scope:sltm_lvm_filter_player.var:sltm_lvm_hf_prowess_band = flag:20 prowess >= 20 }
+    }
+}
+
+sltm_lvm_holder_matches_ruler_filter_trigger = {
+    OR = {
+        scope:sltm_lvm_filter_player.var:sltm_lvm_hf_ruler = flag:all
+        AND = { scope:sltm_lvm_filter_player.var:sltm_lvm_hf_ruler = flag:ruler is_ruler = yes }
+        AND = { scope:sltm_lvm_filter_player.var:sltm_lvm_hf_ruler = flag:non_ruler is_ruler = no }
+        AND = { scope:sltm_lvm_filter_player.var:sltm_lvm_hf_ruler = flag:landed is_landed = yes }
+        AND = { scope:sltm_lvm_filter_player.var:sltm_lvm_hf_ruler = flag:landless NOT = { is_landed = yes } }
+    }
+}
+
+sltm_lvm_holder_matches_marriage_filter_trigger = {
+    # V3.6 当前筛选链未调用；保留兼容名并禁用旧版未验证语法。
+    always = yes
+}
+
+sltm_lvm_holder_matches_sexuality_filter_trigger = {
+    # V3.6 当前筛选链未调用；保留兼容名并禁用旧版未验证语法。
+    always = yes
+}
+
+sltm_lvm_holder_matches_hook_filter_trigger = {
+    # V3.6 当前筛选链未调用；保留兼容名并禁用旧版未验证语法。
+    always = yes
+}
+
+sltm_lvm_holder_matches_faith_relation_filter_trigger = {
+    OR = {
+        scope:sltm_lvm_filter_player.var:sltm_lvm_hf_faith_relation = flag:all
+        AND = { scope:sltm_lvm_filter_player.var:sltm_lvm_hf_faith_relation = flag:same_faith faith = scope:sltm_lvm_filter_player.faith }
+        AND = { scope:sltm_lvm_filter_player.var:sltm_lvm_hf_faith_relation = flag:same_religion religion = scope:sltm_lvm_filter_player.religion }
+        # hostile_evil 需实跑核对：敌对或邪恶宗教
+        AND = { scope:sltm_lvm_filter_player.var:sltm_lvm_hf_faith_relation = flag:hostile_evil is_hostile = scope:sltm_lvm_filter_player }
+    }
+}
+
+sltm_lvm_holder_matches_culture_relation_filter_trigger = {
+    # V3.6 当前筛选链未调用；保留兼容名并禁用旧版未验证语法。
+    always = yes
+}
+
+sltm_lvm_holder_matches_dynasty_relation_filter_trigger = {
+    OR = {
+        scope:sltm_lvm_filter_player.var:sltm_lvm_hf_dynasty_relation = flag:all
+        AND = { scope:sltm_lvm_filter_player.var:sltm_lvm_hf_dynasty_relation = flag:same_house house = scope:sltm_lvm_filter_player.house }
+        AND = { scope:sltm_lvm_filter_player.var:sltm_lvm_hf_dynasty_relation = flag:same_dynasty dynasty = scope:sltm_lvm_filter_player.dynasty }
+        AND = { scope:sltm_lvm_filter_player.var:sltm_lvm_hf_dynasty_relation = flag:other_dynasty NOT = { dynasty = scope:sltm_lvm_filter_player.dynasty } }
+        AND = { scope:sltm_lvm_filter_player.var:sltm_lvm_hf_dynasty_relation = flag:lowborn is_lowborn = yes }
+    }
+}
+
+sltm_lvm_holder_matches_vassal_stance_filter_trigger = {
+    # V3.6 当前筛选链未调用；保留兼容名并禁用旧版未验证语法。
+    always = yes
+}
+
+sltm_lvm_holder_matches_inspiration_filter_trigger = {
+    # V3.6 当前筛选链未调用；保留兼容名并禁用旧版未验证语法。
+    always = yes
+}
+
+sltm_lvm_holder_matches_artifact_filter_trigger = {
+    # V3.6 当前筛选链未调用；保留兼容名并禁用旧版未验证语法。
+    always = yes
+}
+
+sltm_lvm_holder_matches_hostage_filter_trigger = {
+    # 是否人质，需实跑核对 trigger 名
+    OR = {
+        scope:sltm_lvm_filter_player.var:sltm_lvm_hf_hostage = flag:all
+        AND = { scope:sltm_lvm_filter_player.var:sltm_lvm_hf_hostage = flag:yes is_hostage = yes }
+        AND = { scope:sltm_lvm_filter_player.var:sltm_lvm_hf_hostage = flag:no NOT = { is_hostage = yes } }
+    }
+}
+
+sltm_lvm_holder_matches_pin_filter_trigger = {
+    # V3.6 当前筛选链未调用；保留兼容名并禁用旧版未验证语法。
+    always = yes
+}
+
+# ===================== 人物总 AND 触发器 =====================
+# 逐字段与；任何一个单字段不满足即排除。token 三态匹配在 04 文件定义后接入。
+sltm_lvm_holder_matches_all_filters_trigger = {
+    # V3.6 普通复选框：组内 OR，组间 AND，空组不限。
+    sltm_lvm_v36_matches_all_ordinary_filters_trigger = yes
+    # 能力值仍使用单选阈值；各能力组彼此 AND。
+    sltm_lvm_holder_matches_diplomacy_band_filter_trigger = yes
+    sltm_lvm_holder_matches_martial_band_filter_trigger = yes
+    sltm_lvm_holder_matches_stewardship_band_filter_trigger = yes
+    sltm_lvm_holder_matches_intrigue_band_filter_trigger = yes
+    sltm_lvm_holder_matches_learning_band_filter_trigger = yes
+    sltm_lvm_holder_matches_prowess_band_filter_trigger = yes
+    # 特质三态：正选组内 OR，负选排除；指挥官/生活方式/基础特质分组 AND。
+    sltm_lvm_v36_matches_all_trait_filters_trigger = yes
+}

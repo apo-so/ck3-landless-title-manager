@@ -1,0 +1,247 @@
+﻿# Public helpers run on the acting CHARACTER; target/donor variables are typed TITLE values.
+# Same province contract for creation and editing: barony itself; county capital; higher title capital county.
+sltm_pick_province_effect = {
+ remove_variable = $DEST$
+ clear_saved_scope = sltm_input_province
+ if = { limit = { exists = $SOURCE$ }
+  $SOURCE$ = {
+   if = { limit = { tier = tier_barony exists = title_province } title_province = { save_scope_as = sltm_input_province } }
+   else_if = { limit = { tier = tier_county exists = title_province } title_province = { save_scope_as = sltm_input_province } }
+   else_if = { limit = { exists = title_capital_county.title_province } title_capital_county.title_province = { save_scope_as = sltm_input_province } }
+  }
+ }
+ if = { limit = { exists = scope:sltm_input_province } set_variable = { name = $DEST$ value = scope:sltm_input_province } }
+}
+
+sltm_edit_review_effect = {
+ if = { limit = { sltm_edit_session_live_trigger = yes }
+  sltm_workflow_new_session_effect = yes
+  set_variable = { name = sltm_edit_review_ready value = 1 }
+  sltm_edit_read_current_effect = yes
+  trigger_event = sltm_workflow.0208
+ }
+}
+sltm_edit_check_conflicts_effect = {
+ set_variable = { name = sltm_edit_conflict_count value = 0 }
+ remove_variable = sltm_edit_conflict_holder
+ if = { limit = {  NOT = { sltm_edit_holder_unchanged_trigger = yes } }
+  set_variable = { name = sltm_edit_conflict_holder value = 1 }
+  change_variable = { name = sltm_edit_conflict_count add = 1 }
+ }
+ remove_variable = sltm_edit_conflict_domicile
+ if = { limit = {  NOT = { sltm_edit_domicile_unchanged_trigger = yes } }
+  set_variable = { name = sltm_edit_conflict_domicile value = 1 }
+  change_variable = { name = sltm_edit_conflict_count add = 1 }
+ }
+ remove_variable = sltm_edit_conflict_capital
+ if = { limit = { has_variable = sltm_edit_capital NOT = { sltm_edit_capital_unchanged_trigger = yes } }
+  set_variable = { name = sltm_edit_conflict_capital value = 1 }
+  change_variable = { name = sltm_edit_conflict_count add = 1 }
+ }
+ remove_variable = sltm_edit_conflict_dejure
+ if = { limit = { has_variable = sltm_edit_dejure NOT = { sltm_edit_dejure_unchanged_trigger = yes } }
+  set_variable = { name = sltm_edit_conflict_dejure value = 1 }
+  change_variable = { name = sltm_edit_conflict_count add = 1 }
+ }
+ remove_variable = sltm_edit_conflict_province
+ if = { limit = { has_variable = sltm_edit_province NOT = { sltm_edit_province_unchanged_trigger = yes } }
+  set_variable = { name = sltm_edit_conflict_province value = 1 }
+  change_variable = { name = sltm_edit_conflict_count add = 1 }
+ }
+ remove_variable = sltm_edit_conflict_building
+ if = { limit = { has_variable = sltm_edit_building NOT = { sltm_edit_building_unchanged_trigger = yes } }
+  set_variable = { name = sltm_edit_conflict_building value = 1 }
+  change_variable = { name = sltm_edit_conflict_count add = 1 }
+ }
+ remove_variable = sltm_edit_conflict_landless
+ if = { limit = { has_variable = sltm_edit_landless NOT = { sltm_edit_landless_unchanged_trigger = yes } }
+  set_variable = { name = sltm_edit_conflict_landless value = 1 }
+  change_variable = { name = sltm_edit_conflict_count add = 1 }
+ }
+ remove_variable = sltm_edit_conflict_gender
+ if = { limit = { OR = { var:sltm_edit_law_add ?= 1 var:sltm_edit_law_add ?= 2 var:sltm_edit_law_add ?= 3 var:sltm_edit_law_add ?= 4 var:sltm_edit_law_add ?= 5 var:sltm_edit_law_remove ?= 1 var:sltm_edit_law_remove ?= 2 var:sltm_edit_law_remove ?= 3 var:sltm_edit_law_remove ?= 4 var:sltm_edit_law_remove ?= 5 } NOT = { sltm_edit_gender_unchanged_trigger = yes } }
+  set_variable = { name = sltm_edit_conflict_gender value = 1 }
+  change_variable = { name = sltm_edit_conflict_count add = 1 }
+ }
+ remove_variable = sltm_edit_conflict_order
+ if = { limit = { OR = { var:sltm_edit_law_add ?= 6 var:sltm_edit_law_add ?= 7 var:sltm_edit_law_add ?= 8 var:sltm_edit_law_add ?= 9 var:sltm_edit_law_remove ?= 6 var:sltm_edit_law_remove ?= 7 var:sltm_edit_law_remove ?= 8 var:sltm_edit_law_remove ?= 9 } NOT = { sltm_edit_order_unchanged_trigger = yes } }
+  set_variable = { name = sltm_edit_conflict_order value = 1 }
+  change_variable = { name = sltm_edit_conflict_count add = 1 }
+ }
+}
+sltm_edit_read_current_effect = {
+ remove_variable = sltm_current_holder
+ if = { limit = { exists = var:sltm_edit_target.holder } set_variable = { name = sltm_current_holder value = var:sltm_edit_target.holder } }
+ remove_variable = sltm_current_domicile
+ if = { limit = { exists = var:sltm_edit_target.title_domicile } set_variable = { name = sltm_current_domicile value = var:sltm_edit_target.title_domicile } }
+ remove_variable = sltm_current_capital
+ if = { limit = { exists = var:sltm_edit_target.title_capital_county } set_variable = { name = sltm_current_capital value = var:sltm_edit_target.title_capital_county } }
+ remove_variable = sltm_current_dejure
+ if = { limit = { exists = var:sltm_edit_target.de_jure_liege } set_variable = { name = sltm_current_dejure value = var:sltm_edit_target.de_jure_liege } }
+ remove_variable = sltm_current_province
+ if = { limit = { exists = var:sltm_edit_target.title_domicile.domicile_location } set_variable = { name = sltm_current_province value = var:sltm_edit_target.title_domicile.domicile_location } }
+ set_variable = { name = sltm_current_building value = 0 }
+ if = { limit = { exists = var:sltm_edit_target.title_domicile var:sltm_edit_target.title_domicile = { has_domicile_building = sltm_residence_main_01 } } set_variable = { name = sltm_current_building value = 1 } }
+ set_variable = { name = sltm_current_landless value = 0 }
+ if = { limit = { var:sltm_edit_target = { is_landless_type_title = yes } } set_variable = { name = sltm_current_landless value = 1 } }
+}
+
+# Actual government tests, not a remembered constructor parameter. Unknown stays 0.
+sltm_read_government_effect = {
+ set_variable = { name = $DEST$ value = 0 }
+ if = { limit = { $PERSON$ = { has_government = feudal_government } } set_variable = { name = $DEST$ value = 1 } }
+ if = { limit = { $PERSON$ = { has_government = republic_government } } set_variable = { name = $DEST$ value = 2 } }
+ if = { limit = { $PERSON$ = { has_government = clan_government } } set_variable = { name = $DEST$ value = 3 } }
+ if = { limit = { $PERSON$ = { has_government = tribal_government } } set_variable = { name = $DEST$ value = 4 } }
+ if = { limit = { $PERSON$ = { has_government = wanua_government } } set_variable = { name = $DEST$ value = 5 } }
+ if = { limit = { $PERSON$ = { has_government = mercenary_government } } set_variable = { name = $DEST$ value = 6 } }
+ if = { limit = { $PERSON$ = { has_government = holy_order_government } } set_variable = { name = $DEST$ value = 7 } }
+ if = { limit = { $PERSON$ = { has_government = monastic_holy_order_government } } set_variable = { name = $DEST$ value = 8 } }
+ if = { limit = { $PERSON$ = { has_government = administrative_government } } set_variable = { name = $DEST$ value = 9 } }
+ if = { limit = { $PERSON$ = { has_government = landless_adventurer_government } } set_variable = { name = $DEST$ value = 10 } }
+ if = { limit = { $PERSON$ = { has_government = nomad_government } } set_variable = { name = $DEST$ value = 11 } }
+ if = { limit = { $PERSON$ = { has_government = herder_government } } set_variable = { name = $DEST$ value = 12 } }
+ if = { limit = { $PERSON$ = { has_government = celestial_government } } set_variable = { name = $DEST$ value = 13 } }
+ if = { limit = { $PERSON$ = { has_government = mandala_government } } set_variable = { name = $DEST$ value = 14 } }
+ if = { limit = { $PERSON$ = { has_government = steppe_admin_government } } set_variable = { name = $DEST$ value = 15 } }
+ if = { limit = { $PERSON$ = { has_government = meritocratic_government } } set_variable = { name = $DEST$ value = 16 } }
+ if = { limit = { $PERSON$ = { has_government = japan_administrative_government } } set_variable = { name = $DEST$ value = 17 } }
+ if = { limit = { $PERSON$ = { has_government = japan_feudal_government } } set_variable = { name = $DEST$ value = 18 } }
+ if = { limit = { $PERSON$ = { has_government = theocracy_government } } set_variable = { name = $DEST$ value = 19 } }
+ if = { limit = { $PERSON$ = { has_government = ecclesiastical_government } } set_variable = { name = $DEST$ value = 20 } }
+ if = { limit = { $PERSON$ = { has_government = sltm_residence_government } } set_variable = { name = $DEST$ value = 21 } }
+}
+
+# TITLE scope, ordinary route only. Set all initial rules before the first grant.
+sltm_plain_initial_rules_effect = {
+ set_landless_title = yes
+ set_definitive_form = yes
+ set_can_be_named_after_dynasty = no
+ set_can_use_nomadic_naming = no
+ set_always_follows_primary_heir = no
+ set_no_automatic_claims = no
+ set_destroy_on_succession = no
+ set_destroy_if_invalid_heir = no
+ set_destroy_on_gain_same_tier = no
+ if = { limit = { root.var:sltm_create_preset = 2 } set_always_follows_primary_heir = yes }
+ if = { limit = { root.var:sltm_create_claims = 1 } set_no_automatic_claims = yes }
+ if = { limit = { root.var:sltm_create_preset = 3 } set_destroy_on_succession = yes }
+}
+
+# CHARACTER actor scope. Keep independent counts: an invalid reference may be skipped by an iterator.
+sltm_create_capture_before_effect = {
+ clear_variable_list = sltm_before_titles
+ clear_variable_list = sltm_before_domiciles
+ set_variable = { name = sltm_before_titles_count value = 0 }
+ set_variable = { name = sltm_before_domiciles_count value = 0 }
+ scope:sltm_holder = {
+  every_held_title = {
+   set_variable = { name = sltm_pre_create_holder value = holder }
+   remove_variable = sltm_pre_create_domicile
+   set_variable = { name = sltm_pre_had_domicile value = 0 }
+   if = { limit = { exists = title_domicile }
+    set_variable = { name = sltm_pre_create_domicile value = title_domicile }
+    set_variable = { name = sltm_pre_had_domicile value = 1 }
+   }
+   save_scope_as = sltm_old_title
+   scope:sltm_actor = {
+    add_to_variable_list = { name = sltm_before_titles target = scope:sltm_old_title }
+    change_variable = { name = sltm_before_titles_count add = 1 }
+   }
+   if = { limit = { exists = title_domicile }
+    title_domicile = { save_scope_as = sltm_old_domicile }
+    scope:sltm_actor = {
+     if = { limit = { NOT = { any_in_list = { variable = sltm_before_domiciles this = scope:sltm_old_domicile } } }
+      add_to_variable_list = { name = sltm_before_domiciles target = scope:sltm_old_domicile }
+      change_variable = { name = sltm_before_domiciles_count add = 1 }
+      scope:sltm_old_domicile = {
+       remove_variable = sltm_pre_owner
+       remove_variable = sltm_pre_location
+       set_variable = { name = sltm_pre_had_owner value = 0 }
+       set_variable = { name = sltm_pre_had_location value = 0 }
+       set_variable = { name = sltm_pre_main value = 0 }
+       if = { limit = { exists = owner } set_variable = { name = sltm_pre_owner value = owner } set_variable = { name = sltm_pre_had_owner value = 1 } }
+       if = { limit = { exists = domicile_location } set_variable = { name = sltm_pre_location value = domicile_location } set_variable = { name = sltm_pre_had_location value = 1 } }
+       if = { limit = { has_domicile_building = sltm_residence_main_01 } set_variable = { name = sltm_pre_main value = 1 } }
+      }
+     }
+    }
+   }
+  }
+ }
+ remove_variable = sltm_before_default
+ remove_variable = sltm_before_primary
+ remove_variable = sltm_before_liege
+ if = { limit = { exists = scope:sltm_holder.domicile } set_variable = { name = sltm_before_default value = scope:sltm_holder.domicile } }
+ if = { limit = { exists = scope:sltm_holder.primary_title } set_variable = { name = sltm_before_primary value = scope:sltm_holder.primary_title } }
+ if = { limit = { exists = scope:sltm_holder.liege } set_variable = { name = sltm_before_liege value = scope:sltm_holder.liege } }
+ sltm_read_government_effect = { PERSON = scope:sltm_holder DEST = sltm_before_government }
+}
+
+sltm_create_capture_after_effect = {
+ remove_variable = sltm_after_default
+ remove_variable = sltm_after_primary
+ remove_variable = sltm_after_liege
+ if = { limit = { exists = scope:sltm_holder.domicile } set_variable = { name = sltm_after_default value = scope:sltm_holder.domicile } }
+ if = { limit = { exists = scope:sltm_holder.primary_title } set_variable = { name = sltm_after_primary value = scope:sltm_holder.primary_title } }
+ if = { limit = { exists = scope:sltm_holder.liege } set_variable = { name = sltm_after_liege value = scope:sltm_holder.liege } }
+ sltm_read_government_effect = { PERSON = scope:sltm_holder DEST = sltm_after_government }
+ set_variable = { name = sltm_after_old_titles_count value = 0 }
+ set_variable = { name = sltm_after_old_domiciles_count value = 0 }
+ set_variable = { name = sltm_old_titles_preserved value = 1 }
+ set_variable = { name = sltm_old_domiciles_preserved value = 1 }
+ every_in_list = {
+  variable = sltm_before_titles
+  scope:sltm_actor = { change_variable = { name = sltm_after_old_titles_count add = 1 } }
+  if = { limit = { OR = {
+   NOT = { holder = var:sltm_pre_create_holder }
+   AND = { var:sltm_pre_had_domicile = 1 OR = { NOT = { exists = var:sltm_pre_create_domicile } NOT = { title_domicile = var:sltm_pre_create_domicile } } }
+   AND = { var:sltm_pre_had_domicile = 0 exists = title_domicile }
+  } } scope:sltm_actor = { set_variable = { name = sltm_old_titles_preserved value = 0 } } }
+  remove_variable = sltm_pre_create_holder
+  remove_variable = sltm_pre_create_domicile
+  remove_variable = sltm_pre_had_domicile
+ }
+ every_in_list = {
+  variable = sltm_before_domiciles
+  scope:sltm_actor = { change_variable = { name = sltm_after_old_domiciles_count add = 1 } }
+  if = { limit = { OR = {
+   AND = { var:sltm_pre_had_owner = 1 OR = { NOT = { exists = var:sltm_pre_owner } NOT = { owner = var:sltm_pre_owner } } }
+   AND = { var:sltm_pre_had_owner = 0 exists = owner }
+   AND = { var:sltm_pre_had_location = 1 OR = { NOT = { exists = var:sltm_pre_location } NOT = { domicile_location = var:sltm_pre_location } } }
+   AND = { var:sltm_pre_had_location = 0 exists = domicile_location }
+   AND = { var:sltm_pre_main = 1 NOT = { has_domicile_building = sltm_residence_main_01 } }
+  } } scope:sltm_actor = { set_variable = { name = sltm_old_domiciles_preserved value = 0 } } }
+  remove_variable = sltm_pre_owner
+  remove_variable = sltm_pre_location
+  remove_variable = sltm_pre_had_owner
+  remove_variable = sltm_pre_had_location
+  remove_variable = sltm_pre_main
+ }
+ if = { limit = { NOT = { var:sltm_after_old_titles_count = var:sltm_before_titles_count } } set_variable = { name = sltm_old_titles_preserved value = 0 } }
+ if = { limit = { NOT = { var:sltm_after_old_domiciles_count = var:sltm_before_domiciles_count } } set_variable = { name = sltm_old_domiciles_preserved value = 0 } }
+}
+
+sltm_create_read_output_effect = {
+ set_variable = { name = sltm_create_result_main value = 0 }
+ set_variable = { name = sltm_create_result_holder value = 3 }
+ set_variable = { name = sltm_create_result_tier value = 3 }
+ set_variable = { name = sltm_create_result_object value = 3 }
+ if = { limit = { exists = scope:sltm_created }
+  if = { limit = { scope:sltm_created = { holder = scope:sltm_holder } } set_variable = { name = sltm_create_result_holder value = 1 } }
+  if = { limit = { OR = {
+   AND = { var:sltm_create_tier = 1 scope:sltm_created = { tier = tier_county } }
+   AND = { var:sltm_create_tier = 2 scope:sltm_created = { tier = tier_duchy } }
+   AND = { var:sltm_create_tier = 3 scope:sltm_created = { tier = tier_kingdom } }
+   AND = { var:sltm_create_tier = 4 scope:sltm_created = { tier = tier_empire } }
+   AND = { var:sltm_create_tier = 5 scope:sltm_created = { tier = tier_hegemony } }
+  } } set_variable = { name = sltm_create_result_tier value = 1 } }
+  if = { limit = { sltm_verified_created_object_trigger = yes } set_variable = { name = sltm_create_result_object value = 1 } }
+ }
+ if = { limit = { var:sltm_create_kind = 2 }
+  set_variable = { name = sltm_create_result_main value = 3 }
+  if = { limit = { exists = scope:sltm_created.title_domicile scope:sltm_created.title_domicile = { is_domicile_type = sltm_residence has_domicile_building = sltm_residence_main_01 } }
+   set_variable = { name = sltm_create_result_main value = 1 }
+  }
+ }
+}

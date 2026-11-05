@@ -1,0 +1,101 @@
+﻿# All triggers below receive TITLE scope unless explicitly documented.
+sltm_protected_domicile_title_trigger = {
+ OR = {
+  exists = title_domicile
+  is_noble_family_title = yes
+  is_nomad_title = yes
+  has_variable = sltm_origin_domicile
+ }
+}
+sltm_plain_title_action_trigger = {
+ NOT = { sltm_protected_domicile_title_trigger = yes }
+}
+sltm_owned_extra_domicile_trigger = {
+ has_variable = sltm_created_title
+ var:sltm_schema_version = 2
+ exists = title_domicile
+ exists = var:sltm_origin_domicile
+ title_domicile = var:sltm_origin_domicile
+}
+# CHARACTER scope. Native backend is an extra prototype route, not a claim of engine acceptance.
+# Deprecated eligibility helper removed: explicit profile choice has no government gate.
+
+# CHARACTER scope; expected profile was captured before creation, so a government change cannot change the expectation.
+sltm_created_domicile_type_matches_trigger = {
+ OR = {
+  AND = { var:sltm_create_kind = 2 scope:sltm_created.title_domicile = { is_domicile_type = sltm_residence } }
+  AND = { var:sltm_create_kind = 3 var:sltm_create_native_profile = 1 scope:sltm_created.title_domicile = { is_domicile_type = estate } }
+  AND = { var:sltm_create_kind = 3 var:sltm_create_native_profile = 2 scope:sltm_created.title_domicile = { is_domicile_type = camp } }
+  AND = { var:sltm_create_kind = 3 var:sltm_create_native_profile = 3 scope:sltm_created.title_domicile = { is_domicile_type = yurt } }
+  AND = { var:sltm_create_kind = 3 var:sltm_create_native_profile = 4 scope:sltm_created.title_domicile = { is_domicile_type = east_asian_estate } }
+  AND = { var:sltm_create_kind = 3 var:sltm_create_native_profile = 5 scope:sltm_created.title_domicile = { is_domicile_type = east_asian_estate } }
+  AND = { var:sltm_create_kind = 3 var:sltm_create_native_profile = 6 scope:sltm_created.title_domicile = { is_domicile_type = east_asian_estate } }
+  AND = { var:sltm_create_kind = 3 var:sltm_create_native_profile = 7 scope:sltm_created.title_domicile = { is_domicile_type = japanese_manor } }
+  AND = { var:sltm_create_kind = 3 var:sltm_create_native_profile = 8 scope:sltm_created.title_domicile = { is_domicile_type = japanese_manor } }
+  AND = { var:sltm_create_kind = 3 var:sltm_create_native_profile = 9 scope:sltm_created.title_domicile = { is_domicile_type = ecclesiastical_domicile } }
+ }
+}
+
+# CHARACTER scope; session is a saved numeric value, never a title revision or gameplay cooldown.
+sltm_workflow_session_current_trigger = {
+ exists = scope:sltm_workflow_session
+ var:sltm_workflow_revision = scope:sltm_workflow_session
+}
+sltm_create_session_live_trigger = {
+ sltm_workflow_session_current_trigger = yes
+ has_variable = sltm_create_pending
+}
+sltm_edit_session_live_trigger = {
+ sltm_workflow_session_current_trigger = yes
+ has_variable = sltm_edit_pending
+ exists = var:sltm_edit_target
+}
+sltm_edit_has_changes_trigger = {
+ OR = {
+  has_variable = sltm_edit_prefix
+  has_variable = sltm_edit_name
+  has_variable = sltm_edit_coa
+  has_variable = sltm_edit_color
+  has_variable = sltm_edit_capital
+  has_variable = sltm_edit_dejure
+  has_variable = sltm_edit_definitive
+  has_variable = sltm_edit_dynasty
+  has_variable = sltm_edit_nomadic
+  has_variable = sltm_edit_heir
+  has_variable = sltm_edit_claims
+  has_variable = sltm_edit_landless
+  has_variable = sltm_edit_succession
+  has_variable = sltm_edit_invalid_heir
+  has_variable = sltm_edit_same_tier
+  has_variable = sltm_edit_province
+  has_variable = sltm_edit_building
+  has_variable = sltm_edit_law_add
+  has_variable = sltm_edit_law_remove
+ }
+}
+
+# The caller has saved the applicant as sltm_legacy_applicant.
+# A living rival's title or company claim keeps the original request open for review.
+sltm_legacy_claim_uncontested_trigger = {
+    var:sltm_merc_candidate ?= {
+        OR = {
+            NOT = { has_variable = sltm_merc_claimant }
+            var:sltm_merc_claimant ?= scope:sltm_legacy_applicant
+        }
+        OR = {
+            NOT = { has_variable = sltm_merc_native_company }
+            var:sltm_merc_native_company ?= scope:sltm_legacy_applicant.var:sltm_merc_candidate_company
+        }
+    }
+    NOT = {
+        any_in_global_list = {
+            variable = sltm_pending_charters
+            is_alive = yes
+            NOT = { this = scope:sltm_legacy_applicant }
+            OR = {
+                var:sltm_merc_candidate ?= scope:sltm_legacy_applicant.var:sltm_merc_candidate
+                var:sltm_merc_candidate_company ?= scope:sltm_legacy_applicant.var:sltm_merc_candidate_company
+            }
+        }
+    }
+}

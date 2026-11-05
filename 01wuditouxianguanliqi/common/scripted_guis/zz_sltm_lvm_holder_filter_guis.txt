@@ -1,0 +1,309 @@
+﻿# 无地封臣筛选 scripted GUI（V2.6 批次 3/4/6/8/9）
+# 每个单选 gui：保存 undo → 设 hf_* → 更新封臣活动计数 → 只重算封臣页。
+# 禁止人物按钮调用 sltm_lvm_recompute_all_views_effect。
+# token 三态 gui：保存 undo → 调对应 cycle 效果 → 更新活动计数 → 重算封臣页。
+
+# ---- 关系 ----
+sltm_lvm_hf_relation_all_gui = { scope = character effect = { sltm_lvm_save_holder_filter_undo_effect = yes set_variable = { name = sltm_lvm_hf_relation value = flag:all } sltm_lvm_update_holder_active_filter_count_effect = yes sltm_lvm_recompute_holder_view_effect = yes } }
+sltm_lvm_hf_relation_self_gui = { scope = character effect = { sltm_lvm_save_holder_filter_undo_effect = yes set_variable = { name = sltm_lvm_hf_relation value = flag:self } sltm_lvm_update_holder_active_filter_count_effect = yes sltm_lvm_recompute_holder_view_effect = yes } }
+sltm_lvm_hf_relation_direct_gui = { scope = character effect = { sltm_lvm_save_holder_filter_undo_effect = yes set_variable = { name = sltm_lvm_hf_relation value = flag:direct_vassal } sltm_lvm_update_holder_active_filter_count_effect = yes sltm_lvm_recompute_holder_view_effect = yes } }
+sltm_lvm_hf_relation_all_vassals_gui = { scope = character effect = { sltm_lvm_save_holder_filter_undo_effect = yes set_variable = { name = sltm_lvm_hf_relation value = flag:all_vassals } sltm_lvm_update_holder_active_filter_count_effect = yes sltm_lvm_recompute_holder_view_effect = yes } }
+sltm_lvm_hf_relation_courtier_gui = { scope = character effect = { sltm_lvm_save_holder_filter_undo_effect = yes set_variable = { name = sltm_lvm_hf_relation value = flag:courtier } sltm_lvm_update_holder_active_filter_count_effect = yes sltm_lvm_recompute_holder_view_effect = yes } }
+sltm_lvm_hf_relation_close_family_gui = { scope = character effect = { sltm_lvm_save_holder_filter_undo_effect = yes set_variable = { name = sltm_lvm_hf_relation value = flag:close_family } sltm_lvm_update_holder_active_filter_count_effect = yes sltm_lvm_recompute_holder_view_effect = yes } }
+
+# ---- 性别 ----
+sltm_lvm_hf_gender_all_gui = { scope = character effect = { sltm_lvm_save_holder_filter_undo_effect = yes set_variable = { name = sltm_lvm_hf_gender value = flag:all } sltm_lvm_update_holder_active_filter_count_effect = yes sltm_lvm_recompute_holder_view_effect = yes } }
+sltm_lvm_hf_gender_male_gui = { scope = character effect = { sltm_lvm_save_holder_filter_undo_effect = yes set_variable = { name = sltm_lvm_hf_gender value = flag:male } sltm_lvm_update_holder_active_filter_count_effect = yes sltm_lvm_recompute_holder_view_effect = yes } }
+sltm_lvm_hf_gender_female_gui = { scope = character effect = { sltm_lvm_save_holder_filter_undo_effect = yes set_variable = { name = sltm_lvm_hf_gender value = flag:female } sltm_lvm_update_holder_active_filter_count_effect = yes sltm_lvm_recompute_holder_view_effect = yes } }
+
+# ---- 成年 ----
+sltm_lvm_hf_adult_all_gui = { scope = character effect = { sltm_lvm_save_holder_filter_undo_effect = yes set_variable = { name = sltm_lvm_hf_adult value = flag:all } sltm_lvm_update_holder_active_filter_count_effect = yes sltm_lvm_recompute_holder_view_effect = yes } }
+sltm_lvm_hf_adult_adult_gui = { scope = character effect = { sltm_lvm_save_holder_filter_undo_effect = yes set_variable = { name = sltm_lvm_hf_adult value = flag:adult } sltm_lvm_update_holder_active_filter_count_effect = yes sltm_lvm_recompute_holder_view_effect = yes } }
+sltm_lvm_hf_adult_child_gui = { scope = character effect = { sltm_lvm_save_holder_filter_undo_effect = yes set_variable = { name = sltm_lvm_hf_adult value = flag:child } sltm_lvm_update_holder_active_filter_count_effect = yes sltm_lvm_recompute_holder_view_effect = yes } }
+
+# ---- 年龄段 ----
+sltm_lvm_hf_age_all_gui = { scope = character effect = { sltm_lvm_save_holder_filter_undo_effect = yes set_variable = { name = sltm_lvm_hf_age_band value = flag:all } sltm_lvm_update_holder_active_filter_count_effect = yes sltm_lvm_recompute_holder_view_effect = yes } }
+sltm_lvm_hf_age_0_15_gui = { scope = character effect = { sltm_lvm_save_holder_filter_undo_effect = yes set_variable = { name = sltm_lvm_hf_age_band value = flag:age_0_15 } sltm_lvm_update_holder_active_filter_count_effect = yes sltm_lvm_recompute_holder_view_effect = yes } }
+sltm_lvm_hf_age_16_29_gui = { scope = character effect = { sltm_lvm_save_holder_filter_undo_effect = yes set_variable = { name = sltm_lvm_hf_age_band value = flag:age_16_29 } sltm_lvm_update_holder_active_filter_count_effect = yes sltm_lvm_recompute_holder_view_effect = yes } }
+sltm_lvm_hf_age_30_49_gui = { scope = character effect = { sltm_lvm_save_holder_filter_undo_effect = yes set_variable = { name = sltm_lvm_hf_age_band value = flag:age_30_49 } sltm_lvm_update_holder_active_filter_count_effect = yes sltm_lvm_recompute_holder_view_effect = yes } }
+sltm_lvm_hf_age_50_64_gui = { scope = character effect = { sltm_lvm_save_holder_filter_undo_effect = yes set_variable = { name = sltm_lvm_hf_age_band value = flag:age_50_64 } sltm_lvm_update_holder_active_filter_count_effect = yes sltm_lvm_recompute_holder_view_effect = yes } }
+sltm_lvm_hf_age_65_plus_gui = { scope = character effect = { sltm_lvm_save_holder_filter_undo_effect = yes set_variable = { name = sltm_lvm_hf_age_band value = flag:age_65_plus } sltm_lvm_update_holder_active_filter_count_effect = yes sltm_lvm_recompute_holder_view_effect = yes } }
+
+# ---- 监禁 ----
+sltm_lvm_hf_imprisoned_all_gui = { scope = character effect = { sltm_lvm_save_holder_filter_undo_effect = yes set_variable = { name = sltm_lvm_hf_imprisoned value = flag:all } sltm_lvm_update_holder_active_filter_count_effect = yes sltm_lvm_recompute_holder_view_effect = yes } }
+sltm_lvm_hf_imprisoned_free_gui = { scope = character effect = { sltm_lvm_save_holder_filter_undo_effect = yes set_variable = { name = sltm_lvm_hf_imprisoned value = flag:free } sltm_lvm_update_holder_active_filter_count_effect = yes sltm_lvm_recompute_holder_view_effect = yes } }
+sltm_lvm_hf_imprisoned_yes_gui = { scope = character effect = { sltm_lvm_save_holder_filter_undo_effect = yes set_variable = { name = sltm_lvm_hf_imprisoned value = flag:imprisoned } sltm_lvm_update_holder_active_filter_count_effect = yes sltm_lvm_recompute_holder_view_effect = yes } }
+
+# ---- 政体 ----
+sltm_lvm_hf_gov_all_gui = { scope = character effect = { sltm_lvm_save_holder_filter_undo_effect = yes set_variable = { name = sltm_lvm_hf_government value = flag:all } sltm_lvm_update_holder_active_filter_count_effect = yes sltm_lvm_recompute_holder_view_effect = yes } }
+sltm_lvm_hf_gov_clan_gui = { scope = character effect = { sltm_lvm_save_holder_filter_undo_effect = yes set_variable = { name = sltm_lvm_hf_government value = flag:clan } sltm_lvm_update_holder_active_filter_count_effect = yes sltm_lvm_recompute_holder_view_effect = yes } }
+sltm_lvm_hf_gov_feudal_gui = { scope = character effect = { sltm_lvm_save_holder_filter_undo_effect = yes set_variable = { name = sltm_lvm_hf_government value = flag:feudal } sltm_lvm_update_holder_active_filter_count_effect = yes sltm_lvm_recompute_holder_view_effect = yes } }
+sltm_lvm_hf_gov_administrative_gui = { scope = character effect = { sltm_lvm_save_holder_filter_undo_effect = yes set_variable = { name = sltm_lvm_hf_government value = flag:administrative } sltm_lvm_update_holder_active_filter_count_effect = yes sltm_lvm_recompute_holder_view_effect = yes } }
+sltm_lvm_hf_gov_theocratic_gui = { scope = character effect = { sltm_lvm_save_holder_filter_undo_effect = yes set_variable = { name = sltm_lvm_hf_government value = flag:theocratic } sltm_lvm_update_holder_active_filter_count_effect = yes sltm_lvm_recompute_holder_view_effect = yes } }
+sltm_lvm_hf_gov_tribal_gui = { scope = character effect = { sltm_lvm_save_holder_filter_undo_effect = yes set_variable = { name = sltm_lvm_hf_government value = flag:tribal } sltm_lvm_update_holder_active_filter_count_effect = yes sltm_lvm_recompute_holder_view_effect = yes } }
+sltm_lvm_hf_gov_merchant_republic_gui = { scope = character effect = { sltm_lvm_save_holder_filter_undo_effect = yes set_variable = { name = sltm_lvm_hf_government value = flag:merchant_republic } sltm_lvm_update_holder_active_filter_count_effect = yes sltm_lvm_recompute_holder_view_effect = yes } }
+
+# ---- 管理数量 ----
+sltm_lvm_hf_managed_all_gui = { scope = character effect = { sltm_lvm_save_holder_filter_undo_effect = yes set_variable = { name = sltm_lvm_hf_managed_count value = flag:all } sltm_lvm_update_holder_active_filter_count_effect = yes sltm_lvm_recompute_holder_view_effect = yes } }
+sltm_lvm_hf_managed_one_gui = { scope = character effect = { sltm_lvm_save_holder_filter_undo_effect = yes set_variable = { name = sltm_lvm_hf_managed_count value = flag:one } sltm_lvm_update_holder_active_filter_count_effect = yes sltm_lvm_recompute_holder_view_effect = yes } }
+sltm_lvm_hf_managed_two_three_gui = { scope = character effect = { sltm_lvm_save_holder_filter_undo_effect = yes set_variable = { name = sltm_lvm_hf_managed_count value = flag:two_three } sltm_lvm_update_holder_active_filter_count_effect = yes sltm_lvm_recompute_holder_view_effect = yes } }
+sltm_lvm_hf_managed_four_plus_gui = { scope = character effect = { sltm_lvm_save_holder_filter_undo_effect = yes set_variable = { name = sltm_lvm_hf_managed_count value = flag:four_plus } sltm_lvm_update_holder_active_filter_count_effect = yes sltm_lvm_recompute_holder_view_effect = yes } }
+
+sltm_lvm_hf_pending_all_gui = { scope = character effect = { sltm_lvm_save_holder_filter_undo_effect = yes set_variable = { name = sltm_lvm_hf_pending_count value = flag:all } sltm_lvm_update_holder_active_filter_count_effect = yes sltm_lvm_recompute_holder_view_effect = yes } }
+sltm_lvm_hf_pending_zero_gui = { scope = character effect = { sltm_lvm_save_holder_filter_undo_effect = yes set_variable = { name = sltm_lvm_hf_pending_count value = flag:zero } sltm_lvm_update_holder_active_filter_count_effect = yes sltm_lvm_recompute_holder_view_effect = yes } }
+sltm_lvm_hf_pending_one_plus_gui = { scope = character effect = { sltm_lvm_save_holder_filter_undo_effect = yes set_variable = { name = sltm_lvm_hf_pending_count value = flag:one_plus } sltm_lvm_update_holder_active_filter_count_effect = yes sltm_lvm_recompute_holder_view_effect = yes } }
+sltm_lvm_hf_pending_two_plus_gui = { scope = character effect = { sltm_lvm_save_holder_filter_undo_effect = yes set_variable = { name = sltm_lvm_hf_pending_count value = flag:two_plus } sltm_lvm_update_holder_active_filter_count_effect = yes sltm_lvm_recompute_holder_view_effect = yes } }
+
+sltm_lvm_hf_blocked_all_gui = { scope = character effect = { sltm_lvm_save_holder_filter_undo_effect = yes set_variable = { name = sltm_lvm_hf_blocked_count value = flag:all } sltm_lvm_update_holder_active_filter_count_effect = yes sltm_lvm_recompute_holder_view_effect = yes } }
+sltm_lvm_hf_blocked_zero_gui = { scope = character effect = { sltm_lvm_save_holder_filter_undo_effect = yes set_variable = { name = sltm_lvm_hf_blocked_count value = flag:zero } sltm_lvm_update_holder_active_filter_count_effect = yes sltm_lvm_recompute_holder_view_effect = yes } }
+sltm_lvm_hf_blocked_one_plus_gui = { scope = character effect = { sltm_lvm_save_holder_filter_undo_effect = yes set_variable = { name = sltm_lvm_hf_blocked_count value = flag:one_plus } sltm_lvm_update_holder_active_filter_count_effect = yes sltm_lvm_recompute_holder_view_effect = yes } }
+sltm_lvm_hf_blocked_two_plus_gui = { scope = character effect = { sltm_lvm_save_holder_filter_undo_effect = yes set_variable = { name = sltm_lvm_hf_blocked_count value = flag:two_plus } sltm_lvm_update_holder_active_filter_count_effect = yes sltm_lvm_recompute_holder_view_effect = yes } }
+
+sltm_lvm_hf_junfu_all_gui = { scope = character effect = { sltm_lvm_save_holder_filter_undo_effect = yes set_variable = { name = sltm_lvm_hf_junfu_count value = flag:all } sltm_lvm_update_holder_active_filter_count_effect = yes sltm_lvm_recompute_holder_view_effect = yes } }
+sltm_lvm_hf_junfu_zero_gui = { scope = character effect = { sltm_lvm_save_holder_filter_undo_effect = yes set_variable = { name = sltm_lvm_hf_junfu_count value = flag:zero } sltm_lvm_update_holder_active_filter_count_effect = yes sltm_lvm_recompute_holder_view_effect = yes } }
+sltm_lvm_hf_junfu_one_gui = { scope = character effect = { sltm_lvm_save_holder_filter_undo_effect = yes set_variable = { name = sltm_lvm_hf_junfu_count value = flag:one } sltm_lvm_update_holder_active_filter_count_effect = yes sltm_lvm_recompute_holder_view_effect = yes } }
+sltm_lvm_hf_junfu_two_plus_gui = { scope = character effect = { sltm_lvm_save_holder_filter_undo_effect = yes set_variable = { name = sltm_lvm_hf_junfu_count value = flag:two_plus } sltm_lvm_update_holder_active_filter_count_effect = yes sltm_lvm_recompute_holder_view_effect = yes } }
+
+sltm_lvm_hf_noble_all_gui = { scope = character effect = { sltm_lvm_save_holder_filter_undo_effect = yes set_variable = { name = sltm_lvm_hf_noble_count value = flag:all } sltm_lvm_update_holder_active_filter_count_effect = yes sltm_lvm_recompute_holder_view_effect = yes } }
+sltm_lvm_hf_noble_zero_gui = { scope = character effect = { sltm_lvm_save_holder_filter_undo_effect = yes set_variable = { name = sltm_lvm_hf_noble_count value = flag:zero } sltm_lvm_update_holder_active_filter_count_effect = yes sltm_lvm_recompute_holder_view_effect = yes } }
+sltm_lvm_hf_noble_one_gui = { scope = character effect = { sltm_lvm_save_holder_filter_undo_effect = yes set_variable = { name = sltm_lvm_hf_noble_count value = flag:one } sltm_lvm_update_holder_active_filter_count_effect = yes sltm_lvm_recompute_holder_view_effect = yes } }
+sltm_lvm_hf_noble_two_plus_gui = { scope = character effect = { sltm_lvm_save_holder_filter_undo_effect = yes set_variable = { name = sltm_lvm_hf_noble_count value = flag:two_plus } sltm_lvm_update_holder_active_filter_count_effect = yes sltm_lvm_recompute_holder_view_effect = yes } }
+
+sltm_lvm_hf_holy_order_all_gui = { scope = character effect = { sltm_lvm_save_holder_filter_undo_effect = yes set_variable = { name = sltm_lvm_hf_holy_order_count value = flag:all } sltm_lvm_update_holder_active_filter_count_effect = yes sltm_lvm_recompute_holder_view_effect = yes } }
+sltm_lvm_hf_holy_order_zero_gui = { scope = character effect = { sltm_lvm_save_holder_filter_undo_effect = yes set_variable = { name = sltm_lvm_hf_holy_order_count value = flag:zero } sltm_lvm_update_holder_active_filter_count_effect = yes sltm_lvm_recompute_holder_view_effect = yes } }
+sltm_lvm_hf_holy_order_one_gui = { scope = character effect = { sltm_lvm_save_holder_filter_undo_effect = yes set_variable = { name = sltm_lvm_hf_holy_order_count value = flag:one } sltm_lvm_update_holder_active_filter_count_effect = yes sltm_lvm_recompute_holder_view_effect = yes } }
+sltm_lvm_hf_holy_order_two_plus_gui = { scope = character effect = { sltm_lvm_save_holder_filter_undo_effect = yes set_variable = { name = sltm_lvm_hf_holy_order_count value = flag:two_plus } sltm_lvm_update_holder_active_filter_count_effect = yes sltm_lvm_recompute_holder_view_effect = yes } }
+
+sltm_lvm_hf_mercenary_all_gui = { scope = character effect = { sltm_lvm_save_holder_filter_undo_effect = yes set_variable = { name = sltm_lvm_hf_mercenary_count value = flag:all } sltm_lvm_update_holder_active_filter_count_effect = yes sltm_lvm_recompute_holder_view_effect = yes } }
+sltm_lvm_hf_mercenary_zero_gui = { scope = character effect = { sltm_lvm_save_holder_filter_undo_effect = yes set_variable = { name = sltm_lvm_hf_mercenary_count value = flag:zero } sltm_lvm_update_holder_active_filter_count_effect = yes sltm_lvm_recompute_holder_view_effect = yes } }
+sltm_lvm_hf_mercenary_one_gui = { scope = character effect = { sltm_lvm_save_holder_filter_undo_effect = yes set_variable = { name = sltm_lvm_hf_mercenary_count value = flag:one } sltm_lvm_update_holder_active_filter_count_effect = yes sltm_lvm_recompute_holder_view_effect = yes } }
+sltm_lvm_hf_mercenary_two_plus_gui = { scope = character effect = { sltm_lvm_save_holder_filter_undo_effect = yes set_variable = { name = sltm_lvm_hf_mercenary_count value = flag:two_plus } sltm_lvm_update_holder_active_filter_count_effect = yes sltm_lvm_recompute_holder_view_effect = yes } }
+
+sltm_lvm_hf_other_all_gui = { scope = character effect = { sltm_lvm_save_holder_filter_undo_effect = yes set_variable = { name = sltm_lvm_hf_other_count value = flag:all } sltm_lvm_update_holder_active_filter_count_effect = yes sltm_lvm_recompute_holder_view_effect = yes } }
+sltm_lvm_hf_other_zero_gui = { scope = character effect = { sltm_lvm_save_holder_filter_undo_effect = yes set_variable = { name = sltm_lvm_hf_other_count value = flag:zero } sltm_lvm_update_holder_active_filter_count_effect = yes sltm_lvm_recompute_holder_view_effect = yes } }
+sltm_lvm_hf_other_one_gui = { scope = character effect = { sltm_lvm_save_holder_filter_undo_effect = yes set_variable = { name = sltm_lvm_hf_other_count value = flag:one } sltm_lvm_update_holder_active_filter_count_effect = yes sltm_lvm_recompute_holder_view_effect = yes } }
+sltm_lvm_hf_other_two_plus_gui = { scope = character effect = { sltm_lvm_save_holder_filter_undo_effect = yes set_variable = { name = sltm_lvm_hf_other_count value = flag:two_plus } sltm_lvm_update_holder_active_filter_count_effect = yes sltm_lvm_recompute_holder_view_effect = yes } }
+
+# ---- 能力门槛（band：全部 / ≥8 / ≥12 / ≥16 / ≥20）----
+sltm_lvm_hf_diplomacy_band_all_gui = { scope = character effect = { sltm_lvm_save_holder_filter_undo_effect = yes set_variable = { name = sltm_lvm_hf_diplomacy_band value = flag:all } sltm_lvm_update_holder_active_filter_count_effect = yes sltm_lvm_recompute_holder_view_effect = yes } }
+sltm_lvm_hf_diplomacy_band_8_gui = { scope = character effect = { sltm_lvm_save_holder_filter_undo_effect = yes set_variable = { name = sltm_lvm_hf_diplomacy_band value = flag:8 } sltm_lvm_update_holder_active_filter_count_effect = yes sltm_lvm_recompute_holder_view_effect = yes } }
+sltm_lvm_hf_diplomacy_band_12_gui = { scope = character effect = { sltm_lvm_save_holder_filter_undo_effect = yes set_variable = { name = sltm_lvm_hf_diplomacy_band value = flag:12 } sltm_lvm_update_holder_active_filter_count_effect = yes sltm_lvm_recompute_holder_view_effect = yes } }
+sltm_lvm_hf_diplomacy_band_16_gui = { scope = character effect = { sltm_lvm_save_holder_filter_undo_effect = yes set_variable = { name = sltm_lvm_hf_diplomacy_band value = flag:16 } sltm_lvm_update_holder_active_filter_count_effect = yes sltm_lvm_recompute_holder_view_effect = yes } }
+sltm_lvm_hf_diplomacy_band_20_gui = { scope = character effect = { sltm_lvm_save_holder_filter_undo_effect = yes set_variable = { name = sltm_lvm_hf_diplomacy_band value = flag:20 } sltm_lvm_update_holder_active_filter_count_effect = yes sltm_lvm_recompute_holder_view_effect = yes } }
+sltm_lvm_hf_martial_band_all_gui = { scope = character effect = { sltm_lvm_save_holder_filter_undo_effect = yes set_variable = { name = sltm_lvm_hf_martial_band value = flag:all } sltm_lvm_update_holder_active_filter_count_effect = yes sltm_lvm_recompute_holder_view_effect = yes } }
+sltm_lvm_hf_martial_band_8_gui = { scope = character effect = { sltm_lvm_save_holder_filter_undo_effect = yes set_variable = { name = sltm_lvm_hf_martial_band value = flag:8 } sltm_lvm_update_holder_active_filter_count_effect = yes sltm_lvm_recompute_holder_view_effect = yes } }
+sltm_lvm_hf_martial_band_12_gui = { scope = character effect = { sltm_lvm_save_holder_filter_undo_effect = yes set_variable = { name = sltm_lvm_hf_martial_band value = flag:12 } sltm_lvm_update_holder_active_filter_count_effect = yes sltm_lvm_recompute_holder_view_effect = yes } }
+sltm_lvm_hf_martial_band_16_gui = { scope = character effect = { sltm_lvm_save_holder_filter_undo_effect = yes set_variable = { name = sltm_lvm_hf_martial_band value = flag:16 } sltm_lvm_update_holder_active_filter_count_effect = yes sltm_lvm_recompute_holder_view_effect = yes } }
+sltm_lvm_hf_martial_band_20_gui = { scope = character effect = { sltm_lvm_save_holder_filter_undo_effect = yes set_variable = { name = sltm_lvm_hf_martial_band value = flag:20 } sltm_lvm_update_holder_active_filter_count_effect = yes sltm_lvm_recompute_holder_view_effect = yes } }
+sltm_lvm_hf_stewardship_band_all_gui = { scope = character effect = { sltm_lvm_save_holder_filter_undo_effect = yes set_variable = { name = sltm_lvm_hf_stewardship_band value = flag:all } sltm_lvm_update_holder_active_filter_count_effect = yes sltm_lvm_recompute_holder_view_effect = yes } }
+sltm_lvm_hf_stewardship_band_8_gui = { scope = character effect = { sltm_lvm_save_holder_filter_undo_effect = yes set_variable = { name = sltm_lvm_hf_stewardship_band value = flag:8 } sltm_lvm_update_holder_active_filter_count_effect = yes sltm_lvm_recompute_holder_view_effect = yes } }
+sltm_lvm_hf_stewardship_band_12_gui = { scope = character effect = { sltm_lvm_save_holder_filter_undo_effect = yes set_variable = { name = sltm_lvm_hf_stewardship_band value = flag:12 } sltm_lvm_update_holder_active_filter_count_effect = yes sltm_lvm_recompute_holder_view_effect = yes } }
+sltm_lvm_hf_stewardship_band_16_gui = { scope = character effect = { sltm_lvm_save_holder_filter_undo_effect = yes set_variable = { name = sltm_lvm_hf_stewardship_band value = flag:16 } sltm_lvm_update_holder_active_filter_count_effect = yes sltm_lvm_recompute_holder_view_effect = yes } }
+sltm_lvm_hf_stewardship_band_20_gui = { scope = character effect = { sltm_lvm_save_holder_filter_undo_effect = yes set_variable = { name = sltm_lvm_hf_stewardship_band value = flag:20 } sltm_lvm_update_holder_active_filter_count_effect = yes sltm_lvm_recompute_holder_view_effect = yes } }
+sltm_lvm_hf_intrigue_band_all_gui = { scope = character effect = { sltm_lvm_save_holder_filter_undo_effect = yes set_variable = { name = sltm_lvm_hf_intrigue_band value = flag:all } sltm_lvm_update_holder_active_filter_count_effect = yes sltm_lvm_recompute_holder_view_effect = yes } }
+sltm_lvm_hf_intrigue_band_8_gui = { scope = character effect = { sltm_lvm_save_holder_filter_undo_effect = yes set_variable = { name = sltm_lvm_hf_intrigue_band value = flag:8 } sltm_lvm_update_holder_active_filter_count_effect = yes sltm_lvm_recompute_holder_view_effect = yes } }
+sltm_lvm_hf_intrigue_band_12_gui = { scope = character effect = { sltm_lvm_save_holder_filter_undo_effect = yes set_variable = { name = sltm_lvm_hf_intrigue_band value = flag:12 } sltm_lvm_update_holder_active_filter_count_effect = yes sltm_lvm_recompute_holder_view_effect = yes } }
+sltm_lvm_hf_intrigue_band_16_gui = { scope = character effect = { sltm_lvm_save_holder_filter_undo_effect = yes set_variable = { name = sltm_lvm_hf_intrigue_band value = flag:16 } sltm_lvm_update_holder_active_filter_count_effect = yes sltm_lvm_recompute_holder_view_effect = yes } }
+sltm_lvm_hf_intrigue_band_20_gui = { scope = character effect = { sltm_lvm_save_holder_filter_undo_effect = yes set_variable = { name = sltm_lvm_hf_intrigue_band value = flag:20 } sltm_lvm_update_holder_active_filter_count_effect = yes sltm_lvm_recompute_holder_view_effect = yes } }
+sltm_lvm_hf_learning_band_all_gui = { scope = character effect = { sltm_lvm_save_holder_filter_undo_effect = yes set_variable = { name = sltm_lvm_hf_learning_band value = flag:all } sltm_lvm_update_holder_active_filter_count_effect = yes sltm_lvm_recompute_holder_view_effect = yes } }
+sltm_lvm_hf_learning_band_8_gui = { scope = character effect = { sltm_lvm_save_holder_filter_undo_effect = yes set_variable = { name = sltm_lvm_hf_learning_band value = flag:8 } sltm_lvm_update_holder_active_filter_count_effect = yes sltm_lvm_recompute_holder_view_effect = yes } }
+sltm_lvm_hf_learning_band_12_gui = { scope = character effect = { sltm_lvm_save_holder_filter_undo_effect = yes set_variable = { name = sltm_lvm_hf_learning_band value = flag:12 } sltm_lvm_update_holder_active_filter_count_effect = yes sltm_lvm_recompute_holder_view_effect = yes } }
+sltm_lvm_hf_learning_band_16_gui = { scope = character effect = { sltm_lvm_save_holder_filter_undo_effect = yes set_variable = { name = sltm_lvm_hf_learning_band value = flag:16 } sltm_lvm_update_holder_active_filter_count_effect = yes sltm_lvm_recompute_holder_view_effect = yes } }
+sltm_lvm_hf_learning_band_20_gui = { scope = character effect = { sltm_lvm_save_holder_filter_undo_effect = yes set_variable = { name = sltm_lvm_hf_learning_band value = flag:20 } sltm_lvm_update_holder_active_filter_count_effect = yes sltm_lvm_recompute_holder_view_effect = yes } }
+sltm_lvm_hf_prowess_band_all_gui = { scope = character effect = { sltm_lvm_save_holder_filter_undo_effect = yes set_variable = { name = sltm_lvm_hf_prowess_band value = flag:all } sltm_lvm_update_holder_active_filter_count_effect = yes sltm_lvm_recompute_holder_view_effect = yes } }
+sltm_lvm_hf_prowess_band_8_gui = { scope = character effect = { sltm_lvm_save_holder_filter_undo_effect = yes set_variable = { name = sltm_lvm_hf_prowess_band value = flag:8 } sltm_lvm_update_holder_active_filter_count_effect = yes sltm_lvm_recompute_holder_view_effect = yes } }
+sltm_lvm_hf_prowess_band_12_gui = { scope = character effect = { sltm_lvm_save_holder_filter_undo_effect = yes set_variable = { name = sltm_lvm_hf_prowess_band value = flag:12 } sltm_lvm_update_holder_active_filter_count_effect = yes sltm_lvm_recompute_holder_view_effect = yes } }
+sltm_lvm_hf_prowess_band_16_gui = { scope = character effect = { sltm_lvm_save_holder_filter_undo_effect = yes set_variable = { name = sltm_lvm_hf_prowess_band value = flag:16 } sltm_lvm_update_holder_active_filter_count_effect = yes sltm_lvm_recompute_holder_view_effect = yes } }
+sltm_lvm_hf_prowess_band_20_gui = { scope = character effect = { sltm_lvm_save_holder_filter_undo_effect = yes set_variable = { name = sltm_lvm_hf_prowess_band value = flag:20 } sltm_lvm_update_holder_active_filter_count_effect = yes sltm_lvm_recompute_holder_view_effect = yes } }
+
+# ---- 统治者 ----
+sltm_lvm_hf_ruler_all_gui = { scope = character effect = { sltm_lvm_save_holder_filter_undo_effect = yes set_variable = { name = sltm_lvm_hf_ruler value = flag:all } sltm_lvm_update_holder_active_filter_count_effect = yes sltm_lvm_recompute_holder_view_effect = yes } }
+sltm_lvm_hf_ruler_ruler_gui = { scope = character effect = { sltm_lvm_save_holder_filter_undo_effect = yes set_variable = { name = sltm_lvm_hf_ruler value = flag:ruler } sltm_lvm_update_holder_active_filter_count_effect = yes sltm_lvm_recompute_holder_view_effect = yes } }
+sltm_lvm_hf_ruler_non_ruler_gui = { scope = character effect = { sltm_lvm_save_holder_filter_undo_effect = yes set_variable = { name = sltm_lvm_hf_ruler value = flag:non_ruler } sltm_lvm_update_holder_active_filter_count_effect = yes sltm_lvm_recompute_holder_view_effect = yes } }
+sltm_lvm_hf_ruler_landed_gui = { scope = character effect = { sltm_lvm_save_holder_filter_undo_effect = yes set_variable = { name = sltm_lvm_hf_ruler value = flag:landed } sltm_lvm_update_holder_active_filter_count_effect = yes sltm_lvm_recompute_holder_view_effect = yes } }
+sltm_lvm_hf_ruler_landless_gui = { scope = character effect = { sltm_lvm_save_holder_filter_undo_effect = yes set_variable = { name = sltm_lvm_hf_ruler value = flag:landless } sltm_lvm_update_holder_active_filter_count_effect = yes sltm_lvm_recompute_holder_view_effect = yes } }
+
+# ---- 婚姻 ----
+sltm_lvm_hf_marriage_all_gui = { scope = character effect = { sltm_lvm_save_holder_filter_undo_effect = yes set_variable = { name = sltm_lvm_hf_marriage value = flag:all } sltm_lvm_update_holder_active_filter_count_effect = yes sltm_lvm_recompute_holder_view_effect = yes } }
+sltm_lvm_hf_marriage_married_gui = { scope = character effect = { sltm_lvm_save_holder_filter_undo_effect = yes set_variable = { name = sltm_lvm_hf_marriage value = flag:married } sltm_lvm_update_holder_active_filter_count_effect = yes sltm_lvm_recompute_holder_view_effect = yes } }
+sltm_lvm_hf_marriage_unmarried_gui = { scope = character effect = { sltm_lvm_save_holder_filter_undo_effect = yes set_variable = { name = sltm_lvm_hf_marriage value = flag:unmarried } sltm_lvm_update_holder_active_filter_count_effect = yes sltm_lvm_recompute_holder_view_effect = yes } }
+sltm_lvm_hf_marriage_betrothed_gui = { scope = character effect = { sltm_lvm_save_holder_filter_undo_effect = yes set_variable = { name = sltm_lvm_hf_marriage value = flag:betrothed } sltm_lvm_update_holder_active_filter_count_effect = yes sltm_lvm_recompute_holder_view_effect = yes } }
+sltm_lvm_hf_marriage_concubine_gui = { scope = character effect = { sltm_lvm_save_holder_filter_undo_effect = yes set_variable = { name = sltm_lvm_hf_marriage value = flag:concubine } sltm_lvm_update_holder_active_filter_count_effect = yes sltm_lvm_recompute_holder_view_effect = yes } }
+
+# ---- 性取向 ----
+sltm_lvm_hf_sex_all_gui = { scope = character effect = { sltm_lvm_save_holder_filter_undo_effect = yes set_variable = { name = sltm_lvm_hf_sexuality value = flag:all } sltm_lvm_update_holder_active_filter_count_effect = yes sltm_lvm_recompute_holder_view_effect = yes } }
+sltm_lvm_hf_sex_hetero_gui = { scope = character effect = { sltm_lvm_save_holder_filter_undo_effect = yes set_variable = { name = sltm_lvm_hf_sexuality value = flag:heterosexual } sltm_lvm_update_holder_active_filter_count_effect = yes sltm_lvm_recompute_holder_view_effect = yes } }
+sltm_lvm_hf_sex_homo_gui = { scope = character effect = { sltm_lvm_save_holder_filter_undo_effect = yes set_variable = { name = sltm_lvm_hf_sexuality value = flag:homosexual } sltm_lvm_update_holder_active_filter_count_effect = yes sltm_lvm_recompute_holder_view_effect = yes } }
+sltm_lvm_hf_sex_bi_gui = { scope = character effect = { sltm_lvm_save_holder_filter_undo_effect = yes set_variable = { name = sltm_lvm_hf_sexuality value = flag:bisexual } sltm_lvm_update_holder_active_filter_count_effect = yes sltm_lvm_recompute_holder_view_effect = yes } }
+sltm_lvm_hf_sex_asexual_gui = { scope = character effect = { sltm_lvm_save_holder_filter_undo_effect = yes set_variable = { name = sltm_lvm_hf_sexuality value = flag:asexual } sltm_lvm_update_holder_active_filter_count_effect = yes sltm_lvm_recompute_holder_view_effect = yes } }
+
+# ---- 把柄 ----
+sltm_lvm_hf_hook_all_gui = { scope = character effect = { sltm_lvm_save_holder_filter_undo_effect = yes set_variable = { name = sltm_lvm_hf_hook value = flag:all } sltm_lvm_update_holder_active_filter_count_effect = yes sltm_lvm_recompute_holder_view_effect = yes } }
+sltm_lvm_hf_hook_yes_gui = { scope = character effect = { sltm_lvm_save_holder_filter_undo_effect = yes set_variable = { name = sltm_lvm_hf_hook value = flag:player_has_hook } sltm_lvm_update_holder_active_filter_count_effect = yes sltm_lvm_recompute_holder_view_effect = yes } }
+sltm_lvm_hf_hook_no_gui = { scope = character effect = { sltm_lvm_save_holder_filter_undo_effect = yes set_variable = { name = sltm_lvm_hf_hook value = flag:player_has_no_hook } sltm_lvm_update_holder_active_filter_count_effect = yes sltm_lvm_recompute_holder_view_effect = yes } }
+
+# ---- 信仰关系 ----
+sltm_lvm_hf_faith_all_gui = { scope = character effect = { sltm_lvm_save_holder_filter_undo_effect = yes set_variable = { name = sltm_lvm_hf_faith_relation value = flag:all } sltm_lvm_update_holder_active_filter_count_effect = yes sltm_lvm_recompute_holder_view_effect = yes } }
+sltm_lvm_hf_faith_same_gui = { scope = character effect = { sltm_lvm_save_holder_filter_undo_effect = yes set_variable = { name = sltm_lvm_hf_faith_relation value = flag:same_faith } sltm_lvm_update_holder_active_filter_count_effect = yes sltm_lvm_recompute_holder_view_effect = yes } }
+sltm_lvm_hf_faith_same_religion_gui = { scope = character effect = { sltm_lvm_save_holder_filter_undo_effect = yes set_variable = { name = sltm_lvm_hf_faith_relation value = flag:same_religion } sltm_lvm_update_holder_active_filter_count_effect = yes sltm_lvm_recompute_holder_view_effect = yes } }
+sltm_lvm_hf_faith_hostile_gui = { scope = character effect = { sltm_lvm_save_holder_filter_undo_effect = yes set_variable = { name = sltm_lvm_hf_faith_relation value = flag:hostile_evil } sltm_lvm_update_holder_active_filter_count_effect = yes sltm_lvm_recompute_holder_view_effect = yes } }
+
+# ---- 文化关系 ----
+sltm_lvm_hf_culture_all_gui = { scope = character effect = { sltm_lvm_save_holder_filter_undo_effect = yes set_variable = { name = sltm_lvm_hf_culture_relation value = flag:all } sltm_lvm_update_holder_active_filter_count_effect = yes sltm_lvm_recompute_holder_view_effect = yes } }
+sltm_lvm_hf_culture_same_gui = { scope = character effect = { sltm_lvm_save_holder_filter_undo_effect = yes set_variable = { name = sltm_lvm_hf_culture_relation value = flag:same_culture } sltm_lvm_update_holder_active_filter_count_effect = yes sltm_lvm_recompute_holder_view_effect = yes } }
+sltm_lvm_hf_culture_same_heritage_gui = { scope = character effect = { sltm_lvm_save_holder_filter_undo_effect = yes set_variable = { name = sltm_lvm_hf_culture_relation value = flag:same_heritage } sltm_lvm_update_holder_active_filter_count_effect = yes sltm_lvm_recompute_holder_view_effect = yes } }
+sltm_lvm_hf_culture_other_heritage_gui = { scope = character effect = { sltm_lvm_save_holder_filter_undo_effect = yes set_variable = { name = sltm_lvm_hf_culture_relation value = flag:other_heritage } sltm_lvm_update_holder_active_filter_count_effect = yes sltm_lvm_recompute_holder_view_effect = yes } }
+
+# ---- 宗族关系 ----
+sltm_lvm_hf_dynasty_all_gui = { scope = character effect = { sltm_lvm_save_holder_filter_undo_effect = yes set_variable = { name = sltm_lvm_hf_dynasty_relation value = flag:all } sltm_lvm_update_holder_active_filter_count_effect = yes sltm_lvm_recompute_holder_view_effect = yes } }
+sltm_lvm_hf_dynasty_same_house_gui = { scope = character effect = { sltm_lvm_save_holder_filter_undo_effect = yes set_variable = { name = sltm_lvm_hf_dynasty_relation value = flag:same_house } sltm_lvm_update_holder_active_filter_count_effect = yes sltm_lvm_recompute_holder_view_effect = yes } }
+sltm_lvm_hf_dynasty_same_dynasty_gui = { scope = character effect = { sltm_lvm_save_holder_filter_undo_effect = yes set_variable = { name = sltm_lvm_hf_dynasty_relation value = flag:same_dynasty } sltm_lvm_update_holder_active_filter_count_effect = yes sltm_lvm_recompute_holder_view_effect = yes } }
+sltm_lvm_hf_dynasty_other_dynasty_gui = { scope = character effect = { sltm_lvm_save_holder_filter_undo_effect = yes set_variable = { name = sltm_lvm_hf_dynasty_relation value = flag:other_dynasty } sltm_lvm_update_holder_active_filter_count_effect = yes sltm_lvm_recompute_holder_view_effect = yes } }
+sltm_lvm_hf_dynasty_lowborn_gui = { scope = character effect = { sltm_lvm_save_holder_filter_undo_effect = yes set_variable = { name = sltm_lvm_hf_dynasty_relation value = flag:lowborn } sltm_lvm_update_holder_active_filter_count_effect = yes sltm_lvm_recompute_holder_view_effect = yes } }
+
+# ---- 附庸立场 ----
+sltm_lvm_hf_stance_all_gui = { scope = character effect = { sltm_lvm_save_holder_filter_undo_effect = yes set_variable = { name = sltm_lvm_hf_vassal_stance value = flag:all } sltm_lvm_update_holder_active_filter_count_effect = yes sltm_lvm_recompute_holder_view_effect = yes } }
+sltm_lvm_hf_stance_loyal_gui = { scope = character effect = { sltm_lvm_save_holder_filter_undo_effect = yes set_variable = { name = sltm_lvm_hf_vassal_stance value = flag:loyal } sltm_lvm_update_holder_active_filter_count_effect = yes sltm_lvm_recompute_holder_view_effect = yes } }
+sltm_lvm_hf_stance_contentious_gui = { scope = character effect = { sltm_lvm_save_holder_filter_undo_effect = yes set_variable = { name = sltm_lvm_hf_vassal_stance value = flag:contentious } sltm_lvm_update_holder_active_filter_count_effect = yes sltm_lvm_recompute_holder_view_effect = yes } }
+sltm_lvm_hf_stance_scheming_gui = { scope = character effect = { sltm_lvm_save_holder_filter_undo_effect = yes set_variable = { name = sltm_lvm_hf_vassal_stance value = flag:scheming } sltm_lvm_update_holder_active_filter_count_effect = yes sltm_lvm_recompute_holder_view_effect = yes } }
+sltm_lvm_hf_stance_dutiful_gui = { scope = character effect = { sltm_lvm_save_holder_filter_undo_effect = yes set_variable = { name = sltm_lvm_hf_vassal_stance value = flag:dutiful } sltm_lvm_update_holder_active_filter_count_effect = yes sltm_lvm_recompute_holder_view_effect = yes } }
+
+# ---- 灵感 ----
+sltm_lvm_hf_inspiration_all_gui = { scope = character effect = { sltm_lvm_save_holder_filter_undo_effect = yes set_variable = { name = sltm_lvm_hf_inspiration value = flag:all } sltm_lvm_update_holder_active_filter_count_effect = yes sltm_lvm_recompute_holder_view_effect = yes } }
+sltm_lvm_hf_inspiration_yes_gui = { scope = character effect = { sltm_lvm_save_holder_filter_undo_effect = yes set_variable = { name = sltm_lvm_hf_inspiration value = flag:yes } sltm_lvm_update_holder_active_filter_count_effect = yes sltm_lvm_recompute_holder_view_effect = yes } }
+sltm_lvm_hf_inspiration_no_gui = { scope = character effect = { sltm_lvm_save_holder_filter_undo_effect = yes set_variable = { name = sltm_lvm_hf_inspiration value = flag:no } sltm_lvm_update_holder_active_filter_count_effect = yes sltm_lvm_recompute_holder_view_effect = yes } }
+
+# ---- 宝物 ----
+sltm_lvm_hf_artifact_all_gui = { scope = character effect = { sltm_lvm_save_holder_filter_undo_effect = yes set_variable = { name = sltm_lvm_hf_artifact value = flag:all } sltm_lvm_update_holder_active_filter_count_effect = yes sltm_lvm_recompute_holder_view_effect = yes } }
+sltm_lvm_hf_artifact_yes_gui = { scope = character effect = { sltm_lvm_save_holder_filter_undo_effect = yes set_variable = { name = sltm_lvm_hf_artifact value = flag:yes } sltm_lvm_update_holder_active_filter_count_effect = yes sltm_lvm_recompute_holder_view_effect = yes } }
+sltm_lvm_hf_artifact_no_gui = { scope = character effect = { sltm_lvm_save_holder_filter_undo_effect = yes set_variable = { name = sltm_lvm_hf_artifact value = flag:no } sltm_lvm_update_holder_active_filter_count_effect = yes sltm_lvm_recompute_holder_view_effect = yes } }
+
+# ---- 人质 ----
+sltm_lvm_hf_hostage_all_gui = { scope = character effect = { sltm_lvm_save_holder_filter_undo_effect = yes set_variable = { name = sltm_lvm_hf_hostage value = flag:all } sltm_lvm_update_holder_active_filter_count_effect = yes sltm_lvm_recompute_holder_view_effect = yes } }
+sltm_lvm_hf_hostage_yes_gui = { scope = character effect = { sltm_lvm_save_holder_filter_undo_effect = yes set_variable = { name = sltm_lvm_hf_hostage value = flag:yes } sltm_lvm_update_holder_active_filter_count_effect = yes sltm_lvm_recompute_holder_view_effect = yes } }
+sltm_lvm_hf_hostage_no_gui = { scope = character effect = { sltm_lvm_save_holder_filter_undo_effect = yes set_variable = { name = sltm_lvm_hf_hostage value = flag:no } sltm_lvm_update_holder_active_filter_count_effect = yes sltm_lvm_recompute_holder_view_effect = yes } }
+
+# ---- 牵制 ----
+sltm_lvm_hf_pin_all_gui = { scope = character effect = { sltm_lvm_save_holder_filter_undo_effect = yes set_variable = { name = sltm_lvm_hf_pin value = flag:all } sltm_lvm_update_holder_active_filter_count_effect = yes sltm_lvm_recompute_holder_view_effect = yes } }
+sltm_lvm_hf_pin_yes_gui = { scope = character effect = { sltm_lvm_save_holder_filter_undo_effect = yes set_variable = { name = sltm_lvm_hf_pin value = flag:yes } sltm_lvm_update_holder_active_filter_count_effect = yes sltm_lvm_recompute_holder_view_effect = yes } }
+sltm_lvm_hf_pin_no_gui = { scope = character effect = { sltm_lvm_save_holder_filter_undo_effect = yes set_variable = { name = sltm_lvm_hf_pin value = flag:no } sltm_lvm_update_holder_active_filter_count_effect = yes sltm_lvm_recompute_holder_view_effect = yes } }
+
+# ---- token 三态 ----
+sltm_lvm_hf_token_brave_gui = { scope = character effect = { sltm_lvm_save_holder_filter_undo_effect = yes sltm_lvm_hf_token_brave_cycle_effect = yes sltm_lvm_update_holder_active_filter_count_effect = yes sltm_lvm_recompute_holder_view_effect = yes } }
+sltm_lvm_hf_token_cowardly_gui = { scope = character effect = { sltm_lvm_save_holder_filter_undo_effect = yes sltm_lvm_hf_token_cowardly_cycle_effect = yes sltm_lvm_update_holder_active_filter_count_effect = yes sltm_lvm_recompute_holder_view_effect = yes } }
+sltm_lvm_hf_token_martial_edu_gui = { scope = character effect = { sltm_lvm_save_holder_filter_undo_effect = yes sltm_lvm_hf_token_martial_edu_cycle_effect = yes sltm_lvm_update_holder_active_filter_count_effect = yes sltm_lvm_recompute_holder_view_effect = yes } }
+sltm_lvm_hf_token_steward_edu_gui = { scope = character effect = { sltm_lvm_save_holder_filter_undo_effect = yes sltm_lvm_hf_token_steward_edu_cycle_effect = yes sltm_lvm_update_holder_active_filter_count_effect = yes sltm_lvm_recompute_holder_view_effect = yes } }
+sltm_lvm_hf_token_good_genetic_gui = { scope = character effect = { sltm_lvm_save_holder_filter_undo_effect = yes sltm_lvm_hf_token_good_genetic_cycle_effect = yes sltm_lvm_update_holder_active_filter_count_effect = yes sltm_lvm_recompute_holder_view_effect = yes } }
+sltm_lvm_hf_token_bad_genetic_gui = { scope = character effect = { sltm_lvm_save_holder_filter_undo_effect = yes sltm_lvm_hf_token_bad_genetic_cycle_effect = yes sltm_lvm_update_holder_active_filter_count_effect = yes sltm_lvm_recompute_holder_view_effect = yes } }
+# 2026-07-18（V3.4-D）常用性格特质 token
+sltm_lvm_hf_token_ambitious_gui = { scope = character effect = { sltm_lvm_save_holder_filter_undo_effect = yes sltm_lvm_hf_token_ambitious_cycle_effect = yes sltm_lvm_update_holder_active_filter_count_effect = yes sltm_lvm_recompute_holder_view_effect = yes } }
+sltm_lvm_hf_token_content_gui = { scope = character effect = { sltm_lvm_save_holder_filter_undo_effect = yes sltm_lvm_hf_token_content_cycle_effect = yes sltm_lvm_update_holder_active_filter_count_effect = yes sltm_lvm_recompute_holder_view_effect = yes } }
+sltm_lvm_hf_token_just_gui = { scope = character effect = { sltm_lvm_save_holder_filter_undo_effect = yes sltm_lvm_hf_token_just_cycle_effect = yes sltm_lvm_update_holder_active_filter_count_effect = yes sltm_lvm_recompute_holder_view_effect = yes } }
+sltm_lvm_hf_token_arbitrary_gui = { scope = character effect = { sltm_lvm_save_holder_filter_undo_effect = yes sltm_lvm_hf_token_arbitrary_cycle_effect = yes sltm_lvm_update_holder_active_filter_count_effect = yes sltm_lvm_recompute_holder_view_effect = yes } }
+sltm_lvm_hf_token_calm_gui = { scope = character effect = { sltm_lvm_save_holder_filter_undo_effect = yes sltm_lvm_hf_token_calm_cycle_effect = yes sltm_lvm_update_holder_active_filter_count_effect = yes sltm_lvm_recompute_holder_view_effect = yes } }
+sltm_lvm_hf_token_wrathful_gui = { scope = character effect = { sltm_lvm_save_holder_filter_undo_effect = yes sltm_lvm_hf_token_wrathful_cycle_effect = yes sltm_lvm_update_holder_active_filter_count_effect = yes sltm_lvm_recompute_holder_view_effect = yes } }
+sltm_lvm_hf_token_patient_gui = { scope = character effect = { sltm_lvm_save_holder_filter_undo_effect = yes sltm_lvm_hf_token_patient_cycle_effect = yes sltm_lvm_update_holder_active_filter_count_effect = yes sltm_lvm_recompute_holder_view_effect = yes } }
+sltm_lvm_hf_token_impatient_gui = { scope = character effect = { sltm_lvm_save_holder_filter_undo_effect = yes sltm_lvm_hf_token_impatient_cycle_effect = yes sltm_lvm_update_holder_active_filter_count_effect = yes sltm_lvm_recompute_holder_view_effect = yes } }
+sltm_lvm_hf_token_diligent_gui = { scope = character effect = { sltm_lvm_save_holder_filter_undo_effect = yes sltm_lvm_hf_token_diligent_cycle_effect = yes sltm_lvm_update_holder_active_filter_count_effect = yes sltm_lvm_recompute_holder_view_effect = yes } }
+sltm_lvm_hf_token_lazy_gui = { scope = character effect = { sltm_lvm_save_holder_filter_undo_effect = yes sltm_lvm_hf_token_lazy_cycle_effect = yes sltm_lvm_update_holder_active_filter_count_effect = yes sltm_lvm_recompute_holder_view_effect = yes } }
+sltm_lvm_hf_token_honest_gui = { scope = character effect = { sltm_lvm_save_holder_filter_undo_effect = yes sltm_lvm_hf_token_honest_cycle_effect = yes sltm_lvm_update_holder_active_filter_count_effect = yes sltm_lvm_recompute_holder_view_effect = yes } }
+sltm_lvm_hf_token_deceitful_gui = { scope = character effect = { sltm_lvm_save_holder_filter_undo_effect = yes sltm_lvm_hf_token_deceitful_cycle_effect = yes sltm_lvm_update_holder_active_filter_count_effect = yes sltm_lvm_recompute_holder_view_effect = yes } }
+
+# ---- 打开前初始化 / 重置 / 活动 / 撤销 ----
+sltm_lvm_prepare_holder_filter_gui = {
+    scope = character
+    effect = {
+        sltm_lvm_ensure_filter_state_effect = yes
+    }
+}
+
+sltm_lvm_holder_reset_filters_gui = {
+    scope = character
+    effect = {
+        sltm_lvm_reset_holder_filters_effect = yes
+    }
+}
+sltm_lvm_holder_filters_active_gui = {
+    scope = character
+    is_shown = {
+        OR = {
+            NOT = { var:sltm_lvm_hf_relation = flag:all }
+            NOT = { var:sltm_lvm_hf_gender = flag:all }
+            NOT = { var:sltm_lvm_hf_adult = flag:all }
+            NOT = { var:sltm_lvm_hf_age_band = flag:all }
+            NOT = { var:sltm_lvm_hf_imprisoned = flag:all }
+            NOT = { var:sltm_lvm_hf_government = flag:all }
+            NOT = { var:sltm_lvm_hf_managed_count = flag:all }
+            NOT = { var:sltm_lvm_hf_pending_count = flag:all }
+            NOT = { var:sltm_lvm_hf_blocked_count = flag:all }
+            NOT = { var:sltm_lvm_hf_junfu_count = flag:all }
+            NOT = { var:sltm_lvm_hf_noble_count = flag:all }
+            NOT = { var:sltm_lvm_hf_holy_order_count = flag:all }
+            NOT = { var:sltm_lvm_hf_mercenary_count = flag:all }
+            NOT = { var:sltm_lvm_hf_other_count = flag:all }
+            NOT = { var:sltm_lvm_hf_diplomacy_band = flag:all }
+            NOT = { var:sltm_lvm_hf_martial_band = flag:all }
+            NOT = { var:sltm_lvm_hf_stewardship_band = flag:all }
+            NOT = { var:sltm_lvm_hf_intrigue_band = flag:all }
+            NOT = { var:sltm_lvm_hf_learning_band = flag:all }
+            NOT = { var:sltm_lvm_hf_prowess_band = flag:all }
+            NOT = { var:sltm_lvm_hf_ruler = flag:all }
+            NOT = { var:sltm_lvm_hf_marriage = flag:all }
+            NOT = { var:sltm_lvm_hf_sexuality = flag:all }
+            NOT = { var:sltm_lvm_hf_hook = flag:all }
+            NOT = { var:sltm_lvm_hf_faith_relation = flag:all }
+            NOT = { var:sltm_lvm_hf_culture_relation = flag:all }
+            NOT = { var:sltm_lvm_hf_dynasty_relation = flag:all }
+            NOT = { var:sltm_lvm_hf_vassal_stance = flag:all }
+            NOT = { var:sltm_lvm_hf_inspiration = flag:all }
+            NOT = { var:sltm_lvm_hf_artifact = flag:all }
+            NOT = { var:sltm_lvm_hf_hostage = flag:all }
+            NOT = { var:sltm_lvm_hf_pin = flag:all }
+            has_variable_list = sltm_lvm_hf_tokens
+        }
+    }
+}
+sltm_lvm_holder_undo_gui = {
+    scope = character
+    is_shown = {
+        has_variable = sltm_lvm_holder_undo_valid
+    }
+    effect = {
+        sltm_lvm_restore_holder_filter_undo_effect = yes
+    }
+}
+
+# 预设槽 GUI 包装（存/读全部 hf_* + token 状态）
+sltm_lvm_holder_preset_1_save_gui = { scope = character effect = { sltm_lvm_holder_preset_1_save_effect = yes } }
+sltm_lvm_holder_preset_1_load_gui = {
+    scope = character
+    is_shown = {
+        AND = {
+            has_variable = sltm_lvm_holder_preset_1_valid
+            var:sltm_lvm_holder_preset_1_schema = flag:v28
+        }
+    }
+    effect = { sltm_lvm_holder_preset_1_load_effect = yes }
+}
+sltm_lvm_holder_preset_2_save_gui = { scope = character effect = { sltm_lvm_holder_preset_2_save_effect = yes } }
+sltm_lvm_holder_preset_2_load_gui = {
+    scope = character
+    is_shown = {
+        AND = {
+            has_variable = sltm_lvm_holder_preset_2_valid
+            var:sltm_lvm_holder_preset_2_schema = flag:v28
+        }
+    }
+    effect = { sltm_lvm_holder_preset_2_load_effect = yes }
+}
+sltm_lvm_holder_preset_3_save_gui = { scope = character effect = { sltm_lvm_holder_preset_3_save_effect = yes } }
+sltm_lvm_holder_preset_3_load_gui = {
+    scope = character
+    is_shown = {
+        AND = {
+            has_variable = sltm_lvm_holder_preset_3_valid
+            var:sltm_lvm_holder_preset_3_schema = flag:v28
+        }
+    }
+    effect = { sltm_lvm_holder_preset_3_load_effect = yes }
+}

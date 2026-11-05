@@ -1,0 +1,34 @@
+﻿sltm_workflow_create_gui = {
+scope = character
+is_shown = { always = yes }
+effect = { sltm_create_open_effect = yes }
+}
+
+sltm_workflow_edit_gui = {
+scope = character
+is_shown = { exists = var:sltm_lvm_selected_title }
+effect = { sltm_ui_open_effect = yes }
+}
+
+sltm_workflow_domicile_gui = {
+scope = character
+is_shown = { exists = var:sltm_lvm_selected_title.title_domicile }
+effect = { sltm_open_exact_domicile_effect = yes }
+}
+
+sltm_workflow_ensure_gui = {
+scope = character
+is_shown = { always = yes }
+effect = { sltm_residence_ensure_effect = yes }
+}
+
+sltm_domicile_pending_gui = {
+scope = character
+is_valid = { has_variable = sltm_open_pending exists = var:sltm_open_title exists = var:sltm_open_domicile var:sltm_open_title = { title_domicile = root.var:sltm_open_domicile } }
+}
+
+sltm_domicile_clear_gui = {
+scope = character
+effect = { remove_variable = sltm_open_pending }
+}
+

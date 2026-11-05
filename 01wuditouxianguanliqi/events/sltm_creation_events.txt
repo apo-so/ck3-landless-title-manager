@@ -1,0 +1,6 @@
+﻿namespace = sltm_custom_title_name_event
+sltm_custom_title_name_event.0011 = {
+ type = character_event
+ hidden = yes
+ immediate = { sltm_create_open_effect = yes }
+}

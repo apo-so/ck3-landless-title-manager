@@ -1,0 +1,26 @@
+﻿# 无地封臣列表参战角色文本。
+# 顺序即多战争并存时的显示优先级，必须与 sltm_lvm_holder_atwar_sort_value 一致。
+sltm_lvm_war_role_text = {
+    type = character
+
+    text = {
+        trigger = { sltm_lvm_holder_leads_defensive_war_trigger = yes }
+        localization_key = SLTM_LVM_COLUMN_ATWAR_LEAD_DEFENSE
+    }
+    text = {
+        trigger = { sltm_lvm_holder_leads_offensive_war_trigger = yes }
+        localization_key = SLTM_LVM_COLUMN_ATWAR_LEAD_OFFENSE
+    }
+    text = {
+        trigger = { sltm_lvm_holder_assists_defensive_war_trigger = yes }
+        localization_key = SLTM_LVM_COLUMN_ATWAR_ASSIST_DEFENSE
+    }
+    text = {
+        trigger = { sltm_lvm_holder_assists_offensive_war_trigger = yes }
+        localization_key = SLTM_LVM_COLUMN_ATWAR_ASSIST_OFFENSE
+    }
+    text = {
+        fallback = yes
+        localization_key = SLTM_LVM_COLUMN_ATWAR_NONE
+    }
+}

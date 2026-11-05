@@ -1,0 +1,23 @@
+﻿sltm_residence = {
+ allowed_for_character = { always = yes }
+ rename_window = none
+ illustration = "gfx/interface/illustrations/event_scenes/ep3_medi_estate.dds"
+ icon = "gfx/interface/icons/flat_icons/estate.dds"
+ map_pin_texture = "gfx/interface/icons/map_icons/map_icon_estate.dds"
+ can_move_manually = yes
+ provisions = no
+ herd = no
+ travel = no
+ base_external_slots = 0
+ domicile_building_slots = {
+  main_slot = {
+   slot_type = main
+   position = { 30% 10% }
+   size = { 40% 70% }
+  }
+ }
+ domicile_asset = {
+  background = "gfx/interface/window_domiciles/estate_background_green_terrain.dds"
+  foreground = "gfx/interface/window_domiciles/estate_background_green_terrain_foreground.dds"
+ }
+}

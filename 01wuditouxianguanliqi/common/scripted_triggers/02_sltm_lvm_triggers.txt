@@ -1,0 +1,287 @@
+﻿# 无地头衔管理器：头衔分类与状态触发器
+# 第一版只负责只读列表和选中状态，不直接执行授予、收回或销毁。
+
+sltm_lvm_is_managed_title_candidate_trigger = {
+    is_landless_type_title = yes
+}
+
+# “管理头衔”仍专指已创立并可由人物持有的头衔，避免改变人物统计和管理操作语义。
+sltm_lvm_is_managed_title_trigger = {
+    sltm_lvm_is_managed_title_candidate_trigger = yes
+    is_title_created = yes
+}
+
+sltm_lvm_is_junfu_title_trigger = {
+    sltm_lvm_is_managed_title_candidate_trigger = yes
+    sltm_is_junfu_title_trigger = yes
+}
+
+# 2026-07-17 新增(V3.1)：朝臣类型 = 天朝制(OE mod)九个固定无地帝国大臣头衔 e_minister_*。
+# 这九个是固定头衔 key，靠头衔本身识别（随头衔走），与“当前持有人是否为朝臣”的持有人条件无关。
+sltm_lvm_is_chaochen_title_trigger = {
+    sltm_lvm_is_managed_title_candidate_trigger = yes
+    OR = {
+        this = title:e_minister_chancellor
+        this = title:e_minister_censor
+        this = title:e_minister_grand_marshal
+        this = title:e_minister_of_personnel
+        this = title:e_minister_of_revenue
+        this = title:e_minister_of_rites
+        this = title:e_minister_of_war
+        this = title:e_minister_of_justice
+        this = title:e_minister_of_works
+    }
+}
+
+sltm_lvm_is_noble_family_title_trigger = {
+    sltm_lvm_is_managed_title_candidate_trigger = yes
+    is_noble_family_title = yes
+}
+
+sltm_lvm_is_holy_order_title_trigger = {
+    sltm_lvm_is_managed_title_candidate_trigger = yes
+    is_holy_order = yes
+}
+
+sltm_lvm_is_mercenary_title_trigger = {
+    sltm_lvm_is_managed_title_candidate_trigger = yes
+    is_mercenary_company = yes
+}
+
+sltm_lvm_is_religious_head_title_trigger = {
+    sltm_lvm_is_managed_title_candidate_trigger = yes
+    exists = holder
+    exists = holder.faith.religious_head_title
+    holder.faith.religious_head_title = this
+}
+
+sltm_lvm_is_other_title_trigger = {
+    sltm_lvm_is_managed_title_candidate_trigger = yes
+    NOR = {
+        sltm_lvm_is_junfu_title_trigger = yes
+        sltm_lvm_is_chaochen_title_trigger = yes
+        sltm_lvm_is_noble_family_title_trigger = yes
+        sltm_lvm_is_holy_order_title_trigger = yes
+        sltm_lvm_is_mercenary_title_trigger = yes
+        sltm_lvm_is_religious_head_title_trigger = yes
+    }
+}
+
+sltm_lvm_is_managed_holder_trigger = {
+    any_held_title = {
+        sltm_lvm_is_managed_title_trigger = yes
+    }
+}
+
+sltm_lvm_is_pending_title_trigger = {
+    has_variable = mytm_reassign_pending
+}
+
+sltm_lvm_is_blocked_title_trigger = {
+    has_variable = mytm_junfu_handover_blocked
+}
+
+sltm_lvm_is_primary_title_trigger = {
+    exists = holder
+    holder.primary_title = this
+}
+
+sltm_lvm_is_concurrent_title_trigger = {
+    exists = holder
+    NOT = {
+        holder.primary_title = this
+    }
+}
+
+# 过滤器触发器：这些触发器在遍历列表前由 effect 保存
+# scope:sltm_lvm_filter_player。未初始化时不要调用它们。
+
+sltm_lvm_title_matches_type_filter_trigger = {
+    OR = {
+        scope:sltm_lvm_filter_player.var:sltm_lvm_tf_type = flag:all
+        AND = {
+            scope:sltm_lvm_filter_player.var:sltm_lvm_tf_type = flag:junfu
+            sltm_lvm_is_junfu_title_trigger = yes
+        }
+        AND = {
+            scope:sltm_lvm_filter_player.var:sltm_lvm_tf_type = flag:noble_family
+            sltm_lvm_is_noble_family_title_trigger = yes
+        }
+        AND = {
+            scope:sltm_lvm_filter_player.var:sltm_lvm_tf_type = flag:holy_order
+            sltm_lvm_is_holy_order_title_trigger = yes
+        }
+        AND = {
+            scope:sltm_lvm_filter_player.var:sltm_lvm_tf_type = flag:mercenary
+            sltm_lvm_is_mercenary_title_trigger = yes
+        }
+        AND = {
+            scope:sltm_lvm_filter_player.var:sltm_lvm_tf_type = flag:religious_head
+            sltm_lvm_is_religious_head_title_trigger = yes
+        }
+        AND = {
+            scope:sltm_lvm_filter_player.var:sltm_lvm_tf_type = flag:other
+            sltm_lvm_is_other_title_trigger = yes
+        }
+    }
+}
+
+# 头衔等级是高频、互斥的筛选条件；对应头衔页顶部的统计表式子分页。
+sltm_lvm_title_matches_tier_filter_trigger = {
+    OR = {
+        scope:sltm_lvm_filter_player.var:sltm_lvm_tf_tier = flag:all
+        AND = {
+            scope:sltm_lvm_filter_player.var:sltm_lvm_tf_tier = flag:barony
+            tier = tier_barony
+        }
+        AND = {
+            scope:sltm_lvm_filter_player.var:sltm_lvm_tf_tier = flag:county
+            tier = tier_county
+        }
+        AND = {
+            scope:sltm_lvm_filter_player.var:sltm_lvm_tf_tier = flag:duchy
+            tier = tier_duchy
+        }
+        AND = {
+            scope:sltm_lvm_filter_player.var:sltm_lvm_tf_tier = flag:kingdom
+            tier = tier_kingdom
+        }
+        AND = {
+            scope:sltm_lvm_filter_player.var:sltm_lvm_tf_tier = flag:empire
+            tier = tier_empire
+        }
+    }
+}
+
+# V2.6：管理状态与头衔角色拆成两个独立维度，可组合（如 受阻 + 兼任）。
+sltm_lvm_title_matches_status_filter_trigger = {
+    OR = {
+        scope:sltm_lvm_filter_player.var:sltm_lvm_tf_status = flag:all
+        AND = {
+            scope:sltm_lvm_filter_player.var:sltm_lvm_tf_status = flag:normal
+            NOT = { sltm_lvm_is_pending_title_trigger = yes }
+            NOT = { sltm_lvm_is_blocked_title_trigger = yes }
+        }
+        AND = {
+            scope:sltm_lvm_filter_player.var:sltm_lvm_tf_status = flag:pending
+            sltm_lvm_is_pending_title_trigger = yes
+        }
+        AND = {
+            scope:sltm_lvm_filter_player.var:sltm_lvm_tf_status = flag:blocked
+            sltm_lvm_is_blocked_title_trigger = yes
+        }
+    }
+}
+
+sltm_lvm_title_matches_role_filter_trigger = {
+    OR = {
+        scope:sltm_lvm_filter_player.var:sltm_lvm_tf_role = flag:all
+        AND = {
+            scope:sltm_lvm_filter_player.var:sltm_lvm_tf_role = flag:primary
+            sltm_lvm_is_primary_title_trigger = yes
+        }
+        AND = {
+            scope:sltm_lvm_filter_player.var:sltm_lvm_tf_role = flag:concurrent
+            sltm_lvm_is_concurrent_title_trigger = yes
+        }
+    }
+}
+
+sltm_lvm_title_matches_scope_filter_trigger = {
+    exists = holder
+    OR = {
+        scope:sltm_lvm_filter_player.var:sltm_lvm_filter_scope = flag:all
+        AND = {
+            scope:sltm_lvm_filter_player.var:sltm_lvm_filter_scope = flag:self
+            holder = scope:sltm_lvm_filter_player
+        }
+        AND = {
+            scope:sltm_lvm_filter_player.var:sltm_lvm_filter_scope = flag:direct_vassal
+            holder = { liege = scope:sltm_lvm_filter_player }
+        }
+        AND = {
+            scope:sltm_lvm_filter_player.var:sltm_lvm_filter_scope = flag:all_vassals
+            holder = { is_vassal_of = scope:sltm_lvm_filter_player }
+        }
+    }
+}
+
+# V2.6：头衔总触发器只含纯头衔维度（type/tier/status/role），绝不引用任何人物/封臣属性。
+# 旧 sltm_lvm_title_matches_scope_filter_trigger 已废弃，不再在头衔管线中调用（兼容期保留定义）。
+sltm_lvm_title_matches_all_filters_trigger = {
+    sltm_lvm_title_matches_type_filter_trigger = yes
+    sltm_lvm_title_matches_tier_filter_trigger = yes
+    sltm_lvm_title_matches_status_filter_trigger = yes
+    sltm_lvm_title_matches_role_filter_trigger = yes
+}
+
+# ===== 批次 1：无地封臣（人物）独立筛选管线 =====
+# 关系条件从旧 sltm_lvm_filter_scope 迁移到 Character scope（变量 sltm_lvm_hf_relation）。
+# 批次 1 阶段仅含 relation；gender/adult/age/imprisoned/government/management 等在后续批次追加。
+sltm_lvm_holder_matches_relation_filter_trigger = {
+    OR = {
+        scope:sltm_lvm_filter_player.var:sltm_lvm_hf_relation = flag:all
+        AND = {
+            scope:sltm_lvm_filter_player.var:sltm_lvm_hf_relation = flag:self
+            this = scope:sltm_lvm_filter_player
+        }
+        AND = {
+            scope:sltm_lvm_filter_player.var:sltm_lvm_hf_relation = flag:direct_vassal
+            liege = scope:sltm_lvm_filter_player
+        }
+        AND = {
+            scope:sltm_lvm_filter_player.var:sltm_lvm_hf_relation = flag:all_vassals
+            is_vassal_of = scope:sltm_lvm_filter_player
+        }
+        AND = {
+            scope:sltm_lvm_filter_player.var:sltm_lvm_hf_relation = flag:courtier
+            is_courtier_of = scope:sltm_lvm_filter_player
+        }
+        AND = {
+            scope:sltm_lvm_filter_player.var:sltm_lvm_hf_relation = flag:close_family
+            is_close_family_of = scope:sltm_lvm_filter_player
+        }
+    }
+}
+
+# 完整的人物总触发器在 03_mytm_lvm_holder_filter_triggers.txt 中定义（P0+P1+token 逐项 AND）。
+
+
+# ===== V3.7.0：无地封臣列表参战角色 =====
+# Character scope。角色可能同时参加多场战争，显示与排序统一采用：
+# 主导防御 > 主导进攻 > 协助防御 > 协助进攻 > 未参战。
+sltm_lvm_holder_leads_defensive_war_trigger = {
+    any_character_war = {
+        root = {
+            is_leader_in_war = prev
+            is_defender_in_war = prev
+        }
+    }
+}
+
+sltm_lvm_holder_leads_offensive_war_trigger = {
+    any_character_war = {
+        root = {
+            is_leader_in_war = prev
+            is_attacker_in_war = prev
+        }
+    }
+}
+
+sltm_lvm_holder_assists_defensive_war_trigger = {
+    any_character_war = {
+        root = {
+            is_defender_in_war = prev
+            NOT = { is_leader_in_war = prev }
+        }
+    }
+}
+
+sltm_lvm_holder_assists_offensive_war_trigger = {
+    any_character_war = {
+        root = {
+            is_attacker_in_war = prev
+            NOT = { is_leader_in_war = prev }
+        }
+    }
+}

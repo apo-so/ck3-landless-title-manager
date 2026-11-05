@@ -1,0 +1,8 @@
+﻿# Selected explicitly from the title atlas. The temporary marker restricts it to this creation.
+sltm_chartered_monastery = {
+    trigger = { scope:founder ?= { has_variable = sltm_founding_monastery } }
+    weight = { value = 1 }
+    name = holy_order_place_order_of_ists
+    government = monastic_holy_order_government
+    type = monastic
+}

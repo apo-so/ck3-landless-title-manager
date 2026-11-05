@@ -1,0 +1,108 @@
+﻿namespace = sltm_property
+
+sltm_property.0100 = {
+ type = character_event
+ title = sltm_ui_name_title
+ desc = sltm_ui_name_desc
+ theme = realm
+ window = sltm_realm_character_event
+ widget = {
+ is_shown = { sltm_edit_session_live_trigger = yes has_variable = sltm_ui_origin }
+ gui = "event_window_widget_enter_text"
+ container = "dynamic_birth_name"
+ controller = { type = text data = { key = sltm_edit_input_text default = sltm_workflow_default_name } }
+ setup_scope = { root = { save_scope_as = text_target } }
+}
+ option = { name = sltm_ui_name_accept
+ trigger = { sltm_edit_session_live_trigger = yes has_variable = sltm_ui_origin has_variable = sltm_edit_input_text NOT = { var:sltm_edit_input_text = flag:sltm_workflow_default_name } }
+ hidden_effect = { if = { limit = { sltm_edit_session_live_trigger = yes has_variable = sltm_ui_origin has_variable = sltm_edit_input_text NOT = { var:sltm_edit_input_text = flag:sltm_workflow_default_name } } set_variable = { name = sltm_edit_accepted_name value = var:sltm_edit_input_text } set_variable = { name = sltm_edit_name value = 1 } remove_variable = sltm_edit_review_ready sltm_ui_resume_effect = yes } }
+ }
+ option = { name = sltm_ui_name_restore_default
+ trigger = { sltm_edit_session_live_trigger = yes has_variable = sltm_ui_origin }
+ hidden_effect = { if = { limit = { sltm_edit_session_live_trigger = yes has_variable = sltm_ui_origin } set_variable = { name = sltm_edit_name value = 2 } remove_variable = sltm_edit_review_ready sltm_ui_resume_effect = yes } }
+ }
+ option = { name = sltm_ui_field_keep
+ trigger = { sltm_edit_session_live_trigger = yes has_variable = sltm_ui_origin }
+ hidden_effect = { if = { limit = { sltm_edit_session_live_trigger = yes has_variable = sltm_ui_origin } remove_variable = sltm_edit_name remove_variable = sltm_edit_review_ready sltm_ui_resume_effect = yes } }
+ }
+ option = { name = sltm_ui_back
+ trigger = { sltm_edit_session_live_trigger = yes has_variable = sltm_ui_origin }
+ hidden_effect = { if = { limit = { sltm_edit_session_live_trigger = yes has_variable = sltm_ui_origin } sltm_ui_resume_effect = yes } }
+ }
+ option = { name = sltm_workflow_stale_close trigger = { NOT = { sltm_edit_session_live_trigger = yes } } }
+}
+
+sltm_property.0101 = {
+ type = character_event
+ title = sltm_ui_prefix_title
+ desc = sltm_ui_prefix_desc
+ theme = realm
+ window = sltm_realm_character_event
+ 
+ option = { name = sltm_ui_prefix_default
+ trigger = { sltm_edit_session_live_trigger = yes has_variable = sltm_ui_origin }
+ hidden_effect = { if = { limit = { sltm_edit_session_live_trigger = yes has_variable = sltm_ui_origin } set_variable = { name = sltm_edit_prefix value = 1 } remove_variable = sltm_edit_review_ready sltm_ui_resume_effect = yes } }
+ }
+ option = { name = sltm_ui_prefix_clear
+ trigger = { sltm_edit_session_live_trigger = yes has_variable = sltm_ui_origin }
+ hidden_effect = { if = { limit = { sltm_edit_session_live_trigger = yes has_variable = sltm_ui_origin } set_variable = { name = sltm_edit_prefix value = 2 } remove_variable = sltm_edit_review_ready sltm_ui_resume_effect = yes } }
+ }
+ option = { name = sltm_ui_prefix_estate
+ trigger = { sltm_edit_session_live_trigger = yes has_variable = sltm_ui_origin }
+ hidden_effect = { if = { limit = { sltm_edit_session_live_trigger = yes has_variable = sltm_ui_origin } set_variable = { name = sltm_edit_prefix value = 3 } remove_variable = sltm_edit_review_ready sltm_ui_resume_effect = yes } }
+ }
+ option = { name = sltm_ui_prefix_military
+ trigger = { sltm_edit_session_live_trigger = yes has_variable = sltm_ui_origin }
+ hidden_effect = { if = { limit = { sltm_edit_session_live_trigger = yes has_variable = sltm_ui_origin } set_variable = { name = sltm_edit_prefix value = 4 } remove_variable = sltm_edit_review_ready sltm_ui_resume_effect = yes } }
+ }
+ option = { name = sltm_ui_prefix_royal
+ trigger = { sltm_edit_session_live_trigger = yes has_variable = sltm_ui_origin }
+ hidden_effect = { if = { limit = { sltm_edit_session_live_trigger = yes has_variable = sltm_ui_origin } set_variable = { name = sltm_edit_prefix value = 5 } remove_variable = sltm_edit_review_ready sltm_ui_resume_effect = yes } }
+ }
+ option = { name = sltm_ui_field_keep
+ trigger = { sltm_edit_session_live_trigger = yes has_variable = sltm_ui_origin }
+ hidden_effect = { if = { limit = { sltm_edit_session_live_trigger = yes has_variable = sltm_ui_origin } remove_variable = sltm_edit_prefix remove_variable = sltm_edit_review_ready sltm_ui_resume_effect = yes } }
+ }
+ option = { name = sltm_ui_back
+ trigger = { sltm_edit_session_live_trigger = yes has_variable = sltm_ui_origin }
+ hidden_effect = { if = { limit = { sltm_edit_session_live_trigger = yes has_variable = sltm_ui_origin } sltm_ui_resume_effect = yes } }
+ }
+ option = { name = sltm_workflow_stale_close trigger = { NOT = { sltm_edit_session_live_trigger = yes } } }
+}
+
+sltm_property.0102 = {
+ type = character_event
+ title = sltm_ui_detail_title
+ desc = sltm_ui_detail_desc
+ theme = realm
+ window = sltm_realm_character_event
+ 
+ option = { name = sltm_ui_back
+ trigger = { sltm_edit_session_live_trigger = yes has_variable = sltm_ui_origin }
+ hidden_effect = { if = { limit = { sltm_edit_session_live_trigger = yes has_variable = sltm_ui_origin } sltm_ui_resume_effect = yes } }
+ }
+ option = { name = sltm_workflow_stale_close trigger = { NOT = { sltm_edit_session_live_trigger = yes } } }
+}
+
+sltm_property.0103 = {
+ type = character_event
+ title = sltm_ui_succ_title
+ desc = sltm_ui_succ_desc
+ theme = realm
+ window = sltm_realm_character_event
+ 
+ option = { name = sltm_ui_succ_rules
+ trigger = { sltm_edit_session_live_trigger = yes has_variable = sltm_ui_origin }
+ hidden_effect = { if = { limit = { sltm_edit_session_live_trigger = yes has_variable = sltm_ui_origin } trigger_event = sltm_workflow.0204 } }
+ }
+ option = { name = sltm_ui_succ_laws
+ trigger = { sltm_edit_session_live_trigger = yes has_variable = sltm_ui_origin }
+ hidden_effect = { if = { limit = { sltm_edit_session_live_trigger = yes has_variable = sltm_ui_origin } trigger_event = sltm_workflow.0206 } }
+ }
+ option = { name = sltm_ui_back
+ trigger = { sltm_edit_session_live_trigger = yes has_variable = sltm_ui_origin }
+ hidden_effect = { if = { limit = { sltm_edit_session_live_trigger = yes has_variable = sltm_ui_origin } sltm_ui_resume_effect = yes } }
+ }
+ option = { name = sltm_workflow_stale_close trigger = { NOT = { sltm_edit_session_live_trigger = yes } } }
+}
+

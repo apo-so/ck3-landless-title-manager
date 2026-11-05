@@ -1,0 +1,62 @@
+﻿# R10-35A Fix1 — 国库管理全封臣筛选、选择与分页 GUI
+
+sltm_lvm_select_treasury_character_gui = {
+    scope = character
+    saved_scopes = { player }
+    effect = {
+        save_scope_as = sltm_lvm_clicked_treasury_character
+        scope:player = { set_variable = { name = sltm_lvm_treasury_selected_character value = scope:sltm_lvm_clicked_treasury_character } }
+        # R8-B2P3F1：独立保存预算 Probe 目标，不受管理器选择校验/重开清理影响。
+        scope:player = { set_variable = { name = sltm_lvm_budget_probe_target value = scope:sltm_lvm_clicked_treasury_character } }
+        # 恢复逐团兵士费用明细列表；不恢复任何当前实际总额数值回写/聚合测试。
+        sltm_lvm_treasury_rebuild_maa_expense_probe_effect = yes
+    }
+}
+
+# 兵团新增/删除/转移后，手动刷新所选封臣的 Regiment 明细列表。
+sltm_lvm_treasury_refresh_maa_expense_probe_gui = {
+    scope = character
+    saved_scopes = { player }
+    effect = {
+        sltm_lvm_treasury_rebuild_maa_expense_probe_effect = yes
+    }
+}
+
+sltm_lvm_treasury_has_treasury_gui = { scope = character is_shown = { has_treasury = yes } }
+sltm_lvm_treasury_is_junfu_gui = { scope = character is_shown = { sltm_lvm_treasury_is_junfu_character_trigger = yes } }
+sltm_lvm_treasury_is_military_gui = { scope = character is_shown = { sltm_lvm_treasury_is_military_character_trigger = yes } }
+
+sltm_lvm_treasury_filters_active_gui = {
+    scope = character
+    is_shown = {
+        OR = {
+            NOT = { var:sltm_lvm_treasury_filter_scope = flag:all }
+            NOT = { var:sltm_lvm_treasury_filter_type = flag:all }
+            NOT = { var:sltm_lvm_treasury_filter_finance = flag:all }
+        }
+    }
+}
+
+sltm_lvm_treasury_reset_filters_gui = { scope = character effect = { sltm_lvm_treasury_reset_filters_effect = yes } }
+
+# 单选筛选项。
+sltm_lvm_treasury_scope_all_gui = { scope = character effect = { set_variable = { name = sltm_lvm_treasury_filter_scope value = flag:all } sltm_lvm_treasury_filter_changed_effect = yes } }
+sltm_lvm_treasury_scope_direct_gui = { scope = character effect = { set_variable = { name = sltm_lvm_treasury_filter_scope value = flag:direct } sltm_lvm_treasury_filter_changed_effect = yes } }
+sltm_lvm_treasury_scope_indirect_gui = { scope = character effect = { set_variable = { name = sltm_lvm_treasury_filter_scope value = flag:indirect } sltm_lvm_treasury_filter_changed_effect = yes } }
+sltm_lvm_treasury_type_all_gui = { scope = character effect = { set_variable = { name = sltm_lvm_treasury_filter_type value = flag:all } sltm_lvm_treasury_filter_changed_effect = yes } }
+sltm_lvm_treasury_type_junfu_gui = { scope = character effect = { set_variable = { name = sltm_lvm_treasury_filter_type value = flag:junfu } sltm_lvm_treasury_filter_changed_effect = yes } }
+sltm_lvm_treasury_type_military_gui = { scope = character effect = { set_variable = { name = sltm_lvm_treasury_filter_type value = flag:military } sltm_lvm_treasury_filter_changed_effect = yes } }
+sltm_lvm_treasury_type_other_gui = { scope = character effect = { set_variable = { name = sltm_lvm_treasury_filter_type value = flag:other } sltm_lvm_treasury_filter_changed_effect = yes } }
+sltm_lvm_treasury_finance_all_gui = { scope = character effect = { set_variable = { name = sltm_lvm_treasury_filter_finance value = flag:all } sltm_lvm_treasury_filter_changed_effect = yes } }
+sltm_lvm_treasury_finance_has_gui = { scope = character effect = { set_variable = { name = sltm_lvm_treasury_filter_finance value = flag:has_treasury } sltm_lvm_treasury_filter_changed_effect = yes } }
+sltm_lvm_treasury_finance_debt_gui = { scope = character effect = { set_variable = { name = sltm_lvm_treasury_filter_finance value = flag:debt } sltm_lvm_treasury_filter_changed_effect = yes } }
+sltm_lvm_treasury_finance_deficit_gui = { scope = character effect = { set_variable = { name = sltm_lvm_treasury_filter_finance value = flag:deficit } sltm_lvm_treasury_filter_changed_effect = yes } }
+sltm_lvm_treasury_finance_none_gui = { scope = character effect = { set_variable = { name = sltm_lvm_treasury_filter_finance value = flag:no_treasury } sltm_lvm_treasury_filter_changed_effect = yes } }
+
+# 分页：每页 8 人。
+sltm_lvm_treasury_can_prev_page_gui = { scope = character is_shown = { var:sltm_lvm_treasury_page > 1 } }
+sltm_lvm_treasury_can_next_page_gui = { scope = character is_shown = { var:sltm_lvm_treasury_page < var:sltm_lvm_treasury_page_count } }
+sltm_lvm_treasury_first_page_gui = { scope = character is_shown = { var:sltm_lvm_treasury_page > 1 } effect = { set_variable = { name = sltm_lvm_treasury_page value = 1 } sltm_lvm_treasury_build_page_effect = yes } }
+sltm_lvm_treasury_prev_page_gui = { scope = character is_shown = { var:sltm_lvm_treasury_page > 1 } effect = { change_variable = { name = sltm_lvm_treasury_page subtract = 1 } sltm_lvm_treasury_build_page_effect = yes } }
+sltm_lvm_treasury_next_page_gui = { scope = character is_shown = { var:sltm_lvm_treasury_page < var:sltm_lvm_treasury_page_count } effect = { change_variable = { name = sltm_lvm_treasury_page add = 1 } sltm_lvm_treasury_build_page_effect = yes } }
+sltm_lvm_treasury_last_page_gui = { scope = character is_shown = { var:sltm_lvm_treasury_page < var:sltm_lvm_treasury_page_count } effect = { set_variable = { name = sltm_lvm_treasury_page value = var:sltm_lvm_treasury_page_count } sltm_lvm_treasury_build_page_effect = yes } }

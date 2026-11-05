@@ -1,0 +1,1443 @@
+﻿# CHARACTER scope; local draft identity only. Saved once at the entry, inherited by triggered pages.
+sltm_workflow_new_session_effect = {
+ if = { limit = { NOT = { has_variable = sltm_workflow_revision } } set_variable = { name = sltm_workflow_revision value = 0 } }
+ change_variable = { name = sltm_workflow_revision add = 1 }
+ if = {
+  limit = { has_variable = sltm_workflow_revision }
+  save_scope_value_as = { name = sltm_workflow_session value = var:sltm_workflow_revision }
+ }
+}
+# Scope contract: every public wrapper starts from acting CHARACTER.
+# create_holder/template/edit_target are persistent typed object variables; engine outputs are cleared each commit.
+# No events, creators or resource costs are called by the edit apply path.
+sltm_create_clear_draft_effect = {
+if = { limit = { has_variable = sltm_create_route_clw } sltm_windows_return_effect = yes }
+sltm_clw_clear_effect = yes
+remove_variable = sltm_create_route_clw
+remove_variable = sltm_clw_nominee
+remove_variable = sltm_create_special_kind
+remove_variable = sltm_create_kind
+remove_variable = sltm_create_tier
+remove_variable = sltm_create_preset
+remove_variable = sltm_create_claims
+remove_variable = sltm_create_template
+remove_variable = sltm_create_holder
+remove_variable = sltm_create_geography
+remove_variable = sltm_create_capital
+remove_variable = sltm_create_dejure
+remove_variable = sltm_create_province
+remove_variable = sltm_create_appearance
+remove_variable = sltm_create_pending
+remove_variable = sltm_create_ensure
+remove_variable = sltm_create_native_profile
+remove_variable = sltm_create_recommended_profile
+remove_variable = sltm_create_review_ready
+remove_variable = sltm_workflow_name
+}
+
+sltm_create_prepare_effect = {
+sltm_workflow_new_session_effect = yes
+sltm_edit_clear_draft_effect = yes
+sltm_create_clear_draft_effect = yes
+set_variable = { name = sltm_create_pending value = 1 }
+set_variable = { name = sltm_create_kind value = 1 }
+set_variable = { name = sltm_create_tier value = 2 }
+set_variable = { name = sltm_create_preset value = 1 }
+set_variable = { name = sltm_create_claims value = 0 }
+set_variable = { name = sltm_create_appearance value = 0 }
+set_variable = { name = sltm_create_holder value = this }
+if = { limit = { exists = var:sltm_lvm_selected_title } set_variable = { name = sltm_create_template value = var:sltm_lvm_selected_title } }
+
+}
+
+sltm_create_open_effect = {
+ sltm_windows_capture_origin_effect = yes
+ sltm_clw_open_effect = yes
+}
+
+# Invalidate every earlier parameter page before displaying the final review.
+sltm_create_review_effect = {
+ if = { limit = { sltm_create_session_live_trigger = yes exists = var:sltm_create_holder }
+  sltm_workflow_new_session_effect = yes
+  set_variable = { name = sltm_create_review_ready value = 1 }
+  trigger_event = sltm_workflow.0103
+ }
+}
+
+
+sltm_guarded_destroy_effect = {
+# Caller supplies scope:target. Every direct deletion is centralized here.
+if = {
+ limit = { exists = scope:target scope:target = { exists = holder sltm_plain_title_action_trigger = yes } }
+ scope:target.holder = { destroy_title = scope:target }
+}
+}
+
+# TITLE scope. The native landless setter requires a preferred capital, even on an empty title.
+sltm_anchor_new_title_effect = {
+    if = { limit = { exists = scope:sltm_holder.capital_county } set_capital_county = scope:sltm_holder.capital_county }
+    else_if = { limit = { exists = scope:sltm_holder.default_location.county } set_capital_county = scope:sltm_holder.default_location.county }
+    else_if = { limit = { exists = scope:sltm_actor.capital_county } set_capital_county = scope:sltm_actor.capital_county }
+}
+sltm_create_plain_effect = {
+clear_saved_scope = sltm_plain_original_primary
+scope:sltm_holder.primary_title ?= { save_scope_as = sltm_plain_original_primary }
+create_dynamic_title = { tier = $TIER$ name = sltm_workflow_created_name }
+if = { limit = { exists = scope:new_title }
+ scope:new_title = {
+  save_scope_as = sltm_created
+  sltm_anchor_new_title_effect = yes
+  sltm_plain_initial_rules_effect = yes
+ }
+ create_title_and_vassal_change = { type = created save_scope_as = sltm_create_change add_claim_on_loss = no }
+ scope:sltm_created = { change_title_holder = { holder = scope:sltm_holder change = scope:sltm_create_change } }
+ resolve_title_and_vassal_change = scope:sltm_create_change
+ if = { limit = { scope:sltm_plain_original_primary ?= { holder = scope:sltm_holder tier >= scope:sltm_holder.primary_title.tier } NOT = { scope:sltm_holder.primary_title ?= scope:sltm_plain_original_primary } }
+  scope:sltm_holder = { set_primary_title_to = scope:sltm_plain_original_primary }
+ }
+}
+}
+
+sltm_create_domicile_effect = {
+create_domicile_title = { name = sltm_workflow_created_name holder = scope:sltm_holder government = $GOVERNMENT$ tier = $TIER$ save_scope_as = sltm_created }
+# This constructor grants internally. Do not perform an unconditional second grant.
+}
+
+# All auxiliary domicile constructors preserve an existing ruler. The historical effect name is retained for callers.
+sltm_create_travel_domicile_effect = {
+ scope:sltm_holder = {
+  save_scope_as = sltm_travel_transaction
+  government_type ?= { save_scope_as = sltm_travel_original_government }
+  primary_title ?= { save_scope_as = sltm_travel_original_primary }
+  clear_saved_scope = sltm_original_confederation
+  confederation ?= { save_scope_as = sltm_original_confederation }
+  clear_variable_list = sltm_identity_laws
+  if = { limit = { exists = scope:sltm_travel_original_primary } sltm_identity_capture_laws_effect = yes }
+  set_variable = sltm_travel_active
+  remove_variable = sltm_travel_returned_title
+ }
+ sltm_create_domicile_effect = { TIER = $TIER$ GOVERNMENT = $GOVERNMENT$ }
+ scope:sltm_holder = {
+  if = {
+   limit = { scope:sltm_created ?= { holder = scope:sltm_holder } }
+   set_variable = { name = sltm_travel_returned_title value = scope:sltm_created }
+  }
+  if = {
+   limit = { exists = scope:sltm_travel_original_government NOT = { government_type ?= scope:sltm_travel_original_government } }
+   change_government = scope:sltm_travel_original_government
+  }
+  if = {
+   limit = {
+    scope:sltm_travel_original_primary ?= { holder = scope:sltm_holder tier >= scope:sltm_holder.primary_title.tier }
+    NOT = { primary_title ?= scope:sltm_travel_original_primary }
+   }
+   set_primary_title_to = scope:sltm_travel_original_primary
+  }
+  if = {
+   limit = {
+    OR = {
+     AND = { exists = scope:sltm_travel_original_government NOT = { government_type ?= scope:sltm_travel_original_government } }
+     AND = {
+       exists = scope:sltm_travel_original_primary
+       NOT = { primary_title ?= scope:sltm_travel_original_primary }
+       NAND = {
+        exists = scope:sltm_promoted_primary_allowed
+        primary_title ?= scope:sltm_created
+        scope:sltm_travel_original_primary = { holder ?= scope:sltm_holder tier < scope:sltm_created.tier }
+       }
+      }
+    }
+   }
+   scope:sltm_actor = { set_variable = sltm_travel_identity_failed }
+  }
+  if = {
+   limit = { exists = scope:sltm_travel_original_primary }
+   sltm_identity_purge_laws_effect = yes
+   sltm_identity_restore_laws_effect = yes
+   sltm_identity_verify_laws_effect = yes
+  }
+  clear_variable_list = sltm_identity_laws
+  if = {
+   limit = { exists = scope:sltm_original_confederation NOT = { confederation ?= scope:sltm_original_confederation } }
+   scope:sltm_actor = { set_variable = sltm_travel_identity_failed }
+  }
+  remove_variable = sltm_travel_returned_title
+  remove_variable = sltm_travel_active
+ }
+}
+
+sltm_create_backend_effect = {
+if = { limit = { var:sltm_create_kind = 1 } sltm_create_plain_effect = { TIER = $TIER$ } }
+else = { sltm_create_domicile_backend_effect = { TIER = $TIER$ } }
+}
+
+# The county constructor exists for domiciles only. Avoid expanding create_dynamic_title with an illegal rank.
+sltm_create_domicile_backend_effect = {
+if = { limit = { var:sltm_create_kind = 2 } sltm_create_travel_domicile_effect = { TIER = $TIER$ GOVERNMENT = sltm_residence_government } }
+else_if = { limit = { var:sltm_create_kind = 3 var:sltm_create_native_profile = 1 } sltm_create_travel_domicile_effect = { TIER = $TIER$ GOVERNMENT = administrative_government } }
+else_if = { limit = { var:sltm_create_kind = 3 var:sltm_create_native_profile = 2 } sltm_create_travel_domicile_effect = { TIER = $TIER$ GOVERNMENT = landless_adventurer_government } }
+else_if = { limit = { var:sltm_create_kind = 3 var:sltm_create_native_profile = 3 } sltm_create_travel_domicile_effect = { TIER = $TIER$ GOVERNMENT = nomad_government } }
+else_if = { limit = { var:sltm_create_kind = 3 var:sltm_create_native_profile = 4 } sltm_create_travel_domicile_effect = { TIER = $TIER$ GOVERNMENT = celestial_government } }
+else_if = { limit = { var:sltm_create_kind = 3 var:sltm_create_native_profile = 5 } sltm_create_travel_domicile_effect = { TIER = $TIER$ GOVERNMENT = steppe_admin_government } }
+else_if = { limit = { var:sltm_create_kind = 3 var:sltm_create_native_profile = 6 } sltm_create_travel_domicile_effect = { TIER = $TIER$ GOVERNMENT = meritocratic_government } }
+else_if = { limit = { var:sltm_create_kind = 3 var:sltm_create_native_profile = 7 } sltm_create_travel_domicile_effect = { TIER = $TIER$ GOVERNMENT = japan_administrative_government } }
+else_if = { limit = { var:sltm_create_kind = 3 var:sltm_create_native_profile = 8 } sltm_create_travel_domicile_effect = { TIER = $TIER$ GOVERNMENT = japan_feudal_government } }
+else_if = { limit = { var:sltm_create_kind = 3 var:sltm_create_native_profile = 9 } sltm_create_travel_domicile_effect = { TIER = $TIER$ GOVERNMENT = ecclesiastical_government } }
+
+}
+
+sltm_create_geography_effect = {
+# Each input is independent. Never derive domicile location from capital at commit time.
+set_variable = { name = sltm_create_result_capital value = 0 }
+set_variable = { name = sltm_create_result_dejure value = 0 }
+set_variable = { name = sltm_create_result_province value = 0 }
+if = { limit = { has_variable = sltm_create_capital }
+ set_variable = { name = sltm_create_result_capital value = 3 }
+ if = { limit = { exists = var:sltm_create_capital var:sltm_create_capital = { tier = tier_county } }
+  scope:sltm_created = { set_capital_county = root.var:sltm_create_capital }
+  if = { limit = { scope:sltm_created = { title_capital_county = root.var:sltm_create_capital } } set_variable = { name = sltm_create_result_capital value = 1 } }
+ }
+}
+if = { limit = { has_variable = sltm_create_dejure }
+ set_variable = { name = sltm_create_result_dejure value = 3 }
+ if = { limit = { exists = var:sltm_create_dejure scope:sltm_created = { this != root.var:sltm_create_dejure tier < root.var:sltm_create_dejure.tier } }
+  scope:sltm_created = { set_de_jure_liege_title = root.var:sltm_create_dejure }
+  if = { limit = { scope:sltm_created = { de_jure_liege = root.var:sltm_create_dejure } } set_variable = { name = sltm_create_result_dejure value = 1 } }
+ }
+}
+if = { limit = { has_variable = sltm_create_province }
+ set_variable = { name = sltm_create_result_province value = 3 }
+ if = { limit = { exists = var:sltm_create_province scope:sltm_created = { exists = title_domicile } }
+  scope:sltm_created.title_domicile = { move_domicile = root.var:sltm_create_province }
+  if = { limit = { scope:sltm_created.title_domicile = { domicile_location = root.var:sltm_create_province } } set_variable = { name = sltm_create_result_province value = 1 } }
+ }
+}
+}
+
+sltm_create_configure_effect = {
+if = { limit = { has_variable = sltm_create_appearance exists = var:sltm_create_template } 
+ if = { limit = { var:sltm_create_appearance = 1 }
+ scope:sltm_created = { set_coa = root.var:sltm_create_template set_color_from_title = root.var:sltm_create_template }
+ }
+}
+sltm_create_geography_effect = yes
+scope:sltm_created = {
+ set_variable = { name = sltm_created_title value = yes }
+ set_variable = { name = sltm_schema_version value = 2 }
+ if = { limit = { exists = title_domicile } set_variable = { name = sltm_origin_domicile value = title_domicile } }
+}
+if = { limit = { scope:sltm_created = { exists = title_domicile title_domicile = { is_domicile_type = sltm_residence } } }
+ scope:sltm_created.title_domicile = { if = { limit = { NOT = { has_domicile_building = sltm_residence_main_01 } } add_domicile_building = sltm_residence_main_01 } }
+}
+}
+
+sltm_create_commit_effect = {
+if = { limit = { sltm_workflow_session_current_trigger = yes has_variable = sltm_create_pending has_variable = sltm_create_review_ready NOT = { has_variable = sltm_create_busy } exists = var:sltm_create_holder }
+ save_scope_as = sltm_actor
+ set_variable = { name = sltm_create_busy value = 1 }
+ remove_variable = sltm_create_pending
+ remove_variable = sltm_create_review_ready
+ remove_variable = sltm_last_created_title
+ remove_variable = sltm_create_output_new
+ remove_variable = sltm_last_created_domicile
+ set_variable = { name = sltm_create_result value = 0 }
+ set_variable = { name = sltm_create_cost_settled value = 0 }
+ set_variable = { name = sltm_create_result_capital value = 0 }
+ set_variable = { name = sltm_create_result_dejure value = 0 }
+ set_variable = { name = sltm_create_result_province value = 0 }
+ set_variable = { name = sltm_old_titles_preserved value = 1 }
+ remove_variable = sltm_travel_identity_failed
+ clear_saved_scope = sltm_travel_transaction
+ clear_saved_scope = sltm_travel_original_government
+ clear_saved_scope = sltm_travel_original_primary
+ clear_saved_scope = new_title
+ clear_saved_scope = sltm_created
+ clear_saved_scope = sltm_capital
+ clear_saved_scope = sltm_dejure
+ var:sltm_create_holder = { save_scope_as = sltm_holder }
+ sltm_create_capture_before_effect = yes
+ if = { limit = { var:sltm_create_kind = 4 } sltm_special_create_effect = yes }
+ else_if = { limit = { var:sltm_create_tier = 1 } sltm_create_domicile_backend_effect = { TIER = county } }
+ else_if = { limit = { var:sltm_create_tier = 2 } sltm_create_backend_effect = { TIER = duchy } }
+ else_if = { limit = { var:sltm_create_tier = 3 } sltm_create_backend_effect = { TIER = kingdom } }
+ else_if = { limit = { var:sltm_create_tier = 4 } sltm_create_backend_effect = { TIER = empire } }
+ else_if = { limit = { var:sltm_create_tier = 5 } sltm_create_backend_effect = { TIER = hegemony } }
+ if = { limit = { exists = scope:sltm_created }
+  set_variable = { name = sltm_last_created_title value = scope:sltm_created }
+  set_variable = { name = sltm_create_result value = 1 }
+  if = { limit = {
+   NOT = { any_in_list = { variable = sltm_before_titles this = scope:sltm_created } }
+   OR = { scope:sltm_created = { NOT = { exists = title_domicile } } NOT = { any_in_list = { variable = sltm_before_domiciles this = scope:sltm_created.title_domicile } } }
+  }
+  set_variable = { name = sltm_create_output_new value = 1 }
+  set_variable = { name = sltm_lvm_selected_title value = scope:sltm_created }
+  sltm_create_configure_effect = yes
+  if = { limit = { scope:sltm_created = { exists = title_domicile } } set_variable = { name = sltm_last_created_domicile value = scope:sltm_created.title_domicile } }
+  if = { limit = { scope:sltm_created = { holder = scope:sltm_holder } OR = { AND = { var:sltm_create_tier = 1 scope:sltm_created = { tier = tier_county } } AND = { var:sltm_create_tier = 2 scope:sltm_created = { tier = tier_duchy } } AND = { var:sltm_create_tier = 3 scope:sltm_created = { tier = tier_kingdom } } AND = { var:sltm_create_tier = 4 scope:sltm_created = { tier = tier_empire } } AND = { var:sltm_create_tier = 5 scope:sltm_created = { tier = tier_hegemony } } } sltm_verified_created_object_trigger = yes }
+   set_variable = { name = sltm_create_result value = 2 }
+  }
+  }
+ }
+ sltm_create_capture_after_effect = yes
+ sltm_create_read_output_effect = yes
+ if = { limit = { OR = { has_variable = sltm_travel_identity_failed var:sltm_old_titles_preserved = 0 var:sltm_old_domiciles_preserved = 0 var:sltm_create_result_main = 3 var:sltm_create_result_object = 3 var:sltm_create_result_capital = 3 var:sltm_create_result_dejure = 3 var:sltm_create_result_province = 3 } var:sltm_create_result = 2 } set_variable = { name = sltm_create_result value = 1 } }
+ if = { limit = { var:sltm_create_result = 2 }
+   if = { limit = { var:sltm_create_tier = 2 } sltm_create_resource_cost_effect = { TIER = tier_duchy } }
+   if = { limit = { var:sltm_create_tier = 3 } sltm_create_resource_cost_effect = { TIER = tier_kingdom } }
+   if = { limit = { var:sltm_create_tier = 4 } sltm_create_resource_cost_effect = { TIER = tier_empire } }
+   if = { limit = { var:sltm_create_tier = 5 } sltm_create_resource_cost_effect = { TIER = tier_hegemony } }
+  set_variable = { name = sltm_create_cost_settled value = 1 }
+ }
+ remove_variable = sltm_create_busy
+ sltm_windows_refresh_after_change_effect = yes
+ if = {
+  limit = { has_variable = sltm_create_route_clw exists = scope:sltm_atlas_submit_mode
+   has_variable = sltm_create_output_new exists = scope:sltm_created var:sltm_last_created_title = scope:sltm_created
+   var:sltm_create_result_holder = 1 var:sltm_create_result_tier = 1
+   OR = { AND = { NOT = { exists = scope:sltm_travel_transaction } NOT = { var:sltm_create_kind = 4 } } var:sltm_create_result = 2 }
+  }
+  if = { limit = { scope:sltm_atlas_submit_mode = 2 }
+   if = { limit = { var:sltm_create_result = 1 }
+    send_interface_toast = { type = sltm_msg_create_dynamic_title title = SLTM_AT_CREATED left_icon = scope:sltm_holder right_icon = scope:sltm_created custom_tooltip = SLTM_DD_PARTIAL }
+   }
+   set_variable = { name = sltm_lvm_selected_title value = scope:sltm_created }
+   sltm_ui_open_fixed_effect = yes
+  }
+  else = { sltm_atlas_show_receipt_effect = yes }
+ }
+ else_if = { limit = { var:sltm_create_kind = 4 has_variable = sltm_create_route_clw NOT = { exists = scope:sltm_created } }
+  set_variable = { name = sltm_create_pending value = 1 }
+  set_variable = { name = sltm_clw_revision value = var:sltm_workflow_revision }
+  set_variable = { name = sltm_clw_open value = 1 }
+  set_variable = { name = sltm_clw_step value = 1 }
+  set_variable = { name = sltm_atlas_view value = 2 }
+  send_interface_toast = { type = event_toast_effect_bad title = SLTM_SP_FAILED left_icon = scope:sltm_holder custom_tooltip = SLTM_SP_REASON }
+ }
+ else = { trigger_event = sltm_workflow.0104 }
+}
+}
+
+sltm_residence_ensure_effect = {
+remove_variable = sltm_ensure_found
+every_held_title = {
+ limit = { sltm_owned_extra_domicile_trigger = yes title_domicile = { is_domicile_type = sltm_residence owner = root } }
+ save_scope_as = sltm_ensure_title
+ root = { if = { limit = { NOT = { has_variable = sltm_ensure_found } } set_variable = { name = sltm_ensure_found value = scope:sltm_ensure_title } } }
+}
+if = { limit = { exists = var:sltm_ensure_found }
+ set_variable = { name = sltm_lvm_selected_title value = var:sltm_ensure_found }
+ sltm_edit_open_effect = yes
+}
+else = {
+ sltm_create_prepare_effect = yes
+ set_variable = { name = sltm_create_kind value = 2 }
+ set_variable = { name = sltm_create_ensure value = 1 }
+ trigger_event = sltm_workflow.0101
+}
+
+}
+
+sltm_edit_clear_draft_effect = {
+# Returning from an event adapter must not strand the hidden manager.
+if = { limit = { has_variable = sltm_ui_origin } sltm_windows_return_effect = yes }
+remove_variable = sltm_edit_target
+remove_variable = sltm_edit_baseline_holder
+remove_variable = sltm_edit_baseline_domicile
+remove_variable = sltm_edit_baseline_capital
+remove_variable = sltm_edit_baseline_dejure
+remove_variable = sltm_edit_location_county
+remove_variable = sltm_edit_coa_source
+remove_variable = sltm_edit_color_source
+remove_variable = sltm_edit_pending
+remove_variable = sltm_edit_capital
+remove_variable = sltm_edit_dejure
+remove_variable = sltm_edit_province
+remove_variable = sltm_edit_transfer
+remove_variable = sltm_transfer_title
+remove_variable = sltm_transfer_from
+remove_variable = sltm_edit_name
+remove_variable = sltm_edit_coa
+remove_variable = sltm_edit_color
+remove_variable = sltm_edit_building
+remove_variable = sltm_edit_law_add
+remove_variable = sltm_edit_law_remove
+remove_variable = sltm_edit_definitive
+remove_variable = sltm_edit_dynasty
+remove_variable = sltm_edit_nomadic
+remove_variable = sltm_edit_heir
+remove_variable = sltm_edit_claims
+remove_variable = sltm_edit_landless
+remove_variable = sltm_edit_succession
+remove_variable = sltm_edit_invalid_heir
+remove_variable = sltm_edit_same_tier
+remove_variable = sltm_workflow_name
+remove_variable = sltm_edit_input_text
+remove_variable = sltm_edit_accepted_name
+remove_variable = sltm_edit_review_ready
+remove_variable = sltm_edit_conflict_holder
+remove_variable = sltm_edit_conflict_domicile
+remove_variable = sltm_edit_conflict_capital
+remove_variable = sltm_edit_conflict_dejure
+remove_variable = sltm_edit_conflict_province
+remove_variable = sltm_edit_conflict_building
+remove_variable = sltm_edit_conflict_landless
+remove_variable = sltm_edit_conflict_gender
+remove_variable = sltm_edit_conflict_order
+remove_variable = sltm_edit_baseline_holder_present
+remove_variable = sltm_edit_baseline_domicile_present
+remove_variable = sltm_edit_baseline_capital_present
+remove_variable = sltm_edit_baseline_dejure_present
+remove_variable = sltm_edit_baseline_province_present
+remove_variable = sltm_edit_baseline_building
+remove_variable = sltm_edit_baseline_landless
+remove_variable = sltm_edit_baseline_province
+remove_variable = sltm_edit_conflict_count
+remove_variable = sltm_baseline_gender_0
+remove_variable = sltm_baseline_gender_1
+remove_variable = sltm_baseline_gender_2
+remove_variable = sltm_baseline_gender_3
+remove_variable = sltm_baseline_gender_4
+remove_variable = sltm_baseline_order_0
+remove_variable = sltm_baseline_order_1
+remove_variable = sltm_baseline_order_2
+remove_variable = sltm_baseline_order_3
+remove_variable = sltm_baseline_order_4
+remove_variable = sltm_baseline_order_5
+remove_variable = sltm_baseline_order_6
+remove_variable = sltm_baseline_order_7
+remove_variable = sltm_baseline_order_8
+remove_variable = sltm_baseline_order_9
+remove_variable = sltm_baseline_order_10
+remove_variable = sltm_baseline_order_11
+remove_variable = sltm_baseline_order_12
+remove_variable = sltm_baseline_order_13
+remove_variable = sltm_baseline_order_14
+remove_variable = sltm_baseline_order_15
+remove_variable = sltm_baseline_order_16
+remove_variable = sltm_baseline_order_17
+remove_variable = sltm_baseline_order_18
+remove_variable = sltm_baseline_order_19
+remove_variable = sltm_baseline_order_20
+remove_variable = sltm_baseline_order_21
+remove_variable = sltm_baseline_order_22
+remove_variable = sltm_baseline_order_23
+remove_variable = sltm_baseline_order_24
+remove_variable = sltm_baseline_order_25
+remove_variable = sltm_baseline_order_26
+remove_variable = sltm_baseline_order_27
+remove_variable = sltm_baseline_order_28
+remove_variable = sltm_baseline_order_29
+remove_variable = sltm_baseline_order_30
+remove_variable = sltm_baseline_order_31
+remove_variable = sltm_baseline_order_32
+remove_variable = sltm_baseline_order_33
+remove_variable = sltm_baseline_order_34
+
+remove_variable = sltm_edit_prefix
+remove_variable = sltm_ui_open
+remove_variable = sltm_ui_origin
+remove_variable = sltm_ui_revision
+remove_variable = sltm_ui_choose_target
+remove_variable = sltm_ui_appearance
+remove_variable = sltm_ui_tab
+remove_variable = sltm_tab_transfer_source
+remove_variable = sltm_tab_transfer_confirm
+remove_variable = sltm_ui_dirty_count
+}
+
+sltm_edit_read_snapshot_effect = {
+ remove_variable = sltm_edit_baseline_holder
+ set_variable = { name = sltm_edit_baseline_holder_present value = 0 }
+ if = { limit = { exists = var:sltm_edit_target.holder }
+  set_variable = { name = sltm_edit_baseline_holder value = var:sltm_edit_target.holder }
+  set_variable = { name = sltm_edit_baseline_holder_present value = 1 }
+ }
+ remove_variable = sltm_edit_baseline_domicile
+ set_variable = { name = sltm_edit_baseline_domicile_present value = 0 }
+ if = { limit = { exists = var:sltm_edit_target.title_domicile }
+  set_variable = { name = sltm_edit_baseline_domicile value = var:sltm_edit_target.title_domicile }
+  set_variable = { name = sltm_edit_baseline_domicile_present value = 1 }
+ }
+ remove_variable = sltm_edit_baseline_capital
+ set_variable = { name = sltm_edit_baseline_capital_present value = 0 }
+ if = { limit = { exists = var:sltm_edit_target.title_capital_county }
+  set_variable = { name = sltm_edit_baseline_capital value = var:sltm_edit_target.title_capital_county }
+  set_variable = { name = sltm_edit_baseline_capital_present value = 1 }
+ }
+ remove_variable = sltm_edit_baseline_dejure
+ set_variable = { name = sltm_edit_baseline_dejure_present value = 0 }
+ if = { limit = { exists = var:sltm_edit_target.de_jure_liege }
+  set_variable = { name = sltm_edit_baseline_dejure value = var:sltm_edit_target.de_jure_liege }
+  set_variable = { name = sltm_edit_baseline_dejure_present value = 1 }
+ }
+ remove_variable = sltm_edit_baseline_province
+ set_variable = { name = sltm_edit_baseline_province_present value = 0 }
+ if = { limit = { exists = var:sltm_edit_target.title_domicile.domicile_location }
+  set_variable = { name = sltm_edit_baseline_province value = var:sltm_edit_target.title_domicile.domicile_location }
+  set_variable = { name = sltm_edit_baseline_province_present value = 1 }
+ }
+ set_variable = { name = sltm_edit_baseline_building value = 0 }
+ if = { limit = { exists = var:sltm_edit_target.title_domicile var:sltm_edit_target.title_domicile = { has_domicile_building = sltm_residence_main_01 } } set_variable = { name = sltm_edit_baseline_building value = 1 } }
+ set_variable = { name = sltm_edit_baseline_landless value = 0 }
+ if = { limit = { var:sltm_edit_target = { is_landless_type_title = yes } } set_variable = { name = sltm_edit_baseline_landless value = 1 } }
+ set_variable = { name = sltm_baseline_gender_0 value = 0 }
+ if = { limit = { var:sltm_edit_target = { sltm_has_title_rule_trigger = { LAW = male_only_law } } } set_variable = { name = sltm_baseline_gender_0 value = 1 } }
+ set_variable = { name = sltm_baseline_gender_1 value = 0 }
+ if = { limit = { var:sltm_edit_target = { sltm_has_title_rule_trigger = { LAW = male_preference_law } } } set_variable = { name = sltm_baseline_gender_1 value = 1 } }
+ set_variable = { name = sltm_baseline_gender_2 value = 0 }
+ if = { limit = { var:sltm_edit_target = { sltm_has_title_rule_trigger = { LAW = equal_law } } } set_variable = { name = sltm_baseline_gender_2 value = 1 } }
+ set_variable = { name = sltm_baseline_gender_3 value = 0 }
+ if = { limit = { var:sltm_edit_target = { sltm_has_title_rule_trigger = { LAW = female_preference_law } } } set_variable = { name = sltm_baseline_gender_3 value = 1 } }
+ set_variable = { name = sltm_baseline_gender_4 value = 0 }
+ if = { limit = { var:sltm_edit_target = { sltm_has_title_rule_trigger = { LAW = female_only_law } } } set_variable = { name = sltm_baseline_gender_4 value = 1 } }
+ set_variable = { name = sltm_baseline_order_0 value = 0 }
+ if = { limit = { var:sltm_edit_target = { has_title_law = confederate_partition_succession_law } } set_variable = { name = sltm_baseline_order_0 value = 1 } }
+ set_variable = { name = sltm_baseline_order_1 value = 0 }
+ if = { limit = { var:sltm_edit_target = { has_title_law = partition_succession_law } } set_variable = { name = sltm_baseline_order_1 value = 1 } }
+ set_variable = { name = sltm_baseline_order_2 value = 0 }
+ if = { limit = { var:sltm_edit_target = { has_title_law = high_partition_succession_law } } set_variable = { name = sltm_baseline_order_2 value = 1 } }
+ set_variable = { name = sltm_baseline_order_3 value = 0 }
+ if = { limit = { var:sltm_edit_target = { sltm_has_title_rule_trigger = { LAW = single_heir_succession_law } } } set_variable = { name = sltm_baseline_order_3 value = 1 } }
+ set_variable = { name = sltm_baseline_order_4 value = 0 }
+ if = { limit = { var:sltm_edit_target = { has_title_law = single_heir_succession_kurultai_law } } set_variable = { name = sltm_baseline_order_4 value = 1 } }
+ set_variable = { name = sltm_baseline_order_5 value = 0 }
+ if = { limit = { var:sltm_edit_target = { sltm_has_title_rule_trigger = { LAW = single_heir_succession_law_youngest } } } set_variable = { name = sltm_baseline_order_5 value = 1 } }
+ set_variable = { name = sltm_baseline_order_6 value = 0 }
+ if = { limit = { var:sltm_edit_target = { sltm_has_title_rule_trigger = { LAW = single_heir_dynasty_house } } } set_variable = { name = sltm_baseline_order_6 value = 1 } }
+ set_variable = { name = sltm_baseline_order_7 value = 0 }
+ if = { limit = { var:sltm_edit_target = { has_title_law = acclamation_succession_law } } set_variable = { name = sltm_baseline_order_7 value = 1 } }
+ set_variable = { name = sltm_baseline_order_8 value = 0 }
+ if = { limit = { var:sltm_edit_target = { has_title_law = appointment_succession_law } } set_variable = { name = sltm_baseline_order_8 value = 1 } }
+ set_variable = { name = sltm_baseline_order_9 value = 0 }
+ if = { limit = { var:sltm_edit_target = { has_title_law = landless_adventurer_succession_law } } set_variable = { name = sltm_baseline_order_9 value = 1 } }
+ set_variable = { name = sltm_baseline_order_10 value = 0 }
+ if = { limit = { var:sltm_edit_target = { has_title_law = theocratic_elective_succession_law } } set_variable = { name = sltm_baseline_order_10 value = 1 } }
+ set_variable = { name = sltm_baseline_order_11 value = 0 }
+ if = { limit = { var:sltm_edit_target = { has_title_law = clerical_appointment_law } } set_variable = { name = sltm_baseline_order_11 value = 1 } }
+ set_variable = { name = sltm_baseline_order_12 value = 0 }
+ if = { limit = { var:sltm_edit_target = { has_title_law = bishop_theocratic_succession_law } } set_variable = { name = sltm_baseline_order_12 value = 1 } }
+ set_variable = { name = sltm_baseline_order_13 value = 0 }
+ if = { limit = { var:sltm_edit_target = { has_title_law = holy_order_succession_law } } set_variable = { name = sltm_baseline_order_13 value = 1 } }
+ set_variable = { name = sltm_baseline_order_14 value = 0 }
+ if = { limit = { var:sltm_edit_target = { has_title_law = cultural_holy_order_succession_law } } set_variable = { name = sltm_baseline_order_14 value = 1 } }
+ set_variable = { name = sltm_baseline_order_15 value = 0 }
+ if = { limit = { var:sltm_edit_target = { has_title_law = monastic_holy_order_succession_law } } set_variable = { name = sltm_baseline_order_15 value = 1 } }
+ set_variable = { name = sltm_baseline_order_16 value = 0 }
+ if = { limit = { var:sltm_edit_target = { has_title_law = female_monastic_holy_order_succession_law } } set_variable = { name = sltm_baseline_order_16 value = 1 } }
+ set_variable = { name = sltm_baseline_order_17 value = 0 }
+ if = { limit = { var:sltm_edit_target = { has_title_law = male_monastic_holy_order_succession_law } } set_variable = { name = sltm_baseline_order_17 value = 1 } }
+ set_variable = { name = sltm_baseline_order_18 value = 0 }
+ if = { limit = { var:sltm_edit_target = { has_title_law = mercenary_company_succession_law } } set_variable = { name = sltm_baseline_order_18 value = 1 } }
+ set_variable = { name = sltm_baseline_order_19 value = 0 }
+ if = { limit = { var:sltm_edit_target = { has_title_law = city_succession_law } } set_variable = { name = sltm_baseline_order_19 value = 1 } }
+ set_variable = { name = sltm_baseline_order_20 value = 0 }
+ if = { limit = { var:sltm_edit_target = { has_title_law = clan_antagonistic_partition_succession_law } } set_variable = { name = sltm_baseline_order_20 value = 1 } }
+ set_variable = { name = sltm_baseline_order_21 value = 0 }
+ if = { limit = { var:sltm_edit_target = { has_title_law = clan_competitive_partition_succession_law } } set_variable = { name = sltm_baseline_order_21 value = 1 } }
+ set_variable = { name = sltm_baseline_order_22 value = 0 }
+ if = { limit = { var:sltm_edit_target = { has_title_law = clan_impassive_partition_succession_law } } set_variable = { name = sltm_baseline_order_22 value = 1 } }
+ set_variable = { name = sltm_baseline_order_23 value = 0 }
+ if = { limit = { var:sltm_edit_target = { has_title_law = clan_friendly_partition_succession_law } } set_variable = { name = sltm_baseline_order_23 value = 1 } }
+ set_variable = { name = sltm_baseline_order_24 value = 0 }
+ if = { limit = { var:sltm_edit_target = { has_title_law = clan_harmonious_partition_succession_law } } set_variable = { name = sltm_baseline_order_24 value = 1 } }
+ set_variable = { name = sltm_baseline_order_25 value = 0 }
+ if = { limit = { var:sltm_edit_target = { has_title_law = herder_succession_law } } set_variable = { name = sltm_baseline_order_25 value = 1 } }
+ set_variable = { name = sltm_baseline_order_26 value = 0 }
+ if = { limit = { var:sltm_edit_target = { has_title_law = celestial_appointment_succession_law } } set_variable = { name = sltm_baseline_order_26 value = 1 } }
+ set_variable = { name = sltm_baseline_order_27 value = 0 }
+ if = { limit = { var:sltm_edit_target = { has_title_law = celestial_military_appointment_succession_law } } set_variable = { name = sltm_baseline_order_27 value = 1 } }
+ set_variable = { name = sltm_baseline_order_28 value = 0 }
+ if = { limit = { var:sltm_edit_target = { has_title_law = japanese_regency_succession_law } } set_variable = { name = sltm_baseline_order_28 value = 1 } }
+ set_variable = { name = sltm_baseline_order_29 value = 0 }
+ if = { limit = { var:sltm_edit_target = { has_title_law = japanese_appointment_succession_law } } set_variable = { name = sltm_baseline_order_29 value = 1 } }
+ set_variable = { name = sltm_baseline_order_30 value = 0 }
+ if = { limit = { var:sltm_edit_target = { has_title_law = japanese_military_appointment_succession_law } } set_variable = { name = sltm_baseline_order_30 value = 1 } }
+ set_variable = { name = sltm_baseline_order_31 value = 0 }
+ if = { limit = { var:sltm_edit_target = { has_title_law = mandala_succession_law } } set_variable = { name = sltm_baseline_order_31 value = 1 } }
+ set_variable = { name = sltm_baseline_order_32 value = 0 }
+ if = { limit = { var:sltm_edit_target = { has_title_law = meritocratic_appointment_succession_law } } set_variable = { name = sltm_baseline_order_32 value = 1 } }
+ set_variable = { name = sltm_baseline_order_33 value = 0 }
+ if = { limit = { var:sltm_edit_target = { has_title_law = meritocratic_military_appointment_succession_law } } set_variable = { name = sltm_baseline_order_33 value = 1 } }
+ set_variable = { name = sltm_baseline_order_34 value = 0 }
+ if = { limit = { var:sltm_edit_target = { has_title_law = meritocratic_regency_succession_law } } set_variable = { name = sltm_baseline_order_34 value = 1 } }
+}
+
+sltm_edit_initialize_effect = {
+if = { limit = { exists = var:sltm_lvm_selected_title }
+ sltm_workflow_new_session_effect = yes
+ sltm_create_clear_draft_effect = yes
+ sltm_edit_clear_draft_effect = yes
+ set_variable = { name = sltm_edit_target value = var:sltm_lvm_selected_title }
+ set_variable = { name = sltm_edit_pending value = 1 }
+ set_variable = { name = sltm_edit_result_building value = 0 }
+ set_variable = { name = sltm_edit_result_capital value = 0 }
+ set_variable = { name = sltm_edit_result_claims value = 0 }
+ set_variable = { name = sltm_edit_result_coa value = 0 }
+ set_variable = { name = sltm_edit_result_color value = 0 }
+ set_variable = { name = sltm_edit_result_definitive value = 0 }
+ set_variable = { name = sltm_edit_result_dejure value = 0 }
+ set_variable = { name = sltm_edit_result_dynasty value = 0 }
+ set_variable = { name = sltm_edit_result_heir value = 0 }
+ set_variable = { name = sltm_edit_result_invalid_heir value = 0 }
+ set_variable = { name = sltm_edit_result_landless value = 0 }
+ set_variable = { name = sltm_edit_result_law_add value = 0 }
+ set_variable = { name = sltm_edit_result_law_remove value = 0 }
+ set_variable = { name = sltm_edit_result_prefix value = 0 }
+ set_variable = { name = sltm_edit_result_name value = 0 }
+ set_variable = { name = sltm_edit_result_nomadic value = 0 }
+ set_variable = { name = sltm_edit_result_province value = 0 }
+ set_variable = { name = sltm_edit_result_same_tier value = 0 }
+ set_variable = { name = sltm_edit_result_succession value = 0 }
+
+ sltm_edit_read_snapshot_effect = yes
+ sltm_edit_read_capabilities_effect = yes
+
+}
+}
+
+sltm_edit_open_effect = { sltm_ui_open_effect = yes }
+
+sltm_edit_apply_effect = {
+ if = { limit = { sltm_edit_session_live_trigger = yes has_variable = sltm_edit_review_ready sltm_edit_has_changes_trigger = yes NOT = { has_variable = sltm_edit_busy } }
+  sltm_edit_check_conflicts_effect = yes
+  if = { limit = { var:sltm_edit_conflict_count > 0 }
+   remove_variable = sltm_edit_review_ready
+   sltm_workflow_new_session_effect = yes
+   sltm_edit_read_current_effect = yes
+   trigger_event = sltm_workflow.0215
+  }
+  else = {
+   set_variable = { name = sltm_edit_busy value = 1 }
+   remove_variable = sltm_edit_pending
+   remove_variable = sltm_edit_review_ready
+   var:sltm_edit_target = { save_scope_as = sltm_edit_title }
+   sltm_edit_apply_fields_effect = yes
+   sltm_edit_summarize_results_effect = yes
+   remove_variable = sltm_edit_busy
+   sltm_windows_refresh_after_change_effect = yes
+   trigger_event = sltm_workflow.0209
+  }
+ }
+}
+
+sltm_edit_apply_fields_effect = {
+if = { limit = { has_variable = sltm_edit_name } if = { limit = { var:sltm_edit_name = 1 } scope:sltm_edit_title = { set_title_name_dynamic = sltm_menu_edit_entered_name } }
+else = { scope:sltm_edit_title = { reset_title_name = yes } }
+set_variable = { name = sltm_edit_result_name value = 2 }
+ }
+if = { limit = { has_variable = sltm_edit_coa } sltm_apply_coa_draft_effect = yes }
+if = { limit = { has_variable = sltm_edit_color } sltm_apply_color_draft_effect = yes }
+if = { limit = { has_variable = sltm_edit_capital } if = { limit = { exists = var:sltm_edit_capital } scope:sltm_edit_title = { set_capital_county = root.var:sltm_edit_capital }
+set_variable = { name = sltm_edit_result_capital value = 1 }
+if = { limit = { NOT = { scope:sltm_edit_title = { title_capital_county = root.var:sltm_edit_capital } } } set_variable = { name = sltm_edit_result_capital value = 3 } }
+ }
+else = { set_variable = { name = sltm_edit_result_capital value = 3 } } }
+if = { limit = { has_variable = sltm_edit_dejure } if = { limit = { exists = var:sltm_edit_dejure scope:sltm_edit_title = { this != root.var:sltm_edit_dejure tier < root.var:sltm_edit_dejure.tier } } scope:sltm_edit_title = { set_de_jure_liege_title = root.var:sltm_edit_dejure }
+set_variable = { name = sltm_edit_result_dejure value = 1 }
+if = { limit = { NOT = { scope:sltm_edit_title = { de_jure_liege = root.var:sltm_edit_dejure } } } set_variable = { name = sltm_edit_result_dejure value = 3 } }
+ }
+else = { set_variable = { name = sltm_edit_result_dejure value = 3 } } }
+if = { limit = { has_variable = sltm_edit_definitive } if = { limit = { var:sltm_edit_definitive = 1 } scope:sltm_edit_title = { set_definitive_form = yes set_variable = { name = sltm_requested_definitive value = 1 } } }
+else = { scope:sltm_edit_title = { set_definitive_form = no set_variable = { name = sltm_requested_definitive value = 2 } } }
+set_variable = { name = sltm_edit_result_definitive value = 2 }
+ }
+if = { limit = { has_variable = sltm_edit_dynasty } if = { limit = { var:sltm_edit_dynasty = 1 } scope:sltm_edit_title = { set_can_be_named_after_dynasty = yes set_variable = { name = sltm_requested_dynasty value = 1 } } }
+else = { scope:sltm_edit_title = { set_can_be_named_after_dynasty = no set_variable = { name = sltm_requested_dynasty value = 2 } } }
+set_variable = { name = sltm_edit_result_dynasty value = 2 }
+ }
+if = { limit = { has_variable = sltm_edit_nomadic } if = { limit = { var:sltm_edit_nomadic = 1 } scope:sltm_edit_title = { set_can_use_nomadic_naming = yes set_variable = { name = sltm_requested_nomadic value = 1 } } }
+else = { scope:sltm_edit_title = { set_can_use_nomadic_naming = no set_variable = { name = sltm_requested_nomadic value = 2 } } }
+set_variable = { name = sltm_edit_result_nomadic value = 2 }
+ }
+if = { limit = { has_variable = sltm_edit_heir } if = { limit = { var:sltm_edit_heir = 1 } scope:sltm_edit_title = { set_always_follows_primary_heir = yes set_variable = { name = sltm_requested_heir value = 1 } } }
+else = { scope:sltm_edit_title = { set_always_follows_primary_heir = no set_variable = { name = sltm_requested_heir value = 2 } } }
+set_variable = { name = sltm_edit_result_heir value = 2 }
+ }
+if = { limit = { has_variable = sltm_edit_claims } if = { limit = { var:sltm_edit_claims = 1 } scope:sltm_edit_title = { set_no_automatic_claims = yes set_variable = { name = sltm_requested_claims value = 1 } } }
+else = { scope:sltm_edit_title = { set_no_automatic_claims = no set_variable = { name = sltm_requested_claims value = 2 } } }
+set_variable = { name = sltm_edit_result_claims value = 2 }
+ }
+if = { limit = { has_variable = sltm_edit_landless } if = { limit = { scope:sltm_edit_title = { sltm_plain_title_action_trigger = yes } } if = { limit = { var:sltm_edit_landless = 1 } scope:sltm_edit_title = { set_landless_title = yes set_variable = { name = sltm_requested_landless value = 1 } } }
+else = { scope:sltm_edit_title = { set_landless_title = no set_variable = { name = sltm_requested_landless value = 2 } } }
+set_variable = { name = sltm_edit_result_landless value = 2 }
+ }
+else = { set_variable = { name = sltm_edit_result_landless value = 3 } } }
+if = { limit = { has_variable = sltm_edit_succession } if = { limit = { scope:sltm_edit_title = { sltm_plain_title_action_trigger = yes } } if = { limit = { var:sltm_edit_succession = 1 } scope:sltm_edit_title = { set_destroy_on_succession = yes set_variable = { name = sltm_requested_succession value = 1 } } }
+else = { scope:sltm_edit_title = { set_destroy_on_succession = no set_variable = { name = sltm_requested_succession value = 2 } } }
+set_variable = { name = sltm_edit_result_succession value = 2 }
+ }
+else = { set_variable = { name = sltm_edit_result_succession value = 3 } } }
+if = { limit = { has_variable = sltm_edit_invalid_heir } if = { limit = { scope:sltm_edit_title = { sltm_plain_title_action_trigger = yes } } if = { limit = { var:sltm_edit_invalid_heir = 1 } scope:sltm_edit_title = { set_destroy_if_invalid_heir = yes set_variable = { name = sltm_requested_invalid_heir value = 1 } } }
+else = { scope:sltm_edit_title = { set_destroy_if_invalid_heir = no set_variable = { name = sltm_requested_invalid_heir value = 2 } } }
+set_variable = { name = sltm_edit_result_invalid_heir value = 2 }
+ }
+else = { set_variable = { name = sltm_edit_result_invalid_heir value = 3 } } }
+if = { limit = { has_variable = sltm_edit_same_tier } if = { limit = { scope:sltm_edit_title = { sltm_plain_title_action_trigger = yes } } if = { limit = { var:sltm_edit_same_tier = 1 } scope:sltm_edit_title = { set_destroy_on_gain_same_tier = yes set_variable = { name = sltm_requested_same_tier value = 1 } } }
+else = { scope:sltm_edit_title = { set_destroy_on_gain_same_tier = no set_variable = { name = sltm_requested_same_tier value = 2 } } }
+set_variable = { name = sltm_edit_result_same_tier value = 2 }
+ }
+else = { set_variable = { name = sltm_edit_result_same_tier value = 3 } } }
+if = { limit = { has_variable = sltm_edit_province } if = { limit = { exists = var:sltm_edit_province scope:sltm_edit_title = { exists = title_domicile } } scope:sltm_edit_title.title_domicile = { move_domicile = root.var:sltm_edit_province }
+set_variable = { name = sltm_edit_result_province value = 1 }
+if = { limit = { NOT = { scope:sltm_edit_title.title_domicile = { domicile_location = root.var:sltm_edit_province } } } set_variable = { name = sltm_edit_result_province value = 3 } }
+ }
+else = { set_variable = { name = sltm_edit_result_province value = 3 } } }
+if = { limit = { has_variable = sltm_edit_building } if = { limit = { scope:sltm_edit_title = { exists = title_domicile title_domicile = { is_domicile_type = sltm_residence } } } scope:sltm_edit_title.title_domicile = { if = { limit = { NOT = { has_domicile_building = sltm_residence_main_01 } } add_domicile_building = sltm_residence_main_01 } }
+set_variable = { name = sltm_edit_result_building value = 1 }
+if = { limit = { NOT = { scope:sltm_edit_title.title_domicile = { has_domicile_building = sltm_residence_main_01 } } } set_variable = { name = sltm_edit_result_building value = 3 } }
+ }
+else = { set_variable = { name = sltm_edit_result_building value = 3 } } }
+sltm_edit_laws_effect = yes
+
+# CHARACTER actor; prefix presets are literal localization keys, no unsupported dynamic-text setter.
+if = { limit = { has_variable = sltm_edit_prefix }
+ set_variable = { name = sltm_edit_result_prefix value = 2 }
+ if = { limit = { var:sltm_edit_prefix = 1 } scope:sltm_edit_title = { reset_title_prefix = yes } }
+ else_if = { limit = { var:sltm_edit_prefix = 2 } scope:sltm_edit_title = { set_title_prefix = sltm_ui_prefix_empty } }
+ else_if = { limit = { var:sltm_edit_prefix = 3 } scope:sltm_edit_title = { set_title_prefix = sltm_ui_prefix_estate } }
+ else_if = { limit = { var:sltm_edit_prefix = 4 } scope:sltm_edit_title = { set_title_prefix = sltm_ui_prefix_military } }
+ else_if = { limit = { var:sltm_edit_prefix = 5 } scope:sltm_edit_title = { set_title_prefix = sltm_ui_prefix_royal } }
+ else = { set_variable = { name = sltm_edit_result_prefix value = 3 } }
+}
+}
+
+sltm_edit_transfer_effect = {
+if = { limit = { sltm_workflow_session_current_trigger = yes }
+
+set_variable = { name = sltm_edit_transfer_result value = 0 }
+if = { limit = { sltm_workflow_session_current_trigger = yes exists = var:sltm_edit_target has_variable = sltm_edit_pending exists = var:sltm_edit_transfer exists = var:sltm_transfer_title exists = var:sltm_transfer_from var:sltm_edit_target = var:sltm_transfer_title var:sltm_transfer_title = { exists = holder holder = root.var:sltm_transfer_from sltm_plain_title_action_trigger = yes } }
+ remove_variable = sltm_edit_pending
+ var:sltm_transfer_title = { save_scope_as = sltm_transfer_title }
+ var:sltm_edit_transfer = { save_scope_as = sltm_transfer_holder }
+ create_title_and_vassal_change = { type = granted save_scope_as = sltm_transfer_change add_claim_on_loss = no }
+ scope:sltm_transfer_title = { change_title_holder = { holder = scope:sltm_transfer_holder change = scope:sltm_transfer_change take_baronies = no } }
+ resolve_title_and_vassal_change = scope:sltm_transfer_change
+ if = { limit = { scope:sltm_transfer_title = { holder = scope:sltm_transfer_holder } } set_variable = { name = sltm_edit_transfer_result value = 1 } }
+ sltm_windows_refresh_after_change_effect = yes
+}
+trigger_event = sltm_workflow.0211
+}
+}
+
+sltm_open_exact_domicile_effect = {
+if = { limit = { exists = var:sltm_lvm_selected_title var:sltm_lvm_selected_title = { exists = title_domicile } }
+ set_variable = { name = sltm_open_title value = var:sltm_lvm_selected_title }
+ set_variable = { name = sltm_open_domicile value = var:sltm_lvm_selected_title.title_domicile }
+ set_variable = { name = sltm_open_pending value = 1 }
+}
+}
+
+
+# Public CHARACTER wrapper; it describes available script actions, not proven engine outcomes.
+# 0 reserved, 1 scripted path present, 2 restricted to a plain non-domicile carrier.
+sltm_edit_read_capabilities_effect = {
+ set_variable = { name = sltm_cap_basic_edit value = 1 }
+ set_variable = { name = sltm_cap_title_law value = 1 }
+ set_variable = { name = sltm_cap_lifecycle value = 0 }
+ set_variable = { name = sltm_cap_holder_transfer value = 0 }
+ set_variable = { name = sltm_cap_domicile_location value = 0 }
+ set_variable = { name = sltm_cap_domicile_building value = 0 }
+ set_variable = { name = sltm_cap_conversion value = 0 }
+ set_variable = { name = sltm_cap_native_default_switch value = 0 }
+ if = { limit = { exists = var:sltm_edit_target var:sltm_edit_target = { sltm_plain_title_action_trigger = yes } }
+  set_variable = { name = sltm_cap_lifecycle value = 2 }
+  set_variable = { name = sltm_cap_holder_transfer value = 2 }
+ }
+ if = { limit = { exists = var:sltm_edit_target.title_domicile }
+  set_variable = { name = sltm_cap_domicile_location value = 1 }
+  if = { limit = { var:sltm_edit_target.title_domicile = { is_domicile_type = sltm_residence } } set_variable = { name = sltm_cap_domicile_building value = 1 } }
+ }
+}
+
+# CHARACTER scope, scope:sltm_edit_title is the fixed TITLE.
+sltm_edit_laws_effect = {
+# Explicit operations only; final readback runs after both operations.
+if = { limit = { var:sltm_edit_law_remove ?= 1 } scope:sltm_edit_title = { sltm_remove_title_rule_effect = { LAW = male_preference_law } } }
+if = { limit = { var:sltm_edit_law_remove ?= 2 } scope:sltm_edit_title = { sltm_remove_title_rule_effect = { LAW = equal_law } } }
+if = { limit = { var:sltm_edit_law_remove ?= 3 } scope:sltm_edit_title = { sltm_remove_title_rule_effect = { LAW = female_preference_law } } }
+if = { limit = { var:sltm_edit_law_remove ?= 4 } scope:sltm_edit_title = { sltm_remove_title_rule_effect = { LAW = male_only_law } } }
+if = { limit = { var:sltm_edit_law_remove ?= 5 } scope:sltm_edit_title = { sltm_remove_title_rule_effect = { LAW = female_only_law } } }
+if = { limit = { var:sltm_edit_law_remove ?= 6 } scope:sltm_edit_title = { sltm_remove_title_rule_effect = { LAW = single_heir_succession_law } } }
+if = { limit = { var:sltm_edit_law_remove ?= 7 } scope:sltm_edit_title = { sltm_remove_title_rule_effect = { LAW = single_heir_succession_law_youngest } } }
+if = { limit = { var:sltm_edit_law_remove ?= 8 } scope:sltm_edit_title = { sltm_remove_title_rule_effect = { LAW = single_heir_dynasty_house } } }
+if = { limit = { var:sltm_edit_law_remove ?= 9 } scope:sltm_edit_title = { remove_title_law = partition_succession_law } }
+if = { limit = { var:sltm_edit_law_add ?= 1 } scope:sltm_edit_title = { sltm_set_title_rule_effect = { LAW = male_preference_law } } }
+if = { limit = { var:sltm_edit_law_add ?= 2 } scope:sltm_edit_title = { sltm_set_title_rule_effect = { LAW = equal_law } } }
+if = { limit = { var:sltm_edit_law_add ?= 3 } scope:sltm_edit_title = { sltm_set_title_rule_effect = { LAW = female_preference_law } } }
+if = { limit = { var:sltm_edit_law_add ?= 4 } scope:sltm_edit_title = { sltm_set_title_rule_effect = { LAW = male_only_law } } }
+if = { limit = { var:sltm_edit_law_add ?= 5 } scope:sltm_edit_title = { sltm_set_title_rule_effect = { LAW = female_only_law } } }
+if = { limit = { var:sltm_edit_law_add ?= 6 } scope:sltm_edit_title = { sltm_set_title_rule_effect = { LAW = single_heir_succession_law } } }
+if = { limit = { var:sltm_edit_law_add ?= 7 } scope:sltm_edit_title = { sltm_set_title_rule_effect = { LAW = single_heir_succession_law_youngest } } }
+if = { limit = { var:sltm_edit_law_add ?= 8 } scope:sltm_edit_title = { sltm_set_title_rule_effect = { LAW = single_heir_dynasty_house } } }
+
+if = { limit = { var:sltm_edit_law_remove ?= 1 } set_variable = { name = sltm_edit_result_law_remove value = 3 } if = { limit = { scope:sltm_edit_title = { NOT = { sltm_has_title_rule_trigger = { LAW = male_preference_law } } } } set_variable = { name = sltm_edit_result_law_remove value = 1 } } }
+if = { limit = { var:sltm_edit_law_remove ?= 2 } set_variable = { name = sltm_edit_result_law_remove value = 3 } if = { limit = { scope:sltm_edit_title = { NOT = { sltm_has_title_rule_trigger = { LAW = equal_law } } } } set_variable = { name = sltm_edit_result_law_remove value = 1 } } }
+if = { limit = { var:sltm_edit_law_remove ?= 3 } set_variable = { name = sltm_edit_result_law_remove value = 3 } if = { limit = { scope:sltm_edit_title = { NOT = { sltm_has_title_rule_trigger = { LAW = female_preference_law } } } } set_variable = { name = sltm_edit_result_law_remove value = 1 } } }
+if = { limit = { var:sltm_edit_law_remove ?= 4 } set_variable = { name = sltm_edit_result_law_remove value = 3 } if = { limit = { scope:sltm_edit_title = { NOT = { sltm_has_title_rule_trigger = { LAW = male_only_law } } } } set_variable = { name = sltm_edit_result_law_remove value = 1 } } }
+if = { limit = { var:sltm_edit_law_remove ?= 5 } set_variable = { name = sltm_edit_result_law_remove value = 3 } if = { limit = { scope:sltm_edit_title = { NOT = { sltm_has_title_rule_trigger = { LAW = female_only_law } } } } set_variable = { name = sltm_edit_result_law_remove value = 1 } } }
+if = { limit = { var:sltm_edit_law_remove ?= 6 } set_variable = { name = sltm_edit_result_law_remove value = 3 } if = { limit = { scope:sltm_edit_title = { NOT = { sltm_has_title_rule_trigger = { LAW = single_heir_succession_law } } } } set_variable = { name = sltm_edit_result_law_remove value = 1 } } }
+if = { limit = { var:sltm_edit_law_remove ?= 7 } set_variable = { name = sltm_edit_result_law_remove value = 3 } if = { limit = { scope:sltm_edit_title = { NOT = { sltm_has_title_rule_trigger = { LAW = single_heir_succession_law_youngest } } } } set_variable = { name = sltm_edit_result_law_remove value = 1 } } }
+if = { limit = { var:sltm_edit_law_remove ?= 8 } set_variable = { name = sltm_edit_result_law_remove value = 3 } if = { limit = { scope:sltm_edit_title = { NOT = { sltm_has_title_rule_trigger = { LAW = single_heir_dynasty_house } } } } set_variable = { name = sltm_edit_result_law_remove value = 1 } } }
+if = { limit = { var:sltm_edit_law_remove ?= 9 } set_variable = { name = sltm_edit_result_law_remove value = 3 } if = { limit = { scope:sltm_edit_title = { NOT = { has_title_law = partition_succession_law } } } set_variable = { name = sltm_edit_result_law_remove value = 1 } } }
+if = { limit = { var:sltm_edit_law_add ?= 1 } set_variable = { name = sltm_edit_result_law_add value = 3 } if = { limit = { scope:sltm_edit_title = { sltm_has_title_rule_trigger = { LAW = male_preference_law } } } set_variable = { name = sltm_edit_result_law_add value = 1 } } }
+if = { limit = { var:sltm_edit_law_add ?= 2 } set_variable = { name = sltm_edit_result_law_add value = 3 } if = { limit = { scope:sltm_edit_title = { sltm_has_title_rule_trigger = { LAW = equal_law } } } set_variable = { name = sltm_edit_result_law_add value = 1 } } }
+if = { limit = { var:sltm_edit_law_add ?= 3 } set_variable = { name = sltm_edit_result_law_add value = 3 } if = { limit = { scope:sltm_edit_title = { sltm_has_title_rule_trigger = { LAW = female_preference_law } } } set_variable = { name = sltm_edit_result_law_add value = 1 } } }
+if = { limit = { var:sltm_edit_law_add ?= 4 } set_variable = { name = sltm_edit_result_law_add value = 3 } if = { limit = { scope:sltm_edit_title = { sltm_has_title_rule_trigger = { LAW = male_only_law } } } set_variable = { name = sltm_edit_result_law_add value = 1 } } }
+if = { limit = { var:sltm_edit_law_add ?= 5 } set_variable = { name = sltm_edit_result_law_add value = 3 } if = { limit = { scope:sltm_edit_title = { sltm_has_title_rule_trigger = { LAW = female_only_law } } } set_variable = { name = sltm_edit_result_law_add value = 1 } } }
+if = { limit = { var:sltm_edit_law_add ?= 6 } set_variable = { name = sltm_edit_result_law_add value = 3 } if = { limit = { scope:sltm_edit_title = { sltm_has_title_rule_trigger = { LAW = single_heir_succession_law } } } set_variable = { name = sltm_edit_result_law_add value = 1 } } }
+if = { limit = { var:sltm_edit_law_add ?= 7 } set_variable = { name = sltm_edit_result_law_add value = 3 } if = { limit = { scope:sltm_edit_title = { sltm_has_title_rule_trigger = { LAW = single_heir_succession_law_youngest } } } set_variable = { name = sltm_edit_result_law_add value = 1 } } }
+if = { limit = { var:sltm_edit_law_add ?= 8 } set_variable = { name = sltm_edit_result_law_add value = 3 } if = { limit = { scope:sltm_edit_title = { sltm_has_title_rule_trigger = { LAW = single_heir_dynasty_house } } } set_variable = { name = sltm_edit_result_law_add value = 1 } } }
+if = { limit = { var:sltm_edit_law_add ?= 9 } set_variable = { name = sltm_edit_result_law_add value = 3 } if = { limit = { scope:sltm_edit_title = { has_title_law = partition_succession_law } } set_variable = { name = sltm_edit_result_law_add value = 1 } } }
+}
+
+sltm_edit_summarize_results_effect = {
+set_variable = { name = sltm_edit_applied value = 0 }
+set_variable = { name = sltm_edit_failed value = 0 }
+set_variable = { name = sltm_edit_unverified value = 0 }
+if = { limit = { var:sltm_edit_result_name = 1 } change_variable = { name = sltm_edit_applied add = 1 } }
+if = { limit = { var:sltm_edit_result_name = 2 } change_variable = { name = sltm_edit_unverified add = 1 } }
+if = { limit = { var:sltm_edit_result_name = 3 } change_variable = { name = sltm_edit_failed add = 1 } }
+if = { limit = { var:sltm_edit_result_coa = 1 } change_variable = { name = sltm_edit_applied add = 1 } }
+if = { limit = { var:sltm_edit_result_coa = 2 } change_variable = { name = sltm_edit_unverified add = 1 } }
+if = { limit = { var:sltm_edit_result_coa = 3 } change_variable = { name = sltm_edit_failed add = 1 } }
+if = { limit = { var:sltm_edit_result_color = 1 } change_variable = { name = sltm_edit_applied add = 1 } }
+if = { limit = { var:sltm_edit_result_color = 2 } change_variable = { name = sltm_edit_unverified add = 1 } }
+if = { limit = { var:sltm_edit_result_color = 3 } change_variable = { name = sltm_edit_failed add = 1 } }
+if = { limit = { var:sltm_edit_result_capital = 1 } change_variable = { name = sltm_edit_applied add = 1 } }
+if = { limit = { var:sltm_edit_result_capital = 2 } change_variable = { name = sltm_edit_unverified add = 1 } }
+if = { limit = { var:sltm_edit_result_capital = 3 } change_variable = { name = sltm_edit_failed add = 1 } }
+if = { limit = { var:sltm_edit_result_dejure = 1 } change_variable = { name = sltm_edit_applied add = 1 } }
+if = { limit = { var:sltm_edit_result_dejure = 2 } change_variable = { name = sltm_edit_unverified add = 1 } }
+if = { limit = { var:sltm_edit_result_dejure = 3 } change_variable = { name = sltm_edit_failed add = 1 } }
+if = { limit = { var:sltm_edit_result_definitive = 1 } change_variable = { name = sltm_edit_applied add = 1 } }
+if = { limit = { var:sltm_edit_result_definitive = 2 } change_variable = { name = sltm_edit_unverified add = 1 } }
+if = { limit = { var:sltm_edit_result_definitive = 3 } change_variable = { name = sltm_edit_failed add = 1 } }
+if = { limit = { var:sltm_edit_result_dynasty = 1 } change_variable = { name = sltm_edit_applied add = 1 } }
+if = { limit = { var:sltm_edit_result_dynasty = 2 } change_variable = { name = sltm_edit_unverified add = 1 } }
+if = { limit = { var:sltm_edit_result_dynasty = 3 } change_variable = { name = sltm_edit_failed add = 1 } }
+if = { limit = { var:sltm_edit_result_nomadic = 1 } change_variable = { name = sltm_edit_applied add = 1 } }
+if = { limit = { var:sltm_edit_result_nomadic = 2 } change_variable = { name = sltm_edit_unverified add = 1 } }
+if = { limit = { var:sltm_edit_result_nomadic = 3 } change_variable = { name = sltm_edit_failed add = 1 } }
+if = { limit = { var:sltm_edit_result_heir = 1 } change_variable = { name = sltm_edit_applied add = 1 } }
+if = { limit = { var:sltm_edit_result_heir = 2 } change_variable = { name = sltm_edit_unverified add = 1 } }
+if = { limit = { var:sltm_edit_result_heir = 3 } change_variable = { name = sltm_edit_failed add = 1 } }
+if = { limit = { var:sltm_edit_result_claims = 1 } change_variable = { name = sltm_edit_applied add = 1 } }
+if = { limit = { var:sltm_edit_result_claims = 2 } change_variable = { name = sltm_edit_unverified add = 1 } }
+if = { limit = { var:sltm_edit_result_claims = 3 } change_variable = { name = sltm_edit_failed add = 1 } }
+if = { limit = { var:sltm_edit_result_landless = 1 } change_variable = { name = sltm_edit_applied add = 1 } }
+if = { limit = { var:sltm_edit_result_landless = 2 } change_variable = { name = sltm_edit_unverified add = 1 } }
+if = { limit = { var:sltm_edit_result_landless = 3 } change_variable = { name = sltm_edit_failed add = 1 } }
+if = { limit = { var:sltm_edit_result_succession = 1 } change_variable = { name = sltm_edit_applied add = 1 } }
+if = { limit = { var:sltm_edit_result_succession = 2 } change_variable = { name = sltm_edit_unverified add = 1 } }
+if = { limit = { var:sltm_edit_result_succession = 3 } change_variable = { name = sltm_edit_failed add = 1 } }
+if = { limit = { var:sltm_edit_result_invalid_heir = 1 } change_variable = { name = sltm_edit_applied add = 1 } }
+if = { limit = { var:sltm_edit_result_invalid_heir = 2 } change_variable = { name = sltm_edit_unverified add = 1 } }
+if = { limit = { var:sltm_edit_result_invalid_heir = 3 } change_variable = { name = sltm_edit_failed add = 1 } }
+if = { limit = { var:sltm_edit_result_same_tier = 1 } change_variable = { name = sltm_edit_applied add = 1 } }
+if = { limit = { var:sltm_edit_result_same_tier = 2 } change_variable = { name = sltm_edit_unverified add = 1 } }
+if = { limit = { var:sltm_edit_result_same_tier = 3 } change_variable = { name = sltm_edit_failed add = 1 } }
+if = { limit = { var:sltm_edit_result_province = 1 } change_variable = { name = sltm_edit_applied add = 1 } }
+if = { limit = { var:sltm_edit_result_province = 2 } change_variable = { name = sltm_edit_unverified add = 1 } }
+if = { limit = { var:sltm_edit_result_province = 3 } change_variable = { name = sltm_edit_failed add = 1 } }
+if = { limit = { var:sltm_edit_result_building = 1 } change_variable = { name = sltm_edit_applied add = 1 } }
+if = { limit = { var:sltm_edit_result_building = 2 } change_variable = { name = sltm_edit_unverified add = 1 } }
+if = { limit = { var:sltm_edit_result_building = 3 } change_variable = { name = sltm_edit_failed add = 1 } }
+if = { limit = { var:sltm_edit_result_law_add = 1 } change_variable = { name = sltm_edit_applied add = 1 } }
+if = { limit = { var:sltm_edit_result_law_add = 2 } change_variable = { name = sltm_edit_unverified add = 1 } }
+if = { limit = { var:sltm_edit_result_law_add = 3 } change_variable = { name = sltm_edit_failed add = 1 } }
+if = { limit = { var:sltm_edit_result_law_remove = 1 } change_variable = { name = sltm_edit_applied add = 1 } }
+if = { limit = { var:sltm_edit_result_law_remove = 2 } change_variable = { name = sltm_edit_unverified add = 1 } }
+if = { limit = { var:sltm_edit_result_law_remove = 3 } change_variable = { name = sltm_edit_failed add = 1 } }
+
+if = { limit = { var:sltm_edit_result_prefix = 1 } change_variable = { name = sltm_edit_applied add = 1 } }
+if = { limit = { var:sltm_edit_result_prefix = 2 } change_variable = { name = sltm_edit_unverified add = 1 } }
+if = { limit = { var:sltm_edit_result_prefix = 3 } change_variable = { name = sltm_edit_failed add = 1 } }
+}
+
+sltm_create_recommend_profile_effect = {
+ remove_variable = sltm_create_recommended_profile
+ if = { limit = { exists = var:sltm_create_holder var:sltm_create_holder = { has_government = administrative_government } } set_variable = { name = sltm_create_recommended_profile value = 1 } }
+ if = { limit = { exists = var:sltm_create_holder var:sltm_create_holder = { has_government = landless_adventurer_government } } set_variable = { name = sltm_create_recommended_profile value = 2 } }
+ if = { limit = { exists = var:sltm_create_holder var:sltm_create_holder = { has_government = nomad_government } } set_variable = { name = sltm_create_recommended_profile value = 3 } }
+ if = { limit = { exists = var:sltm_create_holder var:sltm_create_holder = { has_government = celestial_government } } set_variable = { name = sltm_create_recommended_profile value = 4 } }
+ if = { limit = { exists = var:sltm_create_holder var:sltm_create_holder = { has_government = steppe_admin_government } } set_variable = { name = sltm_create_recommended_profile value = 5 } }
+ if = { limit = { exists = var:sltm_create_holder var:sltm_create_holder = { has_government = meritocratic_government } } set_variable = { name = sltm_create_recommended_profile value = 6 } }
+ if = { limit = { exists = var:sltm_create_holder var:sltm_create_holder = { has_government = japan_administrative_government } } set_variable = { name = sltm_create_recommended_profile value = 7 } }
+ if = { limit = { exists = var:sltm_create_holder var:sltm_create_holder = { has_government = japan_feudal_government } } set_variable = { name = sltm_create_recommended_profile value = 8 } }
+ if = { limit = { exists = var:sltm_create_holder var:sltm_create_holder = { has_government = ecclesiastical_government } } set_variable = { name = sltm_create_recommended_profile value = 9 } }
+}
+
+# Freeze title/from/to before the confirmation page; the commit never reads the marked title.
+sltm_edit_transfer_open_effect = {
+ if = { limit = { sltm_edit_session_live_trigger = yes }
+  sltm_workflow_new_session_effect = yes
+  remove_variable = sltm_edit_transfer
+  remove_variable = sltm_transfer_title
+  remove_variable = sltm_transfer_from
+  set_variable = { name = sltm_transfer_title value = var:sltm_edit_target }
+  if = { limit = { exists = var:sltm_edit_target.holder } set_variable = { name = sltm_transfer_from value = var:sltm_edit_target.holder } }
+  if = { limit = { exists = var:sltm_designee_title.holder } set_variable = { name = sltm_edit_transfer value = var:sltm_designee_title.holder } }
+  trigger_event = sltm_workflow.0210
+ }
+}
+
+# Actor owns the UI; the selected character can be another ruler.
+sltm_special_grant_effect = {
+    create_title_and_vassal_change = { type = $REASON$ save_scope_as = sltm_special_change add_claim_on_loss = no }
+    scope:sltm_created = {
+        change_title_holder = {
+            holder = scope:sltm_holder
+            change = scope:sltm_special_change
+            government_base = scope:sltm_holder
+            take_baronies = no
+        }
+    }
+    resolve_title_and_vassal_change = scope:sltm_special_change
+}
+
+sltm_special_order_effect = {
+    # An explicitly marked free holding can be offered as the seat even when both characters are landless.
+    clear_saved_scope = sltm_order_base
+    var:sltm_designee_title ?= {
+        if = {
+            limit = {
+                sltm_order_available_seat_trigger = yes
+            }
+            save_scope_as = sltm_order_base
+        }
+    }
+    if = {
+        limit = { NOT = { exists = scope:sltm_order_base } var:sltm_create_special_kind = 7 }
+        scope:sltm_holder = { random_sub_realm_barony = { limit = { sltm_order_available_seat_trigger = yes title_province ?= { has_holding_type = church_holding } } save_scope_as = sltm_order_base } }
+    }
+    if = {
+        limit = { NOT = { exists = scope:sltm_order_base } }
+        scope:sltm_holder = { random_sub_realm_barony = { limit = { sltm_order_available_seat_trigger = yes } save_scope_as = sltm_order_base } }
+    }
+    if = {
+        limit = { NOT = { exists = scope:sltm_order_base } }
+        scope:sltm_actor = { random_sub_realm_barony = { limit = { sltm_order_available_seat_trigger = yes } save_scope_as = sltm_order_base } }
+    }
+    clear_saved_scope = sltm_seat_previous_owner
+    clear_saved_scope = sltm_seat_landlord
+    if = { limit = { scope:sltm_order_base ?= { holder.primary_title.tier = tier_barony is_leased_out = no exists = de_jure_liege.holder } }
+        scope:sltm_order_base = {
+            holder = { save_scope_as = sltm_seat_previous_owner }
+            de_jure_liege.holder = { save_scope_as = sltm_seat_landlord }
+        }
+        create_title_and_vassal_change = { type = leased_out save_scope_as = sltm_seat_change add_claim_on_loss = no }
+        scope:sltm_order_base = { change_title_holder_include_vassals = { holder = scope:sltm_seat_landlord change = scope:sltm_seat_change } }
+        resolve_title_and_vassal_change = scope:sltm_seat_change
+    }
+    if = {
+        limit = { scope:sltm_order_base ?= { tier = tier_barony holder.primary_title.tier > tier_barony is_leased_out = no } }
+        scope:sltm_holder = {
+            create_character = {
+                template = holy_order_leader_character
+                faith = scope:sltm_holder.faith
+                culture = scope:sltm_holder.culture
+                location = scope:sltm_order_base.title_province
+                save_scope_as = sltm_first_master
+            }
+        }
+        scope:sltm_order_base.title_province = { save_scope_as = province }
+        if = { limit = { var:sltm_create_special_kind = 7 } scope:sltm_holder = { set_variable = sltm_founding_monastery } }
+        create_holy_order = {
+            leader = scope:sltm_first_master
+            founder = scope:sltm_holder
+            capital = scope:sltm_order_base
+            $ORDER_SETTING$
+            save_scope_as = sltm_new_order
+        }
+        if = { limit = { var:sltm_create_special_kind = 7 } scope:sltm_holder = { remove_variable = sltm_founding_monastery } }
+        scope:sltm_new_order.title ?= {
+            save_scope_as = sltm_created
+            set_variable = { name = sltm_organization value = scope:sltm_new_order }
+            set_variable = { name = sltm_order_seat value = scope:sltm_order_base }
+        }
+        if = {
+            limit = { exists = scope:sltm_created }
+            sltm_special_grant_effect = { REASON = revoked }
+            if = { limit = { scope:sltm_order_base = { is_leased_out = no } }
+                scope:sltm_order_base = { lease_out_to_holy_order = scope:sltm_new_order }
+            }
+        }
+    }
+    if = {
+        limit = { NOT = { exists = scope:sltm_new_order } exists = scope:sltm_seat_previous_owner
+            scope:sltm_order_base ?= { holder = scope:sltm_seat_landlord is_leased_out = no }
+        }
+        create_title_and_vassal_change = { type = granted save_scope_as = sltm_seat_restore add_claim_on_loss = no }
+        scope:sltm_order_base = { change_title_holder_include_vassals = { holder = scope:sltm_seat_previous_owner change = scope:sltm_seat_restore } }
+        resolve_title_and_vassal_change = scope:sltm_seat_restore
+    }
+
+}
+
+sltm_special_diocese_effect = {
+    clear_saved_scope = sltm_region_province
+    # An explicit county/barony mark can choose the site. Otherwise use the nominee's capital.
+    var:sltm_designee_title ?= {
+        if = { limit = { tier = tier_barony } title_province ?= { save_scope_as = sltm_region_province } }
+        else_if = { limit = { tier = tier_county } title_province ?= { save_scope_as = sltm_region_province } }
+    }
+    if = { limit = { NOT = { exists = scope:sltm_region_province } } scope:sltm_holder.capital_province ?= { save_scope_as = sltm_region_province } }
+    if = { limit = { NOT = { exists = scope:sltm_region_province } } scope:sltm_actor.capital_province ?= { save_scope_as = sltm_region_province } }
+    if = { limit = { scope:sltm_region_province ?= { new_clerical_region_size > 0 } }
+        scope:sltm_region_province = {
+            create_clerical_region = { domicile_type = ecclesiastical_domicile name = SLTM_SP_DIOCESE save_scope_as = sltm_created }
+        }
+    }
+    else_if = {
+        limit = {
+            scope:sltm_holder = { exists = capital_province split_clerical_region_size > 0 }
+            scope:sltm_region_province ?= scope:sltm_holder.capital_province
+        }
+        scope:sltm_holder = { split_clerical_region = { domicile_type = ecclesiastical_domicile name = SLTM_SP_DIOCESE save_scope_as = sltm_created } }
+    }
+    if = { limit = { exists = scope:sltm_created }
+        scope:sltm_created = { set_capital_county = scope:sltm_region_province.county set_landless_title = yes set_no_automatic_claims = yes }
+        sltm_special_grant_effect = { REASON = created }
+    }
+}
+
+sltm_special_head_effect = {
+    create_dynamic_title = { tier = duchy name = SLTM_SP_HEAD }
+    scope:new_title ?= {
+        save_scope_as = sltm_created
+        sltm_anchor_new_title_effect = yes
+        set_landless_title = yes
+        set_no_automatic_claims = yes
+        generate_coa = religious_title
+    }
+    if = { limit = { exists = scope:sltm_created }
+        sltm_special_grant_effect = { REASON = created }
+        if = { limit = { scope:sltm_created = { holder = scope:sltm_holder } }
+            scope:sltm_holder.faith = { set_religious_head_title = scope:sltm_created }
+            if = { limit = { scope:sltm_holder.faith = { has_doctrine = doctrine_temporal_head } }
+                scope:sltm_created = { add_title_law = temporal_head_of_faith_succession_law }
+            }
+        }
+    }
+}
+
+sltm_special_cardinal_effect = {
+    if = {
+        limit = {
+            scope:sltm_holder = {
+                faith = { has_doctrine_parameter = has_clerical_electors }
+                NOT = { exists = clerical_elector_title }
+                NOT = { faith.religious_head ?= this }
+            }
+        }
+        create_dynamic_title = { tier = duchy name = SLTM_SP_CARDINAL }
+        scope:new_title ?= {
+            save_scope_as = sltm_created
+            set_variable = sltm_cardinal_seat
+            set_variable = pam_dynamic_cardinalate
+            sltm_anchor_new_title_effect = yes
+            set_landless_title = yes
+            set_no_automatic_claims = yes
+            set_destroy_on_succession = yes
+            add_clerical_elector = scope:sltm_holder.faith
+        }
+        if = { limit = { exists = scope:sltm_created }
+            sltm_special_grant_effect = { REASON = created }
+            if = { limit = { scope:sltm_holder.clerical_elector_title ?= scope:sltm_created }
+                scope:sltm_holder = { add_character_flag = cardinal_flag }
+                if = { limit = { scope:sltm_holder.faith = { this = faith:catholic } }
+                    add_to_global_variable_list = { name = roma_cardinalates target = scope:sltm_created }
+                }
+            }
+        }
+    }
+}
+
+sltm_special_create_effect = {
+    clear_saved_scope = sltm_new_order
+    switch = {
+        trigger = var:sltm_create_special_kind
+        1 = { sltm_special_diocese_effect = yes }
+        6 = { sltm_special_order_effect = { ORDER_SETTING = "random_holy_order_type = military" } }
+        7 = { sltm_special_order_effect = { ORDER_SETTING = "holy_order_type = sltm_chartered_monastery" } }
+        9 = { sltm_special_head_effect = yes }
+        10 = { sltm_special_cardinal_effect = yes }
+    }
+    scope:sltm_created ?= { set_variable = { name = sltm_special_kind value = scope:sltm_actor.var:sltm_create_special_kind } }
+}
+
+# A request reserves native cultural mercenary capacity. The engine creates the company at its annual update.
+sltm_merc_request_effect = {
+    # I18: creation is closed by user request; keep legacy bodies for save-compatible cancellation.
+    if = { limit = { always = no }
+    var:sltm_create_holder = { save_scope_as = sltm_applicant }
+    save_scope_as = sltm_charter_sponsor
+    if = { limit = { scope:sltm_applicant = { has_variable = sltm_merc_sponsor } }
+        if = { limit = { scope:sltm_applicant.var:sltm_merc_sponsor ?= this }
+            scope:sltm_applicant = { sltm_merc_deliver_effect = yes }
+        }
+        else = { send_interface_toast = { type = event_toast_effect_bad title = SLTM_MC_OTHER left_icon = scope:sltm_applicant custom_tooltip = SLTM_MC_OTHER_DESC } }
+    }
+    else = {
+        scope:sltm_applicant.culture = { save_scope_as = sltm_charter_culture }
+        var:sltm_designee_title ?= {
+            if = { limit = { tier = tier_county exists = culture } culture = { save_scope_as = sltm_charter_culture } }
+        }
+        scope:sltm_applicant = {
+            clear_variable_list = sltm_merc_before_titles
+            set_variable = { name = sltm_merc_before_count value = 0 }
+        }
+        every_mercenary_company = {
+            mercenary_company_leader ?= {
+                every_held_title = {
+                    limit = { is_mercenary_company = yes }
+                    save_scope_as = sltm_charter_prior
+                    scope:sltm_applicant = {
+                        if = { limit = { NOT = { is_target_in_variable_list = { name = sltm_merc_before_titles target = scope:sltm_charter_prior } } }
+                            add_to_variable_list = { name = sltm_merc_before_titles target = scope:sltm_charter_prior }
+                            if = { limit = { scope:sltm_charter_prior = {
+                                OR = {
+                                    var:sltm_merc_origin ?= scope:sltm_charter_culture
+                                    AND = { NOT = { has_variable = sltm_merc_origin } holder.culture ?= scope:sltm_charter_culture }
+                                }
+                            } } change_variable = { name = sltm_merc_before_count add = 1 } }
+                        }
+                    }
+                }
+            }
+        }
+        # A county slot may already belong to another applicant whose new band is not present yet.
+        set_local_variable = { name = sltm_committed_bands value = scope:sltm_applicant.var:sltm_merc_before_count }
+        every_in_global_list = {
+            variable = sltm_pending_charters
+            limit = { var:sltm_merc_origin ?= scope:sltm_charter_culture NOT = { exists = var:sltm_merc_candidate } }
+            change_local_variable = { name = sltm_committed_bands add = 1 }
+        }
+        if = {
+            limit = { scope:sltm_charter_culture = { culture_number_of_counties > local_var:sltm_committed_bands } }
+            scope:sltm_applicant = {
+                set_variable = { name = sltm_merc_sponsor value = scope:sltm_charter_sponsor }
+                set_variable = { name = sltm_merc_origin value = scope:sltm_charter_culture }
+                set_variable = { name = sltm_merc_edit_requested value = $MODE$ }
+                set_variable = { name = sltm_merc_units_reserved value = 6 }
+                if = { limit = { scope:sltm_charter_culture = { culture_number_of_counties >= 14 } } set_variable = { name = sltm_merc_units_reserved value = 2 } }
+                else_if = { limit = { scope:sltm_charter_culture = { culture_number_of_counties >= 7 } } set_variable = { name = sltm_merc_units_reserved value = 3 } }
+            }
+            scope:sltm_charter_culture = {
+                if = { limit = { NOT = { has_variable = sltm_chartered_units } } set_variable = { name = sltm_chartered_units value = 0 } }
+                change_variable = { name = sltm_chartered_units add = scope:sltm_applicant.var:sltm_merc_units_reserved }
+                sltm_merc_capacity_effect = yes
+            }
+            if = { limit = { scope:sltm_charter_culture = { has_variable = sltm_charter_capacity_failed } }
+                scope:sltm_charter_culture = {
+                    change_variable = { name = sltm_chartered_units subtract = scope:sltm_applicant.var:sltm_merc_units_reserved }
+                    sltm_merc_capacity_effect = yes
+                }
+                scope:sltm_applicant = { sltm_merc_clear_request_effect = yes }
+                send_interface_toast = { type = event_toast_effect_bad title = SLTM_MC_UNAVAILABLE left_icon = scope:sltm_applicant custom_tooltip = SLTM_MC_RESTART }
+            }
+            else = {
+                add_to_global_variable_list = { name = sltm_pending_charters target = scope:sltm_applicant }
+                set_variable = { name = sltm_last_commission value = scope:sltm_applicant }
+                send_interface_toast = { type = event_toast_effect_good title = SLTM_MC_QUEUED left_icon = scope:sltm_applicant custom_tooltip = SLTM_MC_QUEUED_DESC }
+            }
+        }
+        else = {
+            scope:sltm_applicant = { clear_variable_list = sltm_merc_before_titles remove_variable = sltm_merc_before_count }
+            send_interface_toast = { type = event_toast_effect_bad title = SLTM_MC_FULL left_icon = scope:sltm_applicant custom_tooltip = SLTM_MC_FULL_DESC }
+        }
+    }
+    }
+}
+
+sltm_merc_clear_request_effect = {
+    if = { limit = { is_target_in_global_variable_list = { name = sltm_pending_charters target = this } } remove_list_global_variable = { name = sltm_pending_charters target = this } }
+    save_scope_as = sltm_closing_applicant
+    var:sltm_merc_candidate ?= {
+        if = { limit = { var:sltm_merc_claimant ?= scope:sltm_closing_applicant } remove_variable = sltm_merc_claimant }
+    }
+    remove_variable = sltm_merc_candidate
+    remove_variable = sltm_merc_candidate_company
+    remove_variable = sltm_merc_previous_captain
+    clear_variable_list = sltm_merc_before_titles
+    remove_variable = sltm_merc_before_count
+    remove_variable = sltm_merc_edit_requested
+    remove_variable = sltm_merc_units_reserved
+    remove_variable = sltm_merc_sponsor
+    remove_variable = sltm_merc_origin
+}
+
+# Never take a company that existed at application time. A new captain must unambiguously own one native band.
+sltm_merc_deliver_effect = {
+    # Older saved events may still call this public name.
+    sltm_merc_cancel_effect = yes
+}
+
+# Resolve only requests left by the discontinued charter workflow. Never create a company or charge the sponsor.
+sltm_merc_cancel_effect = {
+    if = {
+        limit = { is_alive = no }
+        # Archived dead characters may no longer own variables. Read only surviving title and global records.
+        if = {
+            limit = { is_target_in_global_variable_list = { name = sltm_pending_charters target = this } }
+            save_scope_as = sltm_deceased_applicant
+            every_mercenary_company = {
+                mercenary_company_leader ?= {
+                    every_held_title = {
+                        limit = { is_mercenary_company = yes var:sltm_merc_claimant ?= scope:sltm_deceased_applicant }
+                        remove_variable = sltm_merc_claimant
+                    }
+                }
+            }
+            remove_list_global_variable = { name = sltm_pending_charters target = this }
+        }
+    }
+    else_if = {
+        limit = {
+            OR = {
+                has_variable = sltm_merc_sponsor
+                is_target_in_global_variable_list = { name = sltm_pending_charters target = this }
+            }
+        }
+        save_scope_as = sltm_legacy_applicant
+        set_variable = { name = sltm_merc_resolution value = 4 }
+        if = {
+            limit = {
+                var:sltm_merc_candidate ?= { is_mercenary_company = yes holder ?= scope:sltm_legacy_applicant }
+                var:sltm_merc_candidate_company.mercenary_company_leader ?= this
+                sltm_legacy_claim_uncontested_trigger = yes
+            }
+            var:sltm_merc_candidate = {
+                set_variable = { name = sltm_merc_native_company value = scope:sltm_legacy_applicant.var:sltm_merc_candidate_company }
+                if = {
+                    limit = { exists = scope:sltm_legacy_applicant.var:sltm_merc_origin }
+                    set_variable = { name = sltm_merc_origin value = scope:sltm_legacy_applicant.var:sltm_merc_origin }
+                }
+            }
+            var:sltm_merc_sponsor ?= {
+                set_variable = { name = sltm_last_chartered_title value = scope:sltm_legacy_applicant.var:sltm_merc_candidate }
+            }
+            set_variable = { name = sltm_merc_resolution value = 3 }
+        }
+        else_if = {
+            limit = {
+                exists = var:sltm_merc_previous_captain
+                var:sltm_merc_candidate ?= {
+                    is_mercenary_company = yes
+                    holder ?= scope:sltm_legacy_applicant.var:sltm_merc_previous_captain
+                    var:sltm_merc_claimant ?= scope:sltm_legacy_applicant
+                }
+                var:sltm_merc_candidate_company.mercenary_company_leader ?= var:sltm_merc_previous_captain
+                sltm_legacy_claim_uncontested_trigger = yes
+            }
+            # A matched company already exists in the world and may depend on this quota.
+            set_variable = { name = sltm_merc_resolution value = 2 }
+        }
+        else_if = {
+            limit = {
+                NOT = { has_variable = sltm_merc_candidate }
+                NOT = { has_variable = sltm_merc_candidate_company }
+                NOT = { has_variable = sltm_merc_previous_captain }
+                exists = var:sltm_merc_origin
+                has_variable = sltm_merc_before_count
+                has_variable = sltm_merc_units_reserved
+                var:sltm_merc_units_reserved > 0
+            }
+            sltm_merc_release_unused_reservation_effect = yes
+        }
+        if = {
+            limit = {
+                var:sltm_merc_resolution = 4
+                OR = { is_alive = no NOT = { var:sltm_merc_sponsor ?= { is_alive = yes } } }
+            }
+            set_variable = { name = sltm_merc_resolution value = 2 }
+        }
+        if = {
+            limit = { var:sltm_merc_resolution < 4 }
+            sltm_merc_clear_request_effect = yes
+        }
+    }
+}
+
+sltm_merc_release_unused_reservation_effect = {
+    # Count other applicants' reservations before touching the shared culture ledger.
+    set_local_variable = { name = sltm_legacy_required value = var:sltm_merc_units_reserved }
+    every_in_global_list = {
+        variable = sltm_pending_charters
+        limit = {
+            is_alive = yes
+            NOT = { this = scope:sltm_legacy_applicant }
+            var:sltm_merc_origin ?= scope:sltm_legacy_applicant.var:sltm_merc_origin
+            has_variable = sltm_merc_units_reserved
+        }
+        change_local_variable = { name = sltm_legacy_required add = var:sltm_merc_units_reserved }
+    }
+    if = {
+        limit = {
+            var:sltm_merc_origin ?= {
+                has_variable = sltm_chartered_units
+                var:sltm_chartered_units >= local_var:sltm_legacy_required
+            }
+        }
+        if = {
+            limit = {
+                any_mercenary_company = {
+                    mercenary_company_leader ?= {
+                        culture ?= scope:sltm_legacy_applicant.var:sltm_merc_origin
+                        any_held_title = {
+                            is_mercenary_company = yes
+                            save_temporary_scope_as = sltm_legacy_band
+                            scope:sltm_legacy_applicant = {
+                                NOT = { is_target_in_variable_list = { name = sltm_merc_before_titles target = scope:sltm_legacy_band } }
+                            }
+                        }
+                    }
+                }
+            }
+            set_variable = { name = sltm_merc_resolution value = 2 }
+        }
+        else = {
+            var:sltm_merc_origin = {
+                change_variable = { name = sltm_chartered_units subtract = scope:sltm_legacy_applicant.var:sltm_merc_units_reserved }
+                sltm_merc_capacity_effect = yes
+                if = {
+                    limit = { has_variable = sltm_charter_capacity_failed }
+                    change_variable = { name = sltm_chartered_units add = scope:sltm_legacy_applicant.var:sltm_merc_units_reserved }
+                    sltm_merc_capacity_effect = yes
+                }
+                else = { scope:sltm_legacy_applicant = { set_variable = { name = sltm_merc_resolution value = 1 } } }
+            }
+        }
+    }
+}
+
+sltm_merc_capacity_effect = {
+    set_variable = { name = sltm_merc_remainder value = var:sltm_chartered_units }
+    set_variable = sltm_charter_unlocking
+    remove_variable = sltm_charter_capacity_failed
+    if = {
+        limit = { var:sltm_merc_remainder >= 32768 }
+        change_variable = { name = sltm_merc_remainder subtract = 32768 }
+        if = { limit = { NOT = { has_innovation = innovation_sltm_charter_15 } } add_innovation = innovation_sltm_charter_15 }
+        if = { limit = { NOT = { has_innovation = innovation_sltm_charter_15 } } set_variable = sltm_charter_capacity_failed }
+    }
+    else_if = { limit = { has_innovation = innovation_sltm_charter_15 } remove_innovation = innovation_sltm_charter_15 }
+    if = {
+        limit = { var:sltm_merc_remainder >= 16384 }
+        change_variable = { name = sltm_merc_remainder subtract = 16384 }
+        if = { limit = { NOT = { has_innovation = innovation_sltm_charter_14 } } add_innovation = innovation_sltm_charter_14 }
+        if = { limit = { NOT = { has_innovation = innovation_sltm_charter_14 } } set_variable = sltm_charter_capacity_failed }
+    }
+    else_if = { limit = { has_innovation = innovation_sltm_charter_14 } remove_innovation = innovation_sltm_charter_14 }
+    if = {
+        limit = { var:sltm_merc_remainder >= 8192 }
+        change_variable = { name = sltm_merc_remainder subtract = 8192 }
+        if = { limit = { NOT = { has_innovation = innovation_sltm_charter_13 } } add_innovation = innovation_sltm_charter_13 }
+        if = { limit = { NOT = { has_innovation = innovation_sltm_charter_13 } } set_variable = sltm_charter_capacity_failed }
+    }
+    else_if = { limit = { has_innovation = innovation_sltm_charter_13 } remove_innovation = innovation_sltm_charter_13 }
+    if = {
+        limit = { var:sltm_merc_remainder >= 4096 }
+        change_variable = { name = sltm_merc_remainder subtract = 4096 }
+        if = { limit = { NOT = { has_innovation = innovation_sltm_charter_12 } } add_innovation = innovation_sltm_charter_12 }
+        if = { limit = { NOT = { has_innovation = innovation_sltm_charter_12 } } set_variable = sltm_charter_capacity_failed }
+    }
+    else_if = { limit = { has_innovation = innovation_sltm_charter_12 } remove_innovation = innovation_sltm_charter_12 }
+    if = {
+        limit = { var:sltm_merc_remainder >= 2048 }
+        change_variable = { name = sltm_merc_remainder subtract = 2048 }
+        if = { limit = { NOT = { has_innovation = innovation_sltm_charter_11 } } add_innovation = innovation_sltm_charter_11 }
+        if = { limit = { NOT = { has_innovation = innovation_sltm_charter_11 } } set_variable = sltm_charter_capacity_failed }
+    }
+    else_if = { limit = { has_innovation = innovation_sltm_charter_11 } remove_innovation = innovation_sltm_charter_11 }
+    if = {
+        limit = { var:sltm_merc_remainder >= 1024 }
+        change_variable = { name = sltm_merc_remainder subtract = 1024 }
+        if = { limit = { NOT = { has_innovation = innovation_sltm_charter_10 } } add_innovation = innovation_sltm_charter_10 }
+        if = { limit = { NOT = { has_innovation = innovation_sltm_charter_10 } } set_variable = sltm_charter_capacity_failed }
+    }
+    else_if = { limit = { has_innovation = innovation_sltm_charter_10 } remove_innovation = innovation_sltm_charter_10 }
+    if = {
+        limit = { var:sltm_merc_remainder >= 512 }
+        change_variable = { name = sltm_merc_remainder subtract = 512 }
+        if = { limit = { NOT = { has_innovation = innovation_sltm_charter_9 } } add_innovation = innovation_sltm_charter_9 }
+        if = { limit = { NOT = { has_innovation = innovation_sltm_charter_9 } } set_variable = sltm_charter_capacity_failed }
+    }
+    else_if = { limit = { has_innovation = innovation_sltm_charter_9 } remove_innovation = innovation_sltm_charter_9 }
+    if = {
+        limit = { var:sltm_merc_remainder >= 256 }
+        change_variable = { name = sltm_merc_remainder subtract = 256 }
+        if = { limit = { NOT = { has_innovation = innovation_sltm_charter_8 } } add_innovation = innovation_sltm_charter_8 }
+        if = { limit = { NOT = { has_innovation = innovation_sltm_charter_8 } } set_variable = sltm_charter_capacity_failed }
+    }
+    else_if = { limit = { has_innovation = innovation_sltm_charter_8 } remove_innovation = innovation_sltm_charter_8 }
+    if = {
+        limit = { var:sltm_merc_remainder >= 128 }
+        change_variable = { name = sltm_merc_remainder subtract = 128 }
+        if = { limit = { NOT = { has_innovation = innovation_sltm_charter_7 } } add_innovation = innovation_sltm_charter_7 }
+        if = { limit = { NOT = { has_innovation = innovation_sltm_charter_7 } } set_variable = sltm_charter_capacity_failed }
+    }
+    else_if = { limit = { has_innovation = innovation_sltm_charter_7 } remove_innovation = innovation_sltm_charter_7 }
+    if = {
+        limit = { var:sltm_merc_remainder >= 64 }
+        change_variable = { name = sltm_merc_remainder subtract = 64 }
+        if = { limit = { NOT = { has_innovation = innovation_sltm_charter_6 } } add_innovation = innovation_sltm_charter_6 }
+        if = { limit = { NOT = { has_innovation = innovation_sltm_charter_6 } } set_variable = sltm_charter_capacity_failed }
+    }
+    else_if = { limit = { has_innovation = innovation_sltm_charter_6 } remove_innovation = innovation_sltm_charter_6 }
+    if = {
+        limit = { var:sltm_merc_remainder >= 32 }
+        change_variable = { name = sltm_merc_remainder subtract = 32 }
+        if = { limit = { NOT = { has_innovation = innovation_sltm_charter_5 } } add_innovation = innovation_sltm_charter_5 }
+        if = { limit = { NOT = { has_innovation = innovation_sltm_charter_5 } } set_variable = sltm_charter_capacity_failed }
+    }
+    else_if = { limit = { has_innovation = innovation_sltm_charter_5 } remove_innovation = innovation_sltm_charter_5 }
+    if = {
+        limit = { var:sltm_merc_remainder >= 16 }
+        change_variable = { name = sltm_merc_remainder subtract = 16 }
+        if = { limit = { NOT = { has_innovation = innovation_sltm_charter_4 } } add_innovation = innovation_sltm_charter_4 }
+        if = { limit = { NOT = { has_innovation = innovation_sltm_charter_4 } } set_variable = sltm_charter_capacity_failed }
+    }
+    else_if = { limit = { has_innovation = innovation_sltm_charter_4 } remove_innovation = innovation_sltm_charter_4 }
+    if = {
+        limit = { var:sltm_merc_remainder >= 8 }
+        change_variable = { name = sltm_merc_remainder subtract = 8 }
+        if = { limit = { NOT = { has_innovation = innovation_sltm_charter_3 } } add_innovation = innovation_sltm_charter_3 }
+        if = { limit = { NOT = { has_innovation = innovation_sltm_charter_3 } } set_variable = sltm_charter_capacity_failed }
+    }
+    else_if = { limit = { has_innovation = innovation_sltm_charter_3 } remove_innovation = innovation_sltm_charter_3 }
+    if = {
+        limit = { var:sltm_merc_remainder >= 4 }
+        change_variable = { name = sltm_merc_remainder subtract = 4 }
+        if = { limit = { NOT = { has_innovation = innovation_sltm_charter_2 } } add_innovation = innovation_sltm_charter_2 }
+        if = { limit = { NOT = { has_innovation = innovation_sltm_charter_2 } } set_variable = sltm_charter_capacity_failed }
+    }
+    else_if = { limit = { has_innovation = innovation_sltm_charter_2 } remove_innovation = innovation_sltm_charter_2 }
+    if = {
+        limit = { var:sltm_merc_remainder >= 2 }
+        change_variable = { name = sltm_merc_remainder subtract = 2 }
+        if = { limit = { NOT = { has_innovation = innovation_sltm_charter_1 } } add_innovation = innovation_sltm_charter_1 }
+        if = { limit = { NOT = { has_innovation = innovation_sltm_charter_1 } } set_variable = sltm_charter_capacity_failed }
+    }
+    else_if = { limit = { has_innovation = innovation_sltm_charter_1 } remove_innovation = innovation_sltm_charter_1 }
+    if = {
+        limit = { var:sltm_merc_remainder >= 1 }
+        change_variable = { name = sltm_merc_remainder subtract = 1 }
+        if = { limit = { NOT = { has_innovation = innovation_sltm_charter_0 } } add_innovation = innovation_sltm_charter_0 }
+        if = { limit = { NOT = { has_innovation = innovation_sltm_charter_0 } } set_variable = sltm_charter_capacity_failed }
+    }
+    else_if = { limit = { has_innovation = innovation_sltm_charter_0 } remove_innovation = innovation_sltm_charter_0 }
+    remove_variable = sltm_charter_unlocking
+    remove_variable = sltm_merc_remainder
+}
+
+sltm_remove_title_rule_effect = {
+    if = { limit = { has_title_law = $LAW$ } remove_title_law = $LAW$ }
+    if = { limit = { has_title_law = sltm_title_$LAW$ } remove_title_law = sltm_title_$LAW$ }
+}
+sltm_set_title_rule_effect = {
+    if = { limit = { NOT = { sltm_has_title_rule_trigger = { LAW = $LAW$ } } }
+        set_variable = sltm_managed_succession
+        add_title_law = sltm_title_$LAW$
+    }
+}

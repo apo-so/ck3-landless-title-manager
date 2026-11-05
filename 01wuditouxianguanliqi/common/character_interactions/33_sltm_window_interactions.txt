@@ -1,0 +1,92 @@
+﻿# 旧版独立互动保留标识以兼容存档；人物右键统一从「天下兵马」进入。
+sltm_menu_create_interaction = {
+ category = interaction_category_diplomacy
+ common_interaction = yes
+ icon = request_maa_interaction
+ auto_accept = yes
+ use_diplomatic_range = no
+ ignores_pending_interaction_block = yes
+ is_available = { is_ai = no }
+ interface_priority = 129
+ send_name = sltm_menu_open_creation
+ desc = sltm_menu_create_interaction_desc
+ is_shown = { always = no }
+ on_accept = {
+  hidden_effect = {
+   scope:actor = {
+    remove_variable = sltm_window_from_manager
+    sltm_clw_open_effect = yes
+    set_variable = { name = sltm_create_holder value = scope:recipient }
+    set_variable = { name = sltm_clw_nominee value = scope:recipient }
+    remove_variable = sltm_create_template
+    if = { limit = { exists = scope:recipient.primary_title }
+     set_variable = { name = sltm_create_template value = scope:recipient.primary_title }
+    }
+   }
+  }
+ }
+}
+sltm_menu_edit_interaction = {
+ category = interaction_category_diplomacy
+ common_interaction = yes
+ icon = request_maa_interaction
+ auto_accept = yes
+ use_diplomatic_range = no
+ ignores_pending_interaction_block = yes
+ is_available = { is_ai = no }
+ interface_priority = 128
+ send_name = sltm_menu_open_editor
+ desc = sltm_menu_edit_interaction_desc
+ target_type = title
+ target_filter = domain_titles_all_baronies
+ target_source = recipient
+ is_shown = { always = no }
+ can_be_picked_title = { exists = scope:target scope:target = { holder = scope:recipient } }
+ has_valid_target = { exists = scope:target scope:target = { holder = scope:recipient } }
+ on_accept = {
+  if = { limit = { exists = scope:target scope:target = { holder = scope:recipient } }
+   scope:actor = {
+    remove_variable = sltm_window_from_manager
+    set_variable = { name = sltm_lvm_selected_title value = scope:target }
+    sltm_ui_open_fixed_effect = yes
+   }
+  }
+ }
+}
+# 无头衔者没有可供原生标题选择器列出的对象。与有头衔版共用名称、规则和创建效果。
+sltm_menu_edit_list_interaction = {
+ category = interaction_category_diarch
+ common_interaction = yes
+ interface_priority = 1000
+ icon = icon_title
+ auto_accept = yes
+ use_diplomatic_range = no
+ ignores_pending_interaction_block = yes
+ is_available = { is_ai = no }
+ desc = sltm_menu_edit_list_interaction_desc
+ send_name = sltm_landless_title_manager_interactions
+ is_shown = {
+  scope:actor = { is_ai = no }
+  NOT = { exists = scope:recipient.primary_title }
+  sltm_cmm_compat_rit_rules_valid_recipient_realm_interactions_trigger = yes
+ }
+ send_options_exclusive = yes
+ send_option = {
+  flag = sltm_landless_title_option_flag_create_landless_title
+  starts_enabled = { always = yes }
+ }
+ send_option = {
+  flag = sltm_menu_open_editor
+  starts_enabled = { always = no }
+ }
+ on_accept = {
+  switch = {
+   trigger = yes
+   scope:sltm_landless_title_option_flag_create_landless_title = {
+    scope:actor = { sltm_menu_open_recipient_atlas_effect = yes }
+   }
+   scope:sltm_menu_open_editor = { scope:actor = { sltm_ui_choose_target_effect = yes } }
+  }
+ }
+ ai_will_do = { base = 0 }
+}

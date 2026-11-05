@@ -1,0 +1,25 @@
+﻿# 无地头衔管理器：右键自己打开独立窗口
+# 打开机制与 Title Men-at-Arms Manager 的自指互动保持一致。
+
+sltm_open_landless_vassal_manager_self_interaction = {
+    category = interaction_category_diplomacy
+    interface_priority = 125
+    common_interaction = yes
+    icon = request_maa_interaction
+    desc = sltm_open_landless_vassal_manager_self_interaction_desc
+    auto_accept = yes
+
+    is_shown = {
+        always = no # 总览暂不开放。
+    }
+
+    is_valid_showing_failures_only = {
+        always = yes
+    }
+
+    on_accept = {
+        scope:actor = {
+            sltm_lvm_open_manager_effect = yes
+        }
+    }
+}

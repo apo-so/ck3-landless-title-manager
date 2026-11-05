@@ -1,0 +1,15 @@
+﻿# CK3 1.20.1.2. Protect only an explicitly created SLTM seat on a secular holder.
+pam_strip_illegal_cardinalate_effect = {
+	if = {
+		limit = {
+			is_ruler = yes
+			NOR = {
+				government_has_flag = government_is_theocracy
+				government_has_flag = government_is_holy_order
+			}
+			exists = clerical_elector_title
+			NOT = { clerical_elector_title = { has_variable = sltm_cardinal_seat } }
+		}
+		pam_destroy_cardinal_title_effect = { CARDINALATE = clerical_elector_title }
+	}
+}

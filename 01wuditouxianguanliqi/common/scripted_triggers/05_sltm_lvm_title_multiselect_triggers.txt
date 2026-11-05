@@ -1,0 +1,134 @@
+﻿# V3.0：头衔筛选多选管线。
+# 规则：同一分组内为 OR，不同分组之间为 AND；分组内没有任何勾选时视为“全部”。
+
+sltm_lvm_title_matches_type_multiselect_trigger = {
+    OR = {
+        scope:sltm_lvm_filter_player = {
+            NOR = {
+                has_variable = sltm_lvm_tf_type_junfu_selected
+                has_variable = sltm_lvm_tf_type_chaochen_selected
+                has_variable = sltm_lvm_tf_type_noble_selected
+                has_variable = sltm_lvm_tf_type_holy_order_selected
+                has_variable = sltm_lvm_tf_type_mercenary_selected
+                has_variable = sltm_lvm_tf_type_religious_head_selected
+                has_variable = sltm_lvm_tf_type_other_selected
+            }
+        }
+        AND = { scope:sltm_lvm_filter_player = { has_variable = sltm_lvm_tf_type_junfu_selected } sltm_lvm_is_junfu_title_trigger = yes }
+        AND = { scope:sltm_lvm_filter_player = { has_variable = sltm_lvm_tf_type_chaochen_selected } sltm_lvm_is_chaochen_title_trigger = yes }
+        AND = { scope:sltm_lvm_filter_player = { has_variable = sltm_lvm_tf_type_noble_selected } sltm_lvm_is_noble_family_title_trigger = yes }
+        AND = { scope:sltm_lvm_filter_player = { has_variable = sltm_lvm_tf_type_holy_order_selected } sltm_lvm_is_holy_order_title_trigger = yes }
+        AND = { scope:sltm_lvm_filter_player = { has_variable = sltm_lvm_tf_type_mercenary_selected } sltm_lvm_is_mercenary_title_trigger = yes }
+        AND = { scope:sltm_lvm_filter_player = { has_variable = sltm_lvm_tf_type_religious_head_selected } sltm_lvm_is_religious_head_title_trigger = yes }
+        AND = { scope:sltm_lvm_filter_player = { has_variable = sltm_lvm_tf_type_other_selected } sltm_lvm_is_other_title_trigger = yes }
+    }
+}
+
+# V3.6.4：创立状态是独立维度；组内多选为 OR，未选择表示不限。
+sltm_lvm_title_matches_creation_multiselect_trigger = {
+    OR = {
+        scope:sltm_lvm_filter_player = {
+            NOR = {
+                has_variable = sltm_lvm_tf_creation_created_selected
+                has_variable = sltm_lvm_tf_creation_uncreated_selected
+            }
+        }
+        AND = {
+            scope:sltm_lvm_filter_player = { has_variable = sltm_lvm_tf_creation_created_selected }
+            is_title_created = yes
+        }
+        AND = {
+            scope:sltm_lvm_filter_player = { has_variable = sltm_lvm_tf_creation_uncreated_selected }
+            is_title_created = no
+        }
+    }
+}
+
+sltm_lvm_title_matches_tier_multiselect_trigger = {
+    OR = {
+        scope:sltm_lvm_filter_player = {
+            NOR = {
+                has_variable = sltm_lvm_tf_tier_barony_selected
+                has_variable = sltm_lvm_tf_tier_county_selected
+                has_variable = sltm_lvm_tf_tier_duchy_selected
+                has_variable = sltm_lvm_tf_tier_kingdom_selected
+                has_variable = sltm_lvm_tf_tier_empire_selected
+                has_variable = sltm_lvm_tf_tier_hegemony_selected
+            }
+        }
+        AND = { scope:sltm_lvm_filter_player = { has_variable = sltm_lvm_tf_tier_barony_selected } tier = tier_barony }
+        AND = { scope:sltm_lvm_filter_player = { has_variable = sltm_lvm_tf_tier_county_selected } tier = tier_county }
+        AND = { scope:sltm_lvm_filter_player = { has_variable = sltm_lvm_tf_tier_duchy_selected } tier = tier_duchy }
+        AND = { scope:sltm_lvm_filter_player = { has_variable = sltm_lvm_tf_tier_kingdom_selected } tier = tier_kingdom }
+        AND = { scope:sltm_lvm_filter_player = { has_variable = sltm_lvm_tf_tier_empire_selected } tier = tier_empire }
+        AND = { scope:sltm_lvm_filter_player = { has_variable = sltm_lvm_tf_tier_hegemony_selected } tier = tier_hegemony }
+    }
+}
+
+sltm_lvm_title_matches_status_multiselect_trigger = {
+    OR = {
+        scope:sltm_lvm_filter_player = {
+            NOR = {
+                has_variable = sltm_lvm_tf_status_normal_selected
+                has_variable = sltm_lvm_tf_status_pending_selected
+                has_variable = sltm_lvm_tf_status_blocked_selected
+            }
+        }
+        AND = {
+            scope:sltm_lvm_filter_player = { has_variable = sltm_lvm_tf_status_normal_selected }
+            NOT = { sltm_lvm_is_pending_title_trigger = yes }
+            NOT = { sltm_lvm_is_blocked_title_trigger = yes }
+        }
+        AND = { scope:sltm_lvm_filter_player = { has_variable = sltm_lvm_tf_status_pending_selected } sltm_lvm_is_pending_title_trigger = yes }
+        AND = { scope:sltm_lvm_filter_player = { has_variable = sltm_lvm_tf_status_blocked_selected } sltm_lvm_is_blocked_title_trigger = yes }
+    }
+}
+
+sltm_lvm_title_matches_role_multiselect_trigger = {
+    OR = {
+        scope:sltm_lvm_filter_player = {
+            NOR = {
+                has_variable = sltm_lvm_tf_role_primary_selected
+                has_variable = sltm_lvm_tf_role_concurrent_selected
+            }
+        }
+        AND = { scope:sltm_lvm_filter_player = { has_variable = sltm_lvm_tf_role_primary_selected } sltm_lvm_is_primary_title_trigger = yes }
+        AND = { scope:sltm_lvm_filter_player = { has_variable = sltm_lvm_tf_role_concurrent_selected } sltm_lvm_is_concurrent_title_trigger = yes }
+    }
+}
+
+sltm_lvm_title_matches_holder_multiselect_trigger = {
+    OR = {
+        scope:sltm_lvm_filter_player = {
+            NOT = { has_variable = sltm_lvm_tf_holder_courtier_selected }
+        }
+        AND = {
+            scope:sltm_lvm_filter_player = { has_variable = sltm_lvm_tf_holder_courtier_selected }
+            exists = holder
+            holder = { is_courtier_of = scope:sltm_lvm_filter_player }
+        }
+    }
+}
+
+# 2026-07-18（V3.4-C）头衔兵士组：勾选后只显示名下有头衔兵团的头衔（单选项组，照持有人组模式）。
+sltm_lvm_title_matches_maa_multiselect_trigger = {
+    OR = {
+        scope:sltm_lvm_filter_player = {
+            NOT = { has_variable = sltm_lvm_tf_has_maa_selected }
+        }
+        AND = {
+            scope:sltm_lvm_filter_player = { has_variable = sltm_lvm_tf_has_maa_selected }
+            any_owned_title_maa_regiment = { count >= 1 }
+        }
+    }
+}
+
+sltm_lvm_title_matches_all_multiselect_filters_trigger = {
+    sltm_lvm_title_matches_type_multiselect_trigger = yes
+    sltm_lvm_title_matches_creation_multiselect_trigger = yes
+    sltm_lvm_title_matches_tier_multiselect_trigger = yes
+    sltm_lvm_title_matches_status_multiselect_trigger = yes
+    sltm_lvm_title_matches_role_multiselect_trigger = yes
+    sltm_lvm_title_matches_holder_multiselect_trigger = yes
+    sltm_lvm_title_matches_maa_multiselect_trigger = yes
+}

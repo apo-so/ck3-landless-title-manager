@@ -1,0 +1,876 @@
+﻿namespace = sltm_workflow
+
+sltm_workflow.0100 = {
+ type = character_event
+ title = sltm_w_100_title
+ desc = sltm_w_100_desc
+ theme = realm
+ window = sltm_realm_character_event
+ option = { name = sltm_w_100_o0
+ trigger = { sltm_create_session_live_trigger = yes }
+ hidden_effect = { if = { limit = { sltm_create_session_live_trigger = yes }  set_variable = { name = sltm_create_kind value = 1 } trigger_event = sltm_workflow.0101  } }
+ }
+ option = { name = sltm_w_100_o1
+ trigger = { sltm_create_session_live_trigger = yes }
+ hidden_effect = { if = { limit = { sltm_create_session_live_trigger = yes }  set_variable = { name = sltm_create_kind value = 2 } trigger_event = sltm_workflow.0101  } }
+ }
+ option = { name = sltm_w_100_o2
+ trigger = { sltm_create_session_live_trigger = yes }
+ hidden_effect = { if = { limit = { sltm_create_session_live_trigger = yes }  set_variable = { name = sltm_create_kind value = 3 } sltm_create_recommend_profile_effect = yes trigger_event = sltm_workflow.0107  } }
+ }
+ option = { name = sltm_w_100_o3
+ trigger = { sltm_create_session_live_trigger = yes }
+ hidden_effect = { if = { limit = { sltm_create_session_live_trigger = yes }  sltm_create_clear_draft_effect = yes  } }
+ }
+ option = {
+  name = sltm_workflow_stale_close
+  trigger = { NOT = { sltm_create_session_live_trigger = yes } }
+  # Dismiss only: never clear or overwrite the current/newer actor draft.
+ }
+}
+
+sltm_workflow.0101 = {
+ type = character_event
+ title = sltm_w_101_title
+ desc = sltm_w_101_desc
+ theme = realm
+ window = sltm_realm_character_event
+ option = { name = sltm_w_101_o0
+ trigger = { sltm_create_session_live_trigger = yes }
+ hidden_effect = { if = { limit = { sltm_create_session_live_trigger = yes }  set_variable = { name = sltm_create_tier value = 1 } if = { limit = { has_variable = sltm_create_route_clw } sltm_atlas_resume_effect = yes } else = { trigger_event = sltm_workflow.0102 }  } }
+ }
+ option = { name = sltm_w_101_o1
+ trigger = { sltm_create_session_live_trigger = yes }
+ hidden_effect = { if = { limit = { sltm_create_session_live_trigger = yes }  set_variable = { name = sltm_create_tier value = 2 } if = { limit = { has_variable = sltm_create_route_clw } sltm_atlas_resume_effect = yes } else = { trigger_event = sltm_workflow.0102 }  } }
+ }
+ option = { name = sltm_w_101_o2
+ trigger = { sltm_create_session_live_trigger = yes }
+ hidden_effect = { if = { limit = { sltm_create_session_live_trigger = yes }  set_variable = { name = sltm_create_tier value = 3 } if = { limit = { has_variable = sltm_create_route_clw } sltm_atlas_resume_effect = yes } else = { trigger_event = sltm_workflow.0102 }  } }
+ }
+ option = { name = sltm_w_101_o3
+ trigger = { sltm_create_session_live_trigger = yes }
+ hidden_effect = { if = { limit = { sltm_create_session_live_trigger = yes }  set_variable = { name = sltm_create_tier value = 4 } if = { limit = { has_variable = sltm_create_route_clw } sltm_atlas_resume_effect = yes } else = { trigger_event = sltm_workflow.0102 }  } }
+ }
+ option = { name = sltm_w_101_o4
+ trigger = { sltm_create_session_live_trigger = yes }
+ hidden_effect = { if = { limit = { sltm_create_session_live_trigger = yes }  set_variable = { name = sltm_create_tier value = 5 } if = { limit = { has_variable = sltm_create_route_clw } sltm_atlas_resume_effect = yes } else = { trigger_event = sltm_workflow.0102 }  } }
+ }
+ option = { name = sltm_menu_back_to_choice
+  trigger = { sltm_create_session_live_trigger = yes has_variable = sltm_create_route_clw }
+  hidden_effect = { if = { limit = { sltm_create_session_live_trigger = yes has_variable = sltm_create_route_clw }
+   sltm_atlas_resume_effect = yes
+  } }
+ }
+ option = { name = sltm_w_101_o5
+ trigger = { sltm_create_session_live_trigger = yes }
+ hidden_effect = { if = { limit = { sltm_create_session_live_trigger = yes }  sltm_create_clear_draft_effect = yes  } }
+ }
+ option = {
+  name = sltm_workflow_stale_close
+  trigger = { NOT = { sltm_create_session_live_trigger = yes } }
+  # Dismiss only: never clear or overwrite the current/newer actor draft.
+ }
+}
+
+sltm_workflow.0102 = {
+ type = character_event
+ title = sltm_w_102_title
+ desc = sltm_w_102_desc
+ theme = realm
+ window = sltm_realm_character_event
+ widget = {
+  is_shown = { sltm_create_session_live_trigger = yes }
+  gui = "event_window_widget_enter_text"
+  container = "dynamic_birth_name"
+  controller = { type = text data = { key = sltm_workflow_name default = sltm_workflow_default_name } }
+  setup_scope = { root = { save_scope_as = text_target } }
+ }
+ option = {
+  name = SLTM_AT_BACK_TO_ATLAS
+  trigger = { sltm_create_session_live_trigger = yes has_variable = sltm_create_route_clw }
+  hidden_effect = { if = { limit = { sltm_create_session_live_trigger = yes has_variable = sltm_create_route_clw } sltm_atlas_resume_effect = yes } }
+ }
+ option = { name = sltm_w_102_o0
+ trigger = { sltm_create_session_live_trigger = yes }
+ hidden_effect = { if = { limit = { sltm_create_session_live_trigger = yes }  set_variable = { name = sltm_create_preset value = 1 } set_variable = { name = sltm_create_claims value = 0 } trigger_event = sltm_workflow.0102  } }
+ }
+ option = { name = sltm_w_102_o1
+ trigger = { sltm_create_session_live_trigger = yes  var:sltm_create_kind = 1 }
+ hidden_effect = { if = { limit = { sltm_create_session_live_trigger = yes }  set_variable = { name = sltm_create_preset value = 2 } set_variable = { name = sltm_create_claims value = 1 } trigger_event = sltm_workflow.0102  } }
+ }
+ option = { name = sltm_w_102_o2
+ trigger = { sltm_create_session_live_trigger = yes  var:sltm_create_kind = 1 }
+ hidden_effect = { if = { limit = { sltm_create_session_live_trigger = yes }  set_variable = { name = sltm_create_preset value = 3 } set_variable = { name = sltm_create_claims value = 0 } trigger_event = sltm_workflow.0102  } }
+ }
+ option = { name = sltm_w_102_o3
+ trigger = { sltm_create_session_live_trigger = yes }
+ hidden_effect = { if = { limit = { sltm_create_session_live_trigger = yes }  trigger_event = sltm_workflow.0105  } }
+ }
+ option = { name = sltm_w_102_o4
+ trigger = { sltm_create_session_live_trigger = yes }
+ hidden_effect = { if = { limit = { sltm_create_session_live_trigger = yes }  remove_variable = sltm_create_capital remove_variable = sltm_create_dejure remove_variable = sltm_create_province trigger_event = sltm_workflow.0102  } }
+ }
+ option = { name = sltm_w_102_o5
+ trigger = { sltm_create_session_live_trigger = yes  exists = var:sltm_create_template }
+ hidden_effect = { if = { limit = { sltm_create_session_live_trigger = yes }  set_variable = { name = sltm_create_appearance value = 1 } trigger_event = sltm_workflow.0102  } }
+ }
+ option = { name = sltm_w_102_o6
+ trigger = { sltm_create_session_live_trigger = yes }
+ hidden_effect = { if = { limit = { sltm_create_session_live_trigger = yes }  remove_variable = sltm_create_appearance trigger_event = sltm_workflow.0102  } }
+ }
+ option = { name = sltm_w_102_o7
+ trigger = { sltm_create_session_live_trigger = yes NOT = { has_variable = sltm_create_ensure } }
+ hidden_effect = { if = { limit = { sltm_create_session_live_trigger = yes NOT = { has_variable = sltm_create_ensure } }
+  remove_variable = sltm_create_native_profile
+  remove_variable = sltm_create_review_ready
+  trigger_event = sltm_workflow.0106
+ } }
+ }
+
+ option = { name = sltm_w_102_o9
+ trigger = { sltm_create_session_live_trigger = yes }
+ hidden_effect = { if = { limit = { sltm_create_session_live_trigger = yes }  sltm_create_review_effect = yes  } }
+ }
+ option = { name = sltm_w_102_o10
+ trigger = { sltm_create_session_live_trigger = yes }
+ hidden_effect = { if = { limit = { sltm_create_session_live_trigger = yes }  sltm_create_clear_draft_effect = yes  } }
+ }
+ option = { name = sltm_w_102_claims
+ trigger = { sltm_create_session_live_trigger = yes var:sltm_create_kind = 1 }
+ hidden_effect = { if = { limit = { sltm_create_session_live_trigger = yes var:sltm_create_kind = 1 }
+  if = { limit = { var:sltm_create_claims = 1 } set_variable = { name = sltm_create_claims value = 0 } }
+  else = { set_variable = { name = sltm_create_claims value = 1 } }
+  trigger_event = sltm_workflow.0102
+ } }
+ }
+ option = {
+  name = sltm_workflow_stale_close
+  trigger = { NOT = { sltm_create_session_live_trigger = yes } }
+  # Dismiss only: never clear or overwrite the current/newer actor draft.
+ }
+}
+
+sltm_workflow.0103 = {
+ type = character_event
+ title = sltm_w_103_title
+ desc = sltm_w_103_desc
+ theme = realm
+ window = sltm_realm_character_event
+ option = {
+  name = SLTM_AT_BACK_TO_ATLAS
+  trigger = { sltm_create_session_live_trigger = yes has_variable = sltm_create_route_clw }
+  hidden_effect = { if = { limit = { sltm_create_session_live_trigger = yes has_variable = sltm_create_route_clw } sltm_atlas_resume_effect = yes } }
+ }
+ option = { name = sltm_w_103_o0
+ trigger = { sltm_create_session_live_trigger = yes  has_variable = sltm_create_review_ready }
+ hidden_effect = { if = { limit = { sltm_create_session_live_trigger = yes }  sltm_create_commit_effect = yes  } }
+ }
+ option = { name = sltm_w_103_o1
+ trigger = { sltm_create_session_live_trigger = yes }
+ hidden_effect = { if = { limit = { sltm_create_session_live_trigger = yes }  remove_variable = sltm_create_review_ready sltm_workflow_new_session_effect = yes trigger_event = sltm_workflow.0102  } }
+ }
+ option = { name = sltm_w_103_o2
+ trigger = { sltm_create_session_live_trigger = yes }
+ hidden_effect = { if = { limit = { sltm_create_session_live_trigger = yes }  sltm_create_clear_draft_effect = yes  } }
+ }
+ option = {
+  name = sltm_workflow_stale_close
+  trigger = { NOT = { sltm_create_session_live_trigger = yes } }
+  # Dismiss only: never clear or overwrite the current/newer actor draft.
+ }
+}
+
+sltm_workflow.0104 = {
+ type = character_event
+ title = sltm_w_104_title
+ desc = sltm_w_104_desc
+ theme = realm
+ window = sltm_realm_character_event
+ option = { name = sltm_w_104_o0
+ trigger = { sltm_workflow_session_current_trigger = yes has_variable = sltm_create_output_new exists = var:sltm_last_created_title }
+ hidden_effect = { if = { limit = { sltm_workflow_session_current_trigger = yes has_variable = sltm_create_output_new exists = var:sltm_last_created_title }  set_variable = { name = sltm_lvm_selected_title value = var:sltm_last_created_title } sltm_ui_open_fixed_effect = yes  } }
+ }
+ option = { name = sltm_w_104_o1
+ trigger = { sltm_workflow_session_current_trigger = yes  exists = var:sltm_last_created_domicile }
+ hidden_effect = { if = { limit = { sltm_workflow_session_current_trigger = yes }  set_variable = { name = sltm_lvm_selected_title value = var:sltm_last_created_title } sltm_open_exact_domicile_effect = yes sltm_workflow_new_session_effect = yes sltm_create_clear_draft_effect = yes  } }
+ }
+ option = { name = sltm_w_104_o2
+ trigger = { sltm_workflow_session_current_trigger = yes }
+ hidden_effect = { if = { limit = { sltm_workflow_session_current_trigger = yes } sltm_workflow_new_session_effect = yes sltm_create_clear_draft_effect = yes } }
+ }
+ option = {
+  name = sltm_workflow_stale_close
+  trigger = { NOT = { sltm_workflow_session_current_trigger = yes } }
+  # Dismiss only: never clear or overwrite the current/newer actor draft.
+ }
+}
+
+sltm_workflow.0200 = {
+ type = character_event
+ title = sltm_w_200_title
+ desc = sltm_w_200_desc
+ theme = realm
+ window = sltm_realm_character_event
+ option = { name = sltm_w_200_o0
+ trigger = { sltm_edit_session_live_trigger = yes }
+ hidden_effect = { if = { limit = { sltm_edit_session_live_trigger = yes }  sltm_ui_prepare_name_effect = yes trigger_event = sltm_workflow.0201  } }
+ }
+ option = { name = sltm_w_200_o1
+ trigger = { sltm_edit_session_live_trigger = yes }
+ hidden_effect = { if = { limit = { sltm_edit_session_live_trigger = yes }  trigger_event = sltm_workflow.0202  } }
+ }
+ option = { name = sltm_w_200_o2
+ trigger = { sltm_edit_session_live_trigger = yes }
+ hidden_effect = { if = { limit = { sltm_edit_session_live_trigger = yes }  trigger_event = sltm_workflow.0203  } }
+ }
+ option = { name = sltm_w_200_o3
+ trigger = { sltm_edit_session_live_trigger = yes }
+ hidden_effect = { if = { limit = { sltm_edit_session_live_trigger = yes }  trigger_event = sltm_workflow.0204  } }
+ }
+ option = { name = sltm_w_200_o4
+ trigger = { sltm_edit_session_live_trigger = yes  exists = var:sltm_edit_target var:sltm_edit_target = { sltm_plain_title_action_trigger = yes } }
+ hidden_effect = { if = { limit = { sltm_edit_session_live_trigger = yes }  trigger_event = sltm_workflow.0205  } }
+ }
+ option = { name = sltm_w_200_o5
+ trigger = { sltm_edit_session_live_trigger = yes }
+ hidden_effect = { if = { limit = { sltm_edit_session_live_trigger = yes }  trigger_event = sltm_workflow.0206  } }
+ }
+ option = { name = sltm_w_200_o6
+ trigger = { sltm_edit_session_live_trigger = yes  exists = var:sltm_edit_target.title_domicile }
+ hidden_effect = { if = { limit = { sltm_edit_session_live_trigger = yes }  trigger_event = sltm_workflow.0207  } }
+ }
+ option = { name = sltm_w_200_o7
+ trigger = { sltm_edit_session_live_trigger = yes  exists = var:sltm_edit_target var:sltm_edit_target = { sltm_plain_title_action_trigger = yes exists = holder } }
+ hidden_effect = { if = { limit = { sltm_edit_session_live_trigger = yes }  sltm_edit_transfer_open_effect = yes  } }
+ }
+ option = { name = sltm_w_200_o8
+ trigger = { sltm_edit_session_live_trigger = yes }
+ hidden_effect = { if = { limit = { sltm_edit_session_live_trigger = yes }  sltm_edit_review_effect = yes  } }
+ }
+ option = { name = sltm_w_200_o9
+ trigger = { sltm_edit_session_live_trigger = yes }
+ hidden_effect = { if = { limit = { sltm_edit_session_live_trigger = yes }  trigger_event = sltm_workflow.0212  } }
+ }
+ option = { name = sltm_w_200_o10
+ trigger = { sltm_edit_session_live_trigger = yes }
+ hidden_effect = { if = { limit = { sltm_edit_session_live_trigger = yes }  sltm_edit_clear_draft_effect = yes  } }
+ }
+ option = {
+  name = sltm_workflow_stale_close
+  trigger = { NOT = { sltm_edit_session_live_trigger = yes } }
+  # Dismiss only: never clear or overwrite the current/newer actor draft.
+ }
+
+ option = { name = sltm_ui_return
+ trigger = { sltm_edit_session_live_trigger = yes has_variable = sltm_ui_origin }
+ hidden_effect = { if = { limit = { sltm_edit_session_live_trigger = yes has_variable = sltm_ui_origin } sltm_ui_resume_effect = yes } }
+ }
+}
+
+sltm_workflow.0201 = {
+ type = character_event
+ title = sltm_w_201_title
+ desc = sltm_w_201_desc
+ theme = realm
+ window = sltm_realm_character_event
+ widget = {
+  is_shown = { sltm_edit_session_live_trigger = yes }
+  gui = "event_window_widget_enter_text"
+  container = "dynamic_birth_name"
+  controller = { type = text data = { key = sltm_edit_input_text default = sltm_workflow_default_name } }
+  setup_scope = { root = { save_scope_as = text_target } }
+ }
+ option = { name = sltm_w_201_o0
+ trigger = { sltm_edit_session_live_trigger = yes has_variable = sltm_edit_input_text NOT = { var:sltm_edit_input_text = flag:sltm_workflow_default_name } }
+ hidden_effect = { if = { limit = { sltm_edit_session_live_trigger = yes has_variable = sltm_edit_input_text NOT = { var:sltm_edit_input_text = flag:sltm_workflow_default_name } }  set_variable = { name = sltm_edit_accepted_name value = var:sltm_edit_input_text } set_variable = { name = sltm_edit_name value = 1 } sltm_ui_back_to_editor_effect = yes  } }
+ }
+ option = { name = sltm_w_201_o1
+ trigger = { sltm_edit_session_live_trigger = yes }
+ hidden_effect = { if = { limit = { sltm_edit_session_live_trigger = yes }  set_variable = { name = sltm_edit_name value = 2 } sltm_ui_back_to_editor_effect = yes  } }
+ }
+ option = { name = sltm_w_201_o2
+ trigger = { sltm_edit_session_live_trigger = yes }
+ hidden_effect = { if = { limit = { sltm_edit_session_live_trigger = yes }  remove_variable = sltm_edit_name sltm_ui_back_to_editor_effect = yes  } }
+ }
+ option = { name = sltm_w_201_o3
+ trigger = { sltm_edit_session_live_trigger = yes }
+ hidden_effect = { if = { limit = { sltm_edit_session_live_trigger = yes }  sltm_ui_back_to_editor_effect = yes  } }
+ }
+ option = {
+  name = sltm_workflow_stale_close
+  trigger = { NOT = { sltm_edit_session_live_trigger = yes } }
+  # Dismiss only: never clear or overwrite the current/newer actor draft.
+ }
+}
+
+sltm_workflow.0202 = {
+ type = character_event
+ title = sltm_w_202_title
+ desc = sltm_w_202_desc
+ theme = realm
+ window = sltm_realm_character_event
+ option = { name = sltm_w_202_o0
+ trigger = { sltm_edit_session_live_trigger = yes }
+ hidden_effect = { if = { limit = { sltm_edit_session_live_trigger = yes }  remove_variable = sltm_edit_coa_source set_variable = { name = sltm_edit_coa value = 1 } sltm_ui_back_to_editor_effect = yes  } }
+ }
+ option = { name = sltm_w_202_o1
+ trigger = { sltm_edit_session_live_trigger = yes  exists = var:sltm_designee_title }
+ hidden_effect = { if = { limit = { sltm_edit_session_live_trigger = yes }  set_variable = { name = sltm_edit_coa_source value = var:sltm_designee_title } set_variable = { name = sltm_edit_coa value = 2 } sltm_ui_back_to_editor_effect = yes  } }
+ }
+ option = { name = sltm_w_202_o2
+ trigger = { sltm_edit_session_live_trigger = yes  exists = var:sltm_designee_title }
+ hidden_effect = { if = { limit = { sltm_edit_session_live_trigger = yes }  set_variable = { name = sltm_edit_color_source value = var:sltm_designee_title } set_variable = { name = sltm_edit_color value = 1 } sltm_ui_back_to_editor_effect = yes  } }
+ }
+ option = { name = sltm_w_202_o3
+ trigger = { sltm_edit_session_live_trigger = yes }
+ hidden_effect = { if = { limit = { sltm_edit_session_live_trigger = yes }  remove_variable = sltm_edit_coa remove_variable = sltm_edit_color remove_variable = sltm_edit_coa_source remove_variable = sltm_edit_color_source sltm_ui_back_to_editor_effect = yes  } }
+ }
+ option = { name = sltm_w_202_o4
+ trigger = { sltm_edit_session_live_trigger = yes }
+ hidden_effect = { if = { limit = { sltm_edit_session_live_trigger = yes }  sltm_ui_back_to_editor_effect = yes  } }
+ }
+ option = {
+  name = sltm_workflow_stale_close
+  trigger = { NOT = { sltm_edit_session_live_trigger = yes } }
+  # Dismiss only: never clear or overwrite the current/newer actor draft.
+ }
+}
+
+sltm_workflow.0203 = {
+ type = character_event
+ title = sltm_w_203_title
+ desc = sltm_w_203_desc
+ theme = realm
+ window = sltm_realm_character_event
+ option = { name = sltm_w_203_o0
+ trigger = { sltm_edit_session_live_trigger = yes  exists = var:sltm_designee_title }
+ hidden_effect = { if = { limit = { sltm_edit_session_live_trigger = yes }  clear_saved_scope = sltm_input_capital var:sltm_designee_title = { if = { limit = { tier = tier_county } save_scope_as = sltm_input_capital } else_if = { limit = { tier = tier_barony exists = de_jure_liege } de_jure_liege = { save_scope_as = sltm_input_capital } } else_if = { limit = { exists = title_capital_county } title_capital_county = { save_scope_as = sltm_input_capital } } } if = { limit = { exists = scope:sltm_input_capital } set_variable = { name = sltm_edit_capital value = scope:sltm_input_capital } } sltm_ui_back_to_editor_effect = yes  } }
+ }
+ option = { name = sltm_w_203_o1
+ trigger = { sltm_edit_session_live_trigger = yes  exists = var:sltm_designee_title }
+ hidden_effect = { if = { limit = { sltm_edit_session_live_trigger = yes }  set_variable = { name = sltm_edit_dejure value = var:sltm_designee_title } sltm_ui_back_to_editor_effect = yes  } }
+ }
+ option = { name = sltm_w_203_o2
+ trigger = { sltm_edit_session_live_trigger = yes }
+ hidden_effect = { if = { limit = { sltm_edit_session_live_trigger = yes }  remove_variable = sltm_edit_capital remove_variable = sltm_edit_dejure sltm_ui_back_to_editor_effect = yes  } }
+ }
+ option = { name = sltm_w_203_o3
+ trigger = { sltm_edit_session_live_trigger = yes }
+ hidden_effect = { if = { limit = { sltm_edit_session_live_trigger = yes }  sltm_ui_back_to_editor_effect = yes  } }
+ }
+ option = {
+  name = sltm_workflow_stale_close
+  trigger = { NOT = { sltm_edit_session_live_trigger = yes } }
+  # Dismiss only: never clear or overwrite the current/newer actor draft.
+ }
+}
+
+sltm_workflow.0204 = {
+ type = character_event
+ title = sltm_w_204_title
+ desc = sltm_w_204_desc
+ theme = realm
+ window = sltm_realm_character_event
+ option = { name = sltm_w_204_o0
+ trigger = { sltm_edit_session_live_trigger = yes }
+ hidden_effect = { if = { limit = { sltm_edit_session_live_trigger = yes }  if = { limit = { NOT = { has_variable = sltm_edit_definitive } } set_variable = { name = sltm_edit_definitive value = 1 } } else_if = { limit = { var:sltm_edit_definitive = 1 } set_variable = { name = sltm_edit_definitive value = 2 } } else = { remove_variable = sltm_edit_definitive } trigger_event = sltm_workflow.0204  } }
+ }
+ option = { name = sltm_w_204_o1
+ trigger = { sltm_edit_session_live_trigger = yes }
+ hidden_effect = { if = { limit = { sltm_edit_session_live_trigger = yes }  if = { limit = { NOT = { has_variable = sltm_edit_dynasty } } set_variable = { name = sltm_edit_dynasty value = 1 } } else_if = { limit = { var:sltm_edit_dynasty = 1 } set_variable = { name = sltm_edit_dynasty value = 2 } } else = { remove_variable = sltm_edit_dynasty } trigger_event = sltm_workflow.0204  } }
+ }
+ option = { name = sltm_w_204_o2
+ trigger = { sltm_edit_session_live_trigger = yes }
+ hidden_effect = { if = { limit = { sltm_edit_session_live_trigger = yes }  if = { limit = { NOT = { has_variable = sltm_edit_nomadic } } set_variable = { name = sltm_edit_nomadic value = 1 } } else_if = { limit = { var:sltm_edit_nomadic = 1 } set_variable = { name = sltm_edit_nomadic value = 2 } } else = { remove_variable = sltm_edit_nomadic } trigger_event = sltm_workflow.0204  } }
+ }
+ option = { name = sltm_w_204_o3
+ trigger = { sltm_edit_session_live_trigger = yes }
+ hidden_effect = { if = { limit = { sltm_edit_session_live_trigger = yes }  if = { limit = { NOT = { has_variable = sltm_edit_heir } } set_variable = { name = sltm_edit_heir value = 1 } } else_if = { limit = { var:sltm_edit_heir = 1 } set_variable = { name = sltm_edit_heir value = 2 } } else = { remove_variable = sltm_edit_heir } trigger_event = sltm_workflow.0204  } }
+ }
+ option = { name = sltm_w_204_o4
+ trigger = { sltm_edit_session_live_trigger = yes }
+ hidden_effect = { if = { limit = { sltm_edit_session_live_trigger = yes }  if = { limit = { NOT = { has_variable = sltm_edit_claims } } set_variable = { name = sltm_edit_claims value = 1 } } else_if = { limit = { var:sltm_edit_claims = 1 } set_variable = { name = sltm_edit_claims value = 2 } } else = { remove_variable = sltm_edit_claims } trigger_event = sltm_workflow.0204  } }
+ }
+ option = { name = sltm_w_204_o5
+ trigger = { sltm_edit_session_live_trigger = yes }
+ hidden_effect = { if = { limit = { sltm_edit_session_live_trigger = yes }  sltm_ui_back_to_editor_effect = yes  } }
+ }
+ option = {
+  name = sltm_workflow_stale_close
+  trigger = { NOT = { sltm_edit_session_live_trigger = yes } }
+  # Dismiss only: never clear or overwrite the current/newer actor draft.
+ }
+}
+
+sltm_workflow.0205 = {
+ type = character_event
+ title = sltm_w_205_title
+ desc = sltm_w_205_desc
+ theme = realm
+ window = sltm_realm_character_event
+ option = { name = sltm_w_205_o0
+ trigger = { sltm_edit_session_live_trigger = yes }
+ hidden_effect = { if = { limit = { sltm_edit_session_live_trigger = yes }  if = { limit = { NOT = { has_variable = sltm_edit_landless } } set_variable = { name = sltm_edit_landless value = 1 } } else_if = { limit = { var:sltm_edit_landless = 1 } set_variable = { name = sltm_edit_landless value = 2 } } else = { remove_variable = sltm_edit_landless } trigger_event = sltm_workflow.0205  } }
+ }
+ option = { name = sltm_w_205_o1
+ trigger = { sltm_edit_session_live_trigger = yes }
+ hidden_effect = { if = { limit = { sltm_edit_session_live_trigger = yes }  if = { limit = { NOT = { has_variable = sltm_edit_succession } } set_variable = { name = sltm_edit_succession value = 1 } } else_if = { limit = { var:sltm_edit_succession = 1 } set_variable = { name = sltm_edit_succession value = 2 } } else = { remove_variable = sltm_edit_succession } trigger_event = sltm_workflow.0205  } }
+ }
+ option = { name = sltm_w_205_o2
+ trigger = { sltm_edit_session_live_trigger = yes }
+ hidden_effect = { if = { limit = { sltm_edit_session_live_trigger = yes }  if = { limit = { NOT = { has_variable = sltm_edit_invalid_heir } } set_variable = { name = sltm_edit_invalid_heir value = 1 } } else_if = { limit = { var:sltm_edit_invalid_heir = 1 } set_variable = { name = sltm_edit_invalid_heir value = 2 } } else = { remove_variable = sltm_edit_invalid_heir } trigger_event = sltm_workflow.0205  } }
+ }
+ option = { name = sltm_w_205_o3
+ trigger = { sltm_edit_session_live_trigger = yes }
+ hidden_effect = { if = { limit = { sltm_edit_session_live_trigger = yes }  if = { limit = { NOT = { has_variable = sltm_edit_same_tier } } set_variable = { name = sltm_edit_same_tier value = 1 } } else_if = { limit = { var:sltm_edit_same_tier = 1 } set_variable = { name = sltm_edit_same_tier value = 2 } } else = { remove_variable = sltm_edit_same_tier } trigger_event = sltm_workflow.0205  } }
+ }
+ option = { name = sltm_w_205_o4
+ trigger = { sltm_edit_session_live_trigger = yes }
+ hidden_effect = { if = { limit = { sltm_edit_session_live_trigger = yes }  sltm_ui_back_to_editor_effect = yes  } }
+ }
+ option = {
+  name = sltm_workflow_stale_close
+  trigger = { NOT = { sltm_edit_session_live_trigger = yes } }
+  # Dismiss only: never clear or overwrite the current/newer actor draft.
+ }
+}
+
+sltm_workflow.0206 = {
+ type = character_event
+ title = sltm_w_206_title
+ desc = sltm_w_206_desc
+ theme = realm
+ window = sltm_realm_character_event
+ option = { name = sltm_w_206_o0
+ trigger = { sltm_edit_session_live_trigger = yes }
+ hidden_effect = { if = { limit = { sltm_edit_session_live_trigger = yes }  trigger_event = sltm_workflow.0213  } }
+ }
+ option = { name = sltm_w_206_o1
+ trigger = { sltm_edit_session_live_trigger = yes }
+ hidden_effect = { if = { limit = { sltm_edit_session_live_trigger = yes }  trigger_event = sltm_workflow.0214  } }
+ }
+ option = { name = sltm_w_206_o2
+ trigger = { sltm_edit_session_live_trigger = yes }
+ hidden_effect = { if = { limit = { sltm_edit_session_live_trigger = yes }  remove_variable = sltm_edit_law_add remove_variable = sltm_edit_law_remove sltm_ui_back_to_editor_effect = yes  } }
+ }
+ option = { name = sltm_w_206_o3
+ trigger = { sltm_edit_session_live_trigger = yes }
+ hidden_effect = { if = { limit = { sltm_edit_session_live_trigger = yes }  sltm_ui_back_to_editor_effect = yes  } }
+ }
+ option = {
+  name = sltm_workflow_stale_close
+  trigger = { NOT = { sltm_edit_session_live_trigger = yes } }
+  # Dismiss only: never clear or overwrite the current/newer actor draft.
+ }
+}
+
+sltm_workflow.0213 = {
+ type = character_event
+ title = sltm_w_213_title
+ desc = sltm_w_213_desc
+ theme = realm
+ window = sltm_realm_character_event
+ option = { name = sltm_w_213_o0
+ trigger = { sltm_edit_session_live_trigger = yes }
+ hidden_effect = { if = { limit = { sltm_edit_session_live_trigger = yes }  if = { limit = { var:sltm_edit_law_remove = 1 } remove_variable = sltm_edit_law_remove } set_variable = { name = sltm_edit_law_add value = 1 } sltm_ui_back_to_editor_effect = yes  } }
+ }
+ option = { name = sltm_w_213_o1
+ trigger = { sltm_edit_session_live_trigger = yes }
+ hidden_effect = { if = { limit = { sltm_edit_session_live_trigger = yes }  if = { limit = { var:sltm_edit_law_remove = 2 } remove_variable = sltm_edit_law_remove } set_variable = { name = sltm_edit_law_add value = 2 } sltm_ui_back_to_editor_effect = yes  } }
+ }
+ option = { name = sltm_w_213_o2
+ trigger = { sltm_edit_session_live_trigger = yes }
+ hidden_effect = { if = { limit = { sltm_edit_session_live_trigger = yes }  if = { limit = { var:sltm_edit_law_remove = 3 } remove_variable = sltm_edit_law_remove } set_variable = { name = sltm_edit_law_add value = 3 } sltm_ui_back_to_editor_effect = yes  } }
+ }
+ option = { name = sltm_w_213_o3
+ trigger = { sltm_edit_session_live_trigger = yes }
+ hidden_effect = { if = { limit = { sltm_edit_session_live_trigger = yes }  if = { limit = { var:sltm_edit_law_remove = 4 } remove_variable = sltm_edit_law_remove } set_variable = { name = sltm_edit_law_add value = 4 } sltm_ui_back_to_editor_effect = yes  } }
+ }
+ option = { name = sltm_w_213_o4
+ trigger = { sltm_edit_session_live_trigger = yes }
+ hidden_effect = { if = { limit = { sltm_edit_session_live_trigger = yes }  if = { limit = { var:sltm_edit_law_remove = 5 } remove_variable = sltm_edit_law_remove } set_variable = { name = sltm_edit_law_add value = 5 } sltm_ui_back_to_editor_effect = yes  } }
+ }
+ option = { name = sltm_w_213_o5
+ trigger = { sltm_edit_session_live_trigger = yes }
+ hidden_effect = { if = { limit = { sltm_edit_session_live_trigger = yes }  if = { limit = { var:sltm_edit_law_remove = 6 } remove_variable = sltm_edit_law_remove } set_variable = { name = sltm_edit_law_add value = 6 } sltm_ui_back_to_editor_effect = yes  } }
+ }
+ option = { name = sltm_w_213_o6
+ trigger = { sltm_edit_session_live_trigger = yes }
+ hidden_effect = { if = { limit = { sltm_edit_session_live_trigger = yes }  if = { limit = { var:sltm_edit_law_remove = 7 } remove_variable = sltm_edit_law_remove } set_variable = { name = sltm_edit_law_add value = 7 } sltm_ui_back_to_editor_effect = yes  } }
+ }
+ option = { name = sltm_w_213_o7
+ trigger = { sltm_edit_session_live_trigger = yes }
+ hidden_effect = { if = { limit = { sltm_edit_session_live_trigger = yes }  if = { limit = { var:sltm_edit_law_remove = 8 } remove_variable = sltm_edit_law_remove } set_variable = { name = sltm_edit_law_add value = 8 } sltm_ui_back_to_editor_effect = yes  } }
+ }
+ option = { name = sltm_w_213_o8
+ trigger = { always = no }
+ hidden_effect = { if = { limit = { sltm_edit_session_live_trigger = yes }  if = { limit = { var:sltm_edit_law_remove = 9 } remove_variable = sltm_edit_law_remove } set_variable = { name = sltm_edit_law_add value = 9 } sltm_ui_back_to_editor_effect = yes  } }
+ }
+ option = { name = sltm_w_213_o9
+ trigger = { sltm_edit_session_live_trigger = yes }
+ hidden_effect = { if = { limit = { sltm_edit_session_live_trigger = yes }  sltm_ui_back_to_editor_effect = yes  } }
+ }
+ option = {
+  name = sltm_workflow_stale_close
+  trigger = { NOT = { sltm_edit_session_live_trigger = yes } }
+  # Dismiss only: never clear or overwrite the current/newer actor draft.
+ }
+}
+
+sltm_workflow.0214 = {
+ type = character_event
+ title = sltm_w_214_title
+ desc = sltm_w_214_desc
+ theme = realm
+ window = sltm_realm_character_event
+ option = { name = sltm_w_214_o0
+ trigger = { sltm_edit_session_live_trigger = yes }
+ hidden_effect = { if = { limit = { sltm_edit_session_live_trigger = yes }  if = { limit = { var:sltm_edit_law_add = 1 } remove_variable = sltm_edit_law_add } set_variable = { name = sltm_edit_law_remove value = 1 } sltm_ui_back_to_editor_effect = yes  } }
+ }
+ option = { name = sltm_w_214_o1
+ trigger = { sltm_edit_session_live_trigger = yes }
+ hidden_effect = { if = { limit = { sltm_edit_session_live_trigger = yes }  if = { limit = { var:sltm_edit_law_add = 2 } remove_variable = sltm_edit_law_add } set_variable = { name = sltm_edit_law_remove value = 2 } sltm_ui_back_to_editor_effect = yes  } }
+ }
+ option = { name = sltm_w_214_o2
+ trigger = { sltm_edit_session_live_trigger = yes }
+ hidden_effect = { if = { limit = { sltm_edit_session_live_trigger = yes }  if = { limit = { var:sltm_edit_law_add = 3 } remove_variable = sltm_edit_law_add } set_variable = { name = sltm_edit_law_remove value = 3 } sltm_ui_back_to_editor_effect = yes  } }
+ }
+ option = { name = sltm_w_214_o3
+ trigger = { sltm_edit_session_live_trigger = yes }
+ hidden_effect = { if = { limit = { sltm_edit_session_live_trigger = yes }  if = { limit = { var:sltm_edit_law_add = 4 } remove_variable = sltm_edit_law_add } set_variable = { name = sltm_edit_law_remove value = 4 } sltm_ui_back_to_editor_effect = yes  } }
+ }
+ option = { name = sltm_w_214_o4
+ trigger = { sltm_edit_session_live_trigger = yes }
+ hidden_effect = { if = { limit = { sltm_edit_session_live_trigger = yes }  if = { limit = { var:sltm_edit_law_add = 5 } remove_variable = sltm_edit_law_add } set_variable = { name = sltm_edit_law_remove value = 5 } sltm_ui_back_to_editor_effect = yes  } }
+ }
+ option = { name = sltm_w_214_o5
+ trigger = { sltm_edit_session_live_trigger = yes }
+ hidden_effect = { if = { limit = { sltm_edit_session_live_trigger = yes }  if = { limit = { var:sltm_edit_law_add = 6 } remove_variable = sltm_edit_law_add } set_variable = { name = sltm_edit_law_remove value = 6 } sltm_ui_back_to_editor_effect = yes  } }
+ }
+ option = { name = sltm_w_214_o6
+ trigger = { sltm_edit_session_live_trigger = yes }
+ hidden_effect = { if = { limit = { sltm_edit_session_live_trigger = yes }  if = { limit = { var:sltm_edit_law_add = 7 } remove_variable = sltm_edit_law_add } set_variable = { name = sltm_edit_law_remove value = 7 } sltm_ui_back_to_editor_effect = yes  } }
+ }
+ option = { name = sltm_w_214_o7
+ trigger = { sltm_edit_session_live_trigger = yes }
+ hidden_effect = { if = { limit = { sltm_edit_session_live_trigger = yes }  if = { limit = { var:sltm_edit_law_add = 8 } remove_variable = sltm_edit_law_add } set_variable = { name = sltm_edit_law_remove value = 8 } sltm_ui_back_to_editor_effect = yes  } }
+ }
+ option = { name = sltm_w_214_o8
+ trigger = { sltm_edit_session_live_trigger = yes var:sltm_edit_target ?= { has_title_law = partition_succession_law } }
+ hidden_effect = { if = { limit = { sltm_edit_session_live_trigger = yes }  if = { limit = { var:sltm_edit_law_add = 9 } remove_variable = sltm_edit_law_add } set_variable = { name = sltm_edit_law_remove value = 9 } sltm_ui_back_to_editor_effect = yes  } }
+ }
+ option = { name = sltm_w_214_o9
+ trigger = { sltm_edit_session_live_trigger = yes }
+ hidden_effect = { if = { limit = { sltm_edit_session_live_trigger = yes }  sltm_ui_back_to_editor_effect = yes  } }
+ }
+ option = {
+  name = sltm_workflow_stale_close
+  trigger = { NOT = { sltm_edit_session_live_trigger = yes } }
+  # Dismiss only: never clear or overwrite the current/newer actor draft.
+ }
+}
+
+sltm_workflow.0207 = {
+ type = character_event
+ title = sltm_w_207_title
+ desc = sltm_w_207_desc
+ theme = realm
+ window = sltm_realm_character_event
+ option = { name = sltm_w_207_o0
+ trigger = { sltm_edit_session_live_trigger = yes  exists = var:sltm_designee_title }
+ hidden_effect = { if = { limit = { sltm_edit_session_live_trigger = yes }  sltm_pick_province_effect = { SOURCE = var:sltm_designee_title DEST = sltm_edit_province } sltm_ui_back_to_editor_effect = yes  } }
+ }
+ option = { name = sltm_w_207_o1
+ trigger = { sltm_edit_session_live_trigger = yes  var:sltm_edit_target.title_domicile = { is_domicile_type = sltm_residence } }
+ hidden_effect = { if = { limit = { sltm_edit_session_live_trigger = yes }  set_variable = { name = sltm_edit_building value = 1 } sltm_ui_back_to_editor_effect = yes  } }
+ }
+ option = { name = sltm_w_207_o2
+ trigger = { sltm_edit_session_live_trigger = yes }
+ hidden_effect = { if = { limit = { sltm_edit_session_live_trigger = yes }  set_variable = { name = sltm_lvm_selected_title value = var:sltm_edit_target } sltm_open_exact_domicile_effect = yes  } }
+ }
+ option = { name = sltm_w_207_o3
+ trigger = { sltm_edit_session_live_trigger = yes }
+ hidden_effect = { if = { limit = { sltm_edit_session_live_trigger = yes }  remove_variable = sltm_edit_province remove_variable = sltm_edit_building sltm_ui_back_to_editor_effect = yes  } }
+ }
+ option = { name = sltm_w_207_o4
+ trigger = { sltm_edit_session_live_trigger = yes }
+ hidden_effect = { if = { limit = { sltm_edit_session_live_trigger = yes }  sltm_ui_back_to_editor_effect = yes  } }
+ }
+ option = {
+  name = sltm_workflow_stale_close
+  trigger = { NOT = { sltm_edit_session_live_trigger = yes } }
+  # Dismiss only: never clear or overwrite the current/newer actor draft.
+ }
+}
+
+sltm_workflow.0208 = {
+ type = character_event
+ title = sltm_w_208_title
+ desc = sltm_ui_review_description
+ theme = realm
+ window = sltm_realm_character_event
+ option = { name = sltm_w_208_o0
+ trigger = { sltm_edit_session_live_trigger = yes  sltm_edit_has_changes_trigger = yes has_variable = sltm_edit_review_ready }
+ hidden_effect = { if = { limit = { sltm_edit_session_live_trigger = yes }  sltm_edit_apply_effect = yes  } }
+ }
+ option = { name = sltm_w_208_o1
+ trigger = { sltm_edit_session_live_trigger = yes }
+ hidden_effect = { if = { limit = { sltm_edit_session_live_trigger = yes }  remove_variable = sltm_edit_review_ready sltm_workflow_new_session_effect = yes sltm_ui_back_to_editor_effect = yes  } }
+ }
+ option = { name = sltm_w_208_o2
+ trigger = { sltm_edit_session_live_trigger = yes }
+ hidden_effect = { if = { limit = { sltm_edit_session_live_trigger = yes }  sltm_edit_clear_draft_effect = yes  } }
+ }
+ option = {
+  name = sltm_workflow_stale_close
+  trigger = { NOT = { sltm_edit_session_live_trigger = yes } }
+  # Dismiss only: never clear or overwrite the current/newer actor draft.
+ }
+}
+
+sltm_workflow.0209 = {
+ type = character_event
+ title = sltm_w_209_title
+ desc = sltm_ui_result_description
+ theme = realm
+ window = sltm_realm_character_event
+ option = { name = sltm_w_209_o0
+ trigger = { sltm_workflow_session_current_trigger = yes }
+ hidden_effect = { if = { limit = { sltm_workflow_session_current_trigger = yes }  sltm_ui_reopen_effect = yes  } }
+ }
+ option = { name = sltm_w_209_o1
+ trigger = { sltm_workflow_session_current_trigger = yes }
+ hidden_effect = { if = { limit = { sltm_workflow_session_current_trigger = yes }  sltm_workflow_new_session_effect = yes sltm_edit_clear_draft_effect = yes  } }
+ }
+ option = {
+  name = sltm_workflow_stale_close
+  trigger = { NOT = { sltm_workflow_session_current_trigger = yes } }
+  # Dismiss only: never clear or overwrite the current/newer actor draft.
+ }
+
+}
+
+sltm_workflow.0210 = {
+ type = character_event
+ title = sltm_w_210_title
+ desc = sltm_w_210_desc
+ theme = realm
+ window = sltm_realm_character_event
+ option = { name = sltm_w_210_o0
+  trigger = { sltm_edit_session_live_trigger = yes exists = var:sltm_transfer_title exists = var:sltm_transfer_from exists = var:sltm_edit_transfer var:sltm_transfer_title = { holder = root.var:sltm_transfer_from sltm_plain_title_action_trigger = yes } }
+  hidden_effect = { if = { limit = { sltm_edit_session_live_trigger = yes exists = var:sltm_transfer_title exists = var:sltm_transfer_from exists = var:sltm_edit_transfer var:sltm_transfer_title = { holder = root.var:sltm_transfer_from sltm_plain_title_action_trigger = yes } } sltm_edit_transfer_effect = yes } }
+ }
+ option = { name = sltm_w_210_reselect
+  trigger = { sltm_edit_session_live_trigger = yes  }
+  hidden_effect = { if = { limit = { sltm_edit_session_live_trigger = yes  } sltm_edit_transfer_open_effect = yes } }
+ }
+ option = { name = sltm_w_210_o1
+  trigger = { sltm_edit_session_live_trigger = yes  }
+  hidden_effect = { if = { limit = { sltm_edit_session_live_trigger = yes  } remove_variable = sltm_edit_transfer sltm_workflow_new_session_effect = yes sltm_ui_back_to_editor_effect = yes } }
+ }
+ option = { name = sltm_workflow_stale_close trigger = { NOT = { sltm_edit_session_live_trigger = yes } } }
+}
+
+sltm_workflow.0211 = {
+ type = character_event
+ title = sltm_w_211_title
+ desc = sltm_w_211_desc
+ theme = realm
+ window = sltm_realm_character_event
+ option = { name = sltm_w_211_o0
+ trigger = { sltm_workflow_session_current_trigger = yes }
+ hidden_effect = { if = { limit = { sltm_workflow_session_current_trigger = yes }  sltm_workflow_new_session_effect = yes sltm_edit_clear_draft_effect = yes  } }
+ }
+ option = {
+  name = sltm_workflow_stale_close
+  trigger = { NOT = { sltm_workflow_session_current_trigger = yes } }
+  # Dismiss only: never clear or overwrite the current/newer actor draft.
+ }
+}
+
+sltm_workflow.0212 = {
+ type = character_event
+ title = sltm_w_212_title
+ desc = sltm_w_212_desc
+ theme = realm
+ window = sltm_realm_character_event
+ option = { name = sltm_w_212_o0
+ trigger = { sltm_edit_session_live_trigger = yes }
+ hidden_effect = { if = { limit = { sltm_edit_session_live_trigger = yes }  sltm_ui_back_to_editor_effect = yes  } }
+ }
+ option = {
+  name = sltm_workflow_stale_close
+  trigger = { NOT = { sltm_edit_session_live_trigger = yes } }
+  # Dismiss only: never clear or overwrite the current/newer actor draft.
+ }
+}
+
+
+sltm_workflow.0105 = {
+ type = character_event
+ title = sltm_w_105_title
+ desc = sltm_w_105_desc
+ theme = realm
+ window = sltm_realm_character_event
+ option = { name = sltm_w_105_o0
+ trigger = { sltm_create_session_live_trigger = yes  exists = var:sltm_designee_title }
+ hidden_effect = { if = { limit = { sltm_create_session_live_trigger = yes }  clear_saved_scope = sltm_input_capital
+ var:sltm_designee_title = {
+  if = { limit = { tier = tier_county } save_scope_as = sltm_input_capital }
+  else_if = { limit = { tier = tier_barony exists = de_jure_liege } de_jure_liege = { if = { limit = { tier = tier_county } save_scope_as = sltm_input_capital } } }
+  else_if = { limit = { exists = title_capital_county } title_capital_county = { save_scope_as = sltm_input_capital } }
+ }
+ if = { limit = { exists = scope:sltm_input_capital } set_variable = { name = sltm_create_capital value = scope:sltm_input_capital } } trigger_event = sltm_workflow.0105  } }
+ }
+ option = { name = sltm_w_105_o1
+ trigger = { sltm_create_session_live_trigger = yes  exists = var:sltm_designee_title }
+ hidden_effect = { if = { limit = { sltm_create_session_live_trigger = yes }  set_variable = { name = sltm_create_dejure value = var:sltm_designee_title } trigger_event = sltm_workflow.0105  } }
+ }
+ option = { name = sltm_w_105_o2
+ trigger = { sltm_create_session_live_trigger = yes exists = var:sltm_designee_title }
+ hidden_effect = { if = { limit = { sltm_create_session_live_trigger = yes exists = var:sltm_designee_title } sltm_pick_province_effect = { SOURCE = var:sltm_designee_title DEST = sltm_create_province } trigger_event = sltm_workflow.0105 } }
+ }
+ option = { name = sltm_w_105_o3
+ trigger = { sltm_create_session_live_trigger = yes  exists = var:sltm_create_template }
+ hidden_effect = { if = { limit = { sltm_create_session_live_trigger = yes }  clear_saved_scope = sltm_input_capital
+ var:sltm_create_template = {
+  if = { limit = { tier = tier_county } save_scope_as = sltm_input_capital }
+  else_if = { limit = { tier = tier_barony exists = de_jure_liege } de_jure_liege = { if = { limit = { tier = tier_county } save_scope_as = sltm_input_capital } } }
+  else_if = { limit = { exists = title_capital_county } title_capital_county = { save_scope_as = sltm_input_capital } }
+ }
+ if = { limit = { exists = scope:sltm_input_capital } set_variable = { name = sltm_create_capital value = scope:sltm_input_capital } } trigger_event = sltm_workflow.0105  } }
+ }
+ option = { name = sltm_w_105_o4
+ trigger = { sltm_create_session_live_trigger = yes  exists = var:sltm_create_template.de_jure_liege }
+ hidden_effect = { if = { limit = { sltm_create_session_live_trigger = yes }  set_variable = { name = sltm_create_dejure value = var:sltm_create_template.de_jure_liege } trigger_event = sltm_workflow.0105  } }
+ }
+ option = { name = sltm_w_105_o5
+ trigger = { sltm_create_session_live_trigger = yes exists = var:sltm_create_template }
+ hidden_effect = { if = { limit = { sltm_create_session_live_trigger = yes exists = var:sltm_create_template } sltm_pick_province_effect = { SOURCE = var:sltm_create_template DEST = sltm_create_province } trigger_event = sltm_workflow.0105 } }
+ }
+ option = { name = sltm_w_105_o6
+ trigger = { sltm_create_session_live_trigger = yes }
+ hidden_effect = { if = { limit = { sltm_create_session_live_trigger = yes }  remove_variable = sltm_create_capital trigger_event = sltm_workflow.0105  } }
+ }
+ option = { name = sltm_w_105_o7
+ trigger = { sltm_create_session_live_trigger = yes }
+ hidden_effect = { if = { limit = { sltm_create_session_live_trigger = yes }  remove_variable = sltm_create_dejure trigger_event = sltm_workflow.0105  } }
+ }
+ option = { name = sltm_w_105_o8
+ trigger = { sltm_create_session_live_trigger = yes }
+ hidden_effect = { if = { limit = { sltm_create_session_live_trigger = yes }  remove_variable = sltm_create_province trigger_event = sltm_workflow.0105  } }
+ }
+ option = { name = sltm_w_105_o9
+ trigger = { sltm_create_session_live_trigger = yes }
+ hidden_effect = { if = { limit = { sltm_create_session_live_trigger = yes }  trigger_event = sltm_workflow.0102  } }
+ }
+ option = {
+  name = sltm_workflow_stale_close
+  trigger = { NOT = { sltm_create_session_live_trigger = yes } }
+  # Dismiss only: never clear or overwrite the current/newer actor draft.
+ }
+}
+
+sltm_workflow.0106 = {
+ type = character_event
+ title = sltm_w_106_title
+ desc = sltm_w_106_desc
+ theme = realm
+ window = sltm_realm_character_event
+ option = { name = sltm_w_106_self
+  trigger = { sltm_create_session_live_trigger = yes  }
+  hidden_effect = { if = { limit = { sltm_create_session_live_trigger = yes  } set_variable = { name = sltm_create_holder value = this } sltm_clw_reselect_holder_effect = yes } }
+ }
+ option = { name = sltm_w_106_template
+  trigger = { sltm_create_session_live_trigger = yes exists = var:sltm_create_template.holder }
+  hidden_effect = { if = { limit = { sltm_create_session_live_trigger = yes exists = var:sltm_create_template.holder } set_variable = { name = sltm_create_holder value = var:sltm_create_template.holder } sltm_clw_reselect_holder_effect = yes } }
+ }
+ option = { name = sltm_menu_nominee_holder
+  trigger = { sltm_create_session_live_trigger = yes exists = var:sltm_clw_nominee NOT = { var:sltm_clw_nominee = this } }
+  hidden_effect = { if = { limit = { sltm_create_session_live_trigger = yes exists = var:sltm_clw_nominee } set_variable = { name = sltm_create_holder value = var:sltm_clw_nominee } sltm_clw_reselect_holder_effect = yes } }
+ }
+ option = { name = sltm_w_106_cancel
+  trigger = { sltm_create_session_live_trigger = yes  }
+  hidden_effect = { if = { limit = { sltm_create_session_live_trigger = yes  } sltm_create_clear_draft_effect = yes } }
+ }
+ option = { name = sltm_workflow_stale_close trigger = { NOT = { sltm_create_session_live_trigger = yes } } }
+}
+
+sltm_workflow.0107 = {
+ type = character_event
+ title = sltm_w_107_title
+ desc = sltm_w_107_desc
+ theme = realm
+ window = sltm_realm_character_event
+ option = {
+  name = SLTM_AT_BACK_TO_ATLAS
+  trigger = { sltm_create_session_live_trigger = yes has_variable = sltm_create_route_clw }
+  hidden_effect = { if = { limit = { sltm_create_session_live_trigger = yes has_variable = sltm_create_route_clw } sltm_atlas_resume_effect = yes } }
+ }
+ option = { name = sltm_native_1
+  trigger = { sltm_create_session_live_trigger = yes OR = { NOT = { has_variable = sltm_create_route_clw } var:sltm_clw_domicile_type = flag:estate } }
+  hidden_effect = { if = { limit = { sltm_create_session_live_trigger = yes OR = { NOT = { has_variable = sltm_create_route_clw } var:sltm_clw_domicile_type = flag:estate } } set_variable = { name = sltm_create_native_profile value = 1 } trigger_event = sltm_workflow.0101 } }
+ }
+ option = { name = sltm_native_2
+  trigger = { sltm_create_session_live_trigger = yes OR = { NOT = { has_variable = sltm_create_route_clw } var:sltm_clw_domicile_type = flag:camp } }
+  hidden_effect = { if = { limit = { sltm_create_session_live_trigger = yes OR = { NOT = { has_variable = sltm_create_route_clw } var:sltm_clw_domicile_type = flag:camp } } set_variable = { name = sltm_create_native_profile value = 2 } trigger_event = sltm_workflow.0101 } }
+ }
+ option = { name = sltm_native_3
+  trigger = { sltm_create_session_live_trigger = yes OR = { NOT = { has_variable = sltm_create_route_clw } var:sltm_clw_domicile_type = flag:yurt } }
+  hidden_effect = { if = { limit = { sltm_create_session_live_trigger = yes OR = { NOT = { has_variable = sltm_create_route_clw } var:sltm_clw_domicile_type = flag:yurt } } set_variable = { name = sltm_create_native_profile value = 3 } trigger_event = sltm_workflow.0101 } }
+ }
+ option = { name = sltm_native_4
+  trigger = { sltm_create_session_live_trigger = yes OR = { NOT = { has_variable = sltm_create_route_clw } var:sltm_clw_domicile_type = flag:east_asian_estate } }
+  hidden_effect = { if = { limit = { sltm_create_session_live_trigger = yes OR = { NOT = { has_variable = sltm_create_route_clw } var:sltm_clw_domicile_type = flag:east_asian_estate } } set_variable = { name = sltm_create_native_profile value = 4 } trigger_event = sltm_workflow.0101 } }
+ }
+ option = { name = sltm_native_5
+  trigger = { sltm_create_session_live_trigger = yes OR = { NOT = { has_variable = sltm_create_route_clw } var:sltm_clw_domicile_type = flag:east_asian_estate } }
+  hidden_effect = { if = { limit = { sltm_create_session_live_trigger = yes OR = { NOT = { has_variable = sltm_create_route_clw } var:sltm_clw_domicile_type = flag:east_asian_estate } } set_variable = { name = sltm_create_native_profile value = 5 } trigger_event = sltm_workflow.0101 } }
+ }
+ option = { name = sltm_native_6
+  trigger = { sltm_create_session_live_trigger = yes OR = { NOT = { has_variable = sltm_create_route_clw } var:sltm_clw_domicile_type = flag:east_asian_estate } }
+  hidden_effect = { if = { limit = { sltm_create_session_live_trigger = yes OR = { NOT = { has_variable = sltm_create_route_clw } var:sltm_clw_domicile_type = flag:east_asian_estate } } set_variable = { name = sltm_create_native_profile value = 6 } trigger_event = sltm_workflow.0101 } }
+ }
+ option = { name = sltm_native_7
+  trigger = { sltm_create_session_live_trigger = yes OR = { NOT = { has_variable = sltm_create_route_clw } var:sltm_clw_domicile_type = flag:japanese_manor } }
+  hidden_effect = { if = { limit = { sltm_create_session_live_trigger = yes OR = { NOT = { has_variable = sltm_create_route_clw } var:sltm_clw_domicile_type = flag:japanese_manor } } set_variable = { name = sltm_create_native_profile value = 7 } trigger_event = sltm_workflow.0101 } }
+ }
+ option = { name = sltm_native_8
+  trigger = { sltm_create_session_live_trigger = yes OR = { NOT = { has_variable = sltm_create_route_clw } var:sltm_clw_domicile_type = flag:japanese_manor } }
+  hidden_effect = { if = { limit = { sltm_create_session_live_trigger = yes OR = { NOT = { has_variable = sltm_create_route_clw } var:sltm_clw_domicile_type = flag:japanese_manor } } set_variable = { name = sltm_create_native_profile value = 8 } trigger_event = sltm_workflow.0101 } }
+ }
+ option = { name = sltm_native_9
+  trigger = { sltm_create_session_live_trigger = yes OR = { NOT = { has_variable = sltm_create_route_clw } var:sltm_clw_domicile_type = flag:ecclesiastical_domicile } }
+  hidden_effect = { if = { limit = { sltm_create_session_live_trigger = yes OR = { NOT = { has_variable = sltm_create_route_clw } var:sltm_clw_domicile_type = flag:ecclesiastical_domicile } } set_variable = { name = sltm_create_native_profile value = 9 } trigger_event = sltm_workflow.0101 } }
+ }
+ option = { name = sltm_native_recommended
+  trigger = { sltm_create_session_live_trigger = yes NOT = { has_variable = sltm_create_route_clw } has_variable = sltm_create_recommended_profile }
+  hidden_effect = { if = { limit = { sltm_create_session_live_trigger = yes NOT = { has_variable = sltm_create_route_clw } has_variable = sltm_create_recommended_profile } set_variable = { name = sltm_create_native_profile value = var:sltm_create_recommended_profile } trigger_event = sltm_workflow.0101 } }
+ }
+ option = { name = sltm_native_back
+  trigger = { sltm_create_session_live_trigger = yes  }
+  hidden_effect = { if = { limit = { sltm_create_session_live_trigger = yes  } if = { limit = { has_variable = sltm_create_route_clw } sltm_clw_show_dwellings_effect = yes } else = { trigger_event = sltm_workflow.0100 } } }
+ }
+ option = { name = sltm_workflow_stale_close trigger = { NOT = { sltm_create_session_live_trigger = yes } } }
+}
+
+sltm_workflow.0215 = {
+ type = character_event
+ title = sltm_w_215_title
+ desc = sltm_w_215_desc
+ theme = realm
+ window = sltm_realm_character_event
+ option = { name = sltm_w_215_refresh
+  trigger = { sltm_edit_session_live_trigger = yes  }
+  hidden_effect = { if = { limit = { sltm_edit_session_live_trigger = yes  } sltm_edit_read_snapshot_effect = yes sltm_edit_read_capabilities_effect = yes sltm_edit_review_effect = yes } }
+ }
+ option = { name = sltm_w_215_back
+  trigger = { sltm_edit_session_live_trigger = yes  }
+  hidden_effect = { if = { limit = { sltm_edit_session_live_trigger = yes  } sltm_workflow_new_session_effect = yes sltm_ui_back_to_editor_effect = yes } }
+ }
+ option = { name = sltm_w_215_cancel
+  trigger = { sltm_edit_session_live_trigger = yes  }
+  hidden_effect = { if = { limit = { sltm_edit_session_live_trigger = yes  } sltm_edit_clear_draft_effect = yes } }
+ }
+ option = { name = sltm_workflow_stale_close trigger = { NOT = { sltm_edit_session_live_trigger = yes } } }
+}

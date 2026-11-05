@@ -1,0 +1,173 @@
+﻿# 无地头衔管理器：排序 scripted GUI（V2.6 批次 7）
+# 头衔页排序只设纯头衔维度（status/type/tier/role），绝不读取人物属性。
+# 每个排序 gui：设对应的 sltm_lvm_title/hlder_sort 旗标 → 只重算对应页。
+# 方向切换 gui：在 yes/no 之间翻转 sltm_lvm_*_sort_desc 旗标。
+
+# ---------- 头衔页排序字段 ----------
+sltm_lvm_sort_titles_status_gui = {
+    scope = character
+    effect = {
+        set_variable = { name = sltm_lvm_title_sort value = flag:status }
+        sltm_lvm_recompute_title_view_effect = yes
+    }
+}
+sltm_lvm_sort_titles_type_gui = {
+    scope = character
+    effect = {
+        set_variable = { name = sltm_lvm_title_sort value = flag:type }
+        sltm_lvm_recompute_title_view_effect = yes
+    }
+}
+sltm_lvm_sort_titles_tier_gui = {
+    scope = character
+    effect = {
+        set_variable = { name = sltm_lvm_title_sort value = flag:tier }
+        sltm_lvm_recompute_title_view_effect = yes
+    }
+}
+sltm_lvm_sort_titles_role_gui = {
+    scope = character
+    effect = {
+        set_variable = { name = sltm_lvm_title_sort value = flag:role }
+        sltm_lvm_recompute_title_view_effect = yes
+    }
+}
+
+# ---------- 封臣页排序字段 ----------
+sltm_lvm_sort_holders_count_gui = {
+    scope = character
+    effect = {
+        set_variable = { name = sltm_lvm_holder_sort value = flag:managed_count }
+        sltm_lvm_recompute_holder_view_effect = yes
+    }
+}
+sltm_lvm_sort_holders_rank_gui = {
+    scope = character
+    effect = {
+        set_variable = { name = sltm_lvm_holder_sort value = flag:rank }
+        sltm_lvm_recompute_holder_view_effect = yes
+    }
+}
+sltm_lvm_sort_holders_age_gui = {
+    scope = character
+    effect = {
+        set_variable = { name = sltm_lvm_holder_sort value = flag:age }
+        sltm_lvm_recompute_holder_view_effect = yes
+    }
+}
+sltm_lvm_sort_holders_diplomacy_gui = {
+    scope = character
+    effect = {
+        set_variable = { name = sltm_lvm_holder_sort value = flag:diplomacy }
+        sltm_lvm_recompute_holder_view_effect = yes
+    }
+}
+sltm_lvm_sort_holders_martial_gui = {
+    scope = character
+    effect = {
+        set_variable = { name = sltm_lvm_holder_sort value = flag:martial }
+        sltm_lvm_recompute_holder_view_effect = yes
+    }
+}
+sltm_lvm_sort_holders_stewardship_gui = {
+    scope = character
+    effect = {
+        set_variable = { name = sltm_lvm_holder_sort value = flag:stewardship }
+        sltm_lvm_recompute_holder_view_effect = yes
+    }
+}
+sltm_lvm_sort_holders_intrigue_gui = {
+    scope = character
+    effect = {
+        set_variable = { name = sltm_lvm_holder_sort value = flag:intrigue }
+        sltm_lvm_recompute_holder_view_effect = yes
+    }
+}
+sltm_lvm_sort_holders_learning_gui = {
+    scope = character
+    effect = {
+        set_variable = { name = sltm_lvm_holder_sort value = flag:learning }
+        sltm_lvm_recompute_holder_view_effect = yes
+    }
+}
+sltm_lvm_sort_holders_prowess_gui = {
+    scope = character
+    effect = {
+        set_variable = { name = sltm_lvm_holder_sort value = flag:prowess }
+        sltm_lvm_recompute_holder_view_effect = yes
+    }
+}
+sltm_lvm_sort_holders_merit_gui = {
+    scope = character
+    effect = {
+        set_variable = { name = sltm_lvm_holder_sort value = flag:merit }
+        sltm_lvm_recompute_holder_view_effect = yes
+    }
+}
+sltm_lvm_sort_holders_efficiency_gui = {
+    scope = character
+    effect = {
+        set_variable = { name = sltm_lvm_holder_sort value = flag:efficiency }
+        sltm_lvm_recompute_holder_view_effect = yes
+    }
+}
+sltm_lvm_sort_holders_treasury_balance_gui = {
+    scope = character
+    effect = {
+        set_variable = { name = sltm_lvm_holder_sort value = flag:treasury_balance }
+        sltm_lvm_recompute_holder_view_effect = yes
+    }
+}
+sltm_lvm_sort_holders_treasury_gui = {
+    scope = character
+    effect = {
+        set_variable = { name = sltm_lvm_holder_sort value = flag:treasury }
+        sltm_lvm_recompute_holder_view_effect = yes
+    }
+}
+sltm_lvm_sort_holders_strength_gui = {
+    scope = character
+    effect = {
+        set_variable = { name = sltm_lvm_holder_sort value = flag:strength }
+        sltm_lvm_recompute_holder_view_effect = yes
+    }
+}
+sltm_lvm_sort_holders_atwar_gui = {
+    scope = character
+    effect = {
+        set_variable = { name = sltm_lvm_holder_sort value = flag:atwar }
+        sltm_lvm_recompute_holder_view_effect = yes
+    }
+}
+sltm_lvm_sort_holders_pending_gui = {
+    scope = character
+    effect = {
+        set_variable = { name = sltm_lvm_holder_sort value = flag:pending }
+        sltm_lvm_recompute_holder_view_effect = yes
+    }
+}
+sltm_lvm_sort_holders_blocked_gui = {
+    scope = character
+    effect = {
+        set_variable = { name = sltm_lvm_holder_sort value = flag:blocked }
+        sltm_lvm_recompute_holder_view_effect = yes
+    }
+}
+
+# ---------- 排序方向切换 ----------
+sltm_lvm_toggle_title_sort_order_gui = {
+    scope = character
+    effect = {
+        if = { limit = { var:sltm_lvm_title_sort_desc = flag:yes } set_variable = { name = sltm_lvm_title_sort_desc value = flag:no } }
+        else = { set_variable = { name = sltm_lvm_title_sort_desc value = flag:yes } }
+        sltm_lvm_recompute_title_view_effect = yes
+    }
+}
+sltm_lvm_toggle_holder_sort_order_gui = {
+    scope = character
+    effect = {
+        if = { limit = { var:sltm_lvm_holder_sort_desc = flag:yes } set_variable = { name = sltm_lvm_holder_sort_desc value = flag:no } }
+        else = { set_variable = { name = sltm_lvm_holder_sort_desc value = flag:yes } }
+        sltm_lvm_recompute_holder_view_effect = yes
+    }
+}

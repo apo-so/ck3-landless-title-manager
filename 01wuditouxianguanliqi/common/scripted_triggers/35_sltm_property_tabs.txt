@@ -1,0 +1,62 @@
+﻿sltm_tab_basic_trigger = {
+    OR = { AND = { has_variable = sltm_ui_tab var:sltm_ui_tab = 1 } AND = { NOT = { has_variable = sltm_ui_tab } NOT = { has_variable = sltm_ui_appearance } } }
+}
+
+sltm_tab_appearance_trigger = {
+    OR = { AND = { has_variable = sltm_ui_tab var:sltm_ui_tab = 2 } AND = { NOT = { has_variable = sltm_ui_tab } has_variable = sltm_ui_appearance } }
+}
+
+sltm_tab_geo_trigger = {
+    has_variable = sltm_ui_tab var:sltm_ui_tab = 3
+}
+
+sltm_tab_succ_trigger = {
+    has_variable = sltm_ui_tab var:sltm_ui_tab = 4
+}
+
+sltm_tab_life_trigger = {
+    has_variable = sltm_ui_tab var:sltm_ui_tab = 5
+}
+
+sltm_tab_dom_trigger = {
+    has_variable = sltm_ui_tab var:sltm_ui_tab = 6
+}
+
+sltm_tab_transfer_trigger = {
+    has_variable = sltm_ui_tab var:sltm_ui_tab = 7
+}
+
+sltm_tab_mark_capital_trigger = {
+    exists = var:sltm_designee_title
+    var:sltm_designee_title = {
+        OR = {
+            tier = tier_county
+            AND = { tier = tier_barony exists = de_jure_liege de_jure_liege = { tier = tier_county } }
+            AND = { tier > tier_county exists = title_capital_county }
+        }
+    }
+}
+
+sltm_tab_mark_province_trigger = {
+    exists = var:sltm_designee_title
+    var:sltm_designee_title = {
+        OR = {
+            AND = { OR = { tier = tier_barony tier = tier_county } exists = title_province }
+            AND = { tier > tier_county exists = title_capital_county.title_province }
+        }
+    }
+}
+
+sltm_tab_transferable_trigger = {
+    exists = var:sltm_edit_target.holder
+    var:sltm_edit_target = { sltm_plain_title_action_trigger = yes }
+}
+
+sltm_tab_frozen_transfer_trigger = {
+    sltm_tab_transferable_trigger = yes
+    exists = var:sltm_edit_transfer
+    exists = var:sltm_transfer_from
+    exists = var:sltm_transfer_title
+    var:sltm_transfer_title = var:sltm_edit_target
+    var:sltm_transfer_title = { holder = root.var:sltm_transfer_from }
+}

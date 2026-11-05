@@ -1,0 +1,304 @@
+template sltm_native_title_marker_row
+{
+    hbox = {
+        name = "sltm_native_title_mark_row"
+        layoutpolicy_horizontal = expanding
+        ignoreinvisible = yes
+        margin = { 20 10 }
+        background = { using = Background_Area_Dark alpha = 0.6 }
+        text_single = { text = "SLTM_NATIVE_MARK_CAPTION" }
+        widget = {
+            name = "sltm_native_mark_coa"
+            size = { 40 20 }
+            datacontext = "[GetPlayer.MakeScope.Var('sltm_designee_title').Title]"
+            visible = "[GetScriptedGui('sltm_lvm_clear_designee_title_gui').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+            coa_title_tiny_crown = { position = { 0 -10 } }
+        }
+        text_single = {
+            name = "sltm_native_mark_status"
+            layoutpolicy_horizontal = expanding
+            text = "[GetPlayer.Custom('sltm_native_current_mark')]"
+            elide = right
+        }
+        button_round = {
+            name = "sltm_native_mark_viewed"
+            tooltip = "SLTM_NATIVE_MARK_HINT"
+            onclick = "[GetScriptedGui('sltm_native_mark_viewed_title').Execute(GuiScope.SetRoot(TitleViewWindow.GetTitle.MakeScope).AddScope('sltm_viewer',GetPlayer.MakeScope).End)]"
+            enabled = "[GetScriptedGui('sltm_native_mark_viewed_title').IsValid(GuiScope.SetRoot(TitleViewWindow.GetTitle.MakeScope).AddScope('sltm_viewer',GetPlayer.MakeScope).End)]"
+            onrightclick = "[GetScriptedGui('sltm_lvm_clear_designee_title_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+            button_ignore = none
+            button_pin = { parentanchor = center alwaystransparent = yes }
+        }
+    }
+}
+
+template sltm_appearance_panel
+{
+    widget = { name = "appearance_panel" position = { 182 190 } size = { 690 525 }
+        visible = "[GetScriptedGui('sltm_tab_appearance_visible').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+        textbox = { name = "appearance_heading" position = { 0 0 } size = { 374 24 }
+            text = "SLTM_LOOK_TITLE" fontsize = 17 font = StandardGameFont fontcolor = { 0.88 0.84 0.75 1 }
+            align = left|top autoresize = no multiline = yes alwaystransparent = yes
+        }
+        button_primary = {
+            name = "open_native_title_appearance" position = { 388 0 } size = { 282 34 }
+            text = "SLTM_LOOK_OPEN_NATIVE_EDITOR"
+            tooltip = "SLTM_LOOK_OPEN_NATIVE_EDITOR_TT"
+            onclick = "[OpenTitleCustomizationWindow(GetPlayer.MakeScope.Var('sltm_edit_target').Title)]"
+        }
+        textbox = { name = "appearance_intro" position = { 0 38 } size = { 674 26 }
+            text = "SLTM_LOOK_INTRO" fontsize = 13 font = StandardGameFont fontcolor = { 0.67 0.65 0.59 1 }
+            align = left|top autoresize = no multiline = yes alwaystransparent = yes
+        }
+        textbox = { name = "coa_heading" position = { 0 67 } size = { 645 25 }
+            text = "SLTM_LOOK_COA_HEADING" fontsize = 17 font = StandardGameFont fontcolor = { 0.88 0.84 0.75 1 }
+            align = left|top autoresize = no multiline = yes alwaystransparent = yes
+        }
+        textbox = { name = "coa_hint" position = { 0 97 } size = { 660 36 }
+            text = "SLTM_LOOK_COA_HINT" fontsize = 14 font = StandardGameFont fontcolor = { 0.67 0.65 0.59 1 }
+            align = left|top autoresize = no multiline = yes alwaystransparent = yes
+        }
+        button_standard = { name = "coa_copy" position = { 0 136 } size = { 148 34 }
+            text = "SLTM_LOOK_COA_COPY" enabled = "[GetScriptedGui('sltm_ui_coa_copy').IsValid(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+            onclick = "[GetScriptedGui('sltm_ui_coa_copy').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+        }
+        button_standard = { name = "coa_random" position = { 154 136 } size = { 128 34 }
+            text = "SLTM_LOOK_COA_RANDOM" enabled = "[GetScriptedGui('sltm_ui_coa_random').IsValid(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+            onclick = "[GetScriptedGui('sltm_ui_coa_random').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+        }
+        button_standard = { name = "coa_reset" position = { 288 136 } size = { 148 34 }
+            text = "SLTM_LOOK_COA_RESET" enabled = "[GetScriptedGui('sltm_ui_coa_reset').IsValid(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+            onclick = "[GetScriptedGui('sltm_ui_coa_reset').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+        }
+        button_standard = { name = "coa_keep" position = { 442 136 } size = { 112 34 }
+            text = "SLTM_LOOK_KEEP" enabled = "[GetScriptedGui('sltm_ui_coa_keep').IsValid(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+            onclick = "[GetScriptedGui('sltm_ui_coa_keep').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+        }
+        textbox = { name = "coa_draft" position = { 0 178 } size = { 550 40 }
+            text = "[GetPlayer.Custom('sltm_appearance_coa_text')]" fontsize = 14 font = StandardGameFont fontcolor = { 0.88 0.84 0.75 1 }
+            align = left|top autoresize = no multiline = yes alwaystransparent = yes
+        }
+        textbox = { name = "coa_preview_a_caption" position = { 565 67 } size = { 56 24 }
+            text = "SLTM_LOOK_A_SHIELD" fontsize = 13 font = StandardGameFont fontcolor = { 0.67 0.65 0.59 1 }
+            align = left|top autoresize = no multiline = yes alwaystransparent = yes
+        }
+        widget = { name = "coa_preview_a" position = { 565 96 } size = { 45 75 } datacontext = "[GetPlayer.MakeScope.Var('sltm_edit_target').Title]" coa_title_small_crown = { scale = 0.8 } }
+        widget = { name = "coa_preview_source" position = { 625 67 } size = { 62 118 } visible = "[GetScriptedGui('sltm_ui_coa_preview_ready').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+        textbox = { name = "coa_preview_src_caption" position = { 0 0 } size = { 62 24 }
+            text = "SLTM_LOOK_SOURCE_SHIELD" fontsize = 13 font = StandardGameFont fontcolor = { 0.67 0.65 0.59 1 }
+            align = left|top autoresize = no multiline = yes alwaystransparent = yes
+        }
+        widget = { position = { 0 29 } size = { 45 75 } datacontext = "[GetPlayer.MakeScope.Var('sltm_edit_coa_source').Title]" coa_title_small_crown = { scale = 0.8 } }
+        }
+        textbox = { name = "color_heading" position = { 0 232 } size = { 650 25 }
+            text = "SLTM_LOOK_COLOR_HEADING" fontsize = 17 font = StandardGameFont fontcolor = { 0.88 0.84 0.75 1 }
+            align = left|top autoresize = no multiline = yes alwaystransparent = yes
+        }
+        textbox = { name = "color_hint" position = { 0 265 } size = { 660 36 }
+            text = "SLTM_LOOK_COLOR_HINT" fontsize = 14 font = StandardGameFont fontcolor = { 0.67 0.65 0.59 1 }
+            align = left|top autoresize = no multiline = yes alwaystransparent = yes
+        }
+        button_standard = { name = "color_copy" position = { 0 304 } size = { 148 34 }
+            text = "SLTM_LOOK_COLOR_COPY" enabled = "[GetScriptedGui('sltm_ui_color_copy').IsValid(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+            onclick = "[GetScriptedGui('sltm_ui_color_copy').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+        }
+        button_standard = { name = "color_keep" position = { 154 304 } size = { 128 34 }
+            text = "SLTM_LOOK_KEEP" enabled = "[GetScriptedGui('sltm_ui_color_keep').IsValid(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+            onclick = "[GetScriptedGui('sltm_ui_color_keep').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+        }
+        button_standard = { name = "color_red" position = { 0 354 } size = { 135 34 }
+            text = "SLTM_LOOK_SWATCH_RED" enabled = "[GetScriptedGui('sltm_ui_color_red').IsValid(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+            onclick = "[GetScriptedGui('sltm_ui_color_red').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+            icon = { position = { 9 9 } size = { 9 16 } texture = "gfx/interface/colors/white.dds"
+                tintcolor = { 0.67451 0.08627 0.08627 1 } alwaystransparent = yes }
+        }
+        button_standard = { name = "color_gold" position = { 141 354 } size = { 135 34 }
+            text = "SLTM_LOOK_SWATCH_GOLD" enabled = "[GetScriptedGui('sltm_ui_color_gold').IsValid(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+            onclick = "[GetScriptedGui('sltm_ui_color_gold').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+            icon = { position = { 9 9 } size = { 9 16 } texture = "gfx/interface/colors/white.dds"
+                tintcolor = { 0.80000 0.60000 0.03922 1 } alwaystransparent = yes }
+        }
+        button_standard = { name = "color_green" position = { 282 354 } size = { 135 34 }
+            text = "SLTM_LOOK_SWATCH_GREEN" enabled = "[GetScriptedGui('sltm_ui_color_green').IsValid(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+            onclick = "[GetScriptedGui('sltm_ui_color_green').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+            icon = { position = { 9 9 } size = { 9 16 } texture = "gfx/interface/colors/white.dds"
+                tintcolor = { 0.02353 0.49804 0.00784 1 } alwaystransparent = yes }
+        }
+        button_standard = { name = "color_teal" position = { 423 354 } size = { 135 34 }
+            text = "SLTM_LOOK_SWATCH_TEAL" enabled = "[GetScriptedGui('sltm_ui_color_teal').IsValid(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+            onclick = "[GetScriptedGui('sltm_ui_color_teal').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+            icon = { position = { 9 9 } size = { 9 16 } texture = "gfx/interface/colors/white.dds"
+                tintcolor = { 0.07843 0.47059 0.47059 1 } alwaystransparent = yes }
+        }
+        button_standard = { name = "color_blue" position = { 0 395 } size = { 135 34 }
+            text = "SLTM_LOOK_SWATCH_BLUE" enabled = "[GetScriptedGui('sltm_ui_color_blue').IsValid(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+            onclick = "[GetScriptedGui('sltm_ui_color_blue').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+            icon = { position = { 9 9 } size = { 9 16 } texture = "gfx/interface/colors/white.dds"
+                tintcolor = { 0.00000 0.37255 0.72157 1 } alwaystransparent = yes }
+        }
+        button_standard = { name = "color_orange" position = { 141 395 } size = { 135 34 }
+            text = "SLTM_LOOK_SWATCH_ORANGE" enabled = "[GetScriptedGui('sltm_ui_color_orange').IsValid(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+            onclick = "[GetScriptedGui('sltm_ui_color_orange').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+            icon = { position = { 9 9 } size = { 9 16 } texture = "gfx/interface/colors/white.dds"
+                tintcolor = { 0.90196 0.54902 0.00000 1 } alwaystransparent = yes }
+        }
+        button_standard = { name = "color_white" position = { 282 395 } size = { 135 34 }
+            text = "SLTM_LOOK_SWATCH_WHITE" enabled = "[GetScriptedGui('sltm_ui_color_white').IsValid(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+            onclick = "[GetScriptedGui('sltm_ui_color_white').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+            icon = { position = { 9 9 } size = { 9 16 } texture = "gfx/interface/colors/white.dds"
+                tintcolor = { 1.00000 1.00000 1.00000 1 } alwaystransparent = yes }
+        }
+        button_standard = { name = "color_black" position = { 423 395 } size = { 135 34 }
+            text = "SLTM_LOOK_SWATCH_BLACK" enabled = "[GetScriptedGui('sltm_ui_color_black').IsValid(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+            onclick = "[GetScriptedGui('sltm_ui_color_black').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+            icon = { position = { 9 9 } size = { 9 16 } texture = "gfx/interface/colors/white.dds"
+                tintcolor = { 0.05882 0.05882 0.05882 1 } alwaystransparent = yes }
+        }
+        textbox = { name = "color_draft" position = { 0 449 } size = { 660 56 }
+            text = "[GetPlayer.Custom('sltm_appearance_color_text')]" fontsize = 14 font = StandardGameFont fontcolor = { 0.88 0.84 0.75 1 }
+            align = left|top autoresize = no multiline = yes alwaystransparent = yes
+        }
+    }
+}
+
+template sltm_draft_summary_panel
+{
+    textbox = { name = "summary_target" position = { 886 216 } size = { 270 40 }
+        text = "SLTM_SUM_A" fontsize = 14 font = StandardGameFont fontcolor = { 0.88 0.84 0.75 1 }
+        align = left|top autoresize = no multiline = yes alwaystransparent = yes
+    }
+    textbox = { name = "summary_current_b" position = { 886 258 } size = { 270 40 }
+        text = "[GetPlayer.Custom('sltm_native_current_mark')]" fontsize = 14 font = StandardGameFont fontcolor = { 0.67 0.65 0.59 1 }
+        align = left|top autoresize = no multiline = yes alwaystransparent = yes
+    }
+    scrollbox = { name = "summary_live" position = { 882 303 } size = { 276 410 }
+        visible = "[GetScriptedGui('sltm_ui_has_changes').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+        blockoverride "scrollbox_background" {}
+        blockoverride "scrollbox_background_fade" {}
+        blockoverride "scrollbox_margins" { margin = { 4 3 } ignoreinvisible = yes }
+        blockoverride "scrollbox_content" {
+            text_multi = { name = "draft_name"
+                visible = "[GetPlayer.MakeScope.Var('sltm_edit_name').IsSet]"
+                text = "SLTM_SUM_NAME" autoresize = yes max_width = 245 fontsize = 14 margin_bottom = 6
+                align = left|top alwaystransparent = yes
+            }
+            text_multi = { name = "draft_prefix"
+                visible = "[GetPlayer.MakeScope.Var('sltm_edit_prefix').IsSet]"
+                text = "SLTM_SUM_PREFIX" autoresize = yes max_width = 245 fontsize = 14 margin_bottom = 6
+                align = left|top alwaystransparent = yes
+            }
+            text_multi = { name = "draft_coa"
+                visible = "[GetPlayer.MakeScope.Var('sltm_edit_coa').IsSet]"
+                text = "SLTM_SUM_COA" autoresize = yes max_width = 245 fontsize = 14 margin_bottom = 6
+                align = left|top alwaystransparent = yes
+            }
+            text_multi = { name = "draft_color"
+                visible = "[GetPlayer.MakeScope.Var('sltm_edit_color').IsSet]"
+                text = "SLTM_SUM_COLOR" autoresize = yes max_width = 245 fontsize = 14 margin_bottom = 6
+                align = left|top alwaystransparent = yes
+            }
+            text_multi = { name = "draft_definitive"
+                visible = "[GetPlayer.MakeScope.Var('sltm_edit_definitive').IsSet]"
+                text = "SLTM_SUM_DEFINITIVE" autoresize = yes max_width = 245 fontsize = 14 margin_bottom = 6
+                align = left|top alwaystransparent = yes
+            }
+            text_multi = { name = "draft_dynasty"
+                visible = "[GetPlayer.MakeScope.Var('sltm_edit_dynasty').IsSet]"
+                text = "SLTM_SUM_DYNASTY" autoresize = yes max_width = 245 fontsize = 14 margin_bottom = 6
+                align = left|top alwaystransparent = yes
+            }
+            text_multi = { name = "draft_nomadic"
+                visible = "[GetPlayer.MakeScope.Var('sltm_edit_nomadic').IsSet]"
+                text = "SLTM_SUM_NOMADIC" autoresize = yes max_width = 245 fontsize = 14 margin_bottom = 6
+                align = left|top alwaystransparent = yes
+            }
+            text_multi = { name = "draft_capital"
+                visible = "[GetPlayer.MakeScope.Var('sltm_edit_capital').IsSet]"
+                text = "SLTM_SUM_CAPITAL" autoresize = yes max_width = 245 fontsize = 14 margin_bottom = 6
+                align = left|top alwaystransparent = yes
+            }
+            text_multi = { name = "draft_dejure"
+                visible = "[GetPlayer.MakeScope.Var('sltm_edit_dejure').IsSet]"
+                text = "SLTM_SUM_DEJURE" autoresize = yes max_width = 245 fontsize = 14 margin_bottom = 6
+                align = left|top alwaystransparent = yes
+            }
+            text_multi = { name = "draft_heir"
+                visible = "[GetPlayer.MakeScope.Var('sltm_edit_heir').IsSet]"
+                text = "SLTM_SUM_HEIR" autoresize = yes max_width = 245 fontsize = 14 margin_bottom = 6
+                align = left|top alwaystransparent = yes
+            }
+            text_multi = { name = "draft_claims"
+                visible = "[GetPlayer.MakeScope.Var('sltm_edit_claims').IsSet]"
+                text = "SLTM_SUM_CLAIMS" autoresize = yes max_width = 245 fontsize = 14 margin_bottom = 6
+                align = left|top alwaystransparent = yes
+            }
+            text_multi = { name = "draft_landless"
+                visible = "[GetPlayer.MakeScope.Var('sltm_edit_landless').IsSet]"
+                text = "SLTM_SUM_LANDLESS" autoresize = yes max_width = 245 fontsize = 14 margin_bottom = 6
+                align = left|top alwaystransparent = yes
+            }
+            text_multi = { name = "draft_succession"
+                visible = "[GetPlayer.MakeScope.Var('sltm_edit_succession').IsSet]"
+                text = "SLTM_SUM_SUCCESSION" autoresize = yes max_width = 245 fontsize = 14 margin_bottom = 6
+                align = left|top alwaystransparent = yes
+            }
+            text_multi = { name = "draft_invalid_heir"
+                visible = "[GetPlayer.MakeScope.Var('sltm_edit_invalid_heir').IsSet]"
+                text = "SLTM_SUM_INVALID_HEIR" autoresize = yes max_width = 245 fontsize = 14 margin_bottom = 6
+                align = left|top alwaystransparent = yes
+            }
+            text_multi = { name = "draft_same_tier"
+                visible = "[GetPlayer.MakeScope.Var('sltm_edit_same_tier').IsSet]"
+                text = "SLTM_SUM_SAME_TIER" autoresize = yes max_width = 245 fontsize = 14 margin_bottom = 6
+                align = left|top alwaystransparent = yes
+            }
+            text_multi = { name = "draft_province"
+                visible = "[GetPlayer.MakeScope.Var('sltm_edit_province').IsSet]"
+                text = "SLTM_SUM_PROVINCE" autoresize = yes max_width = 245 fontsize = 14 margin_bottom = 6
+                align = left|top alwaystransparent = yes
+            }
+            text_multi = { name = "draft_building"
+                visible = "[GetPlayer.MakeScope.Var('sltm_edit_building').IsSet]"
+                text = "SLTM_SUM_BUILDING" autoresize = yes max_width = 245 fontsize = 14 margin_bottom = 6
+                align = left|top alwaystransparent = yes
+            }
+            text_multi = { name = "draft_law_remove"
+                visible = "[GetPlayer.MakeScope.Var('sltm_edit_law_remove').IsSet]"
+                text = "SLTM_SUM_LAW_REMOVE" autoresize = yes max_width = 245 fontsize = 14 margin_bottom = 6
+                align = left|top alwaystransparent = yes
+            }
+            text_multi = { name = "draft_law_add"
+                visible = "[GetPlayer.MakeScope.Var('sltm_edit_law_add').IsSet]"
+                text = "SLTM_SUM_LAW_ADD" autoresize = yes max_width = 245 fontsize = 14 margin_bottom = 6
+                align = left|top alwaystransparent = yes
+            }
+        }
+    }
+}
+
+template sltm_choose_target_panel
+{
+    widget = { name = "choose_target_panel" size = { 1180 800 }
+        visible = "[GetPlayer.MakeScope.Var('sltm_ui_choose_target').IsSet]"
+        textbox = { name = "chooser_title" position = { 34 98 } size = { 1050 34 }
+            text = "SLTM_CHOOSE_TITLE" fontsize = 22 font = StandardGameFont fontcolor = { 0.88 0.84 0.75 1 }
+            align = left|top autoresize = no multiline = yes alwaystransparent = yes
+        }
+        textbox = { name = "chooser_desc" position = { 34 150 } size = { 1030 65 }
+            text = "SLTM_CHOOSE_DESC" fontsize = 16 font = StandardGameFont fontcolor = { 0.88 0.84 0.75 1 }
+            align = left|top autoresize = no multiline = yes alwaystransparent = yes
+        }
+        textbox = { name = "chooser_mark" position = { 34 225 } size = { 1050 40 }
+            text = "[GetPlayer.Custom('sltm_native_current_mark')]" fontsize = 14 font = StandardGameFont fontcolor = { 0.88 0.84 0.75 1 }
+            align = left|top autoresize = no multiline = yes alwaystransparent = yes
+        }
+        button_standard = { name = "choose_last" position = { 34 300 } size = { 210 34 }
+            text = "SLTM_CHOOSE_LAST" enabled = "[GetScriptedGui('sltm_ui_choose_last').IsValid(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+            onclick = "[GetScriptedGui('sltm_ui_choose_last').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+        }
+        button_standard = { name = "choose_close" position = { 34 730 } size = { 105 34 }
+            text = "SLTM_CHOOSE_CLOSE" enabled = "[GetScriptedGui('sltm_ui_choose_close').IsValid(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+            onclick = "[GetScriptedGui('sltm_ui_choose_close').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+        }
+    }
+}

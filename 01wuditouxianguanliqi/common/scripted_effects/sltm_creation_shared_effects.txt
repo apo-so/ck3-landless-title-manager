@@ -1,0 +1,248 @@
+﻿# Standalone extraction: selected dependency definitions only.
+sltm_create_dynamic_title_send_interface_effect = {
+    send_interface_toast = {
+        type = sltm_msg_create_dynamic_title
+        title = sltm_create_dynamic_title_tooltip
+        left_icon = scope:founder
+        right_icon = scope:new_title
+        custom_tooltip = sltm_create_dynamic_title_effect_tt
+    }
+}
+
+sltm_create_dynamic_title_effect = {
+    # 创建动态头衔 头衔将保存到 scope:new_title
+    create_dynamic_title = {
+        tier = $TIER$
+        name = $NAME$
+    }
+    # 新头衔
+    scope:new_title = {
+        # 设置新的法理上级头衔
+        #set_de_jure_liege_title = $primary$
+        # 将头衔的首府设置为目标首府
+        set_capital_county = $PRIMARY$.title_capital_county
+        # 生成随机纹章
+        #generate_coa = yes
+        # 将纹章设置为目标纹章
+        set_coa = $PRIMARY$
+        # 将地块颜色设置为与目标头衔相同
+        set_color_from_title = $PRIMARY$
+        # 头衔不能使用家族命名
+        set_can_be_named_after_dynasty = no
+        set_can_use_nomadic_naming = no
+        # 使用简称
+        # set_definitive_form = $DEFINITIVE$
+        # 无地头衔
+        # set_landless_title = yes
+        # 继承时只分给主要继承人
+        # set_always_follows_primary_heir = yes
+        # 继承时不允许其他继承人获得宣称
+        # set_no_automatic_claims = yes
+        # 摧毁头衔若没有合适的继承人
+        #set_destroy_if_invalid_heir = yes
+        # 摧毁头衔若获得同级头衔
+        #set_destroy_on_gain_same_tier = yes
+        # 摧毁头衔后会删除该头衔
+        #set_delete_on_destroy = yes
+    }
+    # 启动头衔和附庸更改，并将其保存为临时事件目标
+    create_title_and_vassal_change = {
+        type = created # 创建
+        # 保存为范围
+        save_scope_as = change # 头衔和附庸更改
+        add_claim_on_loss = no # 是否产生宣称
+    }
+    # 新头衔
+    scope:new_title = {
+        # 更改头衔持有人
+        change_title_holder = {
+            # 持有人
+            holder = scope:founder # 决策使用者
+            # 更改
+            change = scope:change # 头衔和附庸更改
+        }
+    }
+    # 执行并销毁目标头衔和封臣变更，调用此效果后 scope:change 无法再使用
+    resolve_title_and_vassal_change = scope:change
+}
+
+sltm_create_landless_title_cost_effect = {
+    scope:new_title = {
+        set_landless_title = yes
+        set_always_follows_primary_heir = yes
+        set_no_automatic_claims = yes
+        set_definitive_form = yes
+    }
+}
+
+sltm_create_resource_cost_effect = {
+    ### 花费 ###
+    if = {
+        limit = {
+            NOT = { has_game_rule = sltm_cmm_compat_rit_rules_realm_manager_cost_off }
+        }
+        if = {
+            limit = { $TIER$ = tier_duchy }
+            remove_treasury_or_gold = sltm_cmm_compat_mytm_value_create_title_cost_gold_tier_duchy
+            add_prestige = sltm_cmm_compat_mytm_value_create_title_cost_prestige_tier_duchy
+        }
+        else_if = {
+            limit = { $TIER$ = tier_kingdom }
+            remove_treasury_or_gold = sltm_cmm_compat_mytm_value_create_title_cost_gold_tier_kingdom
+            add_prestige = sltm_cmm_compat_mytm_value_create_title_cost_prestige_tier_kingdom
+        }
+        else_if = {
+            limit = { $TIER$ = tier_empire }
+            remove_treasury_or_gold = sltm_cmm_compat_mytm_value_create_title_cost_gold_tier_empire
+            add_prestige = sltm_cmm_compat_mytm_value_create_title_cost_prestige_tier_empire
+        }
+        else = {
+            remove_treasury_or_gold = sltm_cmm_compat_mytm_value_create_title_cost_gold_tier_hegemony
+            add_prestige = sltm_cmm_compat_mytm_value_create_title_cost_prestige_tier_hegemony
+        }
+    }
+}
+
+sltm_create_legacy_geography_effect = {
+    ### 设定法理 ###
+    if = {
+        limit = {
+            $TIER$ = tier_duchy
+        }
+        if = {
+            limit = {
+                exists = scope:sltm_designee_title.kingdom
+            }
+            scope:sltm_designee_title.kingdom = {
+                save_scope_as = current_de_jure_scope
+                title_capital_county = { save_scope_as = current_capital_scope }
+            }
+        }
+        else_if = {
+            limit = {
+                exists = scope:sltm_designee_title.title_capital_county.kingdom
+            }
+            scope:sltm_designee_title.title_capital_county.kingdom = {
+                save_scope_as = current_de_jure_scope
+                title_capital_county = { save_scope_as = current_capital_scope }
+            }
+        }
+        else_if = {
+            limit = { exists = scope:founder.primary_title.kingdom }
+            scope:founder.primary_title.kingdom = {
+                save_scope_as = current_de_jure_scope
+                title_capital_county = { save_scope_as = current_capital_scope }
+            }
+        }
+        else_if = {
+            limit = { exists = scope:founder.primary_title.title_capital_county.kingdom }
+            scope:founder.primary_title.title_capital_county.kingdom = {
+                save_scope_as = current_de_jure_scope
+                title_capital_county = { save_scope_as = current_capital_scope }
+            }
+        }
+    }
+    else_if = {
+        limit = {
+            $TIER$ = tier_kingdom
+        }
+        if = {
+            limit = { exists = scope:sltm_designee_title.empire }
+            scope:sltm_designee_title.empire = {
+                save_scope_as = current_de_jure_scope
+                title_capital_county = { save_scope_as = current_capital_scope }
+            }
+        }
+        else_if = {
+            limit = { exists = scope:sltm_designee_title.title_capital_county.empire }
+            scope:sltm_designee_title.title_capital_county.empire = {
+                save_scope_as = current_de_jure_scope
+                title_capital_county = { save_scope_as = current_capital_scope }
+            }
+        }
+        # else_if = {
+        #     limit = { exists = scope:founder.primary_title.empire }
+        #     scope:founder.primary_title.empire = {
+        #         save_scope_as = current_de_jure_scope
+        #         title_capital_county = { save_scope_as = current_capital_scope }
+        #     }
+        # }
+        # else_if = {
+        #     limit = { exists = scope:founder.primary_title.title_capital_county.empire }
+        #     scope:founder.primary_title.title_capital_county.empire = {
+        #         save_scope_as = current_de_jure_scope
+        #         title_capital_county = { save_scope_as = current_capital_scope }
+        #     }
+        # }
+    }
+    else_if = {
+        limit = {
+            $TIER$ = tier_empire
+        }
+        if = {
+            limit = { exists = scope:sltm_designee_title.hegemony }
+            scope:sltm_designee_title.hegemony = {
+                save_scope_as = current_de_jure_scope
+                title_capital_county = { save_scope_as = current_capital_scope }
+            }
+        }
+        else_if = {
+            limit = { exists = scope:sltm_designee_title.title_capital_county.hegemony }
+            scope:sltm_designee_title.title_capital_county.hegemony = {
+                save_scope_as = current_de_jure_scope
+                title_capital_county = { save_scope_as = current_capital_scope }
+            }
+        }
+        # else_if = {
+        #     limit = { exists = scope:founder.primary_title.hegemony }
+        #     scope:founder.primary_title.hegemony = {
+        #         save_scope_as = current_de_jure_scope
+        #         title_capital_county = { save_scope_as = current_capital_scope }
+        #     }
+        # }
+        # else_if = {
+        #     limit = { exists = scope:founder.primary_title.title_capital_county.hegemony }
+        #     scope:founder.primary_title.title_capital_county.hegemony = {
+        #         save_scope_as = current_de_jure_scope
+        #         title_capital_county = { save_scope_as = current_capital_scope }
+        #     }
+        # }
+    }
+    else = {
+        if = {
+            limit = { exists = scope:sltm_designee_title.title_capital_county }
+            scope:sltm_designee_title = {
+                title_capital_county = { save_scope_as = current_capital_scope }
+            }
+        }
+        else_if = {
+            limit = { exists = scope:founder.primary_title.title_capital_county }
+            scope:founder.primary_title = {
+                title_capital_county = { save_scope_as = current_capital_scope }
+            }
+        }
+    }
+    # 决定法理从属
+    if = {
+        limit = { exists = scope:current_de_jure_scope }
+        hidden_effect = {
+            scope:new_title = {
+                set_de_jure_liege_title = scope:current_de_jure_scope
+            }
+        }
+        custom_tooltip = sltm_create_dynamic_title_set_de_jure_liege_tooltip
+    }
+    # 决定法理首都
+    if = {
+        limit = { exists = scope:current_capital_scope }
+        hidden_effect = {
+            scope:new_title = {
+                set_capital_county = scope:current_capital_scope
+            }
+        }
+        custom_tooltip = sltm_create_dynamic_title_set_capital_county_tooltip
+    }
+
+}
+
+sltm_create_dynamic_title_cost_effect = { sltm_create_resource_cost_effect = { TIER = $TIER$ } }

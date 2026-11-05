@@ -1,0 +1,6 @@
+﻿# All native GUI wrappers receive acting CHARACTER, never the selected TITLE.
+sltm_ui_owned_draft_trigger = {
+ has_variable = sltm_ui_origin has_variable = sltm_edit_pending exists = var:sltm_edit_target
+ has_variable = sltm_ui_revision var:sltm_ui_revision = var:sltm_workflow_revision
+}
+sltm_ui_live_trigger = { sltm_ui_owned_draft_trigger = yes has_variable = sltm_ui_open }

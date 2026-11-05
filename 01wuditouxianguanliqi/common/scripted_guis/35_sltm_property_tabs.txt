@@ -1,0 +1,637 @@
+﻿sltm_tab_basic_visible = {
+    scope = character
+    is_shown = { sltm_ui_live_trigger = yes sltm_tab_basic_trigger = yes }
+}
+
+sltm_tab_appearance_visible = {
+    scope = character
+    is_shown = { sltm_ui_live_trigger = yes sltm_tab_appearance_trigger = yes }
+}
+
+sltm_tab_geo_visible = {
+    scope = character
+    is_shown = { sltm_ui_live_trigger = yes sltm_tab_geo_trigger = yes }
+}
+
+sltm_tab_succ_visible = {
+    scope = character
+    is_shown = { sltm_ui_live_trigger = yes sltm_tab_succ_trigger = yes }
+}
+
+sltm_tab_life_visible = {
+    scope = character
+    is_shown = { sltm_ui_live_trigger = yes sltm_tab_life_trigger = yes }
+}
+
+sltm_tab_dom_visible = {
+    scope = character
+    is_shown = { sltm_ui_live_trigger = yes sltm_tab_dom_trigger = yes }
+}
+
+sltm_tab_transfer_visible = {
+    scope = character
+    is_shown = { sltm_ui_live_trigger = yes sltm_tab_transfer_trigger = yes }
+}
+
+sltm_tab_capital_mark = {
+    scope = character
+    is_shown = { sltm_ui_live_trigger = yes sltm_tab_geo_trigger = yes }
+    is_valid = { sltm_ui_live_trigger = yes sltm_tab_geo_trigger = yes sltm_tab_mark_capital_trigger = yes }
+    effect = {
+        sltm_tab_mark_capital_effect = yes
+    }
+}
+
+sltm_tab_dejure_mark = {
+    scope = character
+    is_shown = { sltm_ui_live_trigger = yes sltm_tab_geo_trigger = yes }
+    is_valid = { sltm_ui_live_trigger = yes sltm_tab_geo_trigger = yes exists = var:sltm_designee_title var:sltm_edit_target = { this != root.var:sltm_designee_title tier < root.var:sltm_designee_title.tier } }
+    effect = {
+        set_variable = { name = sltm_edit_dejure value = var:sltm_designee_title }
+        sltm_tab_changed_effect = yes
+    }
+}
+
+sltm_tab_capital_keep = {
+    scope = character
+    is_shown = { sltm_ui_live_trigger = yes sltm_tab_geo_trigger = yes }
+    is_valid = { sltm_ui_live_trigger = yes sltm_tab_geo_trigger = yes }
+    effect = {
+        remove_variable = sltm_edit_capital
+        sltm_tab_changed_effect = yes
+    }
+}
+
+sltm_tab_dejure_keep = {
+    scope = character
+    is_shown = { sltm_ui_live_trigger = yes sltm_tab_geo_trigger = yes }
+    is_valid = { sltm_ui_live_trigger = yes sltm_tab_geo_trigger = yes }
+    effect = {
+        remove_variable = sltm_edit_dejure
+        sltm_tab_changed_effect = yes
+    }
+}
+
+sltm_tab_heir_keep = {
+    scope = character
+    is_shown = { sltm_ui_live_trigger = yes sltm_tab_succ_trigger = yes }
+    is_valid = { sltm_ui_live_trigger = yes sltm_tab_succ_trigger = yes }
+    effect = {
+        remove_variable = sltm_edit_heir
+        sltm_tab_changed_effect = yes
+    }
+}
+
+sltm_tab_heir_on = {
+    scope = character
+    is_shown = { sltm_ui_live_trigger = yes sltm_tab_succ_trigger = yes }
+    is_valid = { sltm_ui_live_trigger = yes sltm_tab_succ_trigger = yes }
+    effect = {
+        set_variable = { name = sltm_edit_heir value = 1 }
+        sltm_tab_changed_effect = yes
+    }
+}
+
+sltm_tab_heir_off = {
+    scope = character
+    is_shown = { sltm_ui_live_trigger = yes sltm_tab_succ_trigger = yes }
+    is_valid = { sltm_ui_live_trigger = yes sltm_tab_succ_trigger = yes }
+    effect = {
+        set_variable = { name = sltm_edit_heir value = 2 }
+        sltm_tab_changed_effect = yes
+    }
+}
+
+sltm_tab_claims_keep = {
+    scope = character
+    is_shown = { sltm_ui_live_trigger = yes sltm_tab_succ_trigger = yes }
+    is_valid = { sltm_ui_live_trigger = yes sltm_tab_succ_trigger = yes }
+    effect = {
+        remove_variable = sltm_edit_claims
+        sltm_tab_changed_effect = yes
+    }
+}
+
+sltm_tab_claims_on = {
+    scope = character
+    is_shown = { sltm_ui_live_trigger = yes sltm_tab_succ_trigger = yes }
+    is_valid = { sltm_ui_live_trigger = yes sltm_tab_succ_trigger = yes }
+    effect = {
+        set_variable = { name = sltm_edit_claims value = 1 }
+        sltm_tab_changed_effect = yes
+    }
+}
+
+sltm_tab_claims_off = {
+    scope = character
+    is_shown = { sltm_ui_live_trigger = yes sltm_tab_succ_trigger = yes }
+    is_valid = { sltm_ui_live_trigger = yes sltm_tab_succ_trigger = yes }
+    effect = {
+        set_variable = { name = sltm_edit_claims value = 2 }
+        sltm_tab_changed_effect = yes
+    }
+}
+
+sltm_tab_landless_keep = {
+    scope = character
+    is_shown = { sltm_ui_live_trigger = yes sltm_tab_life_trigger = yes }
+    is_valid = { sltm_ui_live_trigger = yes sltm_tab_life_trigger = yes }
+    effect = {
+        remove_variable = sltm_edit_landless
+        sltm_tab_changed_effect = yes
+    }
+}
+
+sltm_tab_landless_on = {
+    scope = character
+    is_shown = { sltm_ui_live_trigger = yes sltm_tab_life_trigger = yes }
+    is_valid = { sltm_ui_live_trigger = yes sltm_tab_life_trigger = yes var:sltm_edit_target = { sltm_plain_title_action_trigger = yes } }
+    effect = {
+        set_variable = { name = sltm_edit_landless value = 1 }
+        sltm_tab_changed_effect = yes
+    }
+}
+
+sltm_tab_landless_off = {
+    scope = character
+    is_shown = { sltm_ui_live_trigger = yes sltm_tab_life_trigger = yes }
+    is_valid = { sltm_ui_live_trigger = yes sltm_tab_life_trigger = yes var:sltm_edit_target = { sltm_plain_title_action_trigger = yes } }
+    effect = {
+        set_variable = { name = sltm_edit_landless value = 2 }
+        sltm_tab_changed_effect = yes
+    }
+}
+
+sltm_tab_succession_keep = {
+    scope = character
+    is_shown = { sltm_ui_live_trigger = yes sltm_tab_life_trigger = yes }
+    is_valid = { sltm_ui_live_trigger = yes sltm_tab_life_trigger = yes }
+    effect = {
+        remove_variable = sltm_edit_succession
+        sltm_tab_changed_effect = yes
+    }
+}
+
+sltm_tab_succession_on = {
+    scope = character
+    is_shown = { sltm_ui_live_trigger = yes sltm_tab_life_trigger = yes }
+    is_valid = { sltm_ui_live_trigger = yes sltm_tab_life_trigger = yes var:sltm_edit_target = { sltm_plain_title_action_trigger = yes } }
+    effect = {
+        set_variable = { name = sltm_edit_succession value = 1 }
+        sltm_tab_changed_effect = yes
+    }
+}
+
+sltm_tab_succession_off = {
+    scope = character
+    is_shown = { sltm_ui_live_trigger = yes sltm_tab_life_trigger = yes }
+    is_valid = { sltm_ui_live_trigger = yes sltm_tab_life_trigger = yes var:sltm_edit_target = { sltm_plain_title_action_trigger = yes } }
+    effect = {
+        set_variable = { name = sltm_edit_succession value = 2 }
+        sltm_tab_changed_effect = yes
+    }
+}
+
+sltm_tab_invalid_heir_keep = {
+    scope = character
+    is_shown = { sltm_ui_live_trigger = yes sltm_tab_life_trigger = yes }
+    is_valid = { sltm_ui_live_trigger = yes sltm_tab_life_trigger = yes }
+    effect = {
+        remove_variable = sltm_edit_invalid_heir
+        sltm_tab_changed_effect = yes
+    }
+}
+
+sltm_tab_invalid_heir_on = {
+    scope = character
+    is_shown = { sltm_ui_live_trigger = yes sltm_tab_life_trigger = yes }
+    is_valid = { sltm_ui_live_trigger = yes sltm_tab_life_trigger = yes var:sltm_edit_target = { sltm_plain_title_action_trigger = yes } }
+    effect = {
+        set_variable = { name = sltm_edit_invalid_heir value = 1 }
+        sltm_tab_changed_effect = yes
+    }
+}
+
+sltm_tab_invalid_heir_off = {
+    scope = character
+    is_shown = { sltm_ui_live_trigger = yes sltm_tab_life_trigger = yes }
+    is_valid = { sltm_ui_live_trigger = yes sltm_tab_life_trigger = yes var:sltm_edit_target = { sltm_plain_title_action_trigger = yes } }
+    effect = {
+        set_variable = { name = sltm_edit_invalid_heir value = 2 }
+        sltm_tab_changed_effect = yes
+    }
+}
+
+sltm_tab_same_tier_keep = {
+    scope = character
+    is_shown = { sltm_ui_live_trigger = yes sltm_tab_life_trigger = yes }
+    is_valid = { sltm_ui_live_trigger = yes sltm_tab_life_trigger = yes }
+    effect = {
+        remove_variable = sltm_edit_same_tier
+        sltm_tab_changed_effect = yes
+    }
+}
+
+sltm_tab_same_tier_on = {
+    scope = character
+    is_shown = { sltm_ui_live_trigger = yes sltm_tab_life_trigger = yes }
+    is_valid = { sltm_ui_live_trigger = yes sltm_tab_life_trigger = yes var:sltm_edit_target = { sltm_plain_title_action_trigger = yes } }
+    effect = {
+        set_variable = { name = sltm_edit_same_tier value = 1 }
+        sltm_tab_changed_effect = yes
+    }
+}
+
+sltm_tab_same_tier_off = {
+    scope = character
+    is_shown = { sltm_ui_live_trigger = yes sltm_tab_life_trigger = yes }
+    is_valid = { sltm_ui_live_trigger = yes sltm_tab_life_trigger = yes var:sltm_edit_target = { sltm_plain_title_action_trigger = yes } }
+    effect = {
+        set_variable = { name = sltm_edit_same_tier value = 2 }
+        sltm_tab_changed_effect = yes
+    }
+}
+
+sltm_tab_law_1_add = {
+    scope = character
+    is_shown = { sltm_ui_live_trigger = yes sltm_tab_succ_trigger = yes }
+    is_valid = { sltm_ui_live_trigger = yes sltm_tab_succ_trigger = yes }
+    effect = {
+        if = { limit = { var:sltm_edit_law_remove = 1 } remove_variable = sltm_edit_law_remove }
+        set_variable = { name = sltm_edit_law_add value = 1 }
+        sltm_tab_changed_effect = yes
+    }
+}
+
+sltm_tab_law_1_remove = {
+    scope = character
+    is_shown = { sltm_ui_live_trigger = yes sltm_tab_succ_trigger = yes }
+    is_valid = { sltm_ui_live_trigger = yes sltm_tab_succ_trigger = yes }
+    effect = {
+        if = { limit = { var:sltm_edit_law_add = 1 } remove_variable = sltm_edit_law_add }
+        set_variable = { name = sltm_edit_law_remove value = 1 }
+        sltm_tab_changed_effect = yes
+    }
+}
+
+sltm_tab_law_1_keep = {
+    scope = character
+    is_shown = { sltm_ui_live_trigger = yes sltm_tab_succ_trigger = yes }
+    is_valid = { sltm_ui_live_trigger = yes sltm_tab_succ_trigger = yes }
+    effect = {
+        if = { limit = { var:sltm_edit_law_add = 1 } remove_variable = sltm_edit_law_add }
+        if = { limit = { var:sltm_edit_law_remove = 1 } remove_variable = sltm_edit_law_remove }
+        sltm_tab_changed_effect = yes
+    }
+}
+
+sltm_tab_law_2_add = {
+    scope = character
+    is_shown = { sltm_ui_live_trigger = yes sltm_tab_succ_trigger = yes }
+    is_valid = { sltm_ui_live_trigger = yes sltm_tab_succ_trigger = yes }
+    effect = {
+        if = { limit = { var:sltm_edit_law_remove = 2 } remove_variable = sltm_edit_law_remove }
+        set_variable = { name = sltm_edit_law_add value = 2 }
+        sltm_tab_changed_effect = yes
+    }
+}
+
+sltm_tab_law_2_remove = {
+    scope = character
+    is_shown = { sltm_ui_live_trigger = yes sltm_tab_succ_trigger = yes }
+    is_valid = { sltm_ui_live_trigger = yes sltm_tab_succ_trigger = yes }
+    effect = {
+        if = { limit = { var:sltm_edit_law_add = 2 } remove_variable = sltm_edit_law_add }
+        set_variable = { name = sltm_edit_law_remove value = 2 }
+        sltm_tab_changed_effect = yes
+    }
+}
+
+sltm_tab_law_2_keep = {
+    scope = character
+    is_shown = { sltm_ui_live_trigger = yes sltm_tab_succ_trigger = yes }
+    is_valid = { sltm_ui_live_trigger = yes sltm_tab_succ_trigger = yes }
+    effect = {
+        if = { limit = { var:sltm_edit_law_add = 2 } remove_variable = sltm_edit_law_add }
+        if = { limit = { var:sltm_edit_law_remove = 2 } remove_variable = sltm_edit_law_remove }
+        sltm_tab_changed_effect = yes
+    }
+}
+
+sltm_tab_law_3_add = {
+    scope = character
+    is_shown = { sltm_ui_live_trigger = yes sltm_tab_succ_trigger = yes }
+    is_valid = { sltm_ui_live_trigger = yes sltm_tab_succ_trigger = yes }
+    effect = {
+        if = { limit = { var:sltm_edit_law_remove = 3 } remove_variable = sltm_edit_law_remove }
+        set_variable = { name = sltm_edit_law_add value = 3 }
+        sltm_tab_changed_effect = yes
+    }
+}
+
+sltm_tab_law_3_remove = {
+    scope = character
+    is_shown = { sltm_ui_live_trigger = yes sltm_tab_succ_trigger = yes }
+    is_valid = { sltm_ui_live_trigger = yes sltm_tab_succ_trigger = yes }
+    effect = {
+        if = { limit = { var:sltm_edit_law_add = 3 } remove_variable = sltm_edit_law_add }
+        set_variable = { name = sltm_edit_law_remove value = 3 }
+        sltm_tab_changed_effect = yes
+    }
+}
+
+sltm_tab_law_3_keep = {
+    scope = character
+    is_shown = { sltm_ui_live_trigger = yes sltm_tab_succ_trigger = yes }
+    is_valid = { sltm_ui_live_trigger = yes sltm_tab_succ_trigger = yes }
+    effect = {
+        if = { limit = { var:sltm_edit_law_add = 3 } remove_variable = sltm_edit_law_add }
+        if = { limit = { var:sltm_edit_law_remove = 3 } remove_variable = sltm_edit_law_remove }
+        sltm_tab_changed_effect = yes
+    }
+}
+
+sltm_tab_law_4_add = {
+    scope = character
+    is_shown = { sltm_ui_live_trigger = yes sltm_tab_succ_trigger = yes }
+    is_valid = { sltm_ui_live_trigger = yes sltm_tab_succ_trigger = yes }
+    effect = {
+        if = { limit = { var:sltm_edit_law_remove = 4 } remove_variable = sltm_edit_law_remove }
+        set_variable = { name = sltm_edit_law_add value = 4 }
+        sltm_tab_changed_effect = yes
+    }
+}
+
+sltm_tab_law_4_remove = {
+    scope = character
+    is_shown = { sltm_ui_live_trigger = yes sltm_tab_succ_trigger = yes }
+    is_valid = { sltm_ui_live_trigger = yes sltm_tab_succ_trigger = yes }
+    effect = {
+        if = { limit = { var:sltm_edit_law_add = 4 } remove_variable = sltm_edit_law_add }
+        set_variable = { name = sltm_edit_law_remove value = 4 }
+        sltm_tab_changed_effect = yes
+    }
+}
+
+sltm_tab_law_4_keep = {
+    scope = character
+    is_shown = { sltm_ui_live_trigger = yes sltm_tab_succ_trigger = yes }
+    is_valid = { sltm_ui_live_trigger = yes sltm_tab_succ_trigger = yes }
+    effect = {
+        if = { limit = { var:sltm_edit_law_add = 4 } remove_variable = sltm_edit_law_add }
+        if = { limit = { var:sltm_edit_law_remove = 4 } remove_variable = sltm_edit_law_remove }
+        sltm_tab_changed_effect = yes
+    }
+}
+
+sltm_tab_law_5_add = {
+    scope = character
+    is_shown = { sltm_ui_live_trigger = yes sltm_tab_succ_trigger = yes }
+    is_valid = { sltm_ui_live_trigger = yes sltm_tab_succ_trigger = yes }
+    effect = {
+        if = { limit = { var:sltm_edit_law_remove = 5 } remove_variable = sltm_edit_law_remove }
+        set_variable = { name = sltm_edit_law_add value = 5 }
+        sltm_tab_changed_effect = yes
+    }
+}
+
+sltm_tab_law_5_remove = {
+    scope = character
+    is_shown = { sltm_ui_live_trigger = yes sltm_tab_succ_trigger = yes }
+    is_valid = { sltm_ui_live_trigger = yes sltm_tab_succ_trigger = yes }
+    effect = {
+        if = { limit = { var:sltm_edit_law_add = 5 } remove_variable = sltm_edit_law_add }
+        set_variable = { name = sltm_edit_law_remove value = 5 }
+        sltm_tab_changed_effect = yes
+    }
+}
+
+sltm_tab_law_5_keep = {
+    scope = character
+    is_shown = { sltm_ui_live_trigger = yes sltm_tab_succ_trigger = yes }
+    is_valid = { sltm_ui_live_trigger = yes sltm_tab_succ_trigger = yes }
+    effect = {
+        if = { limit = { var:sltm_edit_law_add = 5 } remove_variable = sltm_edit_law_add }
+        if = { limit = { var:sltm_edit_law_remove = 5 } remove_variable = sltm_edit_law_remove }
+        sltm_tab_changed_effect = yes
+    }
+}
+
+sltm_tab_law_6_add = {
+    scope = character
+    is_shown = { sltm_ui_live_trigger = yes sltm_tab_succ_trigger = yes }
+    is_valid = { sltm_ui_live_trigger = yes sltm_tab_succ_trigger = yes }
+    effect = {
+        if = { limit = { var:sltm_edit_law_remove = 6 } remove_variable = sltm_edit_law_remove }
+        set_variable = { name = sltm_edit_law_add value = 6 }
+        sltm_tab_changed_effect = yes
+    }
+}
+
+sltm_tab_law_6_remove = {
+    scope = character
+    is_shown = { sltm_ui_live_trigger = yes sltm_tab_succ_trigger = yes }
+    is_valid = { sltm_ui_live_trigger = yes sltm_tab_succ_trigger = yes }
+    effect = {
+        if = { limit = { var:sltm_edit_law_add = 6 } remove_variable = sltm_edit_law_add }
+        set_variable = { name = sltm_edit_law_remove value = 6 }
+        sltm_tab_changed_effect = yes
+    }
+}
+
+sltm_tab_law_6_keep = {
+    scope = character
+    is_shown = { sltm_ui_live_trigger = yes sltm_tab_succ_trigger = yes }
+    is_valid = { sltm_ui_live_trigger = yes sltm_tab_succ_trigger = yes }
+    effect = {
+        if = { limit = { var:sltm_edit_law_add = 6 } remove_variable = sltm_edit_law_add }
+        if = { limit = { var:sltm_edit_law_remove = 6 } remove_variable = sltm_edit_law_remove }
+        sltm_tab_changed_effect = yes
+    }
+}
+
+sltm_tab_law_7_add = {
+    scope = character
+    is_shown = { sltm_ui_live_trigger = yes sltm_tab_succ_trigger = yes }
+    is_valid = { sltm_ui_live_trigger = yes sltm_tab_succ_trigger = yes }
+    effect = {
+        if = { limit = { var:sltm_edit_law_remove = 7 } remove_variable = sltm_edit_law_remove }
+        set_variable = { name = sltm_edit_law_add value = 7 }
+        sltm_tab_changed_effect = yes
+    }
+}
+
+sltm_tab_law_7_remove = {
+    scope = character
+    is_shown = { sltm_ui_live_trigger = yes sltm_tab_succ_trigger = yes }
+    is_valid = { sltm_ui_live_trigger = yes sltm_tab_succ_trigger = yes }
+    effect = {
+        if = { limit = { var:sltm_edit_law_add = 7 } remove_variable = sltm_edit_law_add }
+        set_variable = { name = sltm_edit_law_remove value = 7 }
+        sltm_tab_changed_effect = yes
+    }
+}
+
+sltm_tab_law_7_keep = {
+    scope = character
+    is_shown = { sltm_ui_live_trigger = yes sltm_tab_succ_trigger = yes }
+    is_valid = { sltm_ui_live_trigger = yes sltm_tab_succ_trigger = yes }
+    effect = {
+        if = { limit = { var:sltm_edit_law_add = 7 } remove_variable = sltm_edit_law_add }
+        if = { limit = { var:sltm_edit_law_remove = 7 } remove_variable = sltm_edit_law_remove }
+        sltm_tab_changed_effect = yes
+    }
+}
+
+sltm_tab_law_8_add = {
+    scope = character
+    is_shown = { sltm_ui_live_trigger = yes sltm_tab_succ_trigger = yes }
+    is_valid = { sltm_ui_live_trigger = yes sltm_tab_succ_trigger = yes }
+    effect = {
+        if = { limit = { var:sltm_edit_law_remove = 8 } remove_variable = sltm_edit_law_remove }
+        set_variable = { name = sltm_edit_law_add value = 8 }
+        sltm_tab_changed_effect = yes
+    }
+}
+
+sltm_tab_law_8_remove = {
+    scope = character
+    is_shown = { sltm_ui_live_trigger = yes sltm_tab_succ_trigger = yes }
+    is_valid = { sltm_ui_live_trigger = yes sltm_tab_succ_trigger = yes }
+    effect = {
+        if = { limit = { var:sltm_edit_law_add = 8 } remove_variable = sltm_edit_law_add }
+        set_variable = { name = sltm_edit_law_remove value = 8 }
+        sltm_tab_changed_effect = yes
+    }
+}
+
+sltm_tab_law_8_keep = {
+    scope = character
+    is_shown = { sltm_ui_live_trigger = yes sltm_tab_succ_trigger = yes }
+    is_valid = { sltm_ui_live_trigger = yes sltm_tab_succ_trigger = yes }
+    effect = {
+        if = { limit = { var:sltm_edit_law_add = 8 } remove_variable = sltm_edit_law_add }
+        if = { limit = { var:sltm_edit_law_remove = 8 } remove_variable = sltm_edit_law_remove }
+        sltm_tab_changed_effect = yes
+    }
+}
+
+sltm_tab_law_9_add = {
+    scope = character
+    is_shown = { sltm_ui_live_trigger = yes sltm_tab_succ_trigger = yes }
+    is_valid = { always = no }
+    effect = {
+        if = { limit = { var:sltm_edit_law_remove = 9 } remove_variable = sltm_edit_law_remove }
+        set_variable = { name = sltm_edit_law_add value = 9 }
+        sltm_tab_changed_effect = yes
+    }
+}
+
+sltm_tab_law_9_remove = {
+    scope = character
+    is_shown = { sltm_ui_live_trigger = yes sltm_tab_succ_trigger = yes }
+    is_valid = { sltm_ui_live_trigger = yes sltm_tab_succ_trigger = yes var:sltm_edit_target ?= { has_title_law = partition_succession_law } }
+    effect = {
+        if = { limit = { var:sltm_edit_law_add = 9 } remove_variable = sltm_edit_law_add }
+        set_variable = { name = sltm_edit_law_remove value = 9 }
+        sltm_tab_changed_effect = yes
+    }
+}
+
+sltm_tab_law_9_keep = {
+    scope = character
+    is_shown = { sltm_ui_live_trigger = yes sltm_tab_succ_trigger = yes }
+    is_valid = { sltm_ui_live_trigger = yes sltm_tab_succ_trigger = yes }
+    effect = {
+        if = { limit = { var:sltm_edit_law_add = 9 } remove_variable = sltm_edit_law_add }
+        if = { limit = { var:sltm_edit_law_remove = 9 } remove_variable = sltm_edit_law_remove }
+        sltm_tab_changed_effect = yes
+    }
+}
+
+sltm_tab_province_mark = {
+    scope = character
+    is_shown = { sltm_ui_live_trigger = yes sltm_tab_dom_trigger = yes }
+    is_valid = { sltm_ui_live_trigger = yes sltm_tab_dom_trigger = yes exists = var:sltm_edit_target.title_domicile sltm_tab_mark_province_trigger = yes }
+    effect = {
+        sltm_pick_province_effect = { SOURCE = var:sltm_designee_title DEST = sltm_edit_province }
+        sltm_tab_changed_effect = yes
+    }
+}
+
+sltm_tab_building_fill = {
+    scope = character
+    is_shown = { sltm_ui_live_trigger = yes sltm_tab_dom_trigger = yes }
+    is_valid = { sltm_ui_live_trigger = yes sltm_tab_dom_trigger = yes exists = var:sltm_edit_target.title_domicile var:sltm_edit_target.title_domicile = { is_domicile_type = sltm_residence } }
+    effect = {
+        set_variable = { name = sltm_edit_building value = 1 }
+        sltm_tab_changed_effect = yes
+    }
+}
+
+sltm_tab_province_keep = {
+    scope = character
+    is_shown = { sltm_ui_live_trigger = yes sltm_tab_dom_trigger = yes }
+    is_valid = { sltm_ui_live_trigger = yes sltm_tab_dom_trigger = yes }
+    effect = {
+        remove_variable = sltm_edit_province
+        sltm_tab_changed_effect = yes
+    }
+}
+
+sltm_tab_building_keep = {
+    scope = character
+    is_shown = { sltm_ui_live_trigger = yes sltm_tab_dom_trigger = yes }
+    is_valid = { sltm_ui_live_trigger = yes sltm_tab_dom_trigger = yes }
+    effect = {
+        remove_variable = sltm_edit_building
+        sltm_tab_changed_effect = yes
+    }
+}
+
+sltm_tab_domicile_open = {
+    scope = character
+    is_shown = { sltm_ui_live_trigger = yes sltm_tab_dom_trigger = yes }
+    is_valid = { sltm_ui_live_trigger = yes sltm_tab_dom_trigger = yes exists = var:sltm_edit_target.title_domicile }
+    effect = {
+        set_variable = { name = sltm_lvm_selected_title value = var:sltm_edit_target }
+        sltm_open_exact_domicile_effect = yes
+    }
+}
+
+sltm_tab_transfer_pick = {
+    scope = character
+    is_shown = { sltm_ui_live_trigger = yes sltm_tab_transfer_trigger = yes }
+    is_valid = { sltm_ui_live_trigger = yes sltm_tab_transfer_trigger = yes sltm_tab_transferable_trigger = yes exists = var:sltm_designee_title.holder }
+    effect = {
+        sltm_tab_freeze_transfer_effect = yes
+    }
+}
+
+sltm_tab_transfer_review = {
+    scope = character
+    is_shown = { sltm_ui_live_trigger = yes sltm_tab_transfer_trigger = yes }
+    is_valid = { sltm_ui_live_trigger = yes sltm_tab_transfer_trigger = yes sltm_tab_frozen_transfer_trigger = yes }
+    effect = {
+        set_variable = { name = sltm_tab_transfer_confirm value = yes }
+    }
+}
+
+sltm_tab_transfer_back = {
+    scope = character
+    is_shown = { sltm_ui_live_trigger = yes sltm_tab_transfer_trigger = yes }
+    is_valid = { sltm_ui_live_trigger = yes sltm_tab_transfer_trigger = yes }
+    effect = {
+        remove_variable = sltm_tab_transfer_confirm
+    }
+}
+
+sltm_tab_transfer_commit = {
+    scope = character
+    is_shown = { sltm_ui_live_trigger = yes sltm_tab_transfer_trigger = yes }
+    is_valid = { sltm_ui_live_trigger = yes sltm_tab_transfer_trigger = yes has_variable = sltm_tab_transfer_confirm sltm_tab_frozen_transfer_trigger = yes }
+    effect = {
+        sltm_ui_prepare_event_effect = yes
+        sltm_edit_transfer_effect = yes
+    }
+}

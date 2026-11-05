@@ -1,0 +1,279 @@
+﻿# 无地封臣 token 匹配触发器（V2.7.1）。
+#
+# 三态 token 约定：none 不限制，pos 必须满足，neg 必须不满足。
+# 每一项先保护“变量不存在”的旧存档，再读取 pos/neg；不能用 NOT(var)
+# 模拟 none，因为 var 未设置时会产生 unset scope 错误。
+
+sltm_lvm_holder_matches_token_filter_trigger = {
+    # 勇敢
+    trigger_if = {
+        limit = { scope:sltm_lvm_filter_player = { NOT = { has_variable = sltm_lvm_hf_tok_brave } } }
+        always = yes
+    }
+    trigger_else_if = {
+        limit = { scope:sltm_lvm_filter_player.var:sltm_lvm_hf_tok_brave = flag:pos }
+        has_trait = brave
+    }
+    trigger_else_if = {
+        limit = { scope:sltm_lvm_filter_player.var:sltm_lvm_hf_tok_brave = flag:neg }
+        NOT = { has_trait = brave }
+    }
+    trigger_else = { always = yes }
+
+    # 怯懦
+    trigger_if = {
+        limit = { scope:sltm_lvm_filter_player = { NOT = { has_variable = sltm_lvm_hf_tok_cowardly } } }
+        always = yes
+    }
+    trigger_else_if = {
+        limit = { scope:sltm_lvm_filter_player.var:sltm_lvm_hf_tok_cowardly = flag:pos }
+        has_trait = craven
+    }
+    trigger_else_if = {
+        limit = { scope:sltm_lvm_filter_player.var:sltm_lvm_hf_tok_cowardly = flag:neg }
+        NOT = { has_trait = craven }
+    }
+    trigger_else = { always = yes }
+
+    # 军事教育
+    trigger_if = {
+        limit = { scope:sltm_lvm_filter_player = { NOT = { has_variable = sltm_lvm_hf_tok_martial_edu } } }
+        always = yes
+    }
+    trigger_else_if = {
+        limit = { scope:sltm_lvm_filter_player.var:sltm_lvm_hf_tok_martial_edu = flag:pos }
+        has_education_martial_trigger = yes
+    }
+    trigger_else_if = {
+        limit = { scope:sltm_lvm_filter_player.var:sltm_lvm_hf_tok_martial_edu = flag:neg }
+        NOT = { has_education_martial_trigger = yes }
+    }
+    trigger_else = { always = yes }
+
+    # 管理教育
+    trigger_if = {
+        limit = { scope:sltm_lvm_filter_player = { NOT = { has_variable = sltm_lvm_hf_tok_steward_edu } } }
+        always = yes
+    }
+    trigger_else_if = {
+        limit = { scope:sltm_lvm_filter_player.var:sltm_lvm_hf_tok_steward_edu = flag:pos }
+        has_education_stewardship_trigger = yes
+    }
+    trigger_else_if = {
+        limit = { scope:sltm_lvm_filter_player.var:sltm_lvm_hf_tok_steward_edu = flag:neg }
+        NOT = { has_education_stewardship_trigger = yes }
+    }
+    trigger_else = { always = yes }
+
+    # 优秀遗传
+    trigger_if = {
+        limit = { scope:sltm_lvm_filter_player = { NOT = { has_variable = sltm_lvm_hf_tok_good_genetic } } }
+        always = yes
+    }
+    trigger_else_if = {
+        limit = { scope:sltm_lvm_filter_player.var:sltm_lvm_hf_tok_good_genetic = flag:pos }
+        num_of_good_genetic_traits > 0
+    }
+    trigger_else_if = {
+        limit = { scope:sltm_lvm_filter_player.var:sltm_lvm_hf_tok_good_genetic = flag:neg }
+        NOT = { num_of_good_genetic_traits > 0 }
+    }
+    trigger_else = { always = yes }
+
+    # 不良遗传
+    trigger_if = {
+        limit = { scope:sltm_lvm_filter_player = { NOT = { has_variable = sltm_lvm_hf_tok_bad_genetic } } }
+        always = yes
+    }
+    trigger_else_if = {
+        limit = { scope:sltm_lvm_filter_player.var:sltm_lvm_hf_tok_bad_genetic = flag:pos }
+        num_of_bad_genetic_traits > 0
+    }
+    trigger_else_if = {
+        limit = { scope:sltm_lvm_filter_player.var:sltm_lvm_hf_tok_bad_genetic = flag:neg }
+        NOT = { num_of_bad_genetic_traits > 0 }
+    }
+    trigger_else = { always = yes }
+
+    # 2026-07-18（V3.4-D）常用性格特质 token 判定
+    # 野心勃勃
+    trigger_if = {
+        limit = { scope:sltm_lvm_filter_player = { NOT = { has_variable = sltm_lvm_hf_tok_ambitious } } }
+        always = yes
+    }
+    trigger_else_if = {
+        limit = { scope:sltm_lvm_filter_player.var:sltm_lvm_hf_tok_ambitious = flag:pos }
+        has_trait = ambitious
+    }
+    trigger_else_if = {
+        limit = { scope:sltm_lvm_filter_player.var:sltm_lvm_hf_tok_ambitious = flag:neg }
+        NOT = { has_trait = ambitious }
+    }
+    trigger_else = { always = yes }
+
+    # 知足
+    trigger_if = {
+        limit = { scope:sltm_lvm_filter_player = { NOT = { has_variable = sltm_lvm_hf_tok_content } } }
+        always = yes
+    }
+    trigger_else_if = {
+        limit = { scope:sltm_lvm_filter_player.var:sltm_lvm_hf_tok_content = flag:pos }
+        has_trait = content
+    }
+    trigger_else_if = {
+        limit = { scope:sltm_lvm_filter_player.var:sltm_lvm_hf_tok_content = flag:neg }
+        NOT = { has_trait = content }
+    }
+    trigger_else = { always = yes }
+
+    # 公正
+    trigger_if = {
+        limit = { scope:sltm_lvm_filter_player = { NOT = { has_variable = sltm_lvm_hf_tok_just } } }
+        always = yes
+    }
+    trigger_else_if = {
+        limit = { scope:sltm_lvm_filter_player.var:sltm_lvm_hf_tok_just = flag:pos }
+        has_trait = just
+    }
+    trigger_else_if = {
+        limit = { scope:sltm_lvm_filter_player.var:sltm_lvm_hf_tok_just = flag:neg }
+        NOT = { has_trait = just }
+    }
+    trigger_else = { always = yes }
+
+    # 专断
+    trigger_if = {
+        limit = { scope:sltm_lvm_filter_player = { NOT = { has_variable = sltm_lvm_hf_tok_arbitrary } } }
+        always = yes
+    }
+    trigger_else_if = {
+        limit = { scope:sltm_lvm_filter_player.var:sltm_lvm_hf_tok_arbitrary = flag:pos }
+        has_trait = arbitrary
+    }
+    trigger_else_if = {
+        limit = { scope:sltm_lvm_filter_player.var:sltm_lvm_hf_tok_arbitrary = flag:neg }
+        NOT = { has_trait = arbitrary }
+    }
+    trigger_else = { always = yes }
+
+    # 冷静
+    trigger_if = {
+        limit = { scope:sltm_lvm_filter_player = { NOT = { has_variable = sltm_lvm_hf_tok_calm } } }
+        always = yes
+    }
+    trigger_else_if = {
+        limit = { scope:sltm_lvm_filter_player.var:sltm_lvm_hf_tok_calm = flag:pos }
+        has_trait = calm
+    }
+    trigger_else_if = {
+        limit = { scope:sltm_lvm_filter_player.var:sltm_lvm_hf_tok_calm = flag:neg }
+        NOT = { has_trait = calm }
+    }
+    trigger_else = { always = yes }
+
+    # 暴怒
+    trigger_if = {
+        limit = { scope:sltm_lvm_filter_player = { NOT = { has_variable = sltm_lvm_hf_tok_wrathful } } }
+        always = yes
+    }
+    trigger_else_if = {
+        limit = { scope:sltm_lvm_filter_player.var:sltm_lvm_hf_tok_wrathful = flag:pos }
+        has_trait = wrathful
+    }
+    trigger_else_if = {
+        limit = { scope:sltm_lvm_filter_player.var:sltm_lvm_hf_tok_wrathful = flag:neg }
+        NOT = { has_trait = wrathful }
+    }
+    trigger_else = { always = yes }
+
+    # 有耐心
+    trigger_if = {
+        limit = { scope:sltm_lvm_filter_player = { NOT = { has_variable = sltm_lvm_hf_tok_patient } } }
+        always = yes
+    }
+    trigger_else_if = {
+        limit = { scope:sltm_lvm_filter_player.var:sltm_lvm_hf_tok_patient = flag:pos }
+        has_trait = patient
+    }
+    trigger_else_if = {
+        limit = { scope:sltm_lvm_filter_player.var:sltm_lvm_hf_tok_patient = flag:neg }
+        NOT = { has_trait = patient }
+    }
+    trigger_else = { always = yes }
+
+    # 无耐心
+    trigger_if = {
+        limit = { scope:sltm_lvm_filter_player = { NOT = { has_variable = sltm_lvm_hf_tok_impatient } } }
+        always = yes
+    }
+    trigger_else_if = {
+        limit = { scope:sltm_lvm_filter_player.var:sltm_lvm_hf_tok_impatient = flag:pos }
+        has_trait = impatient
+    }
+    trigger_else_if = {
+        limit = { scope:sltm_lvm_filter_player.var:sltm_lvm_hf_tok_impatient = flag:neg }
+        NOT = { has_trait = impatient }
+    }
+    trigger_else = { always = yes }
+
+    # 勤奋
+    trigger_if = {
+        limit = { scope:sltm_lvm_filter_player = { NOT = { has_variable = sltm_lvm_hf_tok_diligent } } }
+        always = yes
+    }
+    trigger_else_if = {
+        limit = { scope:sltm_lvm_filter_player.var:sltm_lvm_hf_tok_diligent = flag:pos }
+        has_trait = diligent
+    }
+    trigger_else_if = {
+        limit = { scope:sltm_lvm_filter_player.var:sltm_lvm_hf_tok_diligent = flag:neg }
+        NOT = { has_trait = diligent }
+    }
+    trigger_else = { always = yes }
+
+    # 懒惰
+    trigger_if = {
+        limit = { scope:sltm_lvm_filter_player = { NOT = { has_variable = sltm_lvm_hf_tok_lazy } } }
+        always = yes
+    }
+    trigger_else_if = {
+        limit = { scope:sltm_lvm_filter_player.var:sltm_lvm_hf_tok_lazy = flag:pos }
+        has_trait = lazy
+    }
+    trigger_else_if = {
+        limit = { scope:sltm_lvm_filter_player.var:sltm_lvm_hf_tok_lazy = flag:neg }
+        NOT = { has_trait = lazy }
+    }
+    trigger_else = { always = yes }
+
+    # 诚实
+    trigger_if = {
+        limit = { scope:sltm_lvm_filter_player = { NOT = { has_variable = sltm_lvm_hf_tok_honest } } }
+        always = yes
+    }
+    trigger_else_if = {
+        limit = { scope:sltm_lvm_filter_player.var:sltm_lvm_hf_tok_honest = flag:pos }
+        has_trait = honest
+    }
+    trigger_else_if = {
+        limit = { scope:sltm_lvm_filter_player.var:sltm_lvm_hf_tok_honest = flag:neg }
+        NOT = { has_trait = honest }
+    }
+    trigger_else = { always = yes }
+
+    # 虚伪
+    trigger_if = {
+        limit = { scope:sltm_lvm_filter_player = { NOT = { has_variable = sltm_lvm_hf_tok_deceitful } } }
+        always = yes
+    }
+    trigger_else_if = {
+        limit = { scope:sltm_lvm_filter_player.var:sltm_lvm_hf_tok_deceitful = flag:pos }
+        has_trait = deceitful
+    }
+    trigger_else_if = {
+        limit = { scope:sltm_lvm_filter_player.var:sltm_lvm_hf_tok_deceitful = flag:neg }
+        NOT = { has_trait = deceitful }
+    }
+    trigger_else = { always = yes }
+
+}

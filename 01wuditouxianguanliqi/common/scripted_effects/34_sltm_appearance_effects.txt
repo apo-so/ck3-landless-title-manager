@@ -1,0 +1,81 @@
+﻿# No target yet. Enter the same property window, with all mutations hidden.
+sltm_ui_choose_target_effect = {
+    remove_variable = sltm_window_from_manager
+    sltm_workflow_new_session_effect = yes
+    sltm_create_clear_draft_effect = yes
+    sltm_edit_clear_draft_effect = yes
+    remove_variable = sltm_lvm_open
+    set_variable = { name = sltm_ui_origin value = yes }
+    set_variable = { name = sltm_ui_choose_target value = yes }
+}
+
+# Called only by the confirmed edit, with A already fixed in sltm_edit_title.
+# Result 2 means requested. An expired captured source is a failure, never a fallback to current B.
+
+sltm_apply_coa_draft_effect = {
+    set_variable = { name = sltm_edit_result_coa value = 3 }
+    if = {
+        limit = { var:sltm_edit_coa = 1 }
+        scope:sltm_edit_title = { generate_coa = yes }
+        set_variable = { name = sltm_edit_result_coa value = 2 }
+    }
+    else_if = {
+        limit = { var:sltm_edit_coa = 2 exists = var:sltm_edit_coa_source }
+        scope:sltm_edit_title = { set_coa = root.var:sltm_edit_coa_source }
+        set_variable = { name = sltm_edit_result_coa value = 2 }
+    }
+    else_if = {
+        limit = { var:sltm_edit_coa = 3 }
+        scope:sltm_edit_title = { reset_coa = yes }
+        set_variable = { name = sltm_edit_result_coa value = 2 }
+    }
+}
+
+sltm_apply_color_draft_effect = {
+    set_variable = { name = sltm_edit_result_color value = 3 }
+    if = {
+        limit = { var:sltm_edit_color = 1 exists = var:sltm_edit_color_source }
+        scope:sltm_edit_title = { set_color_from_title = root.var:sltm_edit_color_source }
+        set_variable = { name = sltm_edit_result_color value = 2 }
+    }
+    else_if = {
+        limit = { var:sltm_edit_color = 2 }
+        scope:sltm_edit_title = { set_title_color = { 172 22 22 } }
+        set_variable = { name = sltm_edit_result_color value = 2 }
+    }
+    else_if = {
+        limit = { var:sltm_edit_color = 3 }
+        scope:sltm_edit_title = { set_title_color = { 204 153 10 } }
+        set_variable = { name = sltm_edit_result_color value = 2 }
+    }
+    else_if = {
+        limit = { var:sltm_edit_color = 4 }
+        scope:sltm_edit_title = { set_title_color = { 6 127 2 } }
+        set_variable = { name = sltm_edit_result_color value = 2 }
+    }
+    else_if = {
+        limit = { var:sltm_edit_color = 5 }
+        scope:sltm_edit_title = { set_title_color = { 20 120 120 } }
+        set_variable = { name = sltm_edit_result_color value = 2 }
+    }
+    else_if = {
+        limit = { var:sltm_edit_color = 6 }
+        scope:sltm_edit_title = { set_title_color = { 0 95 184 } }
+        set_variable = { name = sltm_edit_result_color value = 2 }
+    }
+    else_if = {
+        limit = { var:sltm_edit_color = 7 }
+        scope:sltm_edit_title = { set_title_color = { 230 140 0 } }
+        set_variable = { name = sltm_edit_result_color value = 2 }
+    }
+    else_if = {
+        limit = { var:sltm_edit_color = 8 }
+        scope:sltm_edit_title = { set_title_color = { 255 255 255 } }
+        set_variable = { name = sltm_edit_result_color value = 2 }
+    }
+    else_if = {
+        limit = { var:sltm_edit_color = 9 }
+        scope:sltm_edit_title = { set_title_color = { 15 15 15 } }
+        set_variable = { name = sltm_edit_result_color value = 2 }
+    }
+}

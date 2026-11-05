@@ -1,0 +1,251 @@
+﻿# 无地头衔管理器：排序值。
+# V2.6：头衔排序只保留纯头衔维度（status/type/tier/role），删除读取人物属性的 holder_rank / holder_age。
+
+sltm_lvm_title_status_sort_value = {
+    value = 0
+    if = { limit = { sltm_lvm_is_concurrent_title_trigger = yes } add = 100 }
+    if = { limit = { sltm_lvm_is_primary_title_trigger = yes } add = 200 }
+    if = { limit = { sltm_lvm_is_pending_title_trigger = yes } add = 300 }
+    if = { limit = { sltm_lvm_is_blocked_title_trigger = yes } add = 400 }
+}
+
+sltm_lvm_title_type_sort_value = {
+    value = 0
+    if = { limit = { sltm_lvm_is_junfu_title_trigger = yes } add = 600 }
+    else_if = { limit = { sltm_lvm_is_noble_family_title_trigger = yes } add = 500 }
+    else_if = { limit = { sltm_lvm_is_holy_order_title_trigger = yes } add = 400 }
+    else_if = { limit = { sltm_lvm_is_mercenary_title_trigger = yes } add = 300 }
+    else_if = { limit = { sltm_lvm_is_religious_head_title_trigger = yes } add = 200 }
+    else = { add = 100 }
+}
+
+sltm_lvm_title_tier_sort_value = {
+    value = tier
+}
+
+sltm_lvm_title_role_sort_value = {
+    value = 0
+    if = { limit = { sltm_lvm_is_primary_title_trigger = yes } add = 200 }
+    if = { limit = { sltm_lvm_is_concurrent_title_trigger = yes } add = 100 }
+}
+
+# 批次 1：解耦后不再有"过滤后头衔数"，管理数改读总缓存（rebuild_cache 时已按人物初始化）。
+sltm_lvm_holder_managed_count_sort_value = {
+    value = 0
+    if = {
+        limit = { has_variable = sltm_lvm_total_managed_title_count }
+        add = var:sltm_lvm_total_managed_title_count
+    }
+}
+
+sltm_lvm_holder_primary_tier_sort_value = {
+    value = 0
+    if = {
+        limit = { exists = primary_title }
+        add = primary_title.tier
+    }
+}
+
+# 头衔等级为主键；同等级时用所持无地头衔数稳定排序。
+sltm_lvm_holder_rank_sort_value = {
+    value = sltm_lvm_holder_primary_tier_sort_value
+    multiply = 1000
+    if = {
+        limit = { has_variable = sltm_lvm_total_managed_title_count }
+        add = var:sltm_lvm_total_managed_title_count
+    }
+}
+
+sltm_lvm_holder_age_sort_value = { value = age }
+# 能力排序值：主能力值 ×1000 + 主头衔等级（次级稳定规则，避免刷新抖动）
+sltm_lvm_holder_diplomacy_sort_value = {
+    value = diplomacy
+    multiply = 1000
+    add = sltm_lvm_holder_primary_tier_sort_value
+}
+sltm_lvm_holder_martial_sort_value = {
+    value = martial
+    multiply = 1000
+    add = sltm_lvm_holder_primary_tier_sort_value
+}
+sltm_lvm_holder_stewardship_sort_value = {
+    value = stewardship
+    multiply = 1000
+    add = sltm_lvm_holder_primary_tier_sort_value
+}
+sltm_lvm_holder_intrigue_sort_value = {
+    value = intrigue
+    multiply = 1000
+    add = sltm_lvm_holder_primary_tier_sort_value
+}
+sltm_lvm_holder_learning_sort_value = {
+    value = learning
+    multiply = 1000
+    add = sltm_lvm_holder_primary_tier_sort_value
+}
+sltm_lvm_holder_prowess_sort_value = {
+    value = prowess
+    multiply = 1000
+    add = sltm_lvm_holder_primary_tier_sort_value
+}
+
+# V3.6.6：与封臣列表六个可见列使用同源数据。
+sltm_lvm_holder_merit_sort_value = {
+    value = merit_level
+    multiply = 1000
+    add = sltm_lvm_holder_primary_tier_sort_value
+}
+sltm_lvm_holder_efficiency_sort_value = {
+    value = 0
+    if = {
+        limit = { sltm_lvm_holder_uses_governor_efficiency_trigger = yes }
+        add = governor_efficiency
+    }
+    multiply = 1000
+    add = sltm_lvm_holder_primary_tier_sort_value
+}
+sltm_lvm_holder_treasury_balance_sort_value = {
+    value = monthly_character_treasury_balance
+    multiply = 1000
+    add = sltm_lvm_holder_primary_tier_sort_value
+}
+sltm_lvm_holder_treasury_sort_value = {
+    value = 0
+    if = {
+        limit = { has_treasury = yes }
+        add = treasury
+    }
+}
+sltm_lvm_holder_strength_sort_value = { value = current_military_strength }
+sltm_lvm_holder_atwar_sort_value = {
+    value = 0
+    if = {
+        limit = { sltm_lvm_holder_leads_defensive_war_trigger = yes }
+        add = 4000
+    }
+    else_if = {
+        limit = { sltm_lvm_holder_leads_offensive_war_trigger = yes }
+        add = 3000
+    }
+    else_if = {
+        limit = { sltm_lvm_holder_assists_defensive_war_trigger = yes }
+        add = 2000
+    }
+    else_if = {
+        limit = { sltm_lvm_holder_assists_offensive_war_trigger = yes }
+        add = 1000
+    }
+    add = sltm_lvm_holder_primary_tier_sort_value
+}
+sltm_lvm_holder_pending_sort_value = {
+    value = 0
+    if = { limit = { has_variable = sltm_lvm_pending_title_count } add = var:sltm_lvm_pending_title_count }
+}
+sltm_lvm_holder_blocked_sort_value = {
+    value = 0
+    if = { limit = { has_variable = sltm_lvm_blocked_title_count } add = var:sltm_lvm_blocked_title_count }
+}
+
+sltm_lvm_title_sort_value = {
+    value = 0
+    if = {
+        limit = { scope:sltm_lvm_sort_player.var:sltm_lvm_title_sort = flag:status }
+        add = sltm_lvm_title_status_sort_value
+    }
+    else_if = {
+        limit = { scope:sltm_lvm_sort_player.var:sltm_lvm_title_sort = flag:type }
+        add = sltm_lvm_title_type_sort_value
+    }
+    else_if = {
+        limit = { scope:sltm_lvm_sort_player.var:sltm_lvm_title_sort = flag:tier }
+        add = sltm_lvm_title_tier_sort_value
+    }
+    else_if = {
+        limit = { scope:sltm_lvm_sort_player.var:sltm_lvm_title_sort = flag:role }
+        add = sltm_lvm_title_role_sort_value
+    }
+    else = { add = sltm_lvm_title_status_sort_value }
+
+    if = {
+        limit = { scope:sltm_lvm_sort_player.var:sltm_lvm_title_sort_desc = flag:no }
+        multiply = -1
+    }
+}
+
+sltm_lvm_holder_sort_value = {
+    value = 0
+    if = {
+        limit = { scope:sltm_lvm_sort_player.var:sltm_lvm_holder_sort = flag:managed_count }
+        add = sltm_lvm_holder_managed_count_sort_value
+    }
+    else_if = {
+        limit = { scope:sltm_lvm_sort_player.var:sltm_lvm_holder_sort = flag:rank }
+        add = sltm_lvm_holder_rank_sort_value
+    }
+    else_if = {
+        limit = { scope:sltm_lvm_sort_player.var:sltm_lvm_holder_sort = flag:age }
+        add = sltm_lvm_holder_age_sort_value
+    }
+    else_if = {
+        limit = { scope:sltm_lvm_sort_player.var:sltm_lvm_holder_sort = flag:diplomacy }
+        add = sltm_lvm_holder_diplomacy_sort_value
+    }
+    else_if = {
+        limit = { scope:sltm_lvm_sort_player.var:sltm_lvm_holder_sort = flag:martial }
+        add = sltm_lvm_holder_martial_sort_value
+    }
+    else_if = {
+        limit = { scope:sltm_lvm_sort_player.var:sltm_lvm_holder_sort = flag:stewardship }
+        add = sltm_lvm_holder_stewardship_sort_value
+    }
+    else_if = {
+        limit = { scope:sltm_lvm_sort_player.var:sltm_lvm_holder_sort = flag:intrigue }
+        add = sltm_lvm_holder_intrigue_sort_value
+    }
+    else_if = {
+        limit = { scope:sltm_lvm_sort_player.var:sltm_lvm_holder_sort = flag:learning }
+        add = sltm_lvm_holder_learning_sort_value
+    }
+    else_if = {
+        limit = { scope:sltm_lvm_sort_player.var:sltm_lvm_holder_sort = flag:prowess }
+        add = sltm_lvm_holder_prowess_sort_value
+    }
+    else_if = {
+        limit = { scope:sltm_lvm_sort_player.var:sltm_lvm_holder_sort = flag:merit }
+        add = sltm_lvm_holder_merit_sort_value
+    }
+    else_if = {
+        limit = { scope:sltm_lvm_sort_player.var:sltm_lvm_holder_sort = flag:efficiency }
+        add = sltm_lvm_holder_efficiency_sort_value
+    }
+    else_if = {
+        limit = { scope:sltm_lvm_sort_player.var:sltm_lvm_holder_sort = flag:treasury_balance }
+        add = sltm_lvm_holder_treasury_balance_sort_value
+    }
+    else_if = {
+        limit = { scope:sltm_lvm_sort_player.var:sltm_lvm_holder_sort = flag:treasury }
+        add = sltm_lvm_holder_treasury_sort_value
+    }
+    else_if = {
+        limit = { scope:sltm_lvm_sort_player.var:sltm_lvm_holder_sort = flag:strength }
+        add = sltm_lvm_holder_strength_sort_value
+    }
+    else_if = {
+        limit = { scope:sltm_lvm_sort_player.var:sltm_lvm_holder_sort = flag:atwar }
+        add = sltm_lvm_holder_atwar_sort_value
+    }
+    else_if = {
+        limit = { scope:sltm_lvm_sort_player.var:sltm_lvm_holder_sort = flag:pending }
+        add = sltm_lvm_holder_pending_sort_value
+    }
+    else_if = {
+        limit = { scope:sltm_lvm_sort_player.var:sltm_lvm_holder_sort = flag:blocked }
+        add = sltm_lvm_holder_blocked_sort_value
+    }
+    else = { add = sltm_lvm_holder_rank_sort_value }
+
+    if = {
+        limit = { scope:sltm_lvm_sort_player.var:sltm_lvm_holder_sort_desc = flag:no }
+        multiply = -1
+    }
+}

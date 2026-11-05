@@ -1,0 +1,52 @@
+﻿# Standalone extraction: selected dependency definitions only.
+sltm_create_custom_landless_title_effect = {
+	# 【第一步：完全走原作者的标准动态创建流程】
+	# 1. 生成新头衔空壳
+	create_dynamic_title = {
+		tier = $TIER$                                     # 传入参数：county/duchy/kingdom/empire
+		name = $NAME$                                     # 传入输入的文本名称
+	}
+	
+	# 2. 跑原版的初始化属性设定（完美复刻母体首府、纹章、地图染色与文化锁）
+	scope:new_title = {
+		set_capital_county = $PRIMARY$.title_capital_county
+		set_coa = $PRIMARY$
+		set_color_from_title = $PRIMARY$
+		set_can_be_named_after_dynasty = no
+		set_can_use_nomadic_naming = no
+	}
+	
+	# 3. 创建标准的头衔变更事务流并授予决策发起人（此时它还是一个常规有地形态的头衔）
+	create_title_and_vassal_change = {
+		type = created 
+		save_scope_as = change 
+		add_claim_on_loss = no
+	}
+	scope:new_title = {
+		change_title_holder = {
+			holder = scope:founder
+			change = scope:change 
+		}
+	}
+	resolve_title_and_vassal_change = scope:change
+	
+
+	
+	# ------------------------------------------------------------------------
+	# 【第二步：完全依照原作者的办法，在头衔一切就绪后，强行将其降维变更为无地】
+	# ------------------------------------------------------------------------
+	scope:new_title = {
+		# 强制追加核心词条
+		set_landless_title = yes                          # 变为无地头衔
+		set_definitive_form = yes                         # 文本自带定冠词
+		
+		# No standalone reader requires the obsolete sltm_is_official_title marker.
+		
+		# 【核心修改点：按照要求，100% 确保不进行主继承人锁定，保持常规可均分/可剥夺继承】
+		set_always_follows_primary_heir = no
+		set_no_automatic_claims = no
+	}
+	
+	# 5. 调用 UI 横幅弹窗通知
+	sltm_create_dynamic_title_send_interface_effect = yes
+}

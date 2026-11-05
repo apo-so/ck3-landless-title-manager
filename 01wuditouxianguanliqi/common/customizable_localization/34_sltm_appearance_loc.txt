@@ -1,0 +1,63 @@
+﻿sltm_appearance_coa_text = {
+    type = character
+    text = { trigger = { var:sltm_edit_coa ?= 1 } localization_key = sltm_look_coa_random }
+    text = { trigger = { var:sltm_edit_coa ?= 2 NOT = { exists = var:sltm_edit_coa_source } } localization_key = sltm_look_source_lost }
+    text = { trigger = { var:sltm_edit_coa ?= 2 } localization_key = sltm_look_coa_copy }
+    text = { trigger = { var:sltm_edit_coa ?= 3 } localization_key = sltm_look_coa_reset }
+    text = { localization_key = sltm_look_unchanged }
+}
+
+sltm_appearance_color_text = {
+    type = character
+    text = { trigger = { var:sltm_edit_color ?= 1 NOT = { exists = var:sltm_edit_color_source } } localization_key = sltm_look_source_lost }
+    text = { trigger = { var:sltm_edit_color ?= 1 } localization_key = sltm_look_color_copy }
+    text = { trigger = { var:sltm_edit_color ?= 2 } localization_key = sltm_look_color_red }
+    text = { trigger = { var:sltm_edit_color ?= 3 } localization_key = sltm_look_color_gold }
+    text = { trigger = { var:sltm_edit_color ?= 4 } localization_key = sltm_look_color_green }
+    text = { trigger = { var:sltm_edit_color ?= 5 } localization_key = sltm_look_color_teal }
+    text = { trigger = { var:sltm_edit_color ?= 6 } localization_key = sltm_look_color_blue }
+    text = { trigger = { var:sltm_edit_color ?= 7 } localization_key = sltm_look_color_orange }
+    text = { trigger = { var:sltm_edit_color ?= 8 } localization_key = sltm_look_color_white }
+    text = { trigger = { var:sltm_edit_color ?= 9 } localization_key = sltm_look_color_black }
+    text = { localization_key = sltm_look_unchanged }
+}
+
+sltm_summary_law_add = {
+    type = character
+    text = { trigger = { var:sltm_edit_law_add ?= 1 } localization_key = sltm_summary_law_1 }
+    text = { trigger = { var:sltm_edit_law_add ?= 2 } localization_key = sltm_summary_law_2 }
+    text = { trigger = { var:sltm_edit_law_add ?= 3 } localization_key = sltm_summary_law_3 }
+    text = { trigger = { var:sltm_edit_law_add ?= 4 } localization_key = sltm_summary_law_4 }
+    text = { trigger = { var:sltm_edit_law_add ?= 5 } localization_key = sltm_summary_law_5 }
+    text = { trigger = { var:sltm_edit_law_add ?= 6 } localization_key = sltm_summary_law_6 }
+    text = { trigger = { var:sltm_edit_law_add ?= 7 } localization_key = sltm_summary_law_7 }
+    text = { trigger = { var:sltm_edit_law_add ?= 8 } localization_key = sltm_summary_law_8 }
+    text = { trigger = { var:sltm_edit_law_add ?= 9 } localization_key = sltm_summary_law_9 }
+    text = { localization_key = sltm_summary_law_unknown }
+}
+
+sltm_summary_law_remove = {
+    type = character
+    text = { trigger = { var:sltm_edit_law_remove ?= 1 } localization_key = sltm_summary_law_1 }
+    text = { trigger = { var:sltm_edit_law_remove ?= 2 } localization_key = sltm_summary_law_2 }
+    text = { trigger = { var:sltm_edit_law_remove ?= 3 } localization_key = sltm_summary_law_3 }
+    text = { trigger = { var:sltm_edit_law_remove ?= 4 } localization_key = sltm_summary_law_4 }
+    text = { trigger = { var:sltm_edit_law_remove ?= 5 } localization_key = sltm_summary_law_5 }
+    text = { trigger = { var:sltm_edit_law_remove ?= 6 } localization_key = sltm_summary_law_6 }
+    text = { trigger = { var:sltm_edit_law_remove ?= 7 } localization_key = sltm_summary_law_7 }
+    text = { trigger = { var:sltm_edit_law_remove ?= 8 } localization_key = sltm_summary_law_8 }
+    text = { trigger = { var:sltm_edit_law_remove ?= 9 } localization_key = sltm_summary_law_9 }
+    text = { localization_key = sltm_summary_law_unknown }
+}
+
+sltm_native_current_mark = {
+    type = character
+    text = { trigger = { exists = var:sltm_designee_title } localization_key = sltm_native_has_b }
+    text = { localization_key = sltm_native_no_b }
+}
+
+sltm_look_mark_role = {
+    type = character
+    text = { trigger = { exists = var:sltm_designee_title var:sltm_edit_target = var:sltm_designee_title } localization_key = sltm_look_same_title }
+    text = { localization_key = SLTM_UI_MARK_SOURCE }
+}

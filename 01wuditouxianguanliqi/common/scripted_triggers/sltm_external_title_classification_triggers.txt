@@ -1,0 +1,11 @@
+﻿# Standalone extraction: selected dependency definitions only.
+sltm_is_junfu_title_trigger = {
+	has_variable = mytm_junfu_title
+	is_landless_type_title = yes
+	is_noble_family_title = no
+	# 兼容边界：军府与真实游牧头衔是不同体系。即使旧存档曾误盖
+	# mytm_junfu_title，游牧头衔也不再被任何军府后续逻辑识别。
+	is_nomad_title = no
+	NOT = { has_variable = pgh_protected_nomad_account }
+	tier >= tier_duchy
+}

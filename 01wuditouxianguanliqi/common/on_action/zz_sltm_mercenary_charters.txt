@@ -1,0 +1,9 @@
+﻿yearly_global_pulse = { on_actions = { sltm_mercenary_yearly } }
+sltm_mercenary_yearly = {
+    trigger = { any_in_global_list = { variable = sltm_pending_charters always = yes } }
+    effect = {
+        # Resolution removes entries. Iterate a separate snapshot, rechecking ownership inside the resolver.
+        every_in_global_list = { variable = sltm_pending_charters add_to_list = sltm_legacy_due }
+        every_in_list = { list = sltm_legacy_due sltm_merc_cancel_effect = yes }
+    }
+}

@@ -1,0 +1,13 @@
+﻿sltm_residence_main_01 = {
+ slot_type = main
+ internal_slots = 0
+ construction_time = 1
+ allowed_domicile_types = { sltm_residence }
+ cost = { gold = 0 }
+ ai_value = { value = 0 }
+ asset = {
+  icon = "gfx/interface/icons/domicile_building/domicile_building_villa.dds"
+  texture = "gfx/interface/window_domiciles/estate_building_villa_byzantine.dds"
+  intersectionmask_texture = "gfx/interface/window_domiciles/estate_building_villa_byzantine_mask.png"
+ }
+}

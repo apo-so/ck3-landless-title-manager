@@ -1,0 +1,148 @@
+﻿# 无地封臣三态 token 效果（V2.7.1）
+#
+# token 永远存在，只允许：
+#   flag:none = 不参与筛选
+#   flag:pos  = 必须具有条件
+#   flag:neg  = 必须不具有条件
+#
+# 旧版本“未设置 → pos → neg → remove_variable”的模型会在下一次筛选
+# 触发器读取时产生 unset scope 错误。本文件不再删除运行时 token。
+
+sltm_lvm_hf_rebuild_token_list_effect = {
+    clear_variable_list = sltm_lvm_hf_tokens
+}
+
+# 三态循环：none → pos → neg → none。
+sltm_lvm_hf_token_brave_cycle_effect = {
+    if = { limit = { var:sltm_lvm_hf_tok_brave = flag:pos } set_variable = { name = sltm_lvm_hf_tok_brave value = flag:neg } }
+    else_if = { limit = { var:sltm_lvm_hf_tok_brave = flag:neg } set_variable = { name = sltm_lvm_hf_tok_brave value = flag:none } }
+    else = { set_variable = { name = sltm_lvm_hf_tok_brave value = flag:pos } }
+    sltm_lvm_hf_rebuild_token_list_effect = yes
+}
+sltm_lvm_hf_token_cowardly_cycle_effect = {
+    if = { limit = { var:sltm_lvm_hf_tok_cowardly = flag:pos } set_variable = { name = sltm_lvm_hf_tok_cowardly value = flag:neg } }
+    else_if = { limit = { var:sltm_lvm_hf_tok_cowardly = flag:neg } set_variable = { name = sltm_lvm_hf_tok_cowardly value = flag:none } }
+    else = { set_variable = { name = sltm_lvm_hf_tok_cowardly value = flag:pos } }
+    sltm_lvm_hf_rebuild_token_list_effect = yes
+}
+sltm_lvm_hf_token_martial_edu_cycle_effect = {
+    if = { limit = { var:sltm_lvm_hf_tok_martial_edu = flag:pos } set_variable = { name = sltm_lvm_hf_tok_martial_edu value = flag:neg } }
+    else_if = { limit = { var:sltm_lvm_hf_tok_martial_edu = flag:neg } set_variable = { name = sltm_lvm_hf_tok_martial_edu value = flag:none } }
+    else = { set_variable = { name = sltm_lvm_hf_tok_martial_edu value = flag:pos } }
+    sltm_lvm_hf_rebuild_token_list_effect = yes
+}
+sltm_lvm_hf_token_steward_edu_cycle_effect = {
+    if = { limit = { var:sltm_lvm_hf_tok_steward_edu = flag:pos } set_variable = { name = sltm_lvm_hf_tok_steward_edu value = flag:neg } }
+    else_if = { limit = { var:sltm_lvm_hf_tok_steward_edu = flag:neg } set_variable = { name = sltm_lvm_hf_tok_steward_edu value = flag:none } }
+    else = { set_variable = { name = sltm_lvm_hf_tok_steward_edu value = flag:pos } }
+    sltm_lvm_hf_rebuild_token_list_effect = yes
+}
+sltm_lvm_hf_token_good_genetic_cycle_effect = {
+    if = { limit = { var:sltm_lvm_hf_tok_good_genetic = flag:pos } set_variable = { name = sltm_lvm_hf_tok_good_genetic value = flag:neg } }
+    else_if = { limit = { var:sltm_lvm_hf_tok_good_genetic = flag:neg } set_variable = { name = sltm_lvm_hf_tok_good_genetic value = flag:none } }
+    else = { set_variable = { name = sltm_lvm_hf_tok_good_genetic value = flag:pos } }
+    sltm_lvm_hf_rebuild_token_list_effect = yes
+}
+sltm_lvm_hf_token_bad_genetic_cycle_effect = {
+    if = { limit = { var:sltm_lvm_hf_tok_bad_genetic = flag:pos } set_variable = { name = sltm_lvm_hf_tok_bad_genetic value = flag:neg } }
+    else_if = { limit = { var:sltm_lvm_hf_tok_bad_genetic = flag:neg } set_variable = { name = sltm_lvm_hf_tok_bad_genetic value = flag:none } }
+    else = { set_variable = { name = sltm_lvm_hf_tok_bad_genetic value = flag:pos } }
+    sltm_lvm_hf_rebuild_token_list_effect = yes
+}
+
+# 2026-07-18（V3.4-D）常用性格特质 token 三态循环
+sltm_lvm_hf_token_ambitious_cycle_effect = {
+    if = { limit = { var:sltm_lvm_hf_tok_ambitious = flag:pos } set_variable = { name = sltm_lvm_hf_tok_ambitious value = flag:neg } }
+    else_if = { limit = { var:sltm_lvm_hf_tok_ambitious = flag:neg } set_variable = { name = sltm_lvm_hf_tok_ambitious value = flag:none } }
+    else = { set_variable = { name = sltm_lvm_hf_tok_ambitious value = flag:pos } }
+    sltm_lvm_hf_rebuild_token_list_effect = yes
+}
+sltm_lvm_hf_token_content_cycle_effect = {
+    if = { limit = { var:sltm_lvm_hf_tok_content = flag:pos } set_variable = { name = sltm_lvm_hf_tok_content value = flag:neg } }
+    else_if = { limit = { var:sltm_lvm_hf_tok_content = flag:neg } set_variable = { name = sltm_lvm_hf_tok_content value = flag:none } }
+    else = { set_variable = { name = sltm_lvm_hf_tok_content value = flag:pos } }
+    sltm_lvm_hf_rebuild_token_list_effect = yes
+}
+sltm_lvm_hf_token_just_cycle_effect = {
+    if = { limit = { var:sltm_lvm_hf_tok_just = flag:pos } set_variable = { name = sltm_lvm_hf_tok_just value = flag:neg } }
+    else_if = { limit = { var:sltm_lvm_hf_tok_just = flag:neg } set_variable = { name = sltm_lvm_hf_tok_just value = flag:none } }
+    else = { set_variable = { name = sltm_lvm_hf_tok_just value = flag:pos } }
+    sltm_lvm_hf_rebuild_token_list_effect = yes
+}
+sltm_lvm_hf_token_arbitrary_cycle_effect = {
+    if = { limit = { var:sltm_lvm_hf_tok_arbitrary = flag:pos } set_variable = { name = sltm_lvm_hf_tok_arbitrary value = flag:neg } }
+    else_if = { limit = { var:sltm_lvm_hf_tok_arbitrary = flag:neg } set_variable = { name = sltm_lvm_hf_tok_arbitrary value = flag:none } }
+    else = { set_variable = { name = sltm_lvm_hf_tok_arbitrary value = flag:pos } }
+    sltm_lvm_hf_rebuild_token_list_effect = yes
+}
+sltm_lvm_hf_token_calm_cycle_effect = {
+    if = { limit = { var:sltm_lvm_hf_tok_calm = flag:pos } set_variable = { name = sltm_lvm_hf_tok_calm value = flag:neg } }
+    else_if = { limit = { var:sltm_lvm_hf_tok_calm = flag:neg } set_variable = { name = sltm_lvm_hf_tok_calm value = flag:none } }
+    else = { set_variable = { name = sltm_lvm_hf_tok_calm value = flag:pos } }
+    sltm_lvm_hf_rebuild_token_list_effect = yes
+}
+sltm_lvm_hf_token_wrathful_cycle_effect = {
+    if = { limit = { var:sltm_lvm_hf_tok_wrathful = flag:pos } set_variable = { name = sltm_lvm_hf_tok_wrathful value = flag:neg } }
+    else_if = { limit = { var:sltm_lvm_hf_tok_wrathful = flag:neg } set_variable = { name = sltm_lvm_hf_tok_wrathful value = flag:none } }
+    else = { set_variable = { name = sltm_lvm_hf_tok_wrathful value = flag:pos } }
+    sltm_lvm_hf_rebuild_token_list_effect = yes
+}
+sltm_lvm_hf_token_patient_cycle_effect = {
+    if = { limit = { var:sltm_lvm_hf_tok_patient = flag:pos } set_variable = { name = sltm_lvm_hf_tok_patient value = flag:neg } }
+    else_if = { limit = { var:sltm_lvm_hf_tok_patient = flag:neg } set_variable = { name = sltm_lvm_hf_tok_patient value = flag:none } }
+    else = { set_variable = { name = sltm_lvm_hf_tok_patient value = flag:pos } }
+    sltm_lvm_hf_rebuild_token_list_effect = yes
+}
+sltm_lvm_hf_token_impatient_cycle_effect = {
+    if = { limit = { var:sltm_lvm_hf_tok_impatient = flag:pos } set_variable = { name = sltm_lvm_hf_tok_impatient value = flag:neg } }
+    else_if = { limit = { var:sltm_lvm_hf_tok_impatient = flag:neg } set_variable = { name = sltm_lvm_hf_tok_impatient value = flag:none } }
+    else = { set_variable = { name = sltm_lvm_hf_tok_impatient value = flag:pos } }
+    sltm_lvm_hf_rebuild_token_list_effect = yes
+}
+sltm_lvm_hf_token_diligent_cycle_effect = {
+    if = { limit = { var:sltm_lvm_hf_tok_diligent = flag:pos } set_variable = { name = sltm_lvm_hf_tok_diligent value = flag:neg } }
+    else_if = { limit = { var:sltm_lvm_hf_tok_diligent = flag:neg } set_variable = { name = sltm_lvm_hf_tok_diligent value = flag:none } }
+    else = { set_variable = { name = sltm_lvm_hf_tok_diligent value = flag:pos } }
+    sltm_lvm_hf_rebuild_token_list_effect = yes
+}
+sltm_lvm_hf_token_lazy_cycle_effect = {
+    if = { limit = { var:sltm_lvm_hf_tok_lazy = flag:pos } set_variable = { name = sltm_lvm_hf_tok_lazy value = flag:neg } }
+    else_if = { limit = { var:sltm_lvm_hf_tok_lazy = flag:neg } set_variable = { name = sltm_lvm_hf_tok_lazy value = flag:none } }
+    else = { set_variable = { name = sltm_lvm_hf_tok_lazy value = flag:pos } }
+    sltm_lvm_hf_rebuild_token_list_effect = yes
+}
+sltm_lvm_hf_token_honest_cycle_effect = {
+    if = { limit = { var:sltm_lvm_hf_tok_honest = flag:pos } set_variable = { name = sltm_lvm_hf_tok_honest value = flag:neg } }
+    else_if = { limit = { var:sltm_lvm_hf_tok_honest = flag:neg } set_variable = { name = sltm_lvm_hf_tok_honest value = flag:none } }
+    else = { set_variable = { name = sltm_lvm_hf_tok_honest value = flag:pos } }
+    sltm_lvm_hf_rebuild_token_list_effect = yes
+}
+sltm_lvm_hf_token_deceitful_cycle_effect = {
+    if = { limit = { var:sltm_lvm_hf_tok_deceitful = flag:pos } set_variable = { name = sltm_lvm_hf_tok_deceitful value = flag:neg } }
+    else_if = { limit = { var:sltm_lvm_hf_tok_deceitful = flag:neg } set_variable = { name = sltm_lvm_hf_tok_deceitful value = flag:none } }
+    else = { set_variable = { name = sltm_lvm_hf_tok_deceitful value = flag:pos } }
+    sltm_lvm_hf_rebuild_token_list_effect = yes
+}
+
+# 恢复默认：保留变量但恢复为 none，避免下一次触发器读取 unset scope。
+sltm_lvm_hf_clear_all_tokens_effect = {
+    set_variable = { name = sltm_lvm_hf_tok_brave value = flag:none }
+    set_variable = { name = sltm_lvm_hf_tok_cowardly value = flag:none }
+    set_variable = { name = sltm_lvm_hf_tok_martial_edu value = flag:none }
+    set_variable = { name = sltm_lvm_hf_tok_steward_edu value = flag:none }
+    set_variable = { name = sltm_lvm_hf_tok_good_genetic value = flag:none }
+    set_variable = { name = sltm_lvm_hf_tok_bad_genetic value = flag:none }
+    set_variable = { name = sltm_lvm_hf_tok_ambitious value = flag:none }
+    set_variable = { name = sltm_lvm_hf_tok_content value = flag:none }
+    set_variable = { name = sltm_lvm_hf_tok_just value = flag:none }
+    set_variable = { name = sltm_lvm_hf_tok_arbitrary value = flag:none }
+    set_variable = { name = sltm_lvm_hf_tok_calm value = flag:none }
+    set_variable = { name = sltm_lvm_hf_tok_wrathful value = flag:none }
+    set_variable = { name = sltm_lvm_hf_tok_patient value = flag:none }
+    set_variable = { name = sltm_lvm_hf_tok_impatient value = flag:none }
+    set_variable = { name = sltm_lvm_hf_tok_diligent value = flag:none }
+    set_variable = { name = sltm_lvm_hf_tok_lazy value = flag:none }
+    set_variable = { name = sltm_lvm_hf_tok_honest value = flag:none }
+    set_variable = { name = sltm_lvm_hf_tok_deceitful value = flag:none }
+    clear_variable_list = sltm_lvm_hf_tokens
+}

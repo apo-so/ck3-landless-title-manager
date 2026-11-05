@@ -1,0 +1,81 @@
+﻿sltm_ui_name_draft = {
+ type = character
+ text = { trigger = { var:sltm_edit_name ?= 2 } localization_key = sltm_ui_name_default }
+ text = { trigger = { var:sltm_edit_name ?= 1 } localization_key = sltm_ui_name_input }
+ text = { localization_key = sltm_ui_summary_keep }
+}
+
+sltm_ui_prefix_draft = {
+ type = character
+ text = { trigger = { var:sltm_edit_prefix ?= 1 } localization_key = sltm_ui_prefix_default }
+ text = { trigger = { var:sltm_edit_prefix ?= 2 } localization_key = sltm_ui_prefix_clear }
+ text = { trigger = { var:sltm_edit_prefix ?= 3 } localization_key = sltm_ui_prefix_estate }
+ text = { trigger = { var:sltm_edit_prefix ?= 4 } localization_key = sltm_ui_prefix_military }
+ text = { trigger = { var:sltm_edit_prefix ?= 5 } localization_key = sltm_ui_prefix_royal }
+ text = { localization_key = sltm_ui_summary_keep }
+}
+
+sltm_ui_holder = {
+ type = character
+ text = { trigger = { exists = var:sltm_edit_target.holder } localization_key = sltm_ui_holder_value }
+ text = { localization_key = sltm_ui_no_holder }
+}
+
+sltm_ui_mark_holder = {
+ type = character
+ text = { trigger = { exists = var:sltm_designee_title.holder } localization_key = sltm_ui_mark_holder_value }
+ text = { localization_key = sltm_ui_no_holder }
+}
+
+sltm_ui_capital = {
+ type = character
+ text = { trigger = { exists = var:sltm_edit_target.title_capital_county } localization_key = sltm_ui_capital_value }
+ text = { localization_key = sltm_ui_no_capital }
+}
+
+sltm_ui_dejure = {
+ type = character
+ text = { trigger = { exists = var:sltm_edit_target.de_jure_liege } localization_key = sltm_ui_dejure_value }
+ text = { localization_key = sltm_ui_no_dejure }
+}
+
+sltm_ui_domicile = {
+ type = character
+ text = { trigger = { exists = var:sltm_edit_target.title_domicile } localization_key = sltm_ui_domicile_yes }
+ text = { localization_key = sltm_ui_domicile_no }
+}
+
+sltm_ui_legacy_review = {
+ type = character
+ text = { localization_key = sltm_w_208_desc }
+}
+
+sltm_ui_legacy_result = {
+ type = character
+ text = { localization_key = sltm_w_209_desc }
+}
+
+sltm_ui_tier = {
+ type = character
+ text = { trigger = { var:sltm_edit_target = { tier = tier_barony } } localization_key = sltm_ui_tier_barony }
+ text = { trigger = { var:sltm_edit_target = { tier = tier_county } } localization_key = sltm_ui_tier_county }
+ text = { trigger = { var:sltm_edit_target = { tier = tier_duchy } } localization_key = sltm_ui_tier_duchy }
+ text = { trigger = { var:sltm_edit_target = { tier = tier_kingdom } } localization_key = sltm_ui_tier_kingdom }
+ text = { trigger = { var:sltm_edit_target = { tier = tier_empire } } localization_key = sltm_ui_tier_empire }
+ text = { trigger = { var:sltm_edit_target = { tier = tier_hegemony } } localization_key = sltm_ui_tier_hegemony }
+}
+
+sltm_ui_summary = {
+ type = character
+ text = { localization_key = sltm_ui_summary_value }
+}
+
+sltm_ui_summary_count = {
+ type = character
+ text = { localization_key = sltm_ui_summary_count }
+}
+
+sltm_ui_name_current = {
+ type = character
+ text = { localization_key = sltm_ui_name_current }
+}

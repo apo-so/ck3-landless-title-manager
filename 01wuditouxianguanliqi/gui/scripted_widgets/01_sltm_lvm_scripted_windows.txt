@@ -1,0 +1,3 @@
+﻿# 独立管理总览暂不注册；住所回调仍须加载。
+
+gui/30_sltm_domicile_relay.gui = sltm_domicile_relay

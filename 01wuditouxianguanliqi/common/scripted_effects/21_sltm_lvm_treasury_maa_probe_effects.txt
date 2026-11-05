@@ -1,0 +1,39 @@
+﻿# R10-35A2-4B3-CORRECT — 任意封臣 Regiment 费用明细列表。
+# 调用根：所选 Character；要求调用方保存 scope:player。
+# 仅建立 personal/title 两个 GUI 明细列表，不改人物列表/筛选/排序/财政结算。
+# personal MAA -> Gold；title MAA -> Treasury。
+
+sltm_lvm_treasury_rebuild_maa_expense_probe_effect = {
+    scope:player = {
+        clear_variable_list = sltm_lvm_treasury_personal_maa_probe_list
+        clear_variable_list = sltm_lvm_treasury_title_maa_probe_list
+        set_variable = { name = sltm_lvm_treasury_personal_maa_probe_count value = 0 }
+        set_variable = { name = sltm_lvm_treasury_title_maa_probe_count value = 0 }
+    }
+
+    # Vanilla character every_maa_regiment 包含可按 is_personal/is_title 划分的军团。
+    every_maa_regiment = {
+        if = {
+            limit = { is_personal_maa_regiment = yes }
+            save_temporary_scope_as = sltm_lvm_treasury_probe_regiment
+            scope:player = {
+                add_to_variable_list = {
+                    name = sltm_lvm_treasury_personal_maa_probe_list
+                    target = scope:sltm_lvm_treasury_probe_regiment
+                }
+                change_variable = { name = sltm_lvm_treasury_personal_maa_probe_count add = 1 }
+            }
+        }
+        else_if = {
+            limit = { is_title_maa_regiment = yes }
+            save_temporary_scope_as = sltm_lvm_treasury_probe_regiment
+            scope:player = {
+                add_to_variable_list = {
+                    name = sltm_lvm_treasury_title_maa_probe_list
+                    target = scope:sltm_lvm_treasury_probe_regiment
+                }
+                change_variable = { name = sltm_lvm_treasury_title_maa_probe_count add = 1 }
+            }
+        }
+    }
+}

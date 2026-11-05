@@ -1,0 +1,106 @@
+﻿# GUI data owner is player CHARACTER. Init fixes edit_target once; never re-read global selection on mutation.
+sltm_ui_sync_effect = {
+ sltm_edit_read_current_effect = yes
+ set_variable = { name = sltm_ui_dirty_count value = 0 }
+ if = { limit = { has_variable = sltm_edit_name } change_variable = { name = sltm_ui_dirty_count add = 1 } }
+ if = { limit = { has_variable = sltm_edit_prefix } change_variable = { name = sltm_ui_dirty_count add = 1 } }
+ if = { limit = { has_variable = sltm_edit_coa } change_variable = { name = sltm_ui_dirty_count add = 1 } }
+ if = { limit = { has_variable = sltm_edit_color } change_variable = { name = sltm_ui_dirty_count add = 1 } }
+ if = { limit = { has_variable = sltm_edit_capital } change_variable = { name = sltm_ui_dirty_count add = 1 } }
+ if = { limit = { has_variable = sltm_edit_dejure } change_variable = { name = sltm_ui_dirty_count add = 1 } }
+ if = { limit = { has_variable = sltm_edit_definitive } change_variable = { name = sltm_ui_dirty_count add = 1 } }
+ if = { limit = { has_variable = sltm_edit_dynasty } change_variable = { name = sltm_ui_dirty_count add = 1 } }
+ if = { limit = { has_variable = sltm_edit_nomadic } change_variable = { name = sltm_ui_dirty_count add = 1 } }
+ if = { limit = { has_variable = sltm_edit_heir } change_variable = { name = sltm_ui_dirty_count add = 1 } }
+ if = { limit = { has_variable = sltm_edit_claims } change_variable = { name = sltm_ui_dirty_count add = 1 } }
+ if = { limit = { has_variable = sltm_edit_landless } change_variable = { name = sltm_ui_dirty_count add = 1 } }
+ if = { limit = { has_variable = sltm_edit_succession } change_variable = { name = sltm_ui_dirty_count add = 1 } }
+ if = { limit = { has_variable = sltm_edit_invalid_heir } change_variable = { name = sltm_ui_dirty_count add = 1 } }
+ if = { limit = { has_variable = sltm_edit_same_tier } change_variable = { name = sltm_ui_dirty_count add = 1 } }
+ if = { limit = { has_variable = sltm_edit_province } change_variable = { name = sltm_ui_dirty_count add = 1 } }
+ if = { limit = { has_variable = sltm_edit_building } change_variable = { name = sltm_ui_dirty_count add = 1 } }
+ if = { limit = { has_variable = sltm_edit_law_add } change_variable = { name = sltm_ui_dirty_count add = 1 } }
+ if = { limit = { has_variable = sltm_edit_law_remove } change_variable = { name = sltm_ui_dirty_count add = 1 } }
+}
+sltm_ui_open_effect = {
+ sltm_windows_capture_origin_effect = yes
+ sltm_ui_open_fixed_effect = yes
+}
+sltm_ui_open_fixed_effect = {
+ if = { limit = { exists = var:sltm_lvm_selected_title }
+  sltm_edit_initialize_effect = yes
+  set_variable = { name = sltm_ui_origin value = yes }
+  sltm_ui_resume_effect = yes
+  remove_variable = sltm_lvm_open
+ }
+}
+sltm_ui_resume_effect = {
+ if = { limit = { has_variable = sltm_edit_pending exists = var:sltm_edit_target has_variable = sltm_ui_origin }
+  set_variable = { name = sltm_ui_revision value = var:sltm_workflow_revision }
+  set_variable = { name = sltm_ui_open value = yes }
+  sltm_ui_sync_effect = yes
+ }
+}
+sltm_ui_reopen_effect = {
+ if = { limit = { exists = var:sltm_edit_target }
+  set_variable = { name = sltm_lvm_selected_title value = var:sltm_edit_target }
+  sltm_ui_open_fixed_effect = yes
+ }
+}
+sltm_ui_prepare_event_effect = {
+ # Capture current revision once for the new event chain, then hide native window.
+ save_scope_value_as = { name = sltm_workflow_session value = var:sltm_workflow_revision }
+ remove_variable = sltm_ui_open
+}
+sltm_ui_close_effect = {
+ sltm_workflow_new_session_effect = yes
+ sltm_edit_clear_draft_effect = yes
+}
+sltm_ui_restore_effect = {
+ # Same fixed target; restoring fields must not capture a newly selected manager row.
+ sltm_workflow_new_session_effect = yes
+ remove_variable = sltm_edit_name
+ remove_variable = sltm_edit_prefix
+ remove_variable = sltm_edit_coa
+ remove_variable = sltm_edit_color
+ remove_variable = sltm_edit_capital
+ remove_variable = sltm_edit_dejure
+ remove_variable = sltm_edit_definitive
+ remove_variable = sltm_edit_dynasty
+ remove_variable = sltm_edit_nomadic
+ remove_variable = sltm_edit_heir
+ remove_variable = sltm_edit_claims
+ remove_variable = sltm_edit_landless
+ remove_variable = sltm_edit_succession
+ remove_variable = sltm_edit_invalid_heir
+ remove_variable = sltm_edit_same_tier
+ remove_variable = sltm_edit_province
+ remove_variable = sltm_edit_building
+ remove_variable = sltm_edit_law_add
+ remove_variable = sltm_edit_law_remove
+
+ remove_variable = sltm_edit_coa_source
+ remove_variable = sltm_edit_color_source
+ remove_variable = sltm_workflow_name
+ remove_variable = sltm_edit_accepted_name
+ remove_variable = sltm_edit_input_text
+ remove_variable = sltm_edit_review_ready
+ remove_variable = sltm_edit_transfer
+ remove_variable = sltm_tab_transfer_source
+ remove_variable = sltm_tab_transfer_confirm
+ remove_variable = sltm_transfer_title
+ remove_variable = sltm_transfer_from
+ sltm_edit_read_snapshot_effect = yes
+ sltm_ui_resume_effect = yes
+}
+
+sltm_ui_prepare_name_effect = {
+ remove_variable = sltm_edit_input_text
+ if = { limit = { var:sltm_edit_name = 1 has_variable = sltm_edit_accepted_name }
+  set_variable = { name = sltm_edit_input_text value = var:sltm_edit_accepted_name }
+ }
+}
+sltm_ui_back_to_editor_effect = {
+ if = { limit = { has_variable = sltm_ui_origin } sltm_ui_resume_effect = yes }
+ else = { trigger_event = sltm_workflow.0200 }
+}

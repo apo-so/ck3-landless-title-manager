@@ -1,0 +1,207 @@
+﻿# R10-35A0 — 国库管理 canonical 直显验证
+#
+# 证据边界：
+# 1. CK3 1.19.0.6 TGP 原版在总督国库欠债 action 中，从 top_liege 使用
+#    any_vassal_or_below / every_vassal_or_below 枚举总督；
+# 2. TGP 军事总督互动的 populate_recipient_list 同样使用 every_vassal_or_below；
+# 3. 本项目“无地封臣”缓存已采用 every_vassal_or_below + 玩家 variable_list 回写；
+# 4. OE 成熟 GUI 采用 GetPlayer.MakeScope.GetList(...) + Scope.GetCharacter。
+#
+# 因此本版撤销 Fix4 的 every_subject 五层递归与 holder fallback。
+# A0 只验证：玩家封臣树 -> Character canonical list -> GUI datamodel。
+# 筛选/分页代码保留在文件中供后续恢复，但本版刷新路径不让它们参与列表裁切。
+
+sltm_lvm_treasury_ensure_state_effect = {
+    if = { limit = { NOT = { has_variable = sltm_lvm_treasury_filter_scope } } set_variable = { name = sltm_lvm_treasury_filter_scope value = flag:all } }
+    if = { limit = { NOT = { has_variable = sltm_lvm_treasury_filter_type } } set_variable = { name = sltm_lvm_treasury_filter_type value = flag:all } }
+    if = { limit = { NOT = { has_variable = sltm_lvm_treasury_filter_finance } } set_variable = { name = sltm_lvm_treasury_filter_finance value = flag:all } }
+    if = { limit = { NOT = { has_variable = sltm_lvm_treasury_page } } set_variable = { name = sltm_lvm_treasury_page value = 1 } }
+}
+
+# A0 canonical：当前玩家角色的完整封臣树。
+# 与项目既有 holder cache 同型：保存玩家 scope，遍历候选，再显式回写玩家 variable_list。
+sltm_lvm_treasury_rebuild_source_effect = {
+    clear_variable_list = sltm_lvm_treasury_all_vassals
+    clear_variable_list = sltm_lvm_treasury_filtered_vassals
+    clear_variable_list = sltm_lvm_treasury_page_vassals
+    set_variable = { name = sltm_lvm_treasury_total_count value = 0 }
+    set_variable = { name = sltm_lvm_treasury_filtered_count value = 0 }
+    set_variable = { name = sltm_lvm_treasury_page value = 1 }
+    set_variable = { name = sltm_lvm_treasury_page_count value = 1 }
+    save_temporary_scope_as = sltm_lvm_treasury_source_player
+
+    every_vassal_or_below = {
+        save_temporary_scope_as = sltm_lvm_treasury_iter_vassal
+        scope:sltm_lvm_treasury_source_player = {
+            add_to_variable_list = {
+                name = sltm_lvm_treasury_all_vassals
+                target = scope:sltm_lvm_treasury_iter_vassal
+            }
+            change_variable = { name = sltm_lvm_treasury_total_count add = 1 }
+        }
+    }
+
+    # A0 兼容旧 UI 数值：不执行筛选，但让旧“筛后”计数与 canonical 同步。
+    set_variable = { name = sltm_lvm_treasury_filtered_count value = var:sltm_lvm_treasury_total_count }
+}
+
+sltm_lvm_treasury_apply_filters_effect = {
+    clear_variable_list = sltm_lvm_treasury_filtered_vassals
+    set_variable = { name = sltm_lvm_treasury_filtered_count value = 0 }
+    set_variable = { name = sltm_lvm_treasury_page_count value = 0 }
+    set_variable = { name = sltm_lvm_treasury_page_bucket value = 0 }
+    save_temporary_scope_as = sltm_lvm_treasury_filter_player
+
+    every_in_list = {
+        variable = sltm_lvm_treasury_all_vassals
+        save_temporary_scope_as = sltm_lvm_treasury_filter_candidate
+        limit = {
+            # 层级：全部 / 直属 / 下级。
+            OR = {
+                scope:sltm_lvm_treasury_filter_player.var:sltm_lvm_treasury_filter_scope = flag:all
+                AND = {
+                    scope:sltm_lvm_treasury_filter_player.var:sltm_lvm_treasury_filter_scope = flag:direct
+                    liege = scope:sltm_lvm_treasury_filter_player
+                }
+                AND = {
+                    scope:sltm_lvm_treasury_filter_player.var:sltm_lvm_treasury_filter_scope = flag:indirect
+                    NOT = { liege = scope:sltm_lvm_treasury_filter_player }
+                }
+            }
+
+            # 类型：全部 / 行营 / 其他军事封臣 / 其他封臣。
+            OR = {
+                scope:sltm_lvm_treasury_filter_player.var:sltm_lvm_treasury_filter_type = flag:all
+                AND = {
+                    scope:sltm_lvm_treasury_filter_player.var:sltm_lvm_treasury_filter_type = flag:junfu
+                    vassal_contract_has_flag = celestial_province_special_military
+                }
+                AND = {
+                    scope:sltm_lvm_treasury_filter_player.var:sltm_lvm_treasury_filter_type = flag:military
+                    vassal_contract_has_flag = celestial_province_military
+                    NOT = { vassal_contract_has_flag = celestial_province_special_military }
+                }
+                AND = {
+                    scope:sltm_lvm_treasury_filter_player.var:sltm_lvm_treasury_filter_type = flag:other
+                    NOT = { vassal_contract_has_flag = celestial_province_military }
+                    NOT = { vassal_contract_has_flag = celestial_province_special_military }
+                }
+            }
+
+            # 财政：全部 / 有国库 / 国库负债 / 月度赤字 / 无独立国库。
+            OR = {
+                scope:sltm_lvm_treasury_filter_player.var:sltm_lvm_treasury_filter_finance = flag:all
+                AND = {
+                    scope:sltm_lvm_treasury_filter_player.var:sltm_lvm_treasury_filter_finance = flag:has_treasury
+                    has_treasury = yes
+                }
+                AND = {
+                    scope:sltm_lvm_treasury_filter_player.var:sltm_lvm_treasury_filter_finance = flag:debt
+                    has_treasury = yes
+                    treasury < 0
+                }
+                AND = {
+                    scope:sltm_lvm_treasury_filter_player.var:sltm_lvm_treasury_filter_finance = flag:deficit
+                    has_treasury = yes
+                    monthly_character_treasury_income < 0
+                }
+                AND = {
+                    scope:sltm_lvm_treasury_filter_player.var:sltm_lvm_treasury_filter_finance = flag:no_treasury
+                    NOT = { has_treasury = yes }
+                }
+            }
+        }
+
+        scope:sltm_lvm_treasury_filter_player = {
+            add_to_variable_list = {
+                name = sltm_lvm_treasury_filtered_vassals
+                target = scope:sltm_lvm_treasury_filter_candidate
+            }
+            change_variable = { name = sltm_lvm_treasury_filtered_count add = 1 }
+            if = {
+                limit = { var:sltm_lvm_treasury_page_bucket = 0 }
+                change_variable = { name = sltm_lvm_treasury_page_count add = 1 }
+            }
+            change_variable = { name = sltm_lvm_treasury_page_bucket add = 1 }
+            if = {
+                limit = { var:sltm_lvm_treasury_page_bucket >= 8 }
+                set_variable = { name = sltm_lvm_treasury_page_bucket value = 0 }
+            }
+        }
+    }
+
+    if = { limit = { var:sltm_lvm_treasury_page_count < 1 } set_variable = { name = sltm_lvm_treasury_page_count value = 1 } }
+    if = { limit = { var:sltm_lvm_treasury_page < 1 } set_variable = { name = sltm_lvm_treasury_page value = 1 } }
+    if = { limit = { var:sltm_lvm_treasury_page > var:sltm_lvm_treasury_page_count } set_variable = { name = sltm_lvm_treasury_page value = var:sltm_lvm_treasury_page_count } }
+    remove_variable = sltm_lvm_treasury_page_bucket
+}
+
+sltm_lvm_treasury_build_page_effect = {
+    clear_variable_list = sltm_lvm_treasury_page_vassals
+    set_variable = { name = sltm_lvm_treasury_build_current_page value = 1 }
+    set_variable = { name = sltm_lvm_treasury_build_row value = 0 }
+    save_temporary_scope_as = sltm_lvm_treasury_page_player
+
+    every_in_list = {
+        variable = sltm_lvm_treasury_filtered_vassals
+        save_temporary_scope_as = sltm_lvm_treasury_page_candidate
+        if = {
+            limit = {
+                scope:sltm_lvm_treasury_page_player.var:sltm_lvm_treasury_build_current_page = scope:sltm_lvm_treasury_page_player.var:sltm_lvm_treasury_page
+            }
+            scope:sltm_lvm_treasury_page_player = {
+                add_to_variable_list = {
+                    name = sltm_lvm_treasury_page_vassals
+                    target = scope:sltm_lvm_treasury_page_candidate
+                }
+            }
+        }
+        scope:sltm_lvm_treasury_page_player = {
+            change_variable = { name = sltm_lvm_treasury_build_row add = 1 }
+            if = {
+                limit = { var:sltm_lvm_treasury_build_row >= 8 }
+                set_variable = { name = sltm_lvm_treasury_build_row value = 0 }
+                change_variable = { name = sltm_lvm_treasury_build_current_page add = 1 }
+            }
+        }
+    }
+
+    remove_variable = sltm_lvm_treasury_build_current_page
+    remove_variable = sltm_lvm_treasury_build_row
+}
+
+# 选中校验沿用原封臣页的 any_in_list 模式。
+sltm_lvm_treasury_validate_selection_effect = {
+    if = {
+        limit = {
+            has_variable = sltm_lvm_treasury_selected_character
+            NOT = {
+                any_in_list = {
+                    variable = sltm_lvm_treasury_all_vassals
+                    this = var:sltm_lvm_treasury_selected_character
+                }
+            }
+        }
+        remove_variable = sltm_lvm_treasury_selected_character
+    }
+}
+
+sltm_lvm_refresh_treasury_view_effect = {
+    sltm_lvm_treasury_ensure_state_effect = yes
+    sltm_lvm_treasury_rebuild_source_effect = yes
+    sltm_lvm_treasury_validate_selection_effect = yes
+}
+
+sltm_lvm_treasury_filter_changed_effect = {
+    set_variable = { name = sltm_lvm_treasury_page value = 1 }
+    sltm_lvm_treasury_apply_filters_effect = yes
+    sltm_lvm_treasury_build_page_effect = yes
+    sltm_lvm_treasury_validate_selection_effect = yes
+}
+
+sltm_lvm_treasury_reset_filters_effect = {
+    set_variable = { name = sltm_lvm_treasury_filter_scope value = flag:all }
+    set_variable = { name = sltm_lvm_treasury_filter_type value = flag:all }
+    set_variable = { name = sltm_lvm_treasury_filter_finance value = flag:all }
+    sltm_lvm_treasury_filter_changed_effect = yes
+}

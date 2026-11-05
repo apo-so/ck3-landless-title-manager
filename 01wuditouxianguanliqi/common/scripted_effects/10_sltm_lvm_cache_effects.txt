@@ -1,0 +1,294 @@
+﻿# 无地头衔管理器：玩家临时变量列表缓存
+
+sltm_lvm_clear_cache_effect = {
+    if = {
+        limit = { has_variable_list = sltm_lvm_all_holders }
+        every_in_list = {
+            variable = sltm_lvm_all_holders
+            # V2.6：清理人物汇总统计（不含玩家持久筛选变量 tf_*/hf_*/token/预设）
+            remove_variable = sltm_lvm_total_managed_title_count
+            remove_variable = sltm_lvm_pending_title_count
+            remove_variable = sltm_lvm_blocked_title_count
+            remove_variable = sltm_lvm_junfu_title_count
+            remove_variable = sltm_lvm_chaochen_title_count
+            remove_variable = sltm_lvm_noble_title_count
+            remove_variable = sltm_lvm_holy_order_title_count
+            remove_variable = sltm_lvm_mercenary_title_count
+            remove_variable = sltm_lvm_religious_head_title_count
+            remove_variable = sltm_lvm_other_managed_title_count
+            remove_variable = sltm_lvm_primary_managed_title_count
+            remove_variable = sltm_lvm_concurrent_managed_title_count
+        }
+    }
+    clear_variable_list = sltm_lvm_all_titles
+    clear_variable_list = sltm_lvm_all_holders
+    clear_variable_list = sltm_lvm_filtered_titles
+    clear_variable_list = sltm_lvm_filtered_holders
+    clear_variable_list = sltm_lvm_visible_titles
+    clear_variable_list = sltm_lvm_visible_holders
+    # R10-35A Fix1：国库管理页改为全封臣 Character 数据源。
+    clear_variable_list = sltm_lvm_treasury_all_vassals
+    clear_variable_list = sltm_lvm_treasury_filtered_vassals
+    clear_variable_list = sltm_lvm_treasury_page_vassals
+    clear_variable_list = sltm_lvm_selected_holder_titles
+    set_variable = {
+        name = sltm_lvm_title_count
+        value = 0
+    }
+    set_variable = { name = sltm_lvm_created_title_count value = 0 }
+    set_variable = { name = sltm_lvm_uncreated_title_count value = 0 }
+    set_variable = {
+        name = sltm_lvm_holder_count
+        value = 0
+    }
+    set_variable = {
+        name = sltm_lvm_filtered_title_count
+        value = 0
+    }
+    set_variable = {
+        name = sltm_lvm_filtered_holder_count
+        value = 0
+    }
+    set_variable = {
+        name = sltm_lvm_selected_holder_title_count
+        value = 0
+    }
+    set_variable = { name = sltm_lvm_treasury_total_count value = 0 }
+    set_variable = { name = sltm_lvm_treasury_filtered_count value = 0 }
+    set_variable = { name = sltm_lvm_treasury_page value = 1 }
+    set_variable = { name = sltm_lvm_treasury_page_count value = 1 }
+}
+
+# 为 GUI 固化一个唯一的显示分类。这样列表不需要为每个可见文本重复调用
+# scripted GUI，也不会出现六项全部不可见的空“类型”列。
+sltm_lvm_cache_title_display_type_effect = {
+    remove_variable = sltm_lvm_display_type
+    if = {
+        limit = { sltm_lvm_is_junfu_title_trigger = yes }
+        set_variable = { name = sltm_lvm_display_type value = flag:junfu }
+    }
+    else_if = {
+        # 2026-07-17 新增（V3.1）：朝臣类型（天朝制九个 e_minister_* 大臣头衔）。
+        limit = { sltm_lvm_is_chaochen_title_trigger = yes }
+        set_variable = { name = sltm_lvm_display_type value = flag:chaochen }
+    }
+    else_if = {
+        limit = { sltm_lvm_is_noble_family_title_trigger = yes }
+        set_variable = { name = sltm_lvm_display_type value = flag:noble_family }
+    }
+    else_if = {
+        limit = { sltm_lvm_is_holy_order_title_trigger = yes }
+        set_variable = { name = sltm_lvm_display_type value = flag:holy_order }
+    }
+    else_if = {
+        limit = { sltm_lvm_is_mercenary_title_trigger = yes }
+        set_variable = { name = sltm_lvm_display_type value = flag:mercenary }
+    }
+    else_if = {
+        limit = { sltm_lvm_is_religious_head_title_trigger = yes }
+        set_variable = { name = sltm_lvm_display_type value = flag:religious_head }
+    }
+    else = {
+        set_variable = { name = sltm_lvm_display_type value = flag:other }
+    }
+
+    # 2026-07-18（V3.4-B）头衔兵士（title MAA）兵团数缓存，与 display_type 同节奏重算（打开/刷新）。
+    # 用显式保存的 title scope 回写，避免迭代器内 prev 不稳。
+    save_temporary_scope_as = sltm_lvm_maa_count_title
+    set_variable = { name = sltm_lvm_title_maa_count value = 0 }
+    if = {
+        limit = { is_title_created = yes }
+        every_owned_title_maa_regiment = {
+            scope:sltm_lvm_maa_count_title = { change_variable = { name = sltm_lvm_title_maa_count add = 1 } }
+        }
+    }
+}
+
+sltm_lvm_rebuild_cache_effect = {
+    # 此 effect 必须从玩家角色 scope 执行。
+    sltm_lvm_clear_cache_effect = yes
+    save_temporary_scope_as = sltm_lvm_cache_player
+
+    # 玩家本人也可能直接持有无地型头衔，必须单独收集。
+    every_held_title = {
+        limit = {
+            sltm_lvm_is_managed_title_trigger = yes
+        }
+
+        sltm_lvm_cache_title_display_type_effect = yes
+
+        save_temporary_scope_as = sltm_lvm_iter_title
+
+        scope:sltm_lvm_cache_player = {
+            add_to_variable_list = {
+                name = sltm_lvm_all_titles
+                target = scope:sltm_lvm_iter_title
+            }
+            change_variable = {
+                name = sltm_lvm_title_count
+                add = 1
+            }
+            change_variable = { name = sltm_lvm_created_title_count add = 1 }
+        }
+    }
+
+    if = {
+        limit = {
+            sltm_lvm_is_managed_holder_trigger = yes
+        }
+
+        add_to_variable_list = {
+            name = sltm_lvm_all_holders
+            target = scope:sltm_lvm_cache_player
+        }
+        change_variable = {
+            name = sltm_lvm_holder_count
+            add = 1
+        }
+    }
+
+    # every_vassal_or_below 覆盖所有层级附庸；在每个角色下遍历其头衔，
+    # 可以同时收集“有领地但兼任无地头衔”的角色，避免只查无地角色。
+    every_vassal_or_below = {
+        save_temporary_scope_as = sltm_lvm_iter_holder
+
+        if = {
+            limit = {
+                sltm_lvm_is_managed_holder_trigger = yes
+            }
+
+            scope:sltm_lvm_cache_player = {
+                add_to_variable_list = {
+                    name = sltm_lvm_all_holders
+                    target = scope:sltm_lvm_iter_holder
+                }
+                change_variable = {
+                    name = sltm_lvm_holder_count
+                    add = 1
+                }
+            }
+        }
+
+        every_held_title = {
+            limit = {
+                sltm_lvm_is_managed_title_trigger = yes
+            }
+
+            sltm_lvm_cache_title_display_type_effect = yes
+
+            save_temporary_scope_as = sltm_lvm_iter_title
+
+            scope:sltm_lvm_cache_player = {
+                add_to_variable_list = {
+                    name = sltm_lvm_all_titles
+                    target = scope:sltm_lvm_iter_title
+                }
+                change_variable = {
+                    name = sltm_lvm_title_count
+                    add = 1
+                }
+                change_variable = { name = sltm_lvm_created_title_count add = 1 }
+            }
+        }
+    }
+
+    # V3.7.1：补入本体 landed_titles 中预定义、当前尚未创立，且位于
+    # 玩家任一持有头衔法理下游的无地型头衔。不得扫描出玩家法理范围外的对象。
+    # 动态生成的军府/佣兵等头衔在创立前没有可引用的 title scope，无法提前列出。
+    sltm_lvm_cache_static_uncreated_titles_effect = yes
+
+    # 为人物详情保留一个不受当前筛选影响的总管理头衔数。
+    # 过滤计数会在每次筛选时重算；总数只在完整缓存刷新时重算。
+    every_in_list = {
+        variable = sltm_lvm_all_holders
+        save_temporary_scope_as = sltm_lvm_counted_holder
+        set_variable = {
+            name = sltm_lvm_total_managed_title_count
+            value = 0
+        }
+        set_variable = {
+            name = sltm_lvm_pending_title_count
+            value = 0
+        }
+        set_variable = {
+            name = sltm_lvm_blocked_title_count
+            value = 0
+        }
+        # V2.6：各类型数量与 主/兼任 数量，供封臣管理统计筛选。
+        set_variable = { name = sltm_lvm_junfu_title_count value = 0 }
+        set_variable = { name = sltm_lvm_chaochen_title_count value = 0 }
+        set_variable = { name = sltm_lvm_noble_title_count value = 0 }
+        set_variable = { name = sltm_lvm_holy_order_title_count value = 0 }
+        set_variable = { name = sltm_lvm_mercenary_title_count value = 0 }
+        set_variable = { name = sltm_lvm_religious_head_title_count value = 0 }
+        set_variable = { name = sltm_lvm_other_managed_title_count value = 0 }
+        set_variable = { name = sltm_lvm_primary_managed_title_count value = 0 }
+        set_variable = { name = sltm_lvm_concurrent_managed_title_count value = 0 }
+        every_held_title = {
+            limit = { sltm_lvm_is_managed_title_trigger = yes }
+
+            scope:sltm_lvm_counted_holder = {
+                change_variable = {
+                    name = sltm_lvm_total_managed_title_count
+                    add = 1
+                }
+            }
+
+            # 类型触发器必须在当前 title scope 上判断；命中后再切回人物 scope 累加。
+            if = {
+                limit = { sltm_lvm_is_junfu_title_trigger = yes }
+                scope:sltm_lvm_counted_holder = { change_variable = { name = sltm_lvm_junfu_title_count add = 1 } }
+            }
+            else_if = {
+                limit = { sltm_lvm_is_chaochen_title_trigger = yes }
+                scope:sltm_lvm_counted_holder = { change_variable = { name = sltm_lvm_chaochen_title_count add = 1 } }
+            }
+            else_if = {
+                limit = { sltm_lvm_is_noble_family_title_trigger = yes }
+                scope:sltm_lvm_counted_holder = { change_variable = { name = sltm_lvm_noble_title_count add = 1 } }
+            }
+            else_if = {
+                limit = { sltm_lvm_is_holy_order_title_trigger = yes }
+                scope:sltm_lvm_counted_holder = { change_variable = { name = sltm_lvm_holy_order_title_count add = 1 } }
+            }
+            else_if = {
+                limit = { sltm_lvm_is_mercenary_title_trigger = yes }
+                scope:sltm_lvm_counted_holder = { change_variable = { name = sltm_lvm_mercenary_title_count add = 1 } }
+            }
+            else_if = {
+                limit = { sltm_lvm_is_religious_head_title_trigger = yes }
+                scope:sltm_lvm_counted_holder = { change_variable = { name = sltm_lvm_religious_head_title_count add = 1 } }
+            }
+            else = {
+                scope:sltm_lvm_counted_holder = { change_variable = { name = sltm_lvm_other_managed_title_count add = 1 } }
+            }
+
+            if = {
+                limit = { sltm_lvm_is_primary_title_trigger = yes }
+                scope:sltm_lvm_counted_holder = { change_variable = { name = sltm_lvm_primary_managed_title_count add = 1 } }
+            }
+            if = {
+                limit = { sltm_lvm_is_concurrent_title_trigger = yes }
+                scope:sltm_lvm_counted_holder = { change_variable = { name = sltm_lvm_concurrent_managed_title_count add = 1 } }
+            }
+            if = {
+                limit = { has_variable = mytm_reassign_pending }
+                scope:sltm_lvm_counted_holder = {
+                    change_variable = {
+                        name = sltm_lvm_pending_title_count
+                        add = 1
+                    }
+                }
+            }
+            if = {
+                limit = { has_variable = mytm_junfu_handover_blocked }
+                scope:sltm_lvm_counted_holder = {
+                    change_variable = {
+                        name = sltm_lvm_blocked_title_count
+                        add = 1
+                    }
+                }
+            }
+        }
+    }
+}

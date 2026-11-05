@@ -1,0 +1,175 @@
+﻿# 创立无地头衔 · 两步选择窗口的触发器
+# 只读草稿变量，不写任何 live 流程变量。
+
+# 窗口是否打开
+sltm_clw_open_trigger = {
+	has_variable = sltm_clw_open
+ has_variable = sltm_create_route_clw
+ has_variable = sltm_create_pending
+ var:sltm_clw_revision = var:sltm_workflow_revision
+}
+
+# 第 1 步（未设置时按第 1 步处理，避免存档里缺变量把两页都藏掉）
+sltm_clw_step_one_trigger = {
+	OR = {
+		NOT = { has_variable = sltm_clw_step }
+		var:sltm_clw_step = 1
+	}
+}
+
+# 第 2 步
+sltm_clw_step_two_trigger = {
+	has_variable = sltm_clw_step
+	var:sltm_clw_step = 2
+}
+
+# 已选类别
+sltm_clw_has_category_trigger = {
+	has_variable = sltm_clw_kind
+}
+
+# 已选类别是「住所头衔」
+sltm_clw_category_is_domicile_trigger = {
+	has_variable = sltm_clw_kind
+	var:sltm_clw_kind ?= 3
+}
+
+# 已选住所类型
+sltm_clw_has_domicile_type_trigger = {
+	has_variable = sltm_clw_domicile_type
+ OR = { var:sltm_clw_domicile_type = flag:camp var:sltm_clw_domicile_type = flag:estate var:sltm_clw_domicile_type = flag:yurt var:sltm_clw_domicile_type = flag:east_asian_estate var:sltm_clw_domicile_type = flag:ecclesiastical_domicile var:sltm_clw_domicile_type = flag:japanese_manor var:sltm_clw_domicile_type = flag:sltm_residence }
+}
+
+# 第 2 步但尚未选住所
+sltm_clw_domicile_missing_trigger = {
+	sltm_clw_step_two_trigger = yes
+	NOT = { has_variable = sltm_clw_domicile_type }
+}
+
+# 主按钮此刻可以执行：第 1 步需有类别；第 2 步需有住所
+sltm_clw_supported_trigger = {
+ has_variable = sltm_clw_kind
+ OR = { var:sltm_clw_kind ?= 1 var:sltm_clw_kind ?= 2 var:sltm_clw_kind ?= 3 var:sltm_clw_kind ?= 4 var:sltm_clw_kind ?= 5 var:sltm_clw_kind ?= 6 var:sltm_clw_kind ?= 7 var:sltm_clw_kind ?= 9 var:sltm_clw_kind ?= 10 }
+}
+sltm_clw_primary_ready_trigger = {
+ var:sltm_create_holder ?= { is_alive = yes }
+ sltm_clw_supported_trigger = yes
+	OR = {
+		AND = { sltm_clw_step_one_trigger = yes sltm_clw_has_category_trigger = yes }
+		AND = { sltm_clw_step_two_trigger = yes sltm_clw_category_is_domicile_trigger = yes sltm_clw_has_domicile_type_trigger = yes }
+	}
+}
+
+# 第 1 步且选了住所头衔：主按钮变成「下一步」
+sltm_clw_primary_is_next_trigger = {
+	sltm_clw_step_one_trigger = yes
+	sltm_clw_category_is_domicile_trigger = yes
+}
+
+sltm_atlas_read_trigger = {
+   OR = {
+     AND = { has_variable = sltm_atlas_view var:sltm_atlas_view = 2 }
+     AND = { NOT = { has_variable = sltm_atlas_view } sltm_clw_has_category_trigger = yes }
+   }
+ }
+
+sltm_atlas_can_create_trigger = {
+ NOT = { AND = { var:sltm_clw_kind ?= 2 var:sltm_create_tier = 1 } }
+ sltm_clw_open_trigger = yes
+ sltm_clw_primary_ready_trigger = yes
+ NOT = { sltm_clw_primary_is_next_trigger = yes }
+ NOT = { has_variable = sltm_atlas_picker }
+}
+
+sltm_atlas_institution_trigger = {
+    has_variable = sltm_clw_kind
+    OR = { var:sltm_clw_kind ?= 1 var:sltm_clw_kind ?= 6 var:sltm_clw_kind ?= 7 var:sltm_clw_kind ?= 8 var:sltm_clw_kind ?= 9 var:sltm_clw_kind ?= 10 }
+}
+sltm_special_output_trigger = {
+    exists = scope:sltm_created
+    OR = {
+        AND = { var:sltm_create_special_kind = 1 scope:sltm_created ?= { has_clerical_region = yes any_county_in_clerical_region = { always = yes } } }
+        AND = {
+            OR = { var:sltm_create_special_kind = 6 var:sltm_create_special_kind = 7 }
+            scope:sltm_created ?= { is_holy_order = yes }
+            scope:sltm_new_order.title ?= scope:sltm_created
+            scope:sltm_new_order.leader ?= scope:sltm_holder
+            scope:sltm_order_base.lessee_title ?= scope:sltm_created
+            OR = {
+                AND = { var:sltm_create_special_kind = 6 scope:sltm_new_order ?= { is_military_order = yes } }
+                AND = { var:sltm_create_special_kind = 7 scope:sltm_new_order ?= { is_military_order = no } }
+            }
+        }
+        AND = { var:sltm_create_special_kind = 9 scope:sltm_holder.faith.religious_head_title ?= scope:sltm_created scope:sltm_holder.faith.religious_head ?= scope:sltm_holder }
+        AND = { var:sltm_create_special_kind = 10 scope:sltm_holder.clerical_elector_title ?= scope:sltm_created scope:sltm_holder.faith ?= { any_clerical_elector_title = { this = scope:sltm_created } } }
+    }
+}
+
+sltm_verified_created_object_trigger = {
+    trigger_if = {
+        limit = { var:sltm_create_kind = 1 }
+        scope:sltm_created ?= { is_titular = yes is_landless_type_title = yes NOT = { exists = title_domicile } }
+    }
+    trigger_else_if = { limit = { var:sltm_create_kind = 4 } sltm_special_output_trigger = yes }
+    trigger_else = { scope:sltm_created ?= { exists = title_domicile title_domicile = { owner = scope:sltm_holder } } sltm_created_domicile_type_matches_trigger = yes }
+}
+
+sltm_has_title_rule_trigger = { OR = { has_title_law = $LAW$ has_title_law = sltm_title_$LAW$ } }
+
+sltm_hof_confirmation_current_trigger = {
+    var:sltm_hof_confirm_title ?= var:sltm_create_holder.faith.religious_head_title
+    var:sltm_hof_confirm_faith ?= var:sltm_create_holder.faith
+    var:sltm_hof_confirm_nominee ?= var:sltm_create_holder
+    OR = {
+     var:sltm_hof_confirm_person ?= var:sltm_create_holder.faith.religious_head
+     AND = { NOT = { exists = var:sltm_hof_confirm_person } NOT = { exists = var:sltm_create_holder.faith.religious_head } }
+    }
+}
+
+# A free temple or a mayor's secondary holding may be accepted even when can_be_leased_out is false.
+# The engine must still return the new order and the exact lessee title before charging.
+sltm_order_available_seat_trigger = {
+    tier = tier_barony
+    exists = holder
+    is_leased_out = no
+    OR = {
+        can_be_leased_out = yes
+        AND = {
+            title_province ?= { is_county_capital = no }
+            OR = {
+                title_province ?= { has_holding_type = church_holding }
+                AND = {
+                    holder.primary_title.tier = tier_barony
+                    title_province ?= { OR = { has_holding_type = city_holding has_holding_type = castle_holding } }
+                }
+            }
+        }
+    }
+}
+
+sltm_legacy_request_visible_trigger = {
+    var:sltm_create_holder ?= {
+        OR = { has_variable = sltm_merc_sponsor is_target_in_global_variable_list = { name = sltm_pending_charters target = this } }
+        OR = { var:sltm_merc_sponsor ?= root NOT = { var:sltm_merc_sponsor ?= { is_alive = yes } } }
+    }
+}
+
+# Rank IDs in the atlas are county=1 through hegemony=5. This warning covers the two selectable creator backends.
+sltm_atlas_promotes_primary_trigger = {
+    OR = { var:sltm_clw_kind ?= 2 var:sltm_clw_kind ?= 3 var:sltm_clw_kind ?= 4 var:sltm_clw_kind ?= 5 }
+    exists = var:sltm_create_holder.primary_title
+    OR = {
+        AND = { var:sltm_create_tier ?= 1 var:sltm_create_holder.primary_title = { tier < tier_county } }
+        AND = { var:sltm_create_tier ?= 2 var:sltm_create_holder.primary_title = { tier < tier_duchy } }
+        AND = { var:sltm_create_tier ?= 3 var:sltm_create_holder.primary_title = { tier < tier_kingdom } }
+        AND = { var:sltm_create_tier ?= 4 var:sltm_create_holder.primary_title = { tier < tier_empire } }
+        AND = { var:sltm_create_tier ?= 5 var:sltm_create_holder.primary_title = { tier < tier_hegemony } }
+    }
+}
+sltm_atlas_promotion_current_trigger = {
+    var:sltm_rank_revision ?= var:sltm_clw_revision
+    var:sltm_rank_holder ?= var:sltm_create_holder
+    var:sltm_rank_primary ?= var:sltm_create_holder.primary_title
+    var:sltm_rank_tier ?= var:sltm_create_tier
+    var:sltm_rank_kind ?= var:sltm_clw_kind
+}
