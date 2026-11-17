@@ -64,6 +64,7 @@ sltm_clw_select_category_effect = {
  remove_variable = sltm_hof_confirm_nominee
  remove_variable = sltm_hof_confirm_person
  if = { limit = { sltm_atlas_institution_trigger = yes } set_variable = { name = sltm_create_tier value = 2 } }
+ if = { limit = { var:sltm_clw_kind ?= 11 } set_variable = { name = sltm_create_tier value = 3 } }
  if = { limit = { var:sltm_clw_kind ?= 2 var:sltm_create_tier = 1 } set_variable = { name = sltm_create_tier value = 2 } }
  remove_variable = sltm_atlas_receipt_target
 	set_variable = { name = sltm_clw_step value = 1 }

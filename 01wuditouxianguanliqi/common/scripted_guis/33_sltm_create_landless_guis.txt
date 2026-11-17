@@ -181,7 +181,7 @@ sltm_atlas_filter_1 = {
  scope = character
  is_shown = { has_variable = sltm_atlas_filter var:sltm_atlas_filter = 1 }
  is_valid = { sltm_clw_open_trigger = yes }
- effect = { set_variable = { name = sltm_atlas_filter value = 1 } remove_variable = sltm_atlas_spread if = { limit = { sltm_clw_has_category_trigger = yes OR = { var:sltm_clw_kind ?= 2 } } sltm_clw_select_category_effect = { CATEGORY = var:sltm_clw_kind } set_variable = { name = sltm_atlas_index value = 1 } } else = { sltm_clw_select_category_effect = { CATEGORY = 2 } set_variable = { name = sltm_atlas_index value = 1 } } }
+ effect = { set_variable = { name = sltm_atlas_filter value = 1 } remove_variable = sltm_atlas_spread if = { limit = { sltm_clw_has_category_trigger = yes OR = { var:sltm_clw_kind ?= 2 var:sltm_clw_kind ?= 11 } } sltm_clw_select_category_effect = { CATEGORY = var:sltm_clw_kind } set_variable = { name = sltm_atlas_index value = 1 } } else = { sltm_clw_select_category_effect = { CATEGORY = 2 } set_variable = { name = sltm_atlas_index value = 1 } } }
 }
 
 sltm_atlas_filter_2 = {
@@ -488,3 +488,17 @@ sltm_mc_archive = {
     }
 }
 
+
+sltm_clw_pick_k11 = {
+ scope = character
+ is_shown = { sltm_clw_has_category_trigger = yes var:sltm_clw_kind ?= 11 }
+ is_valid = { sltm_clw_open_trigger = yes }
+ effect = { sltm_clw_select_category_effect = { CATEGORY = 11 } }
+}
+
+sltm_atlas_row_ceremonial_1 = {
+ scope = character
+ is_shown = { sltm_clw_has_category_trigger = yes var:sltm_clw_kind ?= 11 has_variable = sltm_atlas_index var:sltm_atlas_index = 1 }
+ is_valid = { sltm_clw_open_trigger = yes }
+ effect = { sltm_clw_select_category_effect = { CATEGORY = 11 } set_variable = { name = sltm_atlas_index value = 1 } }
+}

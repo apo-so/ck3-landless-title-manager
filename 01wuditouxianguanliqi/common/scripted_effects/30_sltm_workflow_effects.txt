@@ -247,6 +247,7 @@ if = { limit = { sltm_workflow_session_current_trigger = yes has_variable = sltm
  set_variable = { name = sltm_create_result_province value = 0 }
  set_variable = { name = sltm_old_titles_preserved value = 1 }
  remove_variable = sltm_travel_identity_failed
+ sltm_order_clear_identity_scopes_effect = yes
  clear_saved_scope = sltm_travel_transaction
  clear_saved_scope = sltm_travel_original_government
  clear_saved_scope = sltm_travel_original_primary
@@ -280,7 +281,7 @@ if = { limit = { sltm_workflow_session_current_trigger = yes has_variable = sltm
  }
  sltm_create_capture_after_effect = yes
  sltm_create_read_output_effect = yes
- if = { limit = { OR = { has_variable = sltm_travel_identity_failed var:sltm_old_titles_preserved = 0 var:sltm_old_domiciles_preserved = 0 var:sltm_create_result_main = 3 var:sltm_create_result_object = 3 var:sltm_create_result_capital = 3 var:sltm_create_result_dejure = 3 var:sltm_create_result_province = 3 } var:sltm_create_result = 2 } set_variable = { name = sltm_create_result value = 1 } }
+ if = { limit = { OR = { has_variable = sltm_travel_identity_failed var:sltm_old_titles_preserved = 0 var:sltm_old_domiciles_preserved = 0 var:sltm_create_result_main = 3 var:sltm_create_result_object = 3 var:sltm_create_result_government = 3 var:sltm_create_result_capital = 3 var:sltm_create_result_dejure = 3 var:sltm_create_result_province = 3 } var:sltm_create_result = 2 } set_variable = { name = sltm_create_result value = 1 } }
  if = { limit = { var:sltm_create_result = 2 }
    if = { limit = { var:sltm_create_tier = 2 } sltm_create_resource_cost_effect = { TIER = tier_duchy } }
    if = { limit = { var:sltm_create_tier = 3 } sltm_create_resource_cost_effect = { TIER = tier_kingdom } }
@@ -288,6 +289,11 @@ if = { limit = { sltm_workflow_session_current_trigger = yes has_variable = sltm
    if = { limit = { var:sltm_create_tier = 5 } sltm_create_resource_cost_effect = { TIER = tier_hegemony } }
   set_variable = { name = sltm_create_cost_settled value = 1 }
  }
+ sltm_order_clear_identity_scopes_effect = yes
+ if = { limit = { var:sltm_create_result_government = 3 OR = { var:sltm_create_special_kind = 6 var:sltm_create_special_kind = 7 } }
+  send_interface_toast = { type = event_toast_effect_bad title = SLTM_ORDER_GOV_PARTIAL left_icon = scope:sltm_holder custom_tooltip = SLTM_ORDER_GOV_PARTIAL_DESC }
+ }
+ if = { limit = { var:sltm_create_result_government = 3 var:sltm_create_special_kind = 11 } send_interface_toast = { type = event_toast_effect_bad title = SLTM_REL_CREATE_PARTIAL left_icon = scope:sltm_holder } }
  remove_variable = sltm_create_busy
  sltm_windows_refresh_after_change_effect = yes
  if = {
@@ -895,7 +901,49 @@ sltm_special_grant_effect = {
     resolve_title_and_vassal_change = scope:sltm_special_change
 }
 
+# Order-only identity state. These scopes belong to the synchronous creation commit.
+sltm_order_clear_identity_scopes_effect = {
+    clear_saved_scope = sltm_order_original_ruler
+    clear_saved_scope = sltm_order_expected_government
+    clear_saved_scope = sltm_order_government_base
+    clear_saved_scope = sltm_order_original_primary
+    clear_saved_scope = sltm_order_owned_identity_guard
+}
+
+# Keep the common special-title grant unchanged for diocese/head/cardinal callers.
+sltm_special_order_grant_effect = {
+    create_title_and_vassal_change = { type = revoked save_scope_as = sltm_special_change add_claim_on_loss = no }
+    scope:sltm_created = {
+        change_title_holder = {
+            holder = scope:sltm_holder
+            change = scope:sltm_special_change
+            government_base = scope:sltm_order_government_base
+            take_baronies = no
+        }
+    }
+    resolve_title_and_vassal_change = scope:sltm_special_change
+}
+
 sltm_special_order_effect = {
+    # Freeze identity before seat transfers or native creation can make the nominee a ruler.
+    sltm_order_clear_identity_scopes_effect = yes
+    scope:sltm_holder = {
+        save_scope_as = sltm_order_government_base
+        if = {
+            limit = { is_ruler = yes }
+            save_scope_as = sltm_order_original_ruler
+            government_type ?= { save_scope_as = sltm_order_expected_government }
+            primary_title ?= { save_scope_as = sltm_order_original_primary }
+            # Reuse the existing narrow callback guard without clearing an outer owner's guard.
+            if = {
+                limit = { NOT = { has_variable = sltm_travel_active } }
+                save_scope_as = sltm_order_owned_identity_guard
+                clear_variable_list = sltm_identity_laws
+                sltm_identity_capture_laws_effect = yes
+                set_variable = sltm_travel_active
+            }
+        }
+    }
     # An explicitly marked free holding can be offered as the seat even when both characters are landless.
     clear_saved_scope = sltm_order_base
     var:sltm_designee_title ?= {
@@ -957,9 +1005,31 @@ sltm_special_order_effect = {
         }
         if = {
             limit = { exists = scope:sltm_created }
-            sltm_special_grant_effect = { REASON = revoked }
+            if = {
+                limit = { NOT = { exists = scope:sltm_order_original_ruler } }
+                # Capture the actual native order government before its first leader loses the title.
+                scope:sltm_first_master = {
+                    save_scope_as = sltm_order_government_base
+                    government_type ?= { save_scope_as = sltm_order_expected_government }
+                }
+            }
+            sltm_special_order_grant_effect = yes
             if = { limit = { scope:sltm_order_base = { is_leased_out = no } }
                 scope:sltm_order_base = { lease_out_to_holy_order = scope:sltm_new_order }
+            }
+            if = {
+                limit = {
+                    NOT = { exists = scope:sltm_order_original_ruler }
+                    scope:sltm_created ?= { holder = scope:sltm_holder }
+                    scope:sltm_new_order.leader ?= scope:sltm_holder
+                    exists = scope:sltm_order_expected_government
+                }
+                scope:sltm_holder = {
+                    if = {
+                        limit = { NOT = { government_type ?= scope:sltm_order_expected_government } }
+                        change_government = scope:sltm_order_expected_government
+                    }
+                }
             }
         }
     }
@@ -972,6 +1042,27 @@ sltm_special_order_effect = {
         resolve_title_and_vassal_change = scope:sltm_seat_restore
     }
 
+    # An existing ruler keeps their government even if creation/transfer returns only a partial result.
+    scope:sltm_order_original_ruler ?= {
+        if = {
+            limit = {
+                scope:sltm_order_original_primary ?= { holder = scope:sltm_holder tier >= scope:sltm_holder.primary_title.tier }
+                NOT = { primary_title ?= scope:sltm_order_original_primary }
+            }
+            set_primary_title_to = scope:sltm_order_original_primary
+        }
+        if = {
+            limit = { exists = scope:sltm_order_expected_government NOT = { government_type ?= scope:sltm_order_expected_government } }
+            change_government = scope:sltm_order_expected_government
+        }
+    }
+    scope:sltm_order_owned_identity_guard ?= {
+        sltm_identity_purge_laws_effect = yes
+        sltm_identity_restore_laws_effect = yes
+        sltm_identity_verify_laws_effect = yes
+        clear_variable_list = sltm_identity_laws
+        remove_variable = sltm_travel_active
+    }
 }
 
 sltm_special_diocese_effect = {
@@ -1062,6 +1153,7 @@ sltm_special_create_effect = {
         7 = { sltm_special_order_effect = { ORDER_SETTING = "holy_order_type = sltm_chartered_monastery" } }
         9 = { sltm_special_head_effect = yes }
         10 = { sltm_special_cardinal_effect = yes }
+        11 = { sltm_special_ceremonial_effect = yes }
     }
     scope:sltm_created ?= { set_variable = { name = sltm_special_kind value = scope:sltm_actor.var:sltm_create_special_kind } }
 }

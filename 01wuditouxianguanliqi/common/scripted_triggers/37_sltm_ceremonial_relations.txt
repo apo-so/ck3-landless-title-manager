@@ -1,0 +1,60 @@
+﻿# Title scope. Preserve domicile carriers; the atlas supplies an actual figurehead title.
+sltm_rel_title_trigger = {
+ OR = { is_figurehead_title = yes exists = var:ceremonial_title }
+ is_noble_family_title = no
+ NOT = { exists = title_domicile }
+}
+# Title scope. The exact native relationship plus the required reciprocal link.
+sltm_rel_native_valid_trigger = {
+ exists = holder
+ exists = var:ceremonial_title.holder
+ var:ceremonial_title.var:administrative_ui_special_title ?= this
+ holder.top_liege.primary_title ?= var:ceremonial_title
+ holder = { liege ?= top_liege tgp_is_ceremonial_liege_trigger = yes }
+}
+# Actor scope with frozen event scopes. A new mark or changed title holder invalidates a review.
+sltm_rel_review_current_trigger = {
+ sltm_edit_session_live_trigger = yes
+ has_variable = sltm_ui_origin
+ scope:sltm_rel_throne ?= var:sltm_edit_target
+ scope:sltm_rel_throne ?= { sltm_rel_title_trigger = yes }
+ OR = {
+  AND = { exists = scope:sltm_rel_old_host scope:sltm_rel_throne.var:ceremonial_title ?= scope:sltm_rel_old_host }
+  AND = { NOT = { exists = scope:sltm_rel_old_host } NOT = { exists = scope:sltm_rel_throne.var:ceremonial_title } }
+ }
+ trigger_if = {
+  limit = { scope:sltm_rel_mode = 1 }
+  scope:sltm_rel_throne.holder ?= scope:sltm_rel_monarch
+  scope:sltm_rel_regent_title ?= var:sltm_designee_title
+  scope:sltm_rel_regent_title.holder ?= scope:sltm_rel_regent
+  scope:sltm_rel_monarch ?= { is_alive = yes }
+  scope:sltm_rel_regent ?= { is_alive = yes }
+  OR = {
+   AND = { exists = scope:sltm_rel_old_throne scope:sltm_rel_regent_title.var:administrative_ui_special_title ?= scope:sltm_rel_old_throne }
+   AND = { NOT = { exists = scope:sltm_rel_old_throne } NOT = { exists = scope:sltm_rel_regent_title.var:administrative_ui_special_title } }
+  }
+ }
+}
+sltm_rel_pair_ready_trigger = {
+ custom_tooltip = {
+  text = SLTM_REL_NEED_DIFFERENT
+  scope:sltm_rel_monarch ?= { this != scope:sltm_rel_regent }
+  scope:sltm_rel_throne ?= { this != scope:sltm_rel_regent_title }
+ }
+ custom_tooltip = {
+  text = SLTM_REL_NEED_TOP_PRIMARY
+  scope:sltm_rel_regent ?= { this = top_liege primary_title ?= scope:sltm_rel_regent_title }
+ }
+}
+sltm_rel_identity_ok_trigger = {
+ scope:sltm_rel_monarch ?= { government_type ?= scope:sltm_rel_monarch_government }
+ scope:sltm_rel_regent ?= { government_type ?= scope:sltm_rel_regent_government }
+ NOT = { has_variable = sltm_rel_identity_failed }
+ NOT = { any_in_list = {
+  variable = sltm_rel_before_titles
+  OR = {
+   NOT = { holder ?= scope:sltm_rel_monarch }
+   AND = { exists = var:sltm_rel_before_domicile NOT = { title_domicile ?= var:sltm_rel_before_domicile } }
+  }
+ } }
+}

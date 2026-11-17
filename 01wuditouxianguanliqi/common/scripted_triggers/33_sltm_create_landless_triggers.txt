@@ -49,7 +49,7 @@ sltm_clw_domicile_missing_trigger = {
 # 主按钮此刻可以执行：第 1 步需有类别；第 2 步需有住所
 sltm_clw_supported_trigger = {
  has_variable = sltm_clw_kind
- OR = { var:sltm_clw_kind ?= 1 var:sltm_clw_kind ?= 2 var:sltm_clw_kind ?= 3 var:sltm_clw_kind ?= 4 var:sltm_clw_kind ?= 5 var:sltm_clw_kind ?= 6 var:sltm_clw_kind ?= 7 var:sltm_clw_kind ?= 9 var:sltm_clw_kind ?= 10 }
+ OR = { var:sltm_clw_kind ?= 1 var:sltm_clw_kind ?= 2 var:sltm_clw_kind ?= 3 var:sltm_clw_kind ?= 4 var:sltm_clw_kind ?= 5 var:sltm_clw_kind ?= 6 var:sltm_clw_kind ?= 7 var:sltm_clw_kind ?= 9 var:sltm_clw_kind ?= 10 var:sltm_clw_kind ?= 11 }
 }
 sltm_clw_primary_ready_trigger = {
  var:sltm_create_holder ?= { is_alive = yes }
@@ -74,6 +74,7 @@ sltm_atlas_read_trigger = {
  }
 
 sltm_atlas_can_create_trigger = {
+ NOT = { AND = { var:sltm_clw_kind ?= 3 var:sltm_clw_domicile_type ?= flag:sltm_residence } }
  NOT = { AND = { var:sltm_clw_kind ?= 2 var:sltm_create_tier = 1 } }
  sltm_clw_open_trigger = yes
  sltm_clw_primary_ready_trigger = yes
@@ -83,8 +84,14 @@ sltm_atlas_can_create_trigger = {
 
 sltm_atlas_institution_trigger = {
     has_variable = sltm_clw_kind
-    OR = { var:sltm_clw_kind ?= 1 var:sltm_clw_kind ?= 6 var:sltm_clw_kind ?= 7 var:sltm_clw_kind ?= 8 var:sltm_clw_kind ?= 9 var:sltm_clw_kind ?= 10 }
+    OR = { var:sltm_clw_kind ?= 1 var:sltm_clw_kind ?= 6 var:sltm_clw_kind ?= 7 var:sltm_clw_kind ?= 8 var:sltm_clw_kind ?= 9 var:sltm_clw_kind ?= 10 var:sltm_clw_kind ?= 11 }
 }
+# Actor scope; evaluated before the commit clears its saved identity scopes.
+sltm_order_government_matches_trigger = {
+    exists = scope:sltm_order_expected_government
+    scope:sltm_holder ?= { government_type ?= scope:sltm_order_expected_government }
+}
+
 sltm_special_output_trigger = {
     exists = scope:sltm_created
     OR = {
@@ -94,6 +101,7 @@ sltm_special_output_trigger = {
             scope:sltm_created ?= { is_holy_order = yes }
             scope:sltm_new_order.title ?= scope:sltm_created
             scope:sltm_new_order.leader ?= scope:sltm_holder
+            sltm_order_government_matches_trigger = yes
             scope:sltm_order_base.lessee_title ?= scope:sltm_created
             OR = {
                 AND = { var:sltm_create_special_kind = 6 scope:sltm_new_order ?= { is_military_order = yes } }
@@ -101,6 +109,7 @@ sltm_special_output_trigger = {
             }
         }
         AND = { var:sltm_create_special_kind = 9 scope:sltm_holder.faith.religious_head_title ?= scope:sltm_created scope:sltm_holder.faith.religious_head ?= scope:sltm_holder }
+        AND = { var:sltm_create_special_kind = 11 scope:sltm_created ?= { is_landless_type_title = yes is_figurehead_title = yes NOT = { exists = title_domicile } } sltm_ceremonial_government_matches_trigger = yes }
         AND = { var:sltm_create_special_kind = 10 scope:sltm_holder.clerical_elector_title ?= scope:sltm_created scope:sltm_holder.faith ?= { any_clerical_elector_title = { this = scope:sltm_created } } }
     }
 }
@@ -156,7 +165,7 @@ sltm_legacy_request_visible_trigger = {
 
 # Rank IDs in the atlas are county=1 through hegemony=5. This warning covers the two selectable creator backends.
 sltm_atlas_promotes_primary_trigger = {
-    OR = { var:sltm_clw_kind ?= 2 var:sltm_clw_kind ?= 3 var:sltm_clw_kind ?= 4 var:sltm_clw_kind ?= 5 }
+    OR = { var:sltm_clw_kind ?= 2 var:sltm_clw_kind ?= 3 var:sltm_clw_kind ?= 4 var:sltm_clw_kind ?= 5 var:sltm_clw_kind ?= 11 }
     exists = var:sltm_create_holder.primary_title
     OR = {
         AND = { var:sltm_create_tier ?= 1 var:sltm_create_holder.primary_title = { tier < tier_county } }
@@ -172,4 +181,12 @@ sltm_atlas_promotion_current_trigger = {
     var:sltm_rank_primary ?= var:sltm_create_holder.primary_title
     var:sltm_rank_tier ?= var:sltm_create_tier
     var:sltm_rank_kind ?= var:sltm_clw_kind
+}
+
+# I33: compare the exact government captured by the ceremonial constructor.
+sltm_ceremonial_government_matches_trigger = {
+ OR = {
+  NOT = { exists = scope:sltm_ceremonial_original_ruler }
+  AND = { exists = scope:sltm_ceremonial_original_government scope:sltm_holder ?= { government_type ?= scope:sltm_ceremonial_original_government } }
+ }
 }

@@ -1,0 +1,54 @@
+﻿# I33: a ceremonial title is not by itself a realm's ceremonial monarch relationship.
+# Deliberately do not overwrite administrative_ui_special_title or ceremonial_title.
+# Actor scope; requires scope:sltm_holder. Returns scope:sltm_created and exact government snapshot.
+sltm_special_ceremonial_effect = {
+    clear_saved_scope = sltm_ceremonial_original_ruler
+    clear_saved_scope = sltm_ceremonial_original_government
+    clear_saved_scope = sltm_ceremonial_original_primary
+    clear_saved_scope = sltm_ceremonial_owned_identity_guard
+    scope:sltm_holder = {
+        if = { limit = { is_ruler = yes } save_scope_as = sltm_ceremonial_original_ruler }
+        government_type ?= { save_scope_as = sltm_ceremonial_original_government }
+        primary_title ?= { save_scope_as = sltm_ceremonial_original_primary }
+        if = {
+            limit = { is_ruler = yes NOT = { has_variable = sltm_travel_active } }
+            save_scope_as = sltm_ceremonial_owned_identity_guard
+            clear_variable_list = sltm_identity_laws
+            sltm_identity_capture_laws_effect = yes
+            set_variable = sltm_travel_active
+        }
+    }
+    create_dynamic_title = { tier = kingdom name = SLTM_SP_CEREMONIAL }
+    scope:new_title ?= {
+        save_scope_as = sltm_created
+        sltm_anchor_new_title_effect = yes
+        set_landless_title = yes
+        set_figurehead_title = yes
+        set_always_follows_primary_heir = yes
+        set_definitive_form = yes
+        if = { limit = { exists = scope:sltm_holder.house } set_coa = scope:sltm_holder.house }
+    }
+    if = { limit = { exists = scope:sltm_created }
+        sltm_special_grant_effect = { REASON = created }
+    }
+    scope:sltm_holder = {
+        if = {
+            limit = {
+                scope:sltm_ceremonial_original_primary ?= { holder = scope:sltm_holder tier >= scope:sltm_holder.primary_title.tier }
+                NOT = { primary_title ?= scope:sltm_ceremonial_original_primary }
+            }
+            set_primary_title_to = scope:sltm_ceremonial_original_primary
+        }
+        if = {
+            limit = { exists = scope:sltm_ceremonial_original_government NOT = { government_type ?= scope:sltm_ceremonial_original_government } }
+            change_government = scope:sltm_ceremonial_original_government
+        }
+    }
+    scope:sltm_ceremonial_owned_identity_guard ?= {
+        sltm_identity_purge_laws_effect = yes
+        sltm_identity_restore_laws_effect = yes
+        sltm_identity_verify_laws_effect = yes
+        clear_variable_list = sltm_identity_laws
+        remove_variable = sltm_travel_active
+    }
+}

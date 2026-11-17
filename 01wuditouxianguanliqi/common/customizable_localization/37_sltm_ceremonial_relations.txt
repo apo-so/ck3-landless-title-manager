@@ -1,0 +1,12 @@
+﻿sltm_rel_status = {
+ type = character
+ text = { trigger = { var:sltm_edit_target ?= { sltm_rel_native_valid_trigger = yes } } localization_key = SLTM_REL_STATUS_ACTIVE }
+ text = { trigger = { var:sltm_edit_target ?= { exists = var:ceremonial_title } } localization_key = SLTM_REL_STATUS_INVALID }
+ text = { localization_key = SLTM_REL_STATUS_NONE }
+}
+
+sltm_rel_regent_info = {
+ type = character
+ text = { trigger = { exists = var:sltm_designee_title.holder } localization_key = SLTM_REL_REGENT_INFO }
+ text = { localization_key = SLTM_REL_REGENT_MISSING }
+}

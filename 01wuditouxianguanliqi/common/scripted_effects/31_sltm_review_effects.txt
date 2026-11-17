@@ -227,6 +227,17 @@ sltm_create_read_output_effect = {
  set_variable = { name = sltm_create_result_holder value = 3 }
  set_variable = { name = sltm_create_result_tier value = 3 }
  set_variable = { name = sltm_create_result_object value = 3 }
+ set_variable = { name = sltm_create_result_government value = 0 }
+ if = {
+  limit = { exists = scope:sltm_created var:sltm_create_kind = 4 OR = { var:sltm_create_special_kind = 6 var:sltm_create_special_kind = 7 } }
+  set_variable = { name = sltm_create_result_government value = 3 }
+  if = { limit = { sltm_order_government_matches_trigger = yes } set_variable = { name = sltm_create_result_government value = 1 } }
+ }
+ if = {
+  limit = { exists = scope:sltm_created var:sltm_create_kind = 4 var:sltm_create_special_kind = 11 }
+  set_variable = { name = sltm_create_result_government value = 3 }
+  if = { limit = { sltm_ceremonial_government_matches_trigger = yes } set_variable = { name = sltm_create_result_government value = 1 } }
+ }
  if = { limit = { exists = scope:sltm_created }
   if = { limit = { scope:sltm_created = { holder = scope:sltm_holder } } set_variable = { name = sltm_create_result_holder value = 1 } }
   if = { limit = { OR = {

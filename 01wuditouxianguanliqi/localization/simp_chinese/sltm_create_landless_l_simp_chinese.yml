@@ -48,7 +48,7 @@
  SLTM_CLW_CAT_NEXT_2:0 "选择位阶 → 设置名称、规则 → 核对创建。"
  SLTM_CLW_KIND_VAR_2:0 ""
  SLTM_CLW_CAT_3:0 "住所头衔"
- SLTM_CLW_CAT_DESC_3:0 "创建绑定住所的头衔。原生住所和本 Mod 的独立宅邸都可选择。"
+ SLTM_CLW_CAT_DESC_3:0 "创建绑定住所的头衔。可选择六种游戏原生住所。"
  SLTM_CLW_CAT_ROUTE_3:0 "选择住所类型"
  SLTM_CLW_CAT_STATE_3:0 "可继续"
  SLTM_CLW_CAT_NOTE_3:0 "创建额外住所不代表更换默认住所或取得整套原生身份。"
@@ -175,11 +175,11 @@
  SLTM_AT_MARKS:0 "书签"
  SLTM_AT_GROUP_0:0 "全卷"
 
- SLTM_AT_COUNT_0:0 "收录 10 种头衔"
+ SLTM_AT_COUNT_0:0 "收录 11 种头衔"
 
  SLTM_AT_GROUP_1:0 "通用"
 
- SLTM_AT_COUNT_1:0 "书签内 1 种头衔"
+ SLTM_AT_COUNT_1:0 "书签内 2 种头衔"
 
  SLTM_AT_GROUP_2:0 "居所"
 
@@ -239,9 +239,9 @@
 
  SLTM_AT_PAGE_0_1:0 "第 1 / 1 跨页"
 
- SLTM_AT_OV_1_0_0_R:0 "图鉴总目   01"
+ SLTM_AT_OV_1_0_0_R:0 "图鉴总目   01 · 11"
 
- SLTM_AT_OV_1_0_0_H:0 "持有与居所"
+ SLTM_AT_OV_1_0_0_H:0 "头衔与王座"
 
  SLTM_AT_END:0 "本目至此"
 
@@ -261,11 +261,11 @@
 
  SLTM_AT_INDEX_0:0 "分类索引"
 
- SLTM_AT_TALLY_0:0 "10 种头衔 · 12 处收录"
+ SLTM_AT_TALLY_0:0 "11 种头衔 · 13 处收录"
 
  SLTM_AT_INDEX_1:0 "通用条目"
 
- SLTM_AT_TALLY_1:0 "本书签收录 1 种头衔"
+ SLTM_AT_TALLY_1:0 "本书签收录 2 种头衔"
 
  SLTM_AT_INDEX_2:0 "居所条目"
 
@@ -288,10 +288,10 @@
 
  SLTM_AT_CREATE:0 "以此类型创立"
  SLTM_AT_ART_HOME:0 "图鉴词条   № 02"
- SLTM_AT_BODY_HOME:0 "这项头衔携带一座住所。可以采用原生住所，也可以创立本 Mod 的独立宅邸。"
+ SLTM_AT_BODY_HOME:0 "这项头衔携带一座住所。可以选择六种游戏原生住所。"
  SLTM_AT_BIND:0 "绑定住所"
  SLTM_AT_PICK:0 "选择一种住所…"
- SLTM_AT_HOMES:0 "六种原生住所及一座独立宅邸。"
+ SLTM_AT_HOMES:0 "六种游戏原生住所。"
  SLTM_AT_FOOT_HOME:0 "词条 02"
  SLTM_AT_NEEDHOME:0 "选择住所后可继续"
  SLTM_AT_ART_NOMAD:0 "图鉴词条   № 03"
@@ -380,8 +380,8 @@
  SLTM_CLW_CAT_NOTE_10:0 "给拟持有人创立枢机席位，核对人物的席位与信仰选举人名册。玩家新建的席位允许世俗持有人兼领。"
  SLTM_AT_PAGE_0_2:0 "第 1 / 2 跨页"
  SLTM_AT_NEXT:0 "下一跨页"
- SLTM_AT_OV_0_1_0_R:0 "图鉴总目   09 — 10"
- SLTM_AT_OV_0_1_0_H:0 "教会与军团"
+ SLTM_AT_OV_0_1_0_R:0 "图鉴总目   09 — 11"
+ SLTM_AT_OV_0_1_0_H:0 "教会与王座"
  SLTM_AT_SUM_HEAD:0 "设立信仰领袖；可能改变政体与法律。"
  SLTM_AT_NO_HEAD:0 "09"
  SLTM_AT_SUM_CARDINAL:0 "建立登记在本信仰选举团中的席位。"
@@ -495,3 +495,16 @@
  SLTM_RANK_APPROVE_EDIT:0 "确认升为主衔并编辑"
 
  SLTM_RANK_EMPTY:0 ""
+
+# I33 礼节王座与原版头衔自定义
+ SLTM_CLW_CAT_11:0 "礼节王座"
+ SLTM_CLW_CAT_DESC_11:0 "高御座、龙孙王座所属的特殊无地头衔。"
+ SLTM_CLW_CAT_ROUTE_11:0 "创立王国级礼节王座；不附带住所。"
+ SLTM_CLW_CAT_STATE_11:0 "王座随主要继承人传承，受领者保留原政体。"
+ SLTM_CLW_CAT_NOTE_11:0 "在头衔属性页建立或解除与实权头衔的礼节关系。"
+ SLTM_AT_SUM_CEREMONIAL:0 "高御座、龙孙王座一类的无地王座"
+ SLTM_AT_NO_CEREMONIAL:0 "11"
+ SLTM_AT_ART_CEREMONIAL:0 "图鉴词条   № 11"
+ SLTM_AT_BODY_CEREMONIAL:0 "王国级特殊无地王座，随主要继承人传承，不附带住所。\n\n建立关系：\n1. 在实权者的主头衔页点击“标记头衔”。\n2. 打开礼节王座的“头衔属性”。\n3. 在左侧选择“礼节关系”，核对双方后点击“建立礼节关系”。\n\n建立后，王座持有者成为实权者的直属封臣。\n旧关联会被替换，原头衔和政体保留。\n\n解除：在左侧“礼节关系”页点击“解除礼节关系”。只取消礼节身份，不会自动独立。"
+ SLTM_SP_CEREMONIAL:0 "礼节王座"
+ SLTM_NATIVE_CUSTOMIZE_TT:0 "打开原版自定义窗口，更改名称、形容词、纹章及地图颜色。此入口沿用原版权限；其他头衔仍可使用左侧属性分页。"

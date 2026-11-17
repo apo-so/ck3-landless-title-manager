@@ -25,6 +25,7 @@ sltm_clw_cat_name = {
 	text = { trigger = { sltm_clw_has_category_trigger = yes var:sltm_clw_kind = 8 } localization_key = SLTM_CLW_CAT_8 }
 	text = { trigger = { sltm_clw_has_category_trigger = yes var:sltm_clw_kind = 9 } localization_key = SLTM_CLW_CAT_9 }
 	text = { trigger = { sltm_clw_has_category_trigger = yes var:sltm_clw_kind = 10 } localization_key = SLTM_CLW_CAT_10 }
+	text = { trigger = { sltm_clw_has_category_trigger = yes var:sltm_clw_kind = 11 } localization_key = SLTM_CLW_CAT_11 }
 	text = { localization_key = SLTM_CLW_SIDE_NONE }
 }
 
@@ -40,6 +41,7 @@ sltm_clw_cat_desc = {
 	text = { trigger = { sltm_clw_has_category_trigger = yes var:sltm_clw_kind = 8 } localization_key = SLTM_CLW_CAT_DESC_8 }
 	text = { trigger = { sltm_clw_has_category_trigger = yes var:sltm_clw_kind = 9 } localization_key = SLTM_CLW_CAT_DESC_9 }
 	text = { trigger = { sltm_clw_has_category_trigger = yes var:sltm_clw_kind = 10 } localization_key = SLTM_CLW_CAT_DESC_10 }
+	text = { trigger = { sltm_clw_has_category_trigger = yes var:sltm_clw_kind = 11 } localization_key = SLTM_CLW_CAT_DESC_11 }
 	text = { localization_key = SLTM_CLW_SIDE_NONE }
 }
 
@@ -55,6 +57,7 @@ sltm_clw_cat_route = {
 	text = { trigger = { sltm_clw_has_category_trigger = yes var:sltm_clw_kind = 8 } localization_key = SLTM_CLW_CAT_ROUTE_8 }
 	text = { trigger = { sltm_clw_has_category_trigger = yes var:sltm_clw_kind = 9 } localization_key = SLTM_CLW_CAT_ROUTE_9 }
 	text = { trigger = { sltm_clw_has_category_trigger = yes var:sltm_clw_kind = 10 } localization_key = SLTM_CLW_CAT_ROUTE_10 }
+	text = { trigger = { sltm_clw_has_category_trigger = yes var:sltm_clw_kind = 11 } localization_key = SLTM_CLW_CAT_ROUTE_11 }
 	text = { localization_key = SLTM_CLW_SIDE_NONE }
 }
 
@@ -70,6 +73,7 @@ sltm_clw_cat_state = {
 	text = { trigger = { sltm_clw_has_category_trigger = yes var:sltm_clw_kind = 8 } localization_key = SLTM_CLW_CAT_STATE_8 }
 	text = { trigger = { sltm_clw_has_category_trigger = yes var:sltm_clw_kind = 9 } localization_key = SLTM_CLW_CAT_STATE_9 }
 	text = { trigger = { sltm_clw_has_category_trigger = yes var:sltm_clw_kind = 10 } localization_key = SLTM_CLW_CAT_STATE_10 }
+	text = { trigger = { sltm_clw_has_category_trigger = yes var:sltm_clw_kind = 11 } localization_key = SLTM_CLW_CAT_STATE_11 }
 	text = { localization_key = SLTM_CLW_SIDE_NONE }
 }
 
@@ -85,6 +89,7 @@ sltm_clw_cat_note = {
 	text = { trigger = { sltm_clw_has_category_trigger = yes var:sltm_clw_kind = 8 } localization_key = SLTM_CLW_CAT_NOTE_8 }
 	text = { trigger = { sltm_clw_has_category_trigger = yes var:sltm_clw_kind = 9 } localization_key = SLTM_CLW_CAT_NOTE_9 }
 	text = { trigger = { sltm_clw_has_category_trigger = yes var:sltm_clw_kind = 10 } localization_key = SLTM_CLW_CAT_NOTE_10 }
+	text = { trigger = { sltm_clw_has_category_trigger = yes var:sltm_clw_kind = 11 } localization_key = SLTM_CLW_CAT_NOTE_11 }
 	text = { localization_key = SLTM_CLW_SIDE_NONE }
 }
 

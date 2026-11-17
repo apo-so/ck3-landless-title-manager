@@ -1,4 +1,6 @@
 ﻿l_simp_chinese:
+ SLTM_ORDER_GOV_PARTIAL:0 "修会创立仅部分完成"
+ SLTM_ORDER_GOV_PARTIAL_DESC:0 "修会头衔已有输出，但政体核验未通过。已有统治者应保留原政体，首次任团长者应采用对应修会政体。本次按部分完成处理，未按完整成功结算。"
  sltm_workflow_default_name:0 "新无地头衔"
  sltm_workflow_entered_name:0 "[ROOT.Char.GetLocalizedText('sltm_workflow_name')]"
  sltm_workflow_created_name:0 "[ROOT.Char.Custom('sltm_workflow_name_text')]"

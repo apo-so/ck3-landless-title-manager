@@ -28,6 +28,17 @@ textbox = { name = "title_name" position = { 88 58 } size = { 208 26 } text = "[
 textbox = { name = "title_tier" position = { 88 88 } size = { 208 19 } text = "[GetPlayer.Custom('sltm_ui_tier')]" fontsize = 12 font = StandardGameFont fontcolor = { 0.400000 0.388235 0.368627 1 } align = left|nobaseline autoresize = no alwaystransparent = yes
 
 }
+button_standard = {
+ name = "sltm_native_title_customization"
+ position = { 88 112 }
+ size = { 208 26 }
+ datacontext = "[GetPlayer.MakeScope.Var('sltm_edit_target').Title]"
+ text = "CUSTOMIZE_TITLE"
+ enabled = "[GetPlayer.MakeScope.Var('sltm_edit_target').Title.CanPlayerCustomizeTitle]"
+ tooltip = "SLTM_NATIVE_CUSTOMIZE_TT"
+ onclick = "[OpenTitleCustomizationWindow(GetPlayer.MakeScope.Var('sltm_edit_target').Title)]"
+}
+
 portrait_button = { name = "holder_portrait" position = { 310 58 } size = { 44 52 } visible = "[GetPlayer.MakeScope.Var('sltm_edit_target').Title.HasHolder]" datacontext = "[GetPlayer.MakeScope.Var('sltm_edit_target').Title.GetHolder]" using = portrait_base portrait_texture = "[Character.GetPortrait('environment_head', 'camera_head', 'idle', PdxGetWidgetScreenSize(PdxGuiWidget.Self))]" }
 textbox = { name = "holder_name" position = { 362 61 } size = { 130 20 } elide = right text = "[GetPlayer.Custom('sltm_ui_holder')]" fontsize = 15 font = StandardGameFont fontcolor = { 0.870588 0.839216 0.749020 1 } align = left|nobaseline autoresize = no alwaystransparent = yes
 
@@ -129,6 +140,13 @@ button = { name = "cat_transfer" position = { 22 448 } size = { 150 38 } texture
 
 } }
 icon = { name = "cat_transfer_selected" position = { 22 451 } size = { 3 32 } texture = "gfx/interface/colors/white.dds" tintcolor = { 0.76 0.60 0.32 1 } visible = "[GetScriptedGui('sltm_tab_transfer_visible').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" alwaystransparent = yes }
+button = { name = "cat_relation" position = { 22 491 } size = { 150 38 } texture = "gfx/sltm_property_window/rail_transfer.dds" gfxtype = buttongfx
+ onclick = "[GetScriptedGui('sltm_rel_tab_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+ enabled = "[GetScriptedGui('sltm_rel_tab_gui').IsValid(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+ textbox = { name = "rail_name_relation" position = { 10 9 } size = { 130 20 } text = "SLTM_REL_TAB" fontsize = 14 font = StandardGameFont fontcolor = { 0.611765 0.600000 0.560784 1 } align = left|nobaseline autoresize = no alwaystransparent = yes }
+}
+icon = { name = "cat_relation_selected" position = { 22 494 } size = { 3 32 } texture = "gfx/interface/colors/white.dds" tintcolor = { 0.76 0.60 0.32 1 } visible = "[GetScriptedGui('sltm_rel_panel_visible').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" alwaystransparent = yes }
+
 
 textbox = { name = "form_title" visible = "[GetScriptedGui('sltm_tab_basic_visible').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End)]" position = { 182 190 } size = { 690 22 } text = "SLTM_PROP_FORM_TITLE" fontsize = 16 font = StandardGameFont fontcolor = { 0.870588 0.839216 0.749020 1 } align = left|nobaseline autoresize = no alwaystransparent = yes
 
@@ -343,6 +361,26 @@ using = sltm_life_panel
 using = sltm_dom_panel
 using = sltm_transfer_panel
 using = sltm_draft_summary_panel
+widget = { name = "sltm_property_relation_page" position = { 182 190 } size = { 690 520 } visible = "[GetScriptedGui('sltm_rel_panel_visible').IsShown(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+textbox = { name = "sltm_relation_page_title" position = { 0 0 } size = { 672 26 } text = "SLTM_REL_TAB" fontsize = 18 font = StandardGameFont align = left|top multiline = yes autoresize = no alwaystransparent = yes }
+textbox = { name = "sltm_relation_page_hint" position = { 0 36 } size = { 672 50 } text = "SLTM_REL_PAGE_HINT" fontsize = 14 font = StandardGameFont align = left|top multiline = yes autoresize = no alwaystransparent = yes }
+textbox = { name = "sltm_relation_status_inline" position = { 0 102 } size = { 672 32 } text = "[GetPlayer.Custom('sltm_rel_status')]" fontsize = 16 font = StandardGameFont align = left|top multiline = yes autoresize = no alwaystransparent = yes }
+textbox = { name = "sltm_relation_monarch_label" position = { 0 160 } size = { 320 24 } text = "SLTM_REL_MONARCH_LABEL" fontsize = 14 font = StandardGameFont align = left|top multiline = yes autoresize = no alwaystransparent = yes }
+textbox = { name = "sltm_relation_monarch_inline" position = { 0 192 } size = { 320 72 } text = "[GetPlayer.Custom('sltm_ui_holder')]" fontsize = 17 font = StandardGameFont align = left|top multiline = yes autoresize = no alwaystransparent = yes }
+textbox = { name = "sltm_relation_regent_label" position = { 350 160 } size = { 322 24 } text = "SLTM_REL_REGENT_LABEL" fontsize = 14 font = StandardGameFont align = left|top multiline = yes autoresize = no alwaystransparent = yes }
+textbox = { name = "sltm_relation_regent_inline" position = { 350 192 } size = { 322 72 } text = "[GetPlayer.Custom('sltm_rel_regent_info')]" fontsize = 17 font = StandardGameFont align = left|top multiline = yes autoresize = no alwaystransparent = yes }
+textbox = { name = "sltm_relation_action_explanation" position = { 0 292 } size = { 672 100 } text = "SLTM_REL_INLINE_EXPLANATION" fontsize = 15 font = StandardGameFont align = left|top multiline = yes autoresize = no alwaystransparent = yes }
+button = { name = "sltm_relation_establish_inline" position = { 0 406 } size = { 260 38 } texture = "gfx/sltm_property_window/btn_detail_button.dds" gfxtype = buttongfx
+ enabled = "[GetScriptedGui('sltm_rel_establish_gui').IsValid(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+ onclick = "[GetScriptedGui('sltm_rel_establish_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+ textbox = { name = "sltm_relation_establish_inline_text" size = { 260 38 } text = "SLTM_REL_ESTABLISH" fontsize = 15 font = StandardGameFont align = center|nobaseline alwaystransparent = yes }
+}
+button = { name = "sltm_relation_remove_inline" position = { 280 406 } size = { 260 38 } texture = "gfx/sltm_property_window/btn_detail_button.dds" gfxtype = buttongfx
+ enabled = "[GetScriptedGui('sltm_rel_remove_gui').IsValid(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+ onclick = "[GetScriptedGui('sltm_rel_remove_gui').Execute(GuiScope.SetRoot(GetPlayer.MakeScope).End)]"
+ textbox = { name = "sltm_relation_remove_inline_text" size = { 260 38 } text = "SLTM_REL_REMOVE" fontsize = 15 font = StandardGameFont align = center|nobaseline alwaystransparent = yes }
+}
+}
 } # property_with_target
 using = sltm_choose_target_panel
 }

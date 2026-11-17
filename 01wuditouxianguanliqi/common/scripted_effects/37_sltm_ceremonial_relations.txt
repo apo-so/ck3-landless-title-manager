@@ -1,0 +1,244 @@
+﻿# I34: event scopes are frozen before a player confirms. No title or domicile destruction here.
+# Landed-title scope; only clears a counterpart that still points back to this exact title.
+sltm_rel_detach_title_effect = {
+ save_scope_as = sltm_rel_detaching_title
+ var:ceremonial_title ?= {
+  if = { limit = { var:administrative_ui_special_title ?= scope:sltm_rel_detaching_title }
+   remove_variable = administrative_ui_special_title
+  }
+ }
+ remove_variable = ceremonial_title
+ remove_variable = sltm_managed_ceremonial_relation
+ holder ?= { sltm_rel_refresh_role_flag_effect = yes }
+}
+sltm_rel_refresh_role_flag_effect = {
+ if = { limit = { any_held_title = { exists = var:ceremonial_title } }
+  add_character_flag = ceremonial_liege_flag
+ }
+ else = { remove_character_flag = ceremonial_liege_flag }
+}
+sltm_rel_open_review_effect = {
+ sltm_ui_prepare_event_effect = yes
+ save_scope_value_as = { name = sltm_rel_mode value = $MODE$ }
+ var:sltm_edit_target = { save_scope_as = sltm_rel_throne }
+ clear_saved_scope = sltm_rel_old_host
+ clear_saved_scope = sltm_rel_old_throne
+ clear_saved_scope = sltm_rel_old_target_managed
+ clear_saved_scope = sltm_rel_old_other_managed
+ clear_saved_scope = sltm_rel_old_host_reciprocal
+ clear_saved_scope = sltm_rel_old_other_reciprocal
+ clear_saved_scope = sltm_rel_monarch
+ clear_saved_scope = sltm_rel_regent
+ clear_saved_scope = sltm_rel_regent_title
+ scope:sltm_rel_throne = {
+  holder ?= { save_scope_as = sltm_rel_monarch }
+  var:ceremonial_title ?= {
+   save_scope_as = sltm_rel_old_host
+   if = { limit = { var:administrative_ui_special_title ?= scope:sltm_rel_throne } save_scope_as = sltm_rel_old_host_reciprocal }
+  }
+  if = { limit = { has_variable = sltm_managed_ceremonial_relation } save_scope_as = sltm_rel_old_target_managed }
+ }
+ if = { limit = { scope:sltm_rel_mode = 1 }
+  var:sltm_designee_title = {
+   save_scope_as = sltm_rel_regent_title
+   holder ?= { save_scope_as = sltm_rel_regent }
+   var:administrative_ui_special_title ?= {
+    save_scope_as = sltm_rel_old_throne
+    if = { limit = { var:ceremonial_title ?= scope:sltm_rel_regent_title } save_scope_as = sltm_rel_old_other_reciprocal }
+    if = { limit = { has_variable = sltm_managed_ceremonial_relation } save_scope_as = sltm_rel_old_other_managed }
+   }
+  }
+ }
+ trigger_event = sltm_ceremonial_relation.0001
+}
+sltm_rel_capture_inline_effect = {
+ save_scope_value_as = { name = sltm_workflow_session value = var:sltm_workflow_revision }
+ save_scope_value_as = { name = sltm_rel_mode value = $MODE$ }
+ var:sltm_edit_target = { save_scope_as = sltm_rel_throne }
+ clear_saved_scope = sltm_rel_old_host
+ clear_saved_scope = sltm_rel_old_throne
+ clear_saved_scope = sltm_rel_old_target_managed
+ clear_saved_scope = sltm_rel_old_other_managed
+ clear_saved_scope = sltm_rel_old_host_reciprocal
+ clear_saved_scope = sltm_rel_old_other_reciprocal
+ clear_saved_scope = sltm_rel_monarch
+ clear_saved_scope = sltm_rel_regent
+ clear_saved_scope = sltm_rel_regent_title
+ scope:sltm_rel_throne = {
+  holder ?= { save_scope_as = sltm_rel_monarch }
+  var:ceremonial_title ?= {
+   save_scope_as = sltm_rel_old_host
+   if = { limit = { var:administrative_ui_special_title ?= scope:sltm_rel_throne } save_scope_as = sltm_rel_old_host_reciprocal }
+  }
+  if = { limit = { has_variable = sltm_managed_ceremonial_relation } save_scope_as = sltm_rel_old_target_managed }
+ }
+ if = { limit = { scope:sltm_rel_mode = 1 }
+  var:sltm_designee_title = {
+   save_scope_as = sltm_rel_regent_title
+   holder ?= { save_scope_as = sltm_rel_regent }
+   var:administrative_ui_special_title ?= {
+    save_scope_as = sltm_rel_old_throne
+    if = { limit = { var:ceremonial_title ?= scope:sltm_rel_regent_title } save_scope_as = sltm_rel_old_other_reciprocal }
+    if = { limit = { has_variable = sltm_managed_ceremonial_relation } save_scope_as = sltm_rel_old_other_managed }
+   }
+  }
+ }
+}
+sltm_rel_capture_identity_effect = {
+ save_scope_as = sltm_actor
+ remove_variable = sltm_rel_identity_failed
+ clear_saved_scope = sltm_rel_old_liege
+ scope:sltm_rel_monarch.liege ?= { save_scope_as = sltm_rel_old_liege }
+ clear_variable_list = sltm_rel_before_titles
+ scope:sltm_rel_monarch = {
+  every_held_title = {
+   save_scope_as = sltm_rel_before_title
+   remove_variable = sltm_rel_before_domicile
+   if = { limit = { exists = title_domicile } set_variable = { name = sltm_rel_before_domicile value = title_domicile } }
+   scope:sltm_actor = { add_to_variable_list = { name = sltm_rel_before_titles target = scope:sltm_rel_before_title } }
+  }
+ }
+ clear_saved_scope = sltm_rel_monarch_government
+ clear_saved_scope = sltm_rel_monarch_guard
+ clear_saved_scope = sltm_rel_monarch_primary
+ scope:sltm_rel_monarch = {
+  government_type ?= { save_scope_as = sltm_rel_monarch_government }
+  primary_title ?= { save_scope_as = sltm_rel_monarch_primary }
+  if = { limit = { NOT = { has_variable = sltm_travel_active } }
+   save_scope_as = sltm_rel_monarch_guard
+   clear_variable_list = sltm_identity_laws
+   sltm_identity_capture_laws_effect = yes
+   set_variable = sltm_travel_active
+  }
+ }
+ clear_saved_scope = sltm_rel_regent_government
+ clear_saved_scope = sltm_rel_regent_guard
+ clear_saved_scope = sltm_rel_regent_primary
+ scope:sltm_rel_regent = {
+  government_type ?= { save_scope_as = sltm_rel_regent_government }
+  primary_title ?= { save_scope_as = sltm_rel_regent_primary }
+  if = { limit = { NOT = { has_variable = sltm_travel_active } }
+   save_scope_as = sltm_rel_regent_guard
+   clear_variable_list = sltm_identity_laws
+   sltm_identity_capture_laws_effect = yes
+   set_variable = sltm_travel_active
+  }
+ }
+}
+sltm_rel_restore_identity_effect = {
+ remove_variable = sltm_rel_identity_failed
+ clear_saved_scope = sltm_rel_previous_identity_failure
+ if = { limit = { has_variable = sltm_travel_identity_failed } save_scope_as = sltm_rel_previous_identity_failure }
+ remove_variable = sltm_travel_identity_failed
+ scope:sltm_rel_monarch = {
+  if = { limit = { scope:sltm_rel_monarch_primary ?= { holder = scope:sltm_rel_monarch tier >= scope:sltm_rel_monarch.primary_title.tier } NOT = { primary_title ?= scope:sltm_rel_monarch_primary } }
+   set_primary_title_to = scope:sltm_rel_monarch_primary
+  }
+  if = { limit = { exists = scope:sltm_rel_monarch_government NOT = { government_type ?= scope:sltm_rel_monarch_government } }
+   change_government = scope:sltm_rel_monarch_government
+  }
+ }
+ scope:sltm_rel_monarch_guard ?= {
+  sltm_identity_purge_laws_effect = yes
+  sltm_identity_restore_laws_effect = yes
+  sltm_identity_verify_laws_effect = yes
+ }
+ scope:sltm_rel_regent = {
+  if = { limit = { scope:sltm_rel_regent_primary ?= { holder = scope:sltm_rel_regent tier >= scope:sltm_rel_regent.primary_title.tier } NOT = { primary_title ?= scope:sltm_rel_regent_primary } }
+   set_primary_title_to = scope:sltm_rel_regent_primary
+  }
+  if = { limit = { exists = scope:sltm_rel_regent_government NOT = { government_type ?= scope:sltm_rel_regent_government } }
+   change_government = scope:sltm_rel_regent_government
+  }
+ }
+ scope:sltm_rel_regent_guard ?= {
+  sltm_identity_purge_laws_effect = yes
+  sltm_identity_restore_laws_effect = yes
+  sltm_identity_verify_laws_effect = yes
+ }
+ if = { limit = { has_variable = sltm_travel_identity_failed } set_variable = sltm_rel_identity_failed }
+ remove_variable = sltm_travel_identity_failed
+ if = { limit = { exists = scope:sltm_rel_previous_identity_failure } set_variable = sltm_travel_identity_failed }
+}
+sltm_rel_finish_identity_effect = {
+ scope:sltm_rel_monarch_guard ?= { clear_variable_list = sltm_identity_laws remove_variable = sltm_travel_active }
+ scope:sltm_rel_regent_guard ?= { clear_variable_list = sltm_identity_laws remove_variable = sltm_travel_active }
+ every_in_list = { variable = sltm_rel_before_titles remove_variable = sltm_rel_before_domicile }
+ clear_variable_list = sltm_rel_before_titles
+ scope:sltm_rel_monarch ?= { sltm_rel_refresh_role_flag_effect = yes }
+ scope:sltm_rel_old_throne.holder ?= { sltm_rel_refresh_role_flag_effect = yes }
+}
+# Only the two reviewed pairs are restored; no title-holder change is performed.
+sltm_rel_restore_old_pairs_effect = {
+ scope:sltm_rel_throne = { sltm_rel_detach_title_effect = yes }
+ if = { limit = { exists = scope:sltm_rel_old_host }
+  scope:sltm_rel_throne = { set_variable = { name = ceremonial_title value = scope:sltm_rel_old_host } }
+  scope:sltm_rel_old_host_reciprocal ?= { set_variable = { name = administrative_ui_special_title value = scope:sltm_rel_throne } }
+  scope:sltm_rel_old_target_managed ?= { set_variable = sltm_managed_ceremonial_relation }
+ }
+ if = { limit = { exists = scope:sltm_rel_old_throne }
+  scope:sltm_rel_old_other_reciprocal ?= { set_variable = { name = ceremonial_title value = scope:sltm_rel_regent_title } }
+  scope:sltm_rel_regent_title = { set_variable = { name = administrative_ui_special_title value = scope:sltm_rel_old_throne } }
+  scope:sltm_rel_old_other_managed ?= { set_variable = sltm_managed_ceremonial_relation }
+ }
+}
+sltm_rel_establish_effect = {
+ if = { limit = { sltm_rel_review_current_trigger = yes sltm_rel_pair_ready_trigger = yes }
+  set_variable = { name = sltm_rel_result value = 0 }
+  sltm_rel_capture_identity_effect = yes
+  scope:sltm_rel_throne = { sltm_rel_detach_title_effect = yes }
+  scope:sltm_rel_old_throne ?= {
+   if = { limit = { var:ceremonial_title ?= scope:sltm_rel_regent_title } sltm_rel_detach_title_effect = yes }
+  }
+  if = { limit = { NOT = { scope:sltm_rel_monarch.liege ?= scope:sltm_rel_regent } }
+   create_title_and_vassal_change = { type = swear_fealty save_scope_as = sltm_rel_change add_claim_on_loss = no }
+   scope:sltm_rel_monarch = { change_liege = { liege = scope:sltm_rel_regent change = scope:sltm_rel_change } }
+   resolve_title_and_vassal_change = scope:sltm_rel_change
+  }
+  if = { limit = { scope:sltm_rel_monarch.liege ?= scope:sltm_rel_regent scope:sltm_rel_regent.primary_title ?= scope:sltm_rel_regent_title }
+   scope:sltm_rel_throne = {
+    set_variable = { name = ceremonial_title value = scope:sltm_rel_regent_title }
+    set_variable = sltm_managed_ceremonial_relation
+   }
+   scope:sltm_rel_regent_title = { set_variable = { name = administrative_ui_special_title value = scope:sltm_rel_throne } }
+  }
+  sltm_rel_restore_identity_effect = yes
+  if = { limit = { scope:sltm_rel_throne = { sltm_rel_native_valid_trigger = yes } sltm_rel_identity_ok_trigger = yes }
+   set_variable = { name = sltm_rel_result value = 1 }
+   send_interface_toast = { type = event_generic_good title = SLTM_REL_SUCCESS left_icon = scope:sltm_rel_monarch right_icon = scope:sltm_rel_regent }
+  }
+  else = {
+   scope:sltm_rel_throne = { sltm_rel_detach_title_effect = yes }
+   create_title_and_vassal_change = { type = swear_fealty save_scope_as = sltm_rel_rollback add_claim_on_loss = no }
+   if = { limit = { exists = scope:sltm_rel_old_liege }
+    scope:sltm_rel_monarch = { change_liege = { liege = scope:sltm_rel_old_liege change = scope:sltm_rel_rollback } }
+   }
+   else = { scope:sltm_rel_monarch = { becomes_independent = { change = scope:sltm_rel_rollback } } }
+   resolve_title_and_vassal_change = scope:sltm_rel_rollback
+   sltm_rel_restore_identity_effect = yes
+   sltm_rel_restore_old_pairs_effect = yes
+   set_variable = { name = sltm_rel_result value = 3 }
+   if = { limit = {
+    sltm_rel_identity_ok_trigger = yes
+    OR = {
+     AND = { exists = scope:sltm_rel_old_liege scope:sltm_rel_monarch.liege ?= scope:sltm_rel_old_liege }
+     AND = { NOT = { exists = scope:sltm_rel_old_liege } NOT = { exists = scope:sltm_rel_monarch.liege } }
+    }
+   } set_variable = { name = sltm_rel_result value = 2 } }
+   if = { limit = { var:sltm_rel_result = 2 }
+    send_interface_toast = { type = event_generic_bad title = SLTM_REL_FAILED_RESTORED left_icon = scope:sltm_rel_monarch }
+   }
+   else = { send_interface_toast = { type = event_generic_bad title = SLTM_REL_FAILED_PARTIAL left_icon = scope:sltm_rel_monarch } }
+  }
+  sltm_rel_finish_identity_effect = yes
+ }
+}
+sltm_rel_remove_effect = {
+ if = { limit = { sltm_rel_review_current_trigger = yes exists = scope:sltm_rel_throne.var:ceremonial_title }
+  scope:sltm_rel_throne = { sltm_rel_detach_title_effect = yes }
+  if = { limit = { NOT = { exists = scope:sltm_rel_throne.var:ceremonial_title } }
+   set_variable = { name = sltm_rel_result value = 4 }
+   send_interface_toast = { type = event_generic_good title = SLTM_REL_REMOVED right_icon = scope:sltm_rel_throne }
+  }
+ }
+}

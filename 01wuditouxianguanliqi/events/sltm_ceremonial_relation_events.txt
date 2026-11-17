@@ -1,0 +1,25 @@
+﻿namespace = sltm_ceremonial_relation
+sltm_ceremonial_relation.0001 = {
+ type = character_event
+ title = SLTM_REL_REVIEW_TITLE
+ desc = {
+  first_valid = {
+   triggered_desc = { trigger = { scope:sltm_rel_mode = 1 } desc = SLTM_REL_REVIEW_ESTABLISH }
+   desc = SLTM_REL_REVIEW_REMOVE
+  }
+ }
+ theme = realm
+ window = sltm_realm_character_event
+ option = {
+  name = SLTM_REL_CONFIRM_ESTABLISH
+  trigger = { sltm_rel_review_current_trigger = yes scope:sltm_rel_mode = 1 sltm_rel_pair_ready_trigger = yes }
+  show_as_unavailable = { sltm_rel_review_current_trigger = yes scope:sltm_rel_mode = 1 }
+  hidden_effect = { sltm_rel_establish_effect = yes sltm_ui_resume_effect = yes }
+ }
+ option = {
+  name = SLTM_REL_CONFIRM_REMOVE
+  trigger = { sltm_rel_review_current_trigger = yes scope:sltm_rel_mode = 2 }
+  hidden_effect = { sltm_rel_remove_effect = yes sltm_ui_resume_effect = yes }
+ }
+ option = { name = SLTM_REL_CANCEL hidden_effect = { if = { limit = { sltm_edit_session_live_trigger = yes } sltm_ui_resume_effect = yes } } }
+}

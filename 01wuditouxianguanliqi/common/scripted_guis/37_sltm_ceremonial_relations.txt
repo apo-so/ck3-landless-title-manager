@@ -1,0 +1,21 @@
+﻿sltm_rel_subject_gui = { scope = character is_shown = { sltm_ui_live_trigger = yes var:sltm_edit_target ?= { sltm_rel_title_trigger = yes } } }
+sltm_rel_panel_visible = { scope = character is_shown = { sltm_ui_live_trigger = yes has_variable = sltm_ui_tab var:sltm_ui_tab = 8 } }
+
+sltm_rel_tab_gui = { scope = character is_valid = { sltm_ui_live_trigger = yes } effect = { sltm_select_editor_tab_effect = { TAB = 8 } } }
+
+sltm_rel_establish_gui = {
+ scope = character
+ is_valid = {
+  sltm_ui_live_trigger = yes
+  var:sltm_edit_target ?= { sltm_rel_title_trigger = yes exists = holder }
+  exists = var:sltm_designee_title.holder
+  var:sltm_edit_target.holder ?= { this != root.var:sltm_designee_title.holder }
+  var:sltm_designee_title.holder ?= { this = top_liege primary_title ?= root.var:sltm_designee_title }
+ }
+ effect = { sltm_rel_capture_inline_effect = { MODE = 1 } sltm_rel_establish_effect = yes }
+}
+sltm_rel_remove_gui = {
+ scope = character
+ is_valid = { sltm_ui_live_trigger = yes var:sltm_edit_target ?= { sltm_rel_title_trigger = yes exists = var:ceremonial_title } }
+ effect = { sltm_rel_capture_inline_effect = { MODE = 2 } sltm_rel_remove_effect = yes }
+}
