@@ -86,6 +86,9 @@ sltm_landless_title_manager_interactions = {
     # 功能4：授予已标记头衔给 recipient
     send_option = {
         flag = sltm_landless_title_option_flag_grant_marked_title
+        is_valid = {
+            custom_tooltip = { text = sltm_marked_title_required_tt scope:actor = { exists = var:sltm_designee_title } }
+        }
         starts_enabled = { always = no }
     }
 
@@ -252,7 +255,7 @@ sltm_landless_title_manager_interactions = {
                 save_scope_as = sltm_designee_title
             }
 
-            custom_tooltip = sltm_cmm_landless_designee_title_tooltip_has
+            custom_tooltip = sltm_marked_title_current_tt
         }
 
         # 提取当前 target 对应的目标伯爵领
@@ -392,45 +395,7 @@ sltm_landless_title_manager_interactions = {
 
             # 功能4：授予已标记头衔给 recipient
             scope:sltm_landless_title_option_flag_grant_marked_title = {
-                if = {
-                    limit = {
-                        scope:actor = {
-                            exists = var:sltm_designee_title
-                            var:sltm_designee_title = { sltm_plain_title_action_trigger = yes }
-                        }
-                        exists = scope:recipient
-                        scope:actor != scope:recipient
-                    }
-
-                    scope:actor.var:sltm_designee_title = {
-                        add_to_temporary_list = target_titles
-                    }
-
-                    scope:recipient = {
-                        create_title_and_vassal_change = {
-                            type = granted
-                            save_scope_as = sltm_grant_marked_title_change
-                            add_claim_on_loss = no
-                        }
-
-                        every_in_list = {
-                            list = target_titles
-
-                            change_title_holder = {
-                                holder = scope:recipient
-                                change = scope:sltm_grant_marked_title_change
-                                take_baronies = no
-                            }
-                        }
-
-                        resolve_title_and_vassal_change = scope:sltm_grant_marked_title_change
-                    }
-
-                    custom_tooltip = sltm_landless_title_option_flag_grant_marked_title
-                }
-                else = {
-                    custom_tooltip = sltm_cmm_landless_has_designee_title_tt
-                }
+                scope:actor = { sltm_grant_marked_to_recipient_effect = yes }
             }
 
             # 功能5：迁移已标记头衔法理首府到当前指定头衔首府

@@ -48,7 +48,7 @@
  SLTM_CLW_CAT_NEXT_2:0 "选择位阶 → 设置名称、规则 → 核对创建。"
  SLTM_CLW_KIND_VAR_2:0 ""
  SLTM_CLW_CAT_3:0 "住所头衔"
- SLTM_CLW_CAT_DESC_3:0 "创建绑定住所的头衔。可选择六种游戏原生住所。"
+ SLTM_CLW_CAT_DESC_3:0 "创建绑定住所的头衔。可选择七种游戏原生住所。"
  SLTM_CLW_CAT_ROUTE_3:0 "选择住所类型"
  SLTM_CLW_CAT_STATE_3:0 "可继续"
  SLTM_CLW_CAT_NOTE_3:0 "创建额外住所不代表更换默认住所或取得整套原生身份。"
@@ -73,11 +73,11 @@
 
  SLTM_CLW_CAT_DESC_6:0 "建立军事修会，兼任团长。"
 
- SLTM_CLW_CAT_ROUTE_6:0 "优先使用适格的标记男爵领。保留原政体，核对团长、总部租约和军事修会组织。"
+ SLTM_CLW_CAT_ROUTE_6:0 "标记一个男爵领，即在原址尝试设立驻地。"
 
  SLTM_CLW_CAT_STATE_6:0 "可创立"
 
- SLTM_CLW_CAT_NOTE_6:0 "授予真实团长头衔并租用驻地。若驻地由市长或男爵单独持有，会先归当地伯爵，再交修会租用。"
+ SLTM_CLW_CAT_NOTE_6:0 "授予团长头衔并租用驻地。支持神殿，会替换教会租赁；市长或男爵的驻地先归当地伯爵。"
  SLTM_CLW_CAT_NEXT_6:0 "若只需要无地头衔，可改选“普通无地头衔”。"
  SLTM_CLW_KIND_VAR_6:0 ""
 
@@ -85,11 +85,11 @@
 
  SLTM_CLW_CAT_DESC_7:0 "建立有驻地的非军事修会。"
 
- SLTM_CLW_CAT_ROUTE_7:0 "优先使用适格的标记男爵领。核对修会类型、领袖与租约。"
+ SLTM_CLW_CAT_ROUTE_7:0 "标记一个男爵领，即在原址尝试设立驻地。"
 
  SLTM_CLW_CAT_STATE_7:0 "可创立"
 
- SLTM_CLW_CAT_NOTE_7:0 "为拟持有人建立隐修会并租用驻地。若驻地由市长或男爵单独持有，会先归当地伯爵，再交修会租用。"
+ SLTM_CLW_CAT_NOTE_7:0 "建立隐修会并租用驻地。支持神殿，会替换教会租赁；市长或男爵的驻地先归当地伯爵。"
  SLTM_CLW_CAT_NEXT_7:0 "若只需要无地头衔，可改选“普通无地头衔”。"
  SLTM_CLW_KIND_VAR_7:0 ""
 
@@ -175,11 +175,11 @@
  SLTM_AT_MARKS:0 "书签"
  SLTM_AT_GROUP_0:0 "全卷"
 
- SLTM_AT_COUNT_0:0 "收录 11 种头衔"
+ SLTM_AT_COUNT_0:0 "收录 12 种头衔"
 
  SLTM_AT_GROUP_1:0 "通用"
 
- SLTM_AT_COUNT_1:0 "书签内 2 种头衔"
+ SLTM_AT_COUNT_1:0 "书签内 3 种头衔"
 
  SLTM_AT_GROUP_2:0 "居所"
 
@@ -239,9 +239,9 @@
 
  SLTM_AT_PAGE_0_1:0 "第 1 / 1 跨页"
 
- SLTM_AT_OV_1_0_0_R:0 "图鉴总目   01 · 11"
+ SLTM_AT_OV_1_0_0_R:0 "图鉴总目   01 · 11 · 12"
 
- SLTM_AT_OV_1_0_0_H:0 "头衔与王座"
+ SLTM_AT_OV_1_0_0_H:0 "头衔、王座与商会"
 
  SLTM_AT_END:0 "本目至此"
 
@@ -261,11 +261,11 @@
 
  SLTM_AT_INDEX_0:0 "分类索引"
 
- SLTM_AT_TALLY_0:0 "11 种头衔 · 13 处收录"
+ SLTM_AT_TALLY_0:0 "12 种头衔 · 14 处收录"
 
  SLTM_AT_INDEX_1:0 "通用条目"
 
- SLTM_AT_TALLY_1:0 "本书签收录 2 种头衔"
+ SLTM_AT_TALLY_1:0 "本书签收录 3 种头衔"
 
  SLTM_AT_INDEX_2:0 "居所条目"
 
@@ -288,10 +288,10 @@
 
  SLTM_AT_CREATE:0 "以此类型创立"
  SLTM_AT_ART_HOME:0 "图鉴词条   № 02"
- SLTM_AT_BODY_HOME:0 "这项头衔携带一座住所。可以选择六种游戏原生住所。"
+ SLTM_AT_BODY_HOME:0 "这项头衔携带一座住所。可以选择七种游戏原生住所。"
  SLTM_AT_BIND:0 "绑定住所"
  SLTM_AT_PICK:0 "选择一种住所…"
- SLTM_AT_HOMES:0 "六种游戏原生住所。"
+ SLTM_AT_HOMES:0 "七种游戏原生住所。"
  SLTM_AT_FOOT_HOME:0 "词条 02"
  SLTM_AT_NEEDHOME:0 "选择住所后可继续"
  SLTM_AT_ART_NOMAD:0 "图鉴词条   № 03"
@@ -318,21 +318,21 @@
 
  SLTM_AT_ART_ORDER:0 "图鉴词条   № 06"
 
- SLTM_AT_BODY_ORDER:0 "为拟持有人建立隐修会并租用驻地。若驻地由市长或男爵单独持有，会先归当地伯爵，再交修会租用。"
+ SLTM_AT_BODY_ORDER:0 "建立隐修会并租用驻地。支持神殿，会替换教会租赁；市长或男爵的驻地先归当地伯爵。"
 
  SLTM_AT_DTYPE_ORDER:0 "创立方案"
 
- SLTM_AT_FORM_ORDER:0 "优先使用适格的标记男爵领。核对修会类型、领袖与租约。"
+ SLTM_AT_FORM_ORDER:0 "标记一个男爵领，即在原址尝试设立驻地。"
 
  SLTM_AT_FOOT_ORDER:0 "词条 06"
 
  SLTM_AT_ART_MILITARY:0 "图鉴词条   № 07"
 
- SLTM_AT_BODY_MILITARY:0 "授予真实团长头衔并租用驻地。若驻地由市长或男爵单独持有，会先归当地伯爵，再交修会租用。"
+ SLTM_AT_BODY_MILITARY:0 "授予团长头衔并租用驻地。支持神殿，会替换教会租赁；市长或男爵的驻地先归当地伯爵。"
 
  SLTM_AT_DTYPE_MILITARY:0 "创立方案"
 
- SLTM_AT_FORM_MILITARY:0 "优先使用适格的标记男爵领。保留原政体，核对团长、总部租约和军事修会组织。"
+ SLTM_AT_FORM_MILITARY:0 "标记一个男爵领，即在原址尝试设立驻地。"
 
  SLTM_AT_FOOT_MILITARY:0 "词条 07"
 
@@ -364,7 +364,7 @@
  SLTM_DD_TO:0 "授予 [GetPlayer.MakeScope.Var('sltm_create_holder').Char.GetName]"
  SLTM_DD_RESULT:0 "[GetPlayer.MakeScope.Var('sltm_atlas_receipt_target').Title.GetName]"
  SLTM_DD_RESULT_HOLDER:0 "已授予 [GetPlayer.MakeScope.Var('sltm_create_holder').Char.GetName]"
- SLTM_DD_PARTIAL:0 "部分附加属性未通过核对，费用未结算。"
+ SLTM_DD_PARTIAL:0 "部分变更未生效，本次未收取费用。"
  SLTM_DD_EDIT:0 "编辑这个头衔"
  SLTM_DD_HOME_TO:0 "[GetPlayer.Custom('sltm_clw_dom_name')] · 授予 [GetPlayer.MakeScope.Var('sltm_create_holder').Char.GetName]"
 
@@ -374,17 +374,17 @@
  SLTM_CLW_CAT_STATE_9:0 "可创立"
  SLTM_CLW_CAT_NOTE_9:0 "已有领袖时会替换登记，不会并列新增领袖；须再次点击确认，原领袖头衔不主动销毁。"
  SLTM_CLW_CAT_10:0 "枢机头衔"
- SLTM_CLW_CAT_DESC_10:0 "建立登记在本信仰选举团中的席位。"
- SLTM_CLW_CAT_ROUTE_10:0 "信仰须有教会选举人机制。已有席位或正在主持本信仰的领袖不能再占一个投票席位。"
+ SLTM_CLW_CAT_DESC_10:0 "为人物创立枢机席位。"
+ SLTM_CLW_CAT_ROUTE_10:0 "可为所选人物创立枢机头衔。投票资格由该信仰的选举决定。"
  SLTM_CLW_CAT_STATE_10:0 "可创立"
- SLTM_CLW_CAT_NOTE_10:0 "给拟持有人创立枢机席位，核对人物的席位与信仰选举人名册。玩家新建的席位允许世俗持有人兼领。"
+ SLTM_CLW_CAT_NOTE_10:0 "为拟持有人创立枢机席位，世俗统治者也可以尝试兼领。"
  SLTM_AT_PAGE_0_2:0 "第 1 / 2 跨页"
  SLTM_AT_NEXT:0 "下一跨页"
- SLTM_AT_OV_0_1_0_R:0 "图鉴总目   09 — 11"
- SLTM_AT_OV_0_1_0_H:0 "教会与王座"
+ SLTM_AT_OV_0_1_0_R:0 "图鉴总目   09 — 12"
+ SLTM_AT_OV_0_1_0_H:0 "教会、王座与商会"
  SLTM_AT_SUM_HEAD:0 "设立信仰领袖；可能改变政体与法律。"
  SLTM_AT_NO_HEAD:0 "09"
- SLTM_AT_SUM_CARDINAL:0 "建立登记在本信仰选举团中的席位。"
+ SLTM_AT_SUM_CARDINAL:0 "为人物创立枢机席位。"
  SLTM_AT_NO_CARDINAL:0 "10"
  SLTM_AT_FOLIO_3:0 "—   03   —"
  SLTM_AT_FOLIO_4:0 "—   04   —"
@@ -399,9 +399,9 @@
  SLTM_AT_LIMITS_HEAD:0 "天主教封建领主实测会转为教会制，领地继承法等也会更换，读档后仍保留这些变化。\n本版不自动恢复原政体与法律。其他信仰、政体组合尚未验证。"
  SLTM_AT_FOOT_HEAD:0 "词条 09"
  SLTM_AT_ART_CARDINAL:0 "图鉴词条   № 10"
- SLTM_AT_BODY_CARDINAL:0 "给拟持有人创立枢机席位，核对人物的席位与信仰选举人名册。玩家新建的席位允许世俗持有人兼领。"
+ SLTM_AT_BODY_CARDINAL:0 "为拟持有人创立枢机席位，世俗统治者也可以尝试兼领。"
  SLTM_AT_DTYPE_CARDINAL:0 "创立方案"
- SLTM_AT_FORM_CARDINAL:0 "信仰须有教会选举人机制。已有席位或正在主持本信仰的领袖不能再占一个投票席位。"
+ SLTM_AT_FORM_CARDINAL:0 "可为所选人物创立枢机头衔。投票资格由该信仰的选举决定。"
  SLTM_AT_FOOT_CARDINAL:0 "词条 10"
  SLTM_SP_DIOCESE:0 "新教区"
  SLTM_SP_HEAD:0 "宗教领袖座"
@@ -412,8 +412,8 @@
  SLTM_SP_FAILED:0 "尚未建成头衔"
  SLTM_SP_REASON:0 "[GetPlayer.Custom('sltm_special_failure_reason')]"
  SLTM_SP_NO_REGION:0 "未生成新辖区。可标记一个仍有空余辖县的伯爵领再试。"
- SLTM_SP_NO_ORDER:0 "未建立修会。可在头衔详情标记一个已建成、空闲且可出租的男爵领，再从这里创立。"
- SLTM_SP_NO_CARDINAL:0 "需要有教会选举人的信仰，且该人物没有席位，也不是主持选举的宗教领袖。"
+ SLTM_SP_NO_ORDER:0 "这次未能建立修会驻地。"
+ SLTM_SP_NO_CARDINAL:0 "这次未能建立枢机席位。"
  SLTM_SP_NO_OBJECT:0 "本次没有返回新的制度头衔，未扣费。"
 
  innovation_sltm_charter_15:0 "佣兵特许名额"
@@ -508,3 +508,62 @@
  SLTM_AT_BODY_CEREMONIAL:0 "王国级特殊无地王座，随主要继承人传承，不附带住所。\n\n建立关系：\n1. 在实权者的主头衔页点击“标记头衔”。\n2. 打开礼节王座的“头衔属性”。\n3. 在左侧选择“礼节关系”，核对双方后点击“建立礼节关系”。\n\n建立后，王座持有者成为实权者的直属封臣。\n旧关联会被替换，原头衔和政体保留。\n\n解除：在左侧“礼节关系”页点击“解除礼节关系”。只取消礼节身份，不会自动独立。"
  SLTM_SP_CEREMONIAL:0 "礼节王座"
  SLTM_NATIVE_CUSTOMIZE_TT:0 "打开原版自定义窗口，更改名称、形容词、纹章及地图颜色。此入口沿用原版权限；其他头衔仍可使用左侧属性分页。"
+ SLTM_AT_VOTER:0 "当前有宗教领袖选举权。"
+ SLTM_AT_NOT_VOTER:0 "当前没有宗教领袖选举权。"
+ SLTM_CLW_CAT_12:0 "商会头衔"
+ SLTM_CLW_CAT_DESC_12:0 "建立伯爵级家族商会。"
+ SLTM_CLW_CAT_ROUTE_12:0 "创立家族商会及商会住所。"
+ SLTM_CLW_CAT_STATE_12:0 "伯爵级"
+ SLTM_CLW_CAT_NOTE_12:0 "已有商会可直接查看。"
+ SLTM_AT_SUM_MERCHANT:0 "带有商会住所的家族头衔。"
+ SLTM_AT_NO_MERCHANT:0 "12"
+ SLTM_AT_ART_MERCHANT:0 "图鉴词条   № 12"
+ SLTM_AT_BODY_MERCHANT:0 "为所选人物建立伯爵级家族商会及其住所。首次成为统治者的人物采用商人政体。已有商会时可直接查看原商会。"
+ SLTM_MC_NO_NEW_COMPANY:0 "这名人物未能建立新的家族商会。"
+ SLTM_MC_OPEN_COMPANY:0 "查看已有商会"
+ SLTM_MC_FOUNDER_COMPANY:0 "[new_merchant.GetFirstNameNoTooltip]商会"
+
+ SLTM_FA_NOBLE: "创立世族头衔"
+ SLTM_FA_NOBLE_EDIT: "创立世族并编辑"
+ SLTM_FA_VIEW: "查看已有家族头衔"
+ SLTM_FA_JOIN: "加入所选共和国"
+ SLTM_FA_REP_BRANCH_INFO: "[ROOT.Char.Custom('sltm_family_branch_names')]。选择分家并加入后，此人将以共和政体效忠[ROOT.Char.MakeScope.Var('sltm_family_republic_ruler').Char.GetFirstNameNoTooltip]。"
+ SLTM_FA_REP_INFO: "目标领主：[ROOT.Char.MakeScope.Var('sltm_family_republic_ruler').Char.GetFirstNameNoTooltip]。提交后将尝试加入其共和国、改用共和政体和贵族家族继承法。已有商会会沿用。"
+ SLTM_FA_OWN_INFO: "此人已持有相符的家族头衔和住所，可查看原头衔。"
+ SLTM_FA_BRANCH_INFO: "[ROOT.Char.Custom('sltm_family_branch_names')]。可选择建立自己的支系并创立。"
+ SLTM_FA_BRANCH_NAMES: "家主[ROOT.Char.MakeScope.Var('sltm_create_holder').Char.GetHouse.GetHeadOfHouse.GetFirstNameNoTooltip]持有[ROOT.Char.MakeScope.Var('sltm_create_holder').Char.GetHouse.GetHouseTitle.GetNameNoTier]"
+ SLTM_FA_COMPANY_INFO: "为此人创建家族商会与住所。已有领主默认兼领；没有头衔的人将以商人身份起家。要以贵族身份加入共和国，请先标记该共和国领主持有的头衔。"
+ SLTM_FA_NOBLE_INFO: "将为此人创建伯爵级世族头衔，绑定所选庄园。"
+ SLTM_FA_RETURN_COMPANY: "返回商会创立"
+ SLTM_FA_REPUBLIC_MODE: "共和国贵族身份"
+ SLTM_FA_RETURN_HOME: "返回普通住所"
+ SLTM_FA_NOBLE_MODE: "选择世族头衔"
+ SLTM_FA_COUNTY_COST: "家族头衔：伯爵级，免费。"
+ SLTM_FA_NORMAL_COST: "[ROOT.Char.Custom('sltm_create_cost_text')]"
+ SLTM_FA_SPLIT: "建立支系并创立"
+ SLTM_FA_SPLIT_EDIT: "建立支系、创立并编辑"
+ SLTM_FAMILY_BRANCH_PARTIAL: "支系已建立，尚未取得目标家族头衔"
+ SLTM_FAMILY_BRANCH_FAILED: "未能建立家族支系"
+ SLTM_FAMILY_REPUBLIC_PARTIAL: "已有商会，尚未完成共和国贵族身份转换"
+ SLTM_FAMILY_READY: "家族头衔已确认"
+ SLTM_FAMILY_NO_HOME: "已持有家族头衔，所选住所尚未绑定"
+ SLTM_FAMILY_NOT_HELD: "未取得所选类型的世族头衔及住所"
+
+ SLTM_FA_JOIN_EDIT: "加入共和国并编辑"
+ SLTM_FA_ALREADY_JOINED: "此人已是所选共和国的贵族，并持有家族商会。"
+ SLTM_FA_REPUBLIC_HINT: "先标记一位有领地的共和国领主持有的头衔，再选择此项。"
+
+ SLTM_CLW_DOM_8:0 "商会住所"
+ SLTM_CLW_DOM_NAME_8:0 "商会住所"
+ SLTM_CLW_DOM_DESC_8:0 "商会住所绑定至新创立的动态头衔。家族原有的商会继续单独持有。"
+ SLTM_CLW_DOM_SOURCE_8:0 "原版商会住所"
+ SLTM_CLW_DOM_ID_8:0 "merchant_company"
+ SLTM_CLW_DOM_NOTE_8:0 "家族原有的商会继续单独持有。"
+ SLTM_CLW_SUM_DOM_8:0 "按所选位阶创立动态头衔，并绑定商会住所。"
+
+ SLTM_NEW_HOUSE_INFO: "此人出身卑微，尚无家族。选择创立后，将由本人建立新家族并出任家主，再取得家族商会与住所。"
+ SLTM_NEW_HOUSE_PATRICIAN: "此人尚无家族。提交后先建立自己的家族与商会，再尝试改用共和政体，效忠[ROOT.Char.MakeScope.Var('sltm_family_republic_ruler').Char.GetFirstNameNoTooltip]。"
+ SLTM_NEW_HOUSE_ACTION: "建立家族并创立商会"
+ SLTM_NEW_HOUSE_EDIT: "建立家族、创立并编辑"
+ SLTM_NEW_HOUSE_NO_COMPANY: "家族已建立，尚未取得商会"
+ SLTM_NEW_HOUSE_FAILED: "未能建立新家族"

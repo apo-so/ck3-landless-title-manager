@@ -38,7 +38,7 @@ sltm_clw_cancel = {
 sltm_clw_primary = {
 	scope = character
 	is_shown = { sltm_clw_open_trigger = yes }
-	is_valid = { sltm_atlas_can_create_trigger = yes }
+	is_valid = { sltm_atlas_can_create_trigger = yes OR = { NOT = { sltm_atlas_patrician_mode_trigger = yes } sltm_atlas_family_ready_trigger = yes } }
 	effect = { sltm_clw_primary_effect = yes }
 }
 
@@ -140,6 +140,13 @@ sltm_clw_pick_d6 = {
 	effect = { sltm_clw_select_domicile_effect = { DWELLING = japanese_manor } }
 }
 
+sltm_clw_pick_d8 = {
+	scope = character
+	is_shown = { sltm_clw_open_trigger = yes sltm_clw_has_domicile_type_trigger = yes var:sltm_clw_domicile_type = flag:merchant_company }
+	is_valid = { sltm_clw_open_trigger = yes sltm_clw_step_two_trigger = yes sltm_clw_category_is_domicile_trigger = yes }
+	effect = { sltm_clw_select_domicile_effect = { DWELLING = merchant_company } }
+}
+
 sltm_clw_pick_d7 = {
 	scope = character
 	is_shown = { sltm_clw_open_trigger = yes sltm_clw_has_domicile_type_trigger = yes var:sltm_clw_domicile_type = flag:sltm_residence }
@@ -181,7 +188,7 @@ sltm_atlas_filter_1 = {
  scope = character
  is_shown = { has_variable = sltm_atlas_filter var:sltm_atlas_filter = 1 }
  is_valid = { sltm_clw_open_trigger = yes }
- effect = { set_variable = { name = sltm_atlas_filter value = 1 } remove_variable = sltm_atlas_spread if = { limit = { sltm_clw_has_category_trigger = yes OR = { var:sltm_clw_kind ?= 2 var:sltm_clw_kind ?= 11 } } sltm_clw_select_category_effect = { CATEGORY = var:sltm_clw_kind } set_variable = { name = sltm_atlas_index value = 1 } } else = { sltm_clw_select_category_effect = { CATEGORY = 2 } set_variable = { name = sltm_atlas_index value = 1 } } }
+ effect = { set_variable = { name = sltm_atlas_filter value = 1 } remove_variable = sltm_atlas_spread if = { limit = { sltm_clw_has_category_trigger = yes OR = { var:sltm_clw_kind ?= 2 var:sltm_clw_kind ?= 11 var:sltm_clw_kind ?= 12 } } sltm_clw_select_category_effect = { CATEGORY = var:sltm_clw_kind } set_variable = { name = sltm_atlas_index value = 1 } } else = { sltm_clw_select_category_effect = { CATEGORY = 2 } set_variable = { name = sltm_atlas_index value = 1 } } }
 }
 
 sltm_atlas_filter_2 = {
@@ -292,7 +299,7 @@ sltm_atlas_tier_row = {
 
 sltm_atlas_create_edit = {
  scope = character
- is_valid = { sltm_atlas_can_create_trigger = yes }
+ is_valid = { sltm_atlas_can_create_trigger = yes OR = { NOT = { sltm_atlas_patrician_mode_trigger = yes } sltm_atlas_family_ready_trigger = yes } }
  effect = { sltm_atlas_submit_effect = { MODE = 2 } }
 }
 
@@ -384,7 +391,7 @@ sltm_atlas_home_hint = {
 sltm_atlas_tier_menu = {
  scope = character
  is_shown = { has_variable = sltm_atlas_picker var:sltm_atlas_picker = 2 }
- is_valid = { sltm_clw_open_trigger = yes sltm_atlas_read_trigger = yes sltm_clw_supported_trigger = yes }
+ is_valid = { NOT = { sltm_atlas_noble_mode_trigger = yes } sltm_clw_open_trigger = yes sltm_atlas_read_trigger = yes sltm_clw_supported_trigger = yes }
  effect = { sltm_atlas_toggle_menu_effect = { MENU = 2 } }
 }
 
@@ -409,7 +416,7 @@ sltm_atlas_receipt = {
 
 sltm_atlas_receipt_partial = {
  scope = character
- is_shown = { sltm_clw_open_trigger = yes exists = var:sltm_atlas_receipt_target var:sltm_create_result = 1 }
+ is_shown = { sltm_clw_open_trigger = yes exists = var:sltm_atlas_receipt_target OR = { var:sltm_create_result ?= 1 var:sltm_atlas_receipt_target = { has_variable = sltm_cardinal_seat } } }
 }
 
 sltm_atlas_receipt_done = {
@@ -501,4 +508,55 @@ sltm_atlas_row_ceremonial_1 = {
  is_shown = { sltm_clw_has_category_trigger = yes var:sltm_clw_kind ?= 11 has_variable = sltm_atlas_index var:sltm_atlas_index = 1 }
  is_valid = { sltm_clw_open_trigger = yes }
  effect = { sltm_clw_select_category_effect = { CATEGORY = 11 } set_variable = { name = sltm_atlas_index value = 1 } }
+}
+
+sltm_clw_pick_k12 = {
+ scope = character
+ is_shown = { sltm_clw_has_category_trigger = yes var:sltm_clw_kind ?= 12 }
+ is_valid = { sltm_clw_open_trigger = yes }
+ effect = { sltm_clw_select_category_effect = { CATEGORY = 12 } }
+}
+
+sltm_atlas_row_merchant_1 = {
+ scope = character
+ is_shown = { sltm_clw_has_category_trigger = yes var:sltm_clw_kind ?= 12 has_variable = sltm_atlas_index var:sltm_atlas_index = 1 }
+ is_valid = { sltm_clw_open_trigger = yes }
+ effect = { sltm_clw_select_category_effect = { CATEGORY = 12 } set_variable = { name = sltm_atlas_index value = 1 } }
+}
+
+sltm_family_noble_toggle = {
+ scope = character
+ is_shown = { sltm_atlas_estate_choice_trigger = yes }
+ is_valid = { sltm_atlas_estate_choice_trigger = yes }
+ effect = { sltm_family_toggle_mode_effect = yes }
+}
+sltm_family_republic_toggle = {
+ scope = character
+ is_valid = { OR = { sltm_atlas_patrician_mode_trigger = yes sltm_atlas_republic_target_trigger = yes } }
+ effect = { sltm_family_toggle_mode_effect = yes }
+}
+sltm_family_split = {
+ scope = character
+ is_shown = { sltm_atlas_family_branch_trigger = yes }
+ is_valid = { sltm_atlas_family_ready_trigger = yes sltm_atlas_family_branch_trigger = yes }
+ effect = { sltm_family_branch_submit_effect = { MODE = 1 } }
+}
+sltm_family_split_edit = {
+ scope = character
+ is_valid = { sltm_atlas_family_ready_trigger = yes sltm_atlas_family_branch_trigger = yes }
+ effect = { sltm_family_branch_submit_effect = { MODE = 2 } }
+}
+
+sltm_company_found = {
+ scope = character
+ is_shown = { sltm_atlas_company_needs_new_house_trigger = yes }
+ is_valid = { sltm_atlas_company_needs_new_house_trigger = yes sltm_atlas_family_ready_trigger = yes }
+ effect = { sltm_atlas_found_company_house_effect = { MODE = 1 } }
+}
+
+sltm_company_found_edit = {
+ scope = character
+ is_shown = { sltm_atlas_company_needs_new_house_trigger = yes }
+ is_valid = { sltm_atlas_company_needs_new_house_trigger = yes sltm_atlas_family_ready_trigger = yes }
+ effect = { sltm_atlas_found_company_house_effect = { MODE = 2 } }
 }

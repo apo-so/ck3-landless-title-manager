@@ -843,6 +843,10 @@ sltm_workflow.0107 = {
   trigger = { sltm_create_session_live_trigger = yes OR = { NOT = { has_variable = sltm_create_route_clw } var:sltm_clw_domicile_type = flag:ecclesiastical_domicile } }
   hidden_effect = { if = { limit = { sltm_create_session_live_trigger = yes OR = { NOT = { has_variable = sltm_create_route_clw } var:sltm_clw_domicile_type = flag:ecclesiastical_domicile } } set_variable = { name = sltm_create_native_profile value = 9 } trigger_event = sltm_workflow.0101 } }
  }
+ option = { name = sltm_native_10
+  trigger = { sltm_create_session_live_trigger = yes OR = { NOT = { has_variable = sltm_create_route_clw } var:sltm_clw_domicile_type = flag:merchant_company } }
+  hidden_effect = { if = { limit = { sltm_create_session_live_trigger = yes OR = { NOT = { has_variable = sltm_create_route_clw } var:sltm_clw_domicile_type = flag:merchant_company } } set_variable = { name = sltm_create_native_profile value = 10 } trigger_event = sltm_workflow.0101 } }
+ }
  option = { name = sltm_native_recommended
   trigger = { sltm_create_session_live_trigger = yes NOT = { has_variable = sltm_create_route_clw } has_variable = sltm_create_recommended_profile }
   hidden_effect = { if = { limit = { sltm_create_session_live_trigger = yes NOT = { has_variable = sltm_create_route_clw } has_variable = sltm_create_recommended_profile } set_variable = { name = sltm_create_native_profile value = var:sltm_create_recommended_profile } trigger_event = sltm_workflow.0101 } }

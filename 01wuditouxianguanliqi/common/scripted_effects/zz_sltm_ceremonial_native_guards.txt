@@ -1,4 +1,4 @@
-﻿# CK3 1.20.1.2: two narrowly guarded vanilla effect overrides. See I34 source receipt.
+﻿# CK3 1.21.0: guarded native effects; native fallbacks refreshed in I36.
 tgp_destroy_ceremonial_liege_title_effect = {
  every_held_title = {
   limit = { has_variable = sltm_managed_ceremonial_relation }
@@ -95,9 +95,7 @@ sltm_rel_vanilla_destroy_laamp_effect = {
 		save_scope_as = the_adventurer
 		# If we weren't an adventurer before, make us one.
 		if = {
-			limit = {
-				NOT = { has_trait = adventurer }
-			}
+			limit = { NOT = { has_trait = adventurer } }
 			add_trait = adventurer
 		}
 		hidden_effect = {
@@ -109,9 +107,10 @@ sltm_rel_vanilla_destroy_laamp_effect = {
 				add_trait = adventurer_follower
 			}
 		}
+		# Liquidate camp
 		custom_tooltip = {
 			text = destroy_laamp_effect.tt.domicile_liquidated
-			laamp_clear_domicile_buildings_effect = yes
+			laamp_clear_domicile_buildings_liquidator_effect = yes
 		}
 		# Contacts have opinions™ about you.
 		## Be they good.

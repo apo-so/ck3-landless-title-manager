@@ -33,6 +33,7 @@ sltm_created_domicile_type_matches_trigger = {
   AND = { var:sltm_create_kind = 3 var:sltm_create_native_profile = 7 scope:sltm_created.title_domicile = { is_domicile_type = japanese_manor } }
   AND = { var:sltm_create_kind = 3 var:sltm_create_native_profile = 8 scope:sltm_created.title_domicile = { is_domicile_type = japanese_manor } }
   AND = { var:sltm_create_kind = 3 var:sltm_create_native_profile = 9 scope:sltm_created.title_domicile = { is_domicile_type = ecclesiastical_domicile } }
+  AND = { var:sltm_create_kind = 3 var:sltm_create_native_profile = 10 scope:sltm_created.title_domicile = { is_domicile_type = merchant_company owner = scope:sltm_holder } }
  }
 }
 

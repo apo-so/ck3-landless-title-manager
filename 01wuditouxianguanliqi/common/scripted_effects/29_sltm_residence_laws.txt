@@ -229,6 +229,90 @@ sltm_visit_realm_laws_effect = {
     $VISITOR$ = { LAW = budget_allocation_cardinal_50 }
     $VISITOR$ = { LAW = no_benefices }
     $VISITOR$ = { LAW = cardinal_standard_benefices }
+
+    # CK3 1.21 merchant and republic laws; captured/restored by the existing identity transaction.
+    $VISITOR$ = { LAW = company_size_small }
+    $VISITOR$ = { LAW = company_size_medium }
+    $VISITOR$ = { LAW = company_size_large }
+    $VISITOR$ = { LAW = company_size_huge }
+    $VISITOR$ = { LAW = company_purpose_family }
+    $VISITOR$ = { LAW = company_purpose_artisan }
+    $VISITOR$ = { LAW = company_purpose_creditor }
+    $VISITOR$ = { LAW = company_purpose_caravaneer }
+    $VISITOR$ = { LAW = republican_despot_succession_law }
+    $VISITOR$ = { LAW = merchant_succession_law }
+    $VISITOR$ = { LAW = republican_elective_succession_law }
+    $VISITOR$ = { LAW = republican_appointment_succession_law }
+    $VISITOR$ = { LAW = republic_type_communal }
+    $VISITOR$ = { LAW = republic_type_civic }
+    $VISITOR$ = { LAW = republic_type_popular }
+    $VISITOR$ = { LAW = republic_type_maritime }
+    $VISITOR$ = { LAW = republic_type_noble }
+    $VISITOR$ = { LAW = republic_type_roman }
+    $VISITOR$ = { LAW = republic_tier_county }
+    $VISITOR$ = { LAW = republic_tier_duchy }
+    $VISITOR$ = { LAW = republic_tier_kingdom }
+    $VISITOR$ = { LAW = republic_tier_empire }
+    $VISITOR$ = { LAW = republic_assembly_composition_patrician }
+    $VISITOR$ = { LAW = republic_assembly_composition_council }
+    $VISITOR$ = { LAW = republic_assembly_composition_general }
+    $VISITOR$ = { LAW = republic_assembly_composition_parliament }
+    $VISITOR$ = { LAW = republic_assembly_composition_communal }
+    $VISITOR$ = { LAW = republic_assembly_composition_roman_senate }
+    $VISITOR$ = { LAW = republic_assembly_authority_constitutional }
+    $VISITOR$ = { LAW = republic_assembly_authority_legislative }
+    $VISITOR$ = { LAW = republic_assembly_authority_ceremonial }
+    $VISITOR$ = { LAW = republic_assembly_voting_thresholds_simple_majority }
+    $VISITOR$ = { LAW = republic_assembly_voting_thresholds_large_majority }
+    $VISITOR$ = { LAW = republic_assembly_voting_thresholds_unanimous }
+    $VISITOR$ = { LAW = republic_assembly_term_length_1 }
+    $VISITOR$ = { LAW = republic_assembly_term_length_2 }
+    $VISITOR$ = { LAW = republic_assembly_term_length_3 }
+    $VISITOR$ = { LAW = republic_assembly_term_length_4 }
+    $VISITOR$ = { LAW = republic_assembly_term_length_5 }
+    $VISITOR$ = { LAW = republic_assembly_term_length_indefinite }
+    $VISITOR$ = { LAW = republic_senate_size_1 }
+    $VISITOR$ = { LAW = republic_senate_size_2 }
+    $VISITOR$ = { LAW = republic_senate_size_3 }
+    $VISITOR$ = { LAW = republic_war_declaration_1_limited }
+    $VISITOR$ = { LAW = republic_war_declaration_2_unlimited }
+    $VISITOR$ = { LAW = republic_army_organization_1_levy }
+    $VISITOR$ = { LAW = republic_army_organization_2_improved_levy }
+    $VISITOR$ = { LAW = republic_army_organization_3_maa }
+    $VISITOR$ = { LAW = republic_army_organization_4_merc }
+    $VISITOR$ = { LAW = republic_banishment_1_prohibited }
+    $VISITOR$ = { LAW = republic_banishment_2_permitted_by_decree }
+    $VISITOR$ = { LAW = republic_banishment_3_unrestricted }
+    $VISITOR$ = { LAW = republic_execution_1_prohibited }
+    $VISITOR$ = { LAW = republic_execution_2_permitted_by_decree }
+    $VISITOR$ = { LAW = republic_execution_3_unrestricted }
+    $VISITOR$ = { LAW = republic_title_revocation_1_disallowed }
+    $VISITOR$ = { LAW = republic_title_revocation_2_allowed }
+    $VISITOR$ = { LAW = republic_retract_vassal_1_disallowed }
+    $VISITOR$ = { LAW = republic_retract_vassal_2_allowed }
+    $VISITOR$ = { LAW = republic_vassal_refusal_1_allowed }
+    $VISITOR$ = { LAW = republic_vassal_refusal_2_treason }
+    $VISITOR$ = { LAW = republic_trade_specialization_none }
+    $VISITOR$ = { LAW = republic_trade_specialization_base_needs }
+    $VISITOR$ = { LAW = republic_trade_specialization_construction }
+    $VISITOR$ = { LAW = republic_trade_specialization_metals }
+    $VISITOR$ = { LAW = republic_trade_specialization_luxury }
+    $VISITOR$ = { LAW = republic_trade_specialization_luxury_food }
+    $VISITOR$ = { LAW = republic_trade_specialization_minerals }
+    $VISITOR$ = { LAW = republic_trade_specialization_textiles }
+    $VISITOR$ = { LAW = republic_trade_specialization_unique }
+    $VISITOR$ = { LAW = republic_trade_pricing_none }
+    $VISITOR$ = { LAW = republic_trade_pricing_arsenal }
+    $VISITOR$ = { LAW = republic_trade_pricing_granary }
+    $VISITOR$ = { LAW = republic_trade_pricing_victualling }
+    $VISITOR$ = { LAW = republic_trade_pricing_caravan }
+    $VISITOR$ = { LAW = republic_trade_pricing_mint }
+    $VISITOR$ = { LAW = republic_trade_pricing_dyeworks }
+    $VISITOR$ = { LAW = republic_trade_pricing_drapery }
+    $VISITOR$ = { LAW = republic_trade_pricing_apothecary }
+    $VISITOR$ = { LAW = republic_end_term_law_1 }
+    $VISITOR$ = { LAW = republic_end_term_law_2 }
+    $VISITOR$ = { LAW = republic_end_term_law_3 }
 }
 
 sltm_visit_camp_laws_effect = {

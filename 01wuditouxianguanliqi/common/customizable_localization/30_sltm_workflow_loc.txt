@@ -169,6 +169,7 @@ sltm_create_profile_text = {
  text = { trigger = { var:sltm_create_native_profile = 7 } localization_key = sltm_native_7 }
  text = { trigger = { var:sltm_create_native_profile = 8 } localization_key = sltm_native_8 }
  text = { trigger = { var:sltm_create_native_profile = 9 } localization_key = sltm_native_9 }
+ text = { trigger = { var:sltm_create_native_profile = 10 } localization_key = sltm_native_10 }
  text = { localization_key = sltm_profile_missing }
 }
 

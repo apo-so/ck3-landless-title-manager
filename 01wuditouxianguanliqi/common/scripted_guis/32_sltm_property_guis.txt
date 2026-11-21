@@ -100,7 +100,7 @@ sltm_ui_definitive_true_gui = {
 
 sltm_ui_definitive_true_state = {
  scope = character
- is_shown = { sltm_ui_live_trigger = yes var:sltm_edit_definitive = 1 }
+ is_shown = { sltm_ui_live_trigger = yes var:sltm_edit_definitive ?= 1 }
 }
 
 sltm_ui_definitive_false_gui = {
@@ -112,7 +112,7 @@ sltm_ui_definitive_false_gui = {
 
 sltm_ui_definitive_false_state = {
  scope = character
- is_shown = { sltm_ui_live_trigger = yes var:sltm_edit_definitive = 2 }
+ is_shown = { sltm_ui_live_trigger = yes var:sltm_edit_definitive ?= 2 }
 }
 
 sltm_ui_dynasty_keep_gui = {
@@ -136,7 +136,7 @@ sltm_ui_dynasty_true_gui = {
 
 sltm_ui_dynasty_true_state = {
  scope = character
- is_shown = { sltm_ui_live_trigger = yes var:sltm_edit_dynasty = 1 }
+ is_shown = { sltm_ui_live_trigger = yes var:sltm_edit_dynasty ?= 1 }
 }
 
 sltm_ui_dynasty_false_gui = {
@@ -148,7 +148,7 @@ sltm_ui_dynasty_false_gui = {
 
 sltm_ui_dynasty_false_state = {
  scope = character
- is_shown = { sltm_ui_live_trigger = yes var:sltm_edit_dynasty = 2 }
+ is_shown = { sltm_ui_live_trigger = yes var:sltm_edit_dynasty ?= 2 }
 }
 
 sltm_ui_nomadic_keep_gui = {
@@ -172,7 +172,7 @@ sltm_ui_nomadic_true_gui = {
 
 sltm_ui_nomadic_true_state = {
  scope = character
- is_shown = { sltm_ui_live_trigger = yes var:sltm_edit_nomadic = 1 }
+ is_shown = { sltm_ui_live_trigger = yes var:sltm_edit_nomadic ?= 1 }
 }
 
 sltm_ui_nomadic_false_gui = {
@@ -184,7 +184,7 @@ sltm_ui_nomadic_false_gui = {
 
 sltm_ui_nomadic_false_state = {
  scope = character
- is_shown = { sltm_ui_live_trigger = yes var:sltm_edit_nomadic = 2 }
+ is_shown = { sltm_ui_live_trigger = yes var:sltm_edit_nomadic ?= 2 }
 }
 
 sltm_ui_appearance_gui = {

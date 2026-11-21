@@ -1,8 +1,9 @@
-﻿version="0.4.6-test5"
+version="0.4.7-test8"
 name="节制天下兵马：无地头衔管理器"
 tags={
 	"Gameplay"
 	"Utilities"
 }
-supported_version="1.20.*"
+supported_version="1.21.*"
+remote_file_id="3834443256"
 path="mod/01wuditouxianguanliqi"

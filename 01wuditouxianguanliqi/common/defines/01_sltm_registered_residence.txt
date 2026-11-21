@@ -20,6 +20,7 @@
         "meritocratic_government"
         "steppe_admin_government"
         "ecclesiastical_government"
+        "merchant_government"
         "sltm_residence_government"
     }
 }

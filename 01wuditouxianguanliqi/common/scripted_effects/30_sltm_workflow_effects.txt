@@ -107,7 +107,10 @@ create_domicile_title = { name = sltm_workflow_created_name holder = scope:sltm_
 sltm_create_travel_domicile_effect = {
  scope:sltm_holder = {
   save_scope_as = sltm_travel_transaction
-  government_type ?= { save_scope_as = sltm_travel_original_government }
+  clear_saved_scope = sltm_travel_original_government
+  if = { limit = { OR = { NOT = { exists = scope:sltm_use_noble_constructor } is_ruler = yes } }
+   government_type ?= { save_scope_as = sltm_travel_original_government }
+  }
   primary_title ?= { save_scope_as = sltm_travel_original_primary }
   clear_saved_scope = sltm_original_confederation
   confederation ?= { save_scope_as = sltm_original_confederation }
@@ -116,7 +119,12 @@ sltm_create_travel_domicile_effect = {
   set_variable = sltm_travel_active
   remove_variable = sltm_travel_returned_title
  }
- sltm_create_domicile_effect = { TIER = $TIER$ GOVERNMENT = $GOVERNMENT$ }
+ if = { limit = { exists = scope:sltm_use_noble_constructor }
+  scope:sltm_holder = {
+   give_noble_family_title = { name = noble_family_name tier = county article = DEFAULT_TITLE_NAME_ARTICLE government = $GOVERNMENT$ save_scope_as = sltm_created }
+  }
+ }
+ else = { sltm_create_domicile_effect = { TIER = $TIER$ GOVERNMENT = $GOVERNMENT$ } }
  scope:sltm_holder = {
   if = {
    limit = { scope:sltm_created ?= { holder = scope:sltm_holder } }
@@ -183,6 +191,12 @@ else_if = { limit = { var:sltm_create_kind = 3 var:sltm_create_native_profile = 
 else_if = { limit = { var:sltm_create_kind = 3 var:sltm_create_native_profile = 7 } sltm_create_travel_domicile_effect = { TIER = $TIER$ GOVERNMENT = japan_administrative_government } }
 else_if = { limit = { var:sltm_create_kind = 3 var:sltm_create_native_profile = 8 } sltm_create_travel_domicile_effect = { TIER = $TIER$ GOVERNMENT = japan_feudal_government } }
 else_if = { limit = { var:sltm_create_kind = 3 var:sltm_create_native_profile = 9 } sltm_create_travel_domicile_effect = { TIER = $TIER$ GOVERNMENT = ecclesiastical_government } }
+else_if = { limit = { var:sltm_create_kind = 3 var:sltm_create_native_profile = 10 }
+ sltm_create_travel_domicile_effect = { TIER = $TIER$ GOVERNMENT = merchant_government }
+ if = { limit = { exists = scope:sltm_created scope:sltm_created = { holder = scope:sltm_holder exists = title_domicile title_domicile = { is_domicile_type = merchant_company owner = scope:sltm_holder } } }
+  scope:sltm_created = { set_variable = sltm_dynamic_merchant_residence }
+ }
+}
 
 }
 
@@ -224,7 +238,7 @@ sltm_create_geography_effect = yes
 scope:sltm_created = {
  set_variable = { name = sltm_created_title value = yes }
  set_variable = { name = sltm_schema_version value = 2 }
- if = { limit = { exists = title_domicile } set_variable = { name = sltm_origin_domicile value = title_domicile } }
+ if = { limit = { exists = title_domicile NOT = { sltm_real_merchant_company_trigger = yes } } set_variable = { name = sltm_origin_domicile value = title_domicile } }
 }
 if = { limit = { scope:sltm_created = { exists = title_domicile title_domicile = { is_domicile_type = sltm_residence } } }
  scope:sltm_created.title_domicile = { if = { limit = { NOT = { has_domicile_building = sltm_residence_main_01 } } add_domicile_building = sltm_residence_main_01 } }
@@ -290,9 +304,6 @@ if = { limit = { sltm_workflow_session_current_trigger = yes has_variable = sltm
   set_variable = { name = sltm_create_cost_settled value = 1 }
  }
  sltm_order_clear_identity_scopes_effect = yes
- if = { limit = { var:sltm_create_result_government = 3 OR = { var:sltm_create_special_kind = 6 var:sltm_create_special_kind = 7 } }
-  send_interface_toast = { type = event_toast_effect_bad title = SLTM_ORDER_GOV_PARTIAL left_icon = scope:sltm_holder custom_tooltip = SLTM_ORDER_GOV_PARTIAL_DESC }
- }
  if = { limit = { var:sltm_create_result_government = 3 var:sltm_create_special_kind = 11 } send_interface_toast = { type = event_toast_effect_bad title = SLTM_REL_CREATE_PARTIAL left_icon = scope:sltm_holder } }
  remove_variable = sltm_create_busy
  sltm_windows_refresh_after_change_effect = yes
@@ -944,12 +955,12 @@ sltm_special_order_effect = {
             }
         }
     }
-    # An explicitly marked free holding can be offered as the seat even when both characters are landless.
+    # A marked barony is authoritative. Automatic selection only runs if there is no marked barony.
     clear_saved_scope = sltm_order_base
     var:sltm_designee_title ?= {
         if = {
             limit = {
-                sltm_order_available_seat_trigger = yes
+                tier = tier_barony
             }
             save_scope_as = sltm_order_base
         }
@@ -968,7 +979,7 @@ sltm_special_order_effect = {
     }
     clear_saved_scope = sltm_seat_previous_owner
     clear_saved_scope = sltm_seat_landlord
-    if = { limit = { scope:sltm_order_base ?= { holder.primary_title.tier = tier_barony is_leased_out = no exists = de_jure_liege.holder } }
+    if = { limit = { scope:sltm_order_base ?= { holder.primary_title ?= { tier = tier_barony } is_under_holy_order_lease = no exists = de_jure_liege.holder } }
         scope:sltm_order_base = {
             holder = { save_scope_as = sltm_seat_previous_owner }
             de_jure_liege.holder = { save_scope_as = sltm_seat_landlord }
@@ -978,7 +989,7 @@ sltm_special_order_effect = {
         resolve_title_and_vassal_change = scope:sltm_seat_change
     }
     if = {
-        limit = { scope:sltm_order_base ?= { tier = tier_barony holder.primary_title.tier > tier_barony is_leased_out = no } }
+        limit = { scope:sltm_order_base ?= { tier = tier_barony } }
         scope:sltm_holder = {
             create_character = {
                 template = holy_order_leader_character
@@ -1014,7 +1025,7 @@ sltm_special_order_effect = {
                 }
             }
             sltm_special_order_grant_effect = yes
-            if = { limit = { scope:sltm_order_base = { is_leased_out = no } }
+            if = { limit = { scope:sltm_order_base = { is_under_holy_order_lease = no } }
                 scope:sltm_order_base = { lease_out_to_holy_order = scope:sltm_new_order }
             }
             if = {
@@ -1035,7 +1046,7 @@ sltm_special_order_effect = {
     }
     if = {
         limit = { NOT = { exists = scope:sltm_new_order } exists = scope:sltm_seat_previous_owner
-            scope:sltm_order_base ?= { holder = scope:sltm_seat_landlord is_leased_out = no }
+            scope:sltm_order_base ?= { holder = scope:sltm_seat_landlord is_under_holy_order_lease = no }
         }
         create_title_and_vassal_change = { type = granted save_scope_as = sltm_seat_restore add_claim_on_loss = no }
         scope:sltm_order_base = { change_title_holder_include_vassals = { holder = scope:sltm_seat_previous_owner change = scope:sltm_seat_restore } }
@@ -1113,32 +1124,61 @@ sltm_special_head_effect = {
 }
 
 sltm_special_cardinal_effect = {
-    if = {
-        limit = {
-            scope:sltm_holder = {
-                faith = { has_doctrine_parameter = has_clerical_electors }
-                NOT = { exists = clerical_elector_title }
-                NOT = { faith.religious_head ?= this }
+    create_dynamic_title = { tier = duchy name = SLTM_SP_CARDINAL }
+    scope:new_title ?= {
+        save_scope_as = sltm_created
+        set_variable = sltm_cardinal_seat
+        set_variable = pam_dynamic_cardinalate
+        sltm_anchor_new_title_effect = yes
+        set_landless_title = yes
+        set_no_automatic_claims = yes
+        set_destroy_on_succession = yes
+        add_clerical_elector = scope:sltm_holder.faith
+    }
+    if = { limit = { exists = scope:sltm_created }
+        sltm_special_grant_effect = { REASON = created }
+        if = { limit = { scope:sltm_holder.clerical_elector_title ?= scope:sltm_created }
+            scope:sltm_holder = { add_character_flag = cardinal_flag }
+            if = { limit = { scope:sltm_holder.faith = { this = faith:catholic } }
+                add_to_global_variable_list = { name = roma_cardinalates target = scope:sltm_created }
             }
         }
-        create_dynamic_title = { tier = duchy name = SLTM_SP_CARDINAL }
-        scope:new_title ?= {
-            save_scope_as = sltm_created
-            set_variable = sltm_cardinal_seat
-            set_variable = pam_dynamic_cardinalate
-            sltm_anchor_new_title_effect = yes
-            set_landless_title = yes
-            set_no_automatic_claims = yes
-            set_destroy_on_succession = yes
-            add_clerical_elector = scope:sltm_holder.faith
+    }
+}
+
+# The full vanilla career transition disposes of other family titles and camps.
+# Only construct the native company. Existing rulers retain their own career.
+sltm_construct_merchant_company_effect = {
+    create_dynamic_title = {
+        name = $NAME$
+        tier = county
+        type = title_type_merchant_family
+        holder = scope:sltm_holder
+        article = DEFAULT_TITLE_NAME_ARTICLE
+        save_scope_as = sltm_company_output
+    }
+}
+sltm_special_merchant_company_effect = {
+    clear_saved_scope = sltm_company_output
+    clear_saved_scope = sltm_company_new_ruler
+    scope:sltm_holder = {
+        if = { limit = { is_ruler = no } save_scope_as = sltm_company_new_ruler }
+        save_scope_as = new_merchant
+        if = {
+            limit = { exists = house }
+            sltm_construct_merchant_company_effect = { NAME = merchant_name_001 }
         }
-        if = { limit = { exists = scope:sltm_created }
-            sltm_special_grant_effect = { REASON = created }
-            if = { limit = { scope:sltm_holder.clerical_elector_title ?= scope:sltm_created }
-                scope:sltm_holder = { add_character_flag = cardinal_flag }
-                if = { limit = { scope:sltm_holder.faith = { this = faith:catholic } }
-                    add_to_global_variable_list = { name = roma_cardinalates target = scope:sltm_created }
-                }
+        else = { sltm_construct_merchant_company_effect = { NAME = SLTM_MC_FOUNDER_COMPANY } }
+    }
+    scope:sltm_company_output ?= {
+        if = {
+            limit = { holder = scope:sltm_holder sltm_real_merchant_company_trigger = yes }
+            save_scope_as = sltm_created
+            scope:sltm_company_new_ruler ?= {
+                change_government = merchant_government
+                if = { limit = { NOT = { has_trait = lifestyle_merchant } } add_trait = lifestyle_merchant }
+                if = { limit = { NOT = { has_realm_law = merchant_succession_law } } add_realm_law = merchant_succession_law }
+                set_starting_company_size_effect = yes
             }
         }
     }
@@ -1154,6 +1194,7 @@ sltm_special_create_effect = {
         9 = { sltm_special_head_effect = yes }
         10 = { sltm_special_cardinal_effect = yes }
         11 = { sltm_special_ceremonial_effect = yes }
+        12 = { sltm_special_merchant_company_effect = yes }
     }
     scope:sltm_created ?= { set_variable = { name = sltm_special_kind value = scope:sltm_actor.var:sltm_create_special_kind } }
 }

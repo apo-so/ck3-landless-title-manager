@@ -37,7 +37,7 @@ sltm_clw_category_is_domicile_trigger = {
 # 已选住所类型
 sltm_clw_has_domicile_type_trigger = {
 	has_variable = sltm_clw_domicile_type
- OR = { var:sltm_clw_domicile_type = flag:camp var:sltm_clw_domicile_type = flag:estate var:sltm_clw_domicile_type = flag:yurt var:sltm_clw_domicile_type = flag:east_asian_estate var:sltm_clw_domicile_type = flag:ecclesiastical_domicile var:sltm_clw_domicile_type = flag:japanese_manor var:sltm_clw_domicile_type = flag:sltm_residence }
+ OR = { var:sltm_clw_domicile_type = flag:camp var:sltm_clw_domicile_type = flag:estate var:sltm_clw_domicile_type = flag:yurt var:sltm_clw_domicile_type = flag:east_asian_estate var:sltm_clw_domicile_type = flag:ecclesiastical_domicile var:sltm_clw_domicile_type = flag:japanese_manor var:sltm_clw_domicile_type = flag:sltm_residence var:sltm_clw_domicile_type = flag:merchant_company }
 }
 
 # 第 2 步但尚未选住所
@@ -49,7 +49,7 @@ sltm_clw_domicile_missing_trigger = {
 # 主按钮此刻可以执行：第 1 步需有类别；第 2 步需有住所
 sltm_clw_supported_trigger = {
  has_variable = sltm_clw_kind
- OR = { var:sltm_clw_kind ?= 1 var:sltm_clw_kind ?= 2 var:sltm_clw_kind ?= 3 var:sltm_clw_kind ?= 4 var:sltm_clw_kind ?= 5 var:sltm_clw_kind ?= 6 var:sltm_clw_kind ?= 7 var:sltm_clw_kind ?= 9 var:sltm_clw_kind ?= 10 var:sltm_clw_kind ?= 11 }
+ OR = { var:sltm_clw_kind ?= 1 var:sltm_clw_kind ?= 2 var:sltm_clw_kind ?= 3 var:sltm_clw_kind ?= 4 var:sltm_clw_kind ?= 5 var:sltm_clw_kind ?= 6 var:sltm_clw_kind ?= 7 var:sltm_clw_kind ?= 9 var:sltm_clw_kind ?= 10 var:sltm_clw_kind ?= 11 var:sltm_clw_kind ?= 12 }
 }
 sltm_clw_primary_ready_trigger = {
  var:sltm_create_holder ?= { is_alive = yes }
@@ -84,7 +84,7 @@ sltm_atlas_can_create_trigger = {
 
 sltm_atlas_institution_trigger = {
     has_variable = sltm_clw_kind
-    OR = { var:sltm_clw_kind ?= 1 var:sltm_clw_kind ?= 6 var:sltm_clw_kind ?= 7 var:sltm_clw_kind ?= 8 var:sltm_clw_kind ?= 9 var:sltm_clw_kind ?= 10 var:sltm_clw_kind ?= 11 }
+    OR = { var:sltm_clw_kind ?= 1 var:sltm_clw_kind ?= 6 var:sltm_clw_kind ?= 7 var:sltm_clw_kind ?= 8 var:sltm_clw_kind ?= 9 var:sltm_clw_kind ?= 10 var:sltm_clw_kind ?= 11 var:sltm_clw_kind ?= 12 }
 }
 # Actor scope; evaluated before the commit clears its saved identity scopes.
 sltm_order_government_matches_trigger = {
@@ -109,6 +109,7 @@ sltm_special_output_trigger = {
             }
         }
         AND = { var:sltm_create_special_kind = 9 scope:sltm_holder.faith.religious_head_title ?= scope:sltm_created scope:sltm_holder.faith.religious_head ?= scope:sltm_holder }
+        AND = { var:sltm_create_special_kind = 12 scope:sltm_created ?= { holder = scope:sltm_holder sltm_real_merchant_company_trigger = yes } }
         AND = { var:sltm_create_special_kind = 11 scope:sltm_created ?= { is_landless_type_title = yes is_figurehead_title = yes NOT = { exists = title_domicile } } sltm_ceremonial_government_matches_trigger = yes }
         AND = { var:sltm_create_special_kind = 10 scope:sltm_holder.clerical_elector_title ?= scope:sltm_created scope:sltm_holder.faith ?= { any_clerical_elector_title = { this = scope:sltm_created } } }
     }
@@ -135,12 +136,13 @@ sltm_hof_confirmation_current_trigger = {
     }
 }
 
-# A free temple or a mayor's secondary holding may be accepted even when can_be_leased_out is false.
+# Preferences for automatic selection only. An explicitly marked barony bypasses this filter.
+# Existing holy-order leases remain unavailable; secondary mayor/baron holdings keep their transfer path.
 # The engine must still return the new order and the exact lessee title before charging.
 sltm_order_available_seat_trigger = {
     tier = tier_barony
     exists = holder
-    is_leased_out = no
+    is_under_holy_order_lease = no
     OR = {
         can_be_leased_out = yes
         AND = {
@@ -189,4 +191,119 @@ sltm_ceremonial_government_matches_trigger = {
   NOT = { exists = scope:sltm_ceremonial_original_ruler }
   AND = { exists = scope:sltm_ceremonial_original_government scope:sltm_holder ?= { government_type ?= scope:sltm_ceremonial_original_government } }
  }
+}
+
+# Title scope. A company must have a real, correctly bound company domicile.
+sltm_real_merchant_company_trigger = {
+    NOT = { has_variable = sltm_dynamic_merchant_residence }
+    gdp_merchant_company_title_trigger = yes
+    exists = holder
+    exists = title_domicile
+    title_domicile = { is_domicile_type = merchant_company owner = prev.holder }
+}
+
+# Character scope: the player viewing the atlas.
+sltm_atlas_estate_choice_trigger = {
+    var:sltm_clw_kind ?= 3
+    OR = {
+        var:sltm_clw_domicile_type ?= flag:estate
+        var:sltm_clw_domicile_type ?= flag:east_asian_estate
+        var:sltm_clw_domicile_type ?= flag:japanese_manor
+    }
+}
+sltm_atlas_noble_mode_trigger = {
+    sltm_atlas_estate_choice_trigger = yes
+    has_variable = sltm_family_institution
+}
+sltm_atlas_patrician_mode_trigger = {
+    var:sltm_clw_kind ?= 12
+    has_variable = sltm_family_institution
+}
+sltm_atlas_family_choice_trigger = {
+    OR = { var:sltm_clw_kind ?= 12 sltm_atlas_noble_mode_trigger = yes }
+}
+
+# Title scope. Compare the native house title, bound domicile and personal holder.
+sltm_bound_house_domicile_trigger = {
+    is_noble_family_title = yes
+    exists = holder
+    exists = title_domicile
+    title_domicile ?= {
+        is_domicile_type = $HOME_TYPE$
+        owner = prev.holder
+    }
+}
+sltm_atlas_matching_family_title_trigger = {
+    OR = {
+        AND = { root.var:sltm_clw_kind ?= 12 sltm_real_merchant_company_trigger = yes }
+        AND = { root.var:sltm_clw_kind ?= 3 root.var:sltm_clw_domicile_type ?= flag:estate sltm_bound_house_domicile_trigger = { HOME_TYPE = estate } }
+        AND = { root.var:sltm_clw_kind ?= 3 root.var:sltm_clw_domicile_type ?= flag:east_asian_estate sltm_bound_house_domicile_trigger = { HOME_TYPE = east_asian_estate } }
+        AND = { root.var:sltm_clw_kind ?= 3 root.var:sltm_clw_domicile_type ?= flag:japanese_manor sltm_bound_house_domicile_trigger = { HOME_TYPE = japanese_manor } }
+    }
+}
+sltm_atlas_owns_family_title_trigger = {
+    sltm_atlas_family_choice_trigger = yes
+    var:sltm_create_holder ?= { any_held_title = { sltm_atlas_matching_family_title_trigger = yes } }
+    exists = var:sltm_create_holder
+}
+sltm_atlas_family_branch_trigger = {
+    sltm_atlas_family_choice_trigger = yes
+    NOT = { sltm_atlas_owns_family_title_trigger = yes }
+    exists = var:sltm_create_holder.house.house_head
+    exists = var:sltm_create_holder.house.noble_family.holder
+    var:sltm_create_holder = {
+        is_house_head = no
+        house.noble_family = {
+            holder = root.var:sltm_create_holder.house.house_head
+            OR = {
+                sltm_real_merchant_company_trigger = yes
+                sltm_bound_house_domicile_trigger = { HOME_TYPE = estate }
+                sltm_bound_house_domicile_trigger = { HOME_TYPE = east_asian_estate }
+                sltm_bound_house_domicile_trigger = { HOME_TYPE = japanese_manor }
+            }
+        }
+    }
+}
+sltm_atlas_republic_target_trigger = {
+    exists = var:sltm_designee_title.holder
+    var:sltm_designee_title.holder = {
+        has_government = republic_government
+        any_held_title = { tier >= tier_county is_landless_type_title = no }
+        NOT = { this = root.var:sltm_create_holder }
+    }
+}
+sltm_atlas_family_ready_trigger = {
+    sltm_atlas_can_create_trigger = yes
+    sltm_atlas_family_choice_trigger = yes
+    OR = {
+        NOT = { sltm_atlas_patrician_mode_trigger = yes }
+        AND = {
+            sltm_atlas_republic_target_trigger = yes
+            exists = var:sltm_family_republic_title
+            var:sltm_family_republic_title = var:sltm_designee_title
+            var:sltm_family_republic_ruler = var:sltm_designee_title.holder
+        }
+    }
+}
+
+
+# Existing membership in the selected realm is a view action, including after reload.
+sltm_atlas_current_patrician_trigger = {
+    sltm_atlas_patrician_mode_trigger = yes
+    sltm_atlas_republic_target_trigger = yes
+    exists = var:sltm_family_republic_ruler
+    var:sltm_create_holder ?= {
+        has_government = republic_government
+        liege = root.var:sltm_family_republic_ruler
+        exists = house.noble_family
+        house.noble_family = { holder = root.var:sltm_create_holder sltm_real_merchant_company_trigger = yes has_title_law = noble_family_succession_law }
+    }
+}
+
+# Existing companies remain viewable even if a later mod changes a holder's house.
+sltm_atlas_company_needs_new_house_trigger = {
+    var:sltm_clw_kind ?= 12
+    exists = var:sltm_create_holder
+    NOT = { exists = var:sltm_create_holder.house }
+    NOT = { sltm_atlas_owns_family_title_trigger = yes }
 }

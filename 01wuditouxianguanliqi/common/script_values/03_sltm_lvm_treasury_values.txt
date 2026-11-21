@@ -555,13 +555,13 @@ sltm_lvm_treasury_budget_development_plus_known_grant_total_probe_value = {
 #     subtract = sltm_lvm_treasury_d17_subject_salary_add_sum
 # }
 
-# 路线 B1：完全独立于 D5。直接枚举 Character 持有的 barony，读取其 title_province.monthly_income。
-# every_held_title / title_province / province monthly_income 均有 1.19.0.6 原版脚本先例。
+# 路线 B1：完全独立于 D5。直接枚举 Character 持有的 barony，读取其 title_province.total_monthly_tax_income。
+# R37：1.21.0.3 已移除旧 monthly_income；当前 triggers.log 与原版区域脚本使用 total_monthly_tax_income。
 sltm_lvm_treasury_d17_domain_income_held_barony = {
     value = 0
     every_held_title = {
         limit = { tier = tier_barony }
-        title_province = { add = monthly_income }
+        title_province = { add = total_monthly_tax_income }
     }
 }
 
@@ -571,7 +571,7 @@ sltm_lvm_treasury_d17_domain_income_subrealm_holder = {
     value = 0
     every_sub_realm_barony = {
         limit = { holder = root }
-        title_province = { add = monthly_income }
+        title_province = { add = total_monthly_tax_income }
     }
 }
 

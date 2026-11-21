@@ -34,13 +34,8 @@ sltm_lvm_act_revoke_gui = {
 sltm_lvm_act_grant_marked_gui = {
     scope = character
     is_shown = {
-        exists = var:sltm_lvm_selected_title
         exists = var:sltm_designee_title
-        var:sltm_designee_title = { sltm_plain_title_action_trigger = yes }
-        var:sltm_lvm_selected_title = {
-            exists = holder
-            NOT = { holder = root }
-        }
+        exists = var:sltm_lvm_selected_title.holder
     }
     effect = { sltm_lvm_title_grant_marked_current_effect = yes }
 }

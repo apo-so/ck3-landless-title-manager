@@ -54,6 +54,7 @@ sltm_clw_clear_effect = {
 
 # 选类别：写类别，回到第 1 步；改选非住所类立刻清掉旧住所 ID
 sltm_clw_select_category_effect = {
+ sltm_family_reset_mode_effect = yes
  sltm_clear_promotion_confirmation_effect = yes
  if = { limit = { sltm_clw_category_is_domicile_trigger = yes sltm_clw_has_domicile_type_trigger = yes }
     set_variable = { name = sltm_atlas_saved_home value = var:sltm_clw_domicile_type }
@@ -64,6 +65,7 @@ sltm_clw_select_category_effect = {
  remove_variable = sltm_hof_confirm_nominee
  remove_variable = sltm_hof_confirm_person
  if = { limit = { sltm_atlas_institution_trigger = yes } set_variable = { name = sltm_create_tier value = 2 } }
+ if = { limit = { var:sltm_clw_kind ?= 12 } set_variable = { name = sltm_create_tier value = 1 } }
  if = { limit = { var:sltm_clw_kind ?= 11 } set_variable = { name = sltm_create_tier value = 3 } }
  if = { limit = { var:sltm_clw_kind ?= 2 var:sltm_create_tier = 1 } set_variable = { name = sltm_create_tier value = 2 } }
  remove_variable = sltm_atlas_receipt_target
@@ -85,6 +87,7 @@ sltm_clw_select_category_effect = {
 
 # 选住所：只写住所 ID 与停留页，不动类别
 sltm_clw_select_domicile_effect = {
+ sltm_family_reset_mode_effect = yes
  sltm_clear_promotion_confirmation_effect = yes
  remove_variable = sltm_atlas_picker
 	set_variable = { name = sltm_clw_domicile_type value = flag:$DWELLING$ }
@@ -127,18 +130,18 @@ sltm_clw_confirm_effect = {
 # Finalize exactly once in the existing creation backend, with the same title/cost guards.
 sltm_atlas_submit_effect = {
  clear_saved_scope = sltm_promoted_primary_allowed
- if = {
-  limit = {
-   sltm_atlas_can_create_trigger = yes
-   sltm_atlas_promotes_primary_trigger = yes
-   NOT = { AND = { sltm_atlas_promotion_current_trigger = yes var:sltm_rank_mode ?= $MODE$ } }
-  }
-  set_variable = { name = sltm_rank_revision value = var:sltm_clw_revision }
-  set_variable = { name = sltm_rank_holder value = var:sltm_create_holder }
-  set_variable = { name = sltm_rank_primary value = var:sltm_create_holder.primary_title }
-  set_variable = { name = sltm_rank_tier value = var:sltm_create_tier }
-  set_variable = { name = sltm_rank_kind value = var:sltm_clw_kind }
-  set_variable = { name = sltm_rank_mode value = $MODE$ }
+ if = { limit = { OR = { sltm_atlas_family_branch_trigger = yes sltm_atlas_company_needs_new_house_trigger = yes } }
+  # Only the explicit family action can change house membership.
+ }
+ else_if = { limit = { OR = { sltm_atlas_noble_mode_trigger = yes sltm_atlas_patrician_mode_trigger = yes } }
+  sltm_family_institution_submit_effect = { MODE = $MODE$ }
+ }
+ else_if = {
+  limit = { sltm_atlas_can_create_trigger = yes var:sltm_clw_kind ?= 12 var:sltm_create_holder ?= { any_held_title = { sltm_real_merchant_company_trigger = yes } } }
+  var:sltm_create_holder = { random_held_title = { limit = { sltm_real_merchant_company_trigger = yes } save_scope_as = sltm_existing_company } }
+  sltm_clw_clear_effect = yes
+  set_variable = { name = sltm_lvm_selected_title value = scope:sltm_existing_company }
+  sltm_ui_open_fixed_effect = yes
  }
  else_if = { limit = { sltm_atlas_can_create_trigger = yes var:sltm_clw_kind ?= 8 }
   sltm_merc_request_effect = { MODE = $MODE$ }
@@ -157,7 +160,7 @@ sltm_atlas_submit_effect = {
  }
  else_if = {
   limit = { sltm_atlas_can_create_trigger = yes }
-  if = { limit = { sltm_atlas_promotes_primary_trigger = yes sltm_atlas_promotion_current_trigger = yes var:sltm_rank_mode ?= $MODE$ }
+  if = { limit = { sltm_atlas_promotes_primary_trigger = yes }
    save_scope_as = sltm_promoted_primary_allowed
   }
   sltm_clear_promotion_confirmation_effect = yes
@@ -195,6 +198,7 @@ sltm_clw_handoff_effect = {
   else_if = { limit = { var:sltm_clw_domicile_type = flag:camp } set_variable = { name = sltm_create_native_profile value = 2 } }
   else_if = { limit = { var:sltm_clw_domicile_type = flag:estate } set_variable = { name = sltm_create_native_profile value = 1 } }
   else_if = { limit = { var:sltm_clw_domicile_type = flag:ecclesiastical_domicile } set_variable = { name = sltm_create_native_profile value = 9 } }
+  else_if = { limit = { var:sltm_clw_domicile_type = flag:merchant_company } set_variable = { name = sltm_create_native_profile value = 10 } }
   else = { sltm_atlas_default_profile_effect = yes }
  }
 }
@@ -255,6 +259,7 @@ sltm_clw_show_dwellings_effect = {
 }
 
 sltm_atlas_clear_effect = {
+ sltm_family_reset_mode_effect = yes
  sltm_clear_promotion_confirmation_effect = yes
  remove_variable = sltm_atlas_spread
  remove_variable = sltm_hof_confirm_title
@@ -294,4 +299,196 @@ sltm_clear_promotion_confirmation_effect = {
     remove_variable = sltm_rank_tier
     remove_variable = sltm_rank_kind
     remove_variable = sltm_rank_mode
+}
+
+# All atlas actions are invoked on the player. The nominee and source belong to
+# this window. A change of article or residence discards the optional institution.
+sltm_family_reset_mode_effect = {
+    if = { limit = { has_variable = sltm_family_previous_tier }
+        set_variable = { name = sltm_create_tier value = var:sltm_family_previous_tier }
+        remove_variable = sltm_family_previous_tier
+    }
+    remove_variable = sltm_family_institution
+    remove_variable = sltm_family_republic_title
+    remove_variable = sltm_family_republic_ruler
+}
+sltm_family_toggle_mode_effect = {
+    if = { limit = { has_variable = sltm_family_institution } sltm_family_reset_mode_effect = yes }
+    else_if = {
+        limit = { var:sltm_clw_kind ?= 12 sltm_atlas_republic_target_trigger = yes }
+        set_variable = sltm_family_institution
+        set_variable = { name = sltm_family_republic_title value = var:sltm_designee_title }
+        set_variable = { name = sltm_family_republic_ruler value = var:sltm_designee_title.holder }
+    }
+    else_if = {
+        limit = { sltm_atlas_estate_choice_trigger = yes }
+        set_variable = { name = sltm_family_previous_tier value = var:sltm_create_tier }
+        set_variable = { name = sltm_create_tier value = 1 }
+        set_variable = sltm_family_institution
+    }
+}
+
+sltm_family_branch_submit_effect = {
+    if = {
+        limit = { sltm_atlas_family_ready_trigger = yes sltm_atlas_family_branch_trigger = yes }
+        var:sltm_create_holder = {
+            house = { save_scope_as = sltm_previous_house }
+            save_scope_as = new_house_head
+            if = { limit = { OR = { exists = domicile.domicile_location exists = capital_province exists = default_location } }
+                save_best_location_for_house_name_effect = yes
+            }
+            else = { root.capital_province ?= { save_scope_as = location } }
+            create_cadet_branch = { name = cadet_name_style_county_dynasty save_scope_as = new_house }
+            scope:new_house ?= { generate_coa = yes }
+        }
+        if = {
+            limit = {
+                exists = scope:new_house
+                var:sltm_create_holder.house = scope:new_house
+                NOT = { var:sltm_create_holder.house = scope:sltm_previous_house }
+                var:sltm_create_holder = { is_house_head = yes }
+            }
+            sltm_atlas_submit_effect = { MODE = $MODE$ }
+            if = {
+                limit = { NOT = { AND = { exists = scope:new_house.noble_family scope:new_house.noble_family = { holder = scope:new_house_head exists = title_domicile } } } }
+                send_interface_toast = { type = event_toast_effect_bad title = SLTM_FAMILY_BRANCH_PARTIAL left_icon = scope:new_house_head }
+            }
+        }
+        else = { send_interface_toast = { type = event_toast_effect_bad title = SLTM_FAMILY_BRANCH_FAILED left_icon = var:sltm_create_holder } }
+    }
+}
+
+# Keep native estate creation inside the existing government, primary-title and
+# law preservation transaction. Native house titles never get auxiliary origin marks.
+sltm_family_create_estate_effect = {
+    sltm_atlas_default_profile_effect = yes
+    clear_saved_scope = sltm_family_temporary_host
+    clear_saved_scope = sltm_family_previous_location
+    if = {
+        limit = { scope:sltm_holder = { is_ruler = no NOT = { is_imprisoned = yes } OR = { is_pool_character = yes NOT = { exists = court_owner } } } }
+        scope:sltm_holder.location ?= { save_scope_as = sltm_family_previous_location }
+        # The native estate constructor needs a court location for a wandering founder.
+        # Only supply a host when the nominee has no court. Existing vassals and courtiers retain theirs.
+        if = { limit = { exists = capital_province } save_scope_as = sltm_family_temporary_host }
+        else = { scope:sltm_holder.house.house_head ?= { save_scope_as = sltm_family_temporary_host } }
+        scope:sltm_family_temporary_host ?= { add_courtier = scope:sltm_holder }
+    }
+    save_scope_as = sltm_use_noble_constructor
+    if = { limit = { var:sltm_clw_domicile_type = flag:estate } sltm_create_travel_domicile_effect = { TIER = county GOVERNMENT = administrative_government } }
+    else_if = { limit = { var:sltm_clw_domicile_type = flag:east_asian_estate }
+        if = { limit = { var:sltm_create_native_profile ?= 5 } sltm_create_travel_domicile_effect = { TIER = county GOVERNMENT = meritocratic_government } }
+        else_if = { limit = { var:sltm_create_native_profile ?= 6 } sltm_create_travel_domicile_effect = { TIER = county GOVERNMENT = steppe_admin_government } }
+        else = { sltm_create_travel_domicile_effect = { TIER = county GOVERNMENT = celestial_government } }
+    }
+    else_if = { limit = { var:sltm_create_native_profile ?= 8 } sltm_create_travel_domicile_effect = { TIER = county GOVERNMENT = japan_feudal_government } }
+    else = { sltm_create_travel_domicile_effect = { TIER = county GOVERNMENT = japan_administrative_government } }
+    clear_saved_scope = sltm_use_noble_constructor
+    if = { limit = { exists = scope:sltm_family_temporary_host scope:sltm_holder = { is_ruler = no court_owner ?= scope:sltm_family_temporary_host } }
+        scope:sltm_holder = {
+            if = { limit = { exists = scope:sltm_family_previous_location } move_to_pool_at = scope:sltm_family_previous_location }
+            else = { move_to_pool = yes }
+        }
+    }
+}
+
+# The player explicitly chose the republic and its displayed ruler. Add its
+# succession law only to the verified house title, then ask the native assembly to refresh.
+sltm_family_join_republic_effect = {
+    scope:sltm_created = { add_title_law = noble_family_succession_law }
+    if = {
+        limit = { NOT = { scope:sltm_holder.liege ?= scope:sltm_family_liege } }
+        scope:sltm_holder = {
+            create_title_and_vassal_change = { type = swear_fealty save_scope_as = sltm_family_fealty }
+            change_liege = { liege = scope:sltm_family_liege change = scope:sltm_family_fealty }
+            resolve_title_and_vassal_change = scope:sltm_family_fealty
+        }
+    }
+    if = {
+        limit = { scope:sltm_holder.liege ?= scope:sltm_family_liege }
+        scope:sltm_holder = { if = { limit = { NOT = { has_government = republic_government } } change_government = republic_government } }
+        scope:sltm_family_liege = { update_assembly = yes }
+    }
+}
+
+sltm_family_institution_submit_effect = {
+    if = {
+        limit = { sltm_atlas_family_ready_trigger = yes NOT = { sltm_atlas_family_branch_trigger = yes } }
+        clear_saved_scope = sltm_family_existing
+        save_scope_value_as = { name = sltm_family_edit_mode value = $MODE$ }
+        save_scope_as = sltm_actor
+        var:sltm_create_holder = { save_scope_as = sltm_holder }
+        clear_saved_scope = sltm_created
+        if = {
+            limit = { sltm_atlas_owns_family_title_trigger = yes }
+            save_scope_as = sltm_family_existing
+            scope:sltm_holder = { random_held_title = { limit = { sltm_atlas_matching_family_title_trigger = yes } save_scope_as = sltm_created } }
+        }
+        else_if = { limit = { sltm_atlas_noble_mode_trigger = yes }
+            if = { limit = {
+                exists = scope:sltm_holder.house.noble_family
+                scope:sltm_holder.house.noble_family = { holder = scope:sltm_holder NOT = { exists = title_domicile } }
+            } scope:sltm_holder.house.noble_family = { save_scope_as = sltm_created } }
+            else = { sltm_family_create_estate_effect = yes }
+        }
+        else = { sltm_special_merchant_company_effect = yes }
+        if = {
+            limit = {
+                exists = scope:sltm_created
+                scope:sltm_created = { holder = scope:sltm_holder sltm_atlas_matching_family_title_trigger = yes }
+                exists = scope:sltm_holder.house.noble_family
+                scope:sltm_holder.house.noble_family = scope:sltm_created
+            }
+            if = {
+                limit = { sltm_atlas_patrician_mode_trigger = yes }
+                var:sltm_family_republic_ruler = { save_scope_as = sltm_family_liege }
+                if = { limit = { NOT = { sltm_atlas_current_patrician_trigger = yes } } sltm_family_join_republic_effect = yes }
+            }
+            if = {
+                limit = {
+                    sltm_atlas_patrician_mode_trigger = yes
+                    NOT = { AND = {
+                        scope:sltm_holder = { has_government = republic_government liege ?= scope:sltm_family_liege }
+                        scope:sltm_created = { holder = scope:sltm_holder has_title_law = noble_family_succession_law sltm_real_merchant_company_trigger = yes }
+                    } }
+                }
+                send_interface_toast = { type = event_toast_effect_bad title = SLTM_FAMILY_REPUBLIC_PARTIAL left_icon = scope:sltm_holder }
+            }
+            else = {
+                set_variable = { name = sltm_last_created_title value = scope:sltm_created }
+                set_variable = { name = sltm_lvm_selected_title value = scope:sltm_created }
+                sltm_clw_clear_effect = yes
+                if = { limit = { OR = { exists = scope:sltm_family_existing scope:sltm_family_edit_mode = 2 } } sltm_ui_open_fixed_effect = yes }
+                else = { send_interface_toast = { type = sltm_msg_create_dynamic_title title = SLTM_FAMILY_READY left_icon = scope:sltm_holder right_icon = scope:sltm_created } }
+            }
+        }
+        else_if = { limit = { exists = scope:sltm_created scope:sltm_created.holder = scope:sltm_holder }
+            send_interface_toast = { type = event_toast_effect_bad title = SLTM_FAMILY_NO_HOME left_icon = scope:sltm_holder right_icon = scope:sltm_created }
+        }
+        else = { send_interface_toast = { type = event_toast_effect_bad title = SLTM_FAMILY_NOT_HELD left_icon = scope:sltm_holder } }
+    }
+}
+
+
+# Create a new founding house for this person only. Branching out of an existing
+# dynasty stays on its own action. Browsing and stale ordinary submits cannot found a house.
+sltm_atlas_found_company_house_effect = {
+    if = {
+        limit = { sltm_atlas_family_ready_trigger = yes sltm_atlas_company_needs_new_house_trigger = yes }
+        var:sltm_create_holder = {
+            save_scope_as = sltm_lowborn_founder
+            create_dynasty = { spread_to_descendants = no }
+        }
+        if = {
+            limit = { exists = scope:sltm_lowborn_founder.house scope:sltm_lowborn_founder = { is_house_head = yes } }
+            sltm_atlas_submit_effect = { MODE = $MODE$ }
+            if = {
+                limit = { NOT = { AND = {
+                    exists = scope:sltm_lowborn_founder.house.noble_family
+                    scope:sltm_lowborn_founder.house.noble_family = { holder = scope:sltm_lowborn_founder sltm_real_merchant_company_trigger = yes }
+                } } }
+                send_interface_toast = { type = event_toast_effect_bad title = SLTM_NEW_HOUSE_NO_COMPANY left_icon = scope:sltm_lowborn_founder }
+            }
+        }
+        else = { send_interface_toast = { type = event_toast_effect_bad title = SLTM_NEW_HOUSE_FAILED left_icon = scope:sltm_lowborn_founder } }
+    }
 }
